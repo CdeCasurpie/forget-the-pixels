@@ -7,7 +7,61 @@ Para solucionar esto, el sistema propuesto plantea un modelo basado firmemente e
 Este capítulo presenta un resumen rápido y estructurado de las fases que conforman la arquitectura propuesta, delineando la idea general del proyecto. Los detalles matemáticos y la implementación técnica profunda de cada fase se abordarán con muchísimo detalle en los capítulos posteriores.
 
 \section{Pipeline de Reconstrucción}
-El \textit{pipeline} propuesto abandona por completo la densificación clásica basada en píxeles. Esto funciona dividiendo el problema en fases secuenciales, priorizando en todo momento la extracción de caras y fronteras arquitectónicas.
+El \textit{pipeline} propuesto abandona por completo la densificación clásica basada en píxeles. Esto funciona dividiendo el problema en fases secuenciales, priorizando en todo momento la extracción de caras y fronteras arquitectónicas. El flujo de datos y los modelos involucrados en cada etapa se ilustran en la Figura \ref{fig:pipeline_general}.
+
+\begin{figure}[H]
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \begin{tikzpicture}[
+        node distance=0.8cm and 0.5cm,
+        phase/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum width=4cm, minimum height=1.2cm, text centered, rounded corners, font=\small\bfseries, align=center},
+        input/.style={rectangle, draw=gray!60, fill=gray!5, very thick, minimum width=3.5cm, minimum height=1cm, text centered, font=\footnotesize, align=center},
+        arrow/.style={thick, -Latex, draw=black!70}
+    ]
+
+    % Nodes
+    \node (video) [input] {Video Original (RGB)};
+    
+    \node (fase1) [phase, below=of video] {Fase 1: Preprocesamiento \\ (Enmascaramiento)};
+    \node (vidmask) [input, below=of fase1] {Video Enmascarado};
+    
+    \node (fase2) [phase, below left=1cm and 0.1cm of vidmask] {Fase 2: Extracción y Tracking \\ (Co-PLNet + GlueStick)};
+    \node (fase3) [phase, below right=1cm and 0.1cm of vidmask] {Fase 3: Segmentación de Caras \\ (SAM / ZeroPlane)};
+    
+    \node (poses) [input, below=of fase2] {Poses de Cámara \\ \& Wireframes 2D};
+    \node (masks) [input, below=of fase3] {Máscaras Planares \\ Semánticas};
+    
+    \node (fase4) [phase, below=4.5cm of vidmask] {Fase 4: Fusión Temporal y Completado \\ (LO-RANSAC)};
+    \node (planos) [input, below=of fase4] {Planos Infinitos 3D};
+    
+    \node (fase5) [phase, below=of planos] {Fase 5: Extracción de Fronteras \\ y Texturizado (Homografías)};
+    \node (output) [input, below=of fase5] {Modelo 3D Estructurado \\ (Malla Poligonal)};
+
+    % Arrows
+    \draw [arrow] (video) -- (fase1);
+    \draw [arrow] (fase1) -- (vidmask);
+    
+    \draw [arrow] (vidmask) -| (fase2);
+    \draw [arrow] (vidmask) -| (fase3);
+    
+    \draw [arrow] (fase2) -- (poses);
+    \draw [arrow] (fase3) -- (masks);
+    
+    \draw [arrow] (poses) |- (fase4);
+    \draw [arrow] (masks) |- (fase4);
+    
+    \draw [arrow] (fase4) -- (planos);
+    \draw [arrow] (planos) -- (fase5);
+    \draw [arrow] (fase5) -- (output);
+    
+    % Feedback
+    \draw [arrow, dashed] (poses.west) -- +(-1.5,0) |- (fase5.west) node[pos=0.25, left, font=\scriptsize] {Líneas proyectadas};
+
+    \end{tikzpicture}
+    }
+    \caption[Diagrama de flujo del pipeline propuesto]{Diagrama de flujo del pipeline de reconstrucción \textit{top-down}. Se detallan las entradas, fases de procesamiento y salidas para la obtención de mallas poligonales limpias.}
+    \label{fig:pipeline_general}
+\end{figure}
 
 \subsection{Fase 1: Preprocesamiento y Enmascaramiento Dinámico}
 Esta fase sirve para limpiar las secuencias de video de información no deseada. Funciona a través de modelos de inferencia rápida, como FastSAM o YOLO, los cuales detectan objetos dinámicos dentro de la escena (típicamente autos y peatones), tal como se ejemplifica en la Figura \ref{fig:yolo_masking}.
@@ -61,7 +115,7 @@ En esta etapa, el sistema inyecta restricciones semánticas para detectar y segm
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{images/planercnn_segmentation.jpg}
-    \caption{Demostración de segmentación de superficies planares. La imagen ilustra cómo la red infiere máscaras para cada instancia plana detectada. Cada color representa un plano geométrico distinto, facilitando la distinción entre superficies arquitectónicas y elementos ajenos (Fuente: \cite{liu2019planercnn}).}
+    \caption[Demostración de segmentación de superficies planares]{Demostración de segmentación de superficies planares. La imagen ilustra cómo la red infiere máscaras para cada instancia plana detectada. Cada color representa un plano geométrico distinto, facilitando la distinción entre superficies arquitectónicas y elementos ajenos (Fuente: \cite{liu2019planercnn}).}
     \label{fig:plane_segmentation}
 \end{figure}
 
@@ -90,8 +144,95 @@ Una vez instanciado este polígono 3D cerrado y finito, se le aplica el texturiz
 \end{itemize}
 
 \section{Infraestructura de la Base de Datos de Poses y Alineación Topológica}
-La captura asíncrona de datos urbanos a gran escala genera múltiples secuencias de video independientes, las cuales resultan en sub-mapas locales o trayectorias de cámara inconexas. Para unificar esta información y dotar al sistema de persistencia espacial, se establece una infraestructura de base de datos de poses centralizada (\textit{Pose Database}).
+La captura asíncrona de datos urbanos a gran escala genera múltiples secuencias de video independientes, las cuales resultan en sub-mapas locales o trayectorias de cámara inconexas. El paradigma clásico comete el error de almacenar nubes de puntos densas directamente en una base de datos. Sin embargo, en esta propuesta arquitectónica \textbf{se prioriza almacenar el grafo de poses de la cámara en lugar de la geometría cruda}.
 
-El desafío fundamental radica en la alineación topológica de estas trayectorias locales hacia un sistema de coordenadas global coherente. A nivel algorítmico, esto requiere la resolución de un problema de Optimización de Grafo de Poses (\textit{Pose Graph Optimization}, PGO). Cuando existen co-visibilidades entre diferentes secuencias de video (es decir, cierres de bucle entre sub-mapas), el sistema extrae coincidencias y computa transformaciones de similitud $Sim(3)$ ---las cuales ajustan la rotación, traslación y escala de forma simultánea--- para anclar matemáticamente las trayectorias relativas.
+Esta decisión de diseño es crítica. Al guardar únicamente las transformaciones espaciales optimizadas ($SE(3)$) y las imágenes fuente, el sistema funciona como un "esqueleto" que es independiente del motor de renderizado. Como se ilustra en la Figura \ref{fig:pose_database}, esto garantiza que el \textit{dataset} recolectado sea completamente agnóstico y reutilizable a futuro. Mañana más tarde, el mismo grafo espacial podrá alimentar no solo la reconstrucción de mallas poligonales actual, sino algoritmos de \textit{3D Gaussian Splatting}, representaciones neuronales (NeRF) o sistemas de mapas interactivos y realidad aumentada.
 
-Para mitigar la acumulación de error inercial y de escala (\textit{drift}), intrínseco al rastreo monocular en distancias prolongadas, la infraestructura integra datos de telemetría GPS que actúan como restricciones absolutas (\textit{absolute priors}) dentro del grafo de optimización. Esta arquitectura descentralizada y robusta garantiza la consistencia global a nivel metropolitano, facultando al sistema a asimilar y ensamblar continuamente nuevos fragmentos de la ciudad sin la penalidad computacional de tener que re-optimizar el mapa global desde cero.
+\begin{figure}[H]
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \begin{tikzpicture}[
+        node distance=1cm and 1.5cm,
+        source/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum width=3cm, minimum height=1cm, text centered, rounded corners, font=\small, align=center},
+        db/.style={cylinder, draw=black!70, fill=yellow!10, very thick, minimum width=3.5cm, minimum height=3cm, text centered, aspect=0.3, shape border rotate=90, font=\small\bfseries, align=center},
+        app/.style={rectangle, draw=green!60, fill=green!5, very thick, minimum width=4cm, minimum height=1cm, text centered, rounded corners, font=\small, align=center},
+        arrow/.style={thick, -Latex, draw=black!70}
+    ]
+
+    % Sources
+    \node (vid1) [source] {Secuencias de Video};
+    \node (gps) [source, below=1cm of vid1] {Telemetría GPS};
+    
+    % DB
+    \node (db) [db, right=2.5cm of vid1, yshift=-0.5cm] {Base de Datos \\ de Poses $SE(3)$ \\ \textit{(Cero nubes densas)}};
+    
+    % Applications
+    \node (app2) [app, right=2.5cm of db, yshift=1.5cm] {3D Gaussian Splatting};
+    \node (app1) [app, above=0.5cm of app2] {Mallas Poligonales \\ \textit{(Pipeline Actual)}};
+    \node (app3) [app, below=0.5cm of app2] {Campos Radiantes (NeRF)};
+    \node (app4) [app, below=0.5cm of app3] {Mapas 3D Interactivos};
+
+    % Arrows
+    \draw [arrow] (vid1) -- (db.140);
+    \draw [arrow] (gps) -- (db.220) node[midway, below, font=\scriptsize, align=center] {Anclaje y \\ Restricciones};
+    
+    \draw [arrow] (db.east) -- +(0.8,0) |- (app1.west);
+    \draw [arrow] (db.east) -- +(0.8,0) |- (app2.west);
+    \draw [arrow] (db.east) -- +(0.8,0) |- (app3.west);
+    \draw [arrow] (db.east) -- +(0.8,0) |- (app4.west);
+
+    \end{tikzpicture}
+    }
+    \caption[Diagrama de la Infraestructura de Poses]{Arquitectura de la Base de Datos de Poses. Al almacenar y alinear el grafo espacial en lugar de puntos tridimensionales masivos, el sistema actúa como un núcleo topológico versátil que puede alimentar múltiples tecnologías de reconstrucción a futuro.}
+    \label{fig:pose_database}
+\end{figure}
+
+El desafío fundamental radica en la alineación topológica de estas trayectorias. A nivel algorítmico, esto requiere resolver un problema de Optimización de Grafo de Poses (\textit{Pose Graph Optimization}, PGO). Cuando existen co-visibilidades entre diferentes secuencias de video, el sistema extrae coincidencias y computa transformaciones de similitud $Sim(3)$ ---las cuales ajustan la rotación, traslación y escala de forma simultánea--- para anclar matemáticamente las trayectorias relativas sin necesidad de recalcular puntos.
+
+Para mitigar la acumulación de error inercial y de escala (\textit{drift}), intrínseco al rastreo monocular en distancias prolongadas, la infraestructura integra datos de telemetría GPS. Estos actúan como restricciones absolutas dentro del grafo de optimización. Esta arquitectura descentralizada y robusta garantiza la consistencia global a nivel metropolitano, facultando al sistema a ensamblar continuamente nuevos fragmentos de la ciudad sin la penalidad de tener que re-optimizar ninguna nube de puntos global desde cero.
+
+\section{Métricas de Evaluación y Entorno Experimental}
+Para evaluar rigurosamente la calidad de la reconstrucción y la eficiencia del modelo propuesto frente al estado del arte, se han definido métricas tanto geométricas como computacionales. Asimismo, se ha seleccionado un entorno de pruebas estandarizado que garantice la reproducibilidad del experimento.
+
+\subsection{Dataset de Evaluación: UrbanScene3D}
+Las pruebas cuantitativas se realizarán utilizando \textbf{UrbanScene3D} \cite{shen2021urbanscene3d}, un \textit{dataset} a gran escala y simulador diseñado específicamente para la investigación en reconstrucción 3D y percepción urbana por visión estéreo y drones.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/urbanscene3d.jpg}
+    \caption[Entorno de simulación y dataset UrbanScene3D]{Representación de una de las ciudades del dataset UrbanScene3D. Provee secuencias de video de alta resolución, parámetros de cámara exactos y un modelo geométrico (\textit{Ground Truth}) extremadamente preciso, lo que resulta fundamental para contrastar matemáticamente la fidelidad de la malla extraída (Fuente: Adaptado de \cite{shen2021urbanscene3d}).}
+    \label{fig:urbanscene3d}
+\end{figure}
+
+UrbanScene3D fue elegido por encima de otros repositorios porque ofrece secuencias de imágenes aéreas sintéticas y reales junto con un modelo topológico completo. Disponer del \textit{Ground Truth} de la geometría arquitectónica permite evaluar sin margen de error la hipótesis del \textit{pipeline} libre de MVS.
+
+\subsection{Métricas Geométricas}
+Estas métricas, extraídas del estándar del estado del arte, miden qué tan parecida es la topología reconstruida ($P$) respecto a la escena de referencia o \textit{Ground Truth} ($G$).
+
+\begin{itemize}
+    \item \textbf{RMSE(P, G) - Error Cuadrático Medio Posicional:} Cuantifica la desviación posicional absoluta promedio de los vértices extraídos frente a la malla real. Mide directamente cuánto se equivocó el algoritmo al ubicar la geometría en el espacio euclidiano. Se define como:
+    \begin{equation}
+        \text{RMSE}(P, G) = \sqrt{\frac{1}{|P|} \sum_{p \in P} \min_{g \in G} \|p - g\|_2^2}
+    \end{equation}
+    Donde $p$ y $g$ representan puntos homólogos en ambas nubes.
+
+    \item \textbf{$\mathbf{d_{CD}(P, G)}$ - Distancia de Chamfer:} Es la métrica estándar por excelencia para evaluar mallas 3D. Intuitivamente, calcula, para cada punto de la reconstrucción $P$, cuál es su vecino más cercano en la geometría real $G$ (evaluando Precisión), y viceversa desde $G$ hacia $P$ (evaluando Completitud). Se define formalmente como:
+    \begin{equation}
+        d_{CD}(P, G) = \frac{1}{|P|} \sum_{p \in P} \min_{g \in G} \|p - g\|_2^2 + \frac{1}{|G|} \sum_{g \in G} \min_{p \in P} \|p - g\|_2^2
+    \end{equation}
+    Un valor cercano a cero penaliza fuertemente las mallas que inventan "geometrías fantasma" (mala precisión) o que dejan huecos estructurales (mala completitud).
+
+    \item \textbf{Error Absoluto Topológico (Normales):} Evalúa la integridad de las caras arquitectónicas y la preservación de los bordes duros de los edificios. En arquitecturas \textit{Manhattan-world}, esto se mide mediante el error angular de las normales de las superficies:
+    \begin{equation}
+        \text{EAT}(P, G) = \frac{1}{|P|} \sum_{i=1}^{|P|} \arccos(|\mathbf{n}_{P,i} \cdot \mathbf{n}_{G,i}|)
+    \end{equation}
+    Penaliza severamente el ruido estructural, como las paredes que parecen "derretidas" o con deformaciones, típicas de los enfoques MVS cuando se confunden con reflejos en las ventanas.
+\end{itemize}
+
+\subsection{Métricas Computacionales}
+Dado que el objetivo principal y la promesa de valor de la investigación es aniquilar el excesivo coste computacional del MVS clásico, se evaluarán dos parámetros operativos críticos de hardware:
+
+\begin{itemize}
+    \item \textbf{Tiempo de Cómputo (Horas):} Se cronometrará el tiempo exacto transcurrido desde la ingesta de las imágenes hasta la exportación de la malla poligonal final. El objetivo es comprobar empíricamente una reducción logarítmica en los tiempos de inferencia.
+    \item \textbf{Consumo máximo de memoria (Peak VRAM):} Mide la huella de memoria en gigabytes (GB) requerida en la tarjeta gráfica. Con esta métrica se busca demostrar empíricamente que extraer únicamente la abstracción geométrica requiere una fracción marginal de la VRAM comparado con densificar iterativamente millones de píxeles ciegos.
+\end{itemize}

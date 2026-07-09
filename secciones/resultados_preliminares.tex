@@ -1,16 +1,33 @@
-\chapter{Resultados Preliminares}
+\chapter{Resultados Preliminares y Diseño Experimental}
 
-\section{Validación del Alineamiento Rígido Sim(3) sobre Submapas Desconectados}
-% Protocolo y Datos del Experimento:
-% Describir la prueba de concepto utilizando dos secuencias de video reales solapadas espacialmente en un sector urbano\textbf{} controlado.
-% Qué reportar aquí: Visualizaciones gráficas de las trayectorias estimadas antes y después del alineamiento por PnP+RANSAC. Tabular el error medio cuadrático (RMSE) de la traslación y rotación tras aplicar la matriz de similitud computada, validando el consenso del algoritmo de fusión de trayectorias individuales.
+Al encontrarse esta investigación en una fase de desarrollo arquitectónico e integración de modelos, no se dispone aún de una métrica global de reconstrucción a escala distrital. Sin embargo, en este capítulo se presentan las \textit{Pruebas de Concepto} (PoC) iniciales que validan la viabilidad técnica de los módulos individuales propuestos. Asimismo, se define el diseño experimental riguroso y las métricas con las cuales se evaluará el sistema final contra el estado del arte.
 
-\section{Evaluación Cuantitativa de la Reducción Paramétrica (Abstracción Dispersa vs MVS)}
-% Protocolo y Datos del Experimento:
-% Aislar un conjunto de fotogramas (3 a 5 imágenes) que enfoquen una estructura con fachadas planas predominantes.
-% Qué reportar aquí: Presentar una comparación directa de la densidad geométrica. Contrastar numéricamente el volumen de datos: la nube de puntos densa y ruidosa producida por un pipeline tradicional MVS (ej. COLMAP) frente al conjunto minimalista y exacto de nodos estructurales 3D (vértices y caras planas) instanciados por tu propuesta. Demostrar la erradicación del "ruido geométrico".
+\section{Pruebas de Concepto (Validación Modular)}
 
-\section{Análisis de Complejidad Temporal y Escalabilidad de Cómputo}
-% Protocolo y Datos del Experimento:
-% Benchmarking empírico de latencia algorítmica sobre un dataset acotado de fotogramas secuenciales urbanos.
-% Qué reportar aquí: Tabular los tiempos de cómputo desglosados. Comparar el tiempo consumido por la fase de densificación píxel a píxel del MVS tradicional (RTX 4090 baseline) frente al tiempo de inferencia combinado de los pasos de segmentación semántica (SAM) + triangulación dispersa O(1). Utilizar estos datos experimentales iniciales para validar empíricamente la viabilidad de escalamiento lineal del modelo propuesto para cubrir la totalidad de Lima Metropolitana.
+Para garantizar que el enfoque \textit{top-down} es aplicable a la arquitectura limeña y entornos no estructurados, se ejecutaron pruebas de aislamiento sobre los modelos neuronales que fundamentan las fases de abstracción.
+
+\subsection{Filtrado de Elementos Dinámicos en Entornos Locales}
+La primera hipótesis del sistema exige que el ruido dinámico pueda ser aislado eficientemente antes del rastreo (\textit{tracking}). Las pruebas preliminares utilizando modelos de segmentación instantánea (como YOLO) sobre metraje real capturado confirmaron la capacidad de inferir, en tiempo real, las máscaras delimitadoras de vehículos y peatones. Tal como se expuso en el Capítulo IV, este enmascaramiento resulta lo suficientemente robusto para garantizar que los cálculos geométricos de triangulación se alimenten exclusivamente de píxeles estáticos arquitectónicos.
+
+\subsection{Inferencia de Wireframes con Co-PLNet}
+El corazón de la propuesta geométrica depende de la identificación de límites estructurales asumiendo restricciones \textit{Manhattan-world}. Las pruebas iniciales ejecutadas con Co-PLNet sobre edificios institucionales (campus UTEC) y edificaciones residenciales (distrito de Barranco) arrojaron resultados muy favorables. El modelo demostró no solo ser capaz de detectar puntos de interés robustos, sino también de interconectarlos mediante tensores de líneas, proveyendo así la base de un grafo bidimensional coherente incluso en fachadas con alta repetición de texturas (ej. ventanas uniformes) donde los descriptores clásicos como SIFT suelen fallar por ambigüedad.
+
+\section{Diseño Experimental y Métricas de Evaluación Futuras}
+
+Para la culminación del proyecto, la arquitectura unificada será sometida a una evaluación cuantitativa exhaustiva, comparando su rendimiento frente al \textit{pipeline} estándar de la industria dominado por COLMAP (SfM + MVS).
+
+\subsection{Métricas de Precisión Geométrica}
+La validación de las poses estimadas de la cámara en el grafo $SE(3)$ se realizará midiendo el \textbf{Error Cuadrático Medio (RMSE)} de la Trayectoria Absoluta (ATE) frente a un \textit{Ground Truth} recolectado mediante telemetría GPS o LIDAR de precisión.
+\begin{equation}
+    \text{RMSE}_{\text{ATE}} = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} \left\| \mathbf{t}_i - \mathbf{t}_i^* \right\|^2 }
+\end{equation}
+donde $\mathbf{t}_i$ representa la traslación estimada y $\mathbf{t}_i^*$ la trayectoria real.
+
+\subsection{Eficiencia Computacional y Escalabilidad}
+La principal justificación de este proyecto radica en la ruptura del cuello de botella temporal. Por tanto, se documentará meticulosamente:
+\begin{itemize}
+    \item \textbf{Latencia de Procesamiento:} Tiempo medio requerido (en segundos por fotograma) para pasar de imágenes RGB a la malla poligonal estructurada, comparado con el tiempo de densificación píxel a píxel del MVS.
+    \item \textbf{Huella de Memoria (Reducción Paramétrica):} Contraste del peso de los archivos exportados. Se medirá en Megabytes (MB) el modelo de planos matemáticos en contraposición al modelo denso de millones de puntos requerido para el mismo sector urbano.
+\end{itemize}
+
+El cumplimiento de estas métricas certificará estadísticamente la superioridad computacional del enfoque \textit{MVS-free} para tareas de modelado a escala masiva.

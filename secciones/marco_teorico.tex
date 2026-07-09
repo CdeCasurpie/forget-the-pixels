@@ -1,92 +1,155 @@
 \chapter{Marco Teórico}
 
-Este capítulo establece las bases teóricas de nuestra arquitectura \textit{top-down} para reconstrucción 3D a escala urbana. Vamos a ir paso a paso, desde cómo una cámara proyecta el mundo en 2D, pasando por cómo calculamos dónde está la cámara, hasta entender por qué los métodos clásicos como MVS se vuelven demasiado pesados. A partir de ese problema, introducimos las herramientas que nos permiten solucionarlo: alineación geométrica asíncrona, restricciones estructurales y el uso de modelos de inteligencia artificial para ir directo a la geometría útil (mallas ligeras) sin pasar por el costoso modelado píxel por píxel.
+Este capítulo establece las bases teóricas y matemáticas de la arquitectura propuesta para la reconstrucción 3D a escala urbana. Se abordarán los conceptos desde la fotogrametría clásica hasta los paradigmas modernos de segmentación semántica y optimización geométrica planar.
 
-% TODO: Añadir aquí un bullet point o pequeño diagrama textual si es necesario para resumir la arquitectura general del capítulo y facilitar la lectura.
+\section{Geometría Multivista Clásica}
 
-\section{Geometría Computacional y Formación de la Imagen}
+La geometría multivista establece los fundamentos matemáticos para inferir la estructura tridimensional de una escena a partir de múltiples proyecciones bidimensionales. Esta disciplina constituye la base algorítmica de la fotogrametría clásica y los sistemas de reconstrucción 3D \cite{hartley2003multiple}. A continuación, se detallan los principios teóricos fundamentales que componen el flujo de trabajo estándar en visión computacional.
 
-\subsection{Modelo de Cámara Pinhole y Proyección Perspectiva}
-El modelo de cámara \textit{pinhole} (o estenopeica) es el concepto fundamental que usamos para entender cómo un punto 3D del mundo real termina viéndose en una imagen 2D. Funciona a través de proyectar rayos de luz a través de un solo punto central hacia un plano de imagen. 
+\subsection{Geometría Epipolar y Matrices Fundamental y Esencial}
 
-% TODO: Definir formalmente la matriz intrínseca (K) y extrínseca [R|t]. 
-% TODO: Formular la proyección geométrica del punto 3D al plano bidimensional.
+La geometría epipolar describe la relación proyectiva geométrica intrínseca entre dos vistas de la misma escena tridimensional. Sea un punto 3D $\mathbf{X}$ que se proyecta en los planos de imagen de dos cámaras, obteniendo las coordenadas homogéneas $\mathbf{x}$ y $\mathbf{x}'$.
 
-\subsection{Geometría Epipolar y Restricciones Multivista}
-La geometría epipolar sirve para relacionar lo que ven dos cámaras mirando una misma escena. Si tenemos un punto en la primera imagen, la geometría epipolar nos dice que ese mismo punto en la segunda imagen debe estar en algún lugar a lo largo de una línea específica (línea epipolar). Esto es clave porque reduce nuestra búsqueda de correspondencias de 2D (buscar en toda la imagen) a 1D (buscar solo sobre esa línea).
+Cuando ambas cámaras están calibradas internamente, la relación espacial entre ellas (descrita por una matriz de rotación $\mathbf{R}$ y un vector de traslación $\mathbf{t}$) queda encapsulada en la \textit{Matriz Esencial} $\mathbf{E} \in \mathbb{R}^{3 \times 3}$:
+\begin{equation}
+    \mathbf{E} = [\mathbf{t}]_{\times} \mathbf{R}
+\end{equation}
+donde $[\mathbf{t}]_{\times}$ representa la matriz antisimétrica asociada al vector de traslación. La restricción epipolar establece que las coordenadas de imagen normalizadas, $\mathbf{\hat{x}}$ y $\mathbf{\hat{x}}'$, deben satisfacer:
+\begin{equation}
+    \mathbf{\hat{x}}'^T \mathbf{E} \mathbf{\hat{x}} = 0
+\end{equation}
 
-% TODO: Explicar la Matriz Esencial (E) y Fundamental (F) conceptualmente. Asegurarse de mantener la formulación ligera y EVITAR LA MATEMÁTICA DENSA.
-% TODO: Mencionar la restricción epipolar de forma directa y clara.
+En el caso general de cámaras no calibradas, se formula la \textit{Matriz Fundamental} $\mathbf{F}$, que absorbe las matrices de parámetros intrínsecos $\mathbf{K}$ y $\mathbf{K}'$ de la primera y segunda cámara respectivamente:
+\begin{equation}
+    \mathbf{F} = \mathbf{K}'^{-T} \mathbf{E} \mathbf{K}^{-1}
+\end{equation}
+Esto generaliza la restricción epipolar para coordenadas de píxel sin normalizar:
+\begin{equation}
+    \mathbf{x}'^T \mathbf{F} \mathbf{x} = 0
+\end{equation}
+Geométricamente, esta ecuación significa que, dado un punto $\mathbf{x}$ en la primera vista, su correspondiente $\mathbf{x}'$ en la segunda vista está restringido a yacer sobre la línea epipolar $\mathbf{l}' = \mathbf{F}\mathbf{x}$. Esta propiedad es crucial, ya que reduce el problema de correspondencia estéreo de una búsqueda bidimensional a una búsqueda unidimensional.
 
-\section{Herramientas Matemáticas y Transformaciones}
+\subsection{Structure-from-Motion (SfM) y Bundle Adjustment}
 
-\subsection{Descomposición en Valores Singulares (SVD)}
-La Descomposición en Valores Singulares (SVD) es algo llamado factorización de matrices, que sirve para descomponer cualquier matriz compleja en partes más manejables. En visión computacional la usamos constantemente para resolver sistemas de ecuaciones lineales de forma robusta, como cuando queremos estimar matrices de rotación o calcular homografías.
+\textit{Structure-from-Motion} (SfM) es el proceso computacional que estima simultáneamente la estructura 3D dispersa (sparse) de la escena y las trayectorias de las cámaras (sus parámetros extrínsecos) a partir de un conjunto de imágenes \cite{schonberger2016structure}. El algoritmo extrae características locales (como SIFT o SURF), establece correspondencias entre vistas y recupera iterativamente las poses de las cámaras y los puntos tridimensionales.
 
-Una desventaja de usar SVD es que, computacionalmente, es una operación pesada si las dimensiones de nuestras matrices crecen demasiado.
+Para mitigar la acumulación de errores de estimación y refinar conjuntamente las poses de cámara y la geometría de la escena, se aplica \textit{Bundle Adjustment} (BA) \cite{triggs1999bundle}. BA es formulado como un problema de optimización no lineal de gran escala que busca minimizar el \textit{error de reproyección}. Este error es la distancia euclidiana entre las coordenadas 2D observadas empíricamente en las imágenes y las proyecciones teóricas de los puntos 3D estimados.
 
-% TODO: Desarrollar la explicación de SVD, enfocándose en qué problema resuelve, cómo funciona y su aplicación específica en la optimización geométrica de este proyecto.
+Dadas $m$ cámaras con matrices de proyección $\mathbf{P}_i$ y $n$ puntos 3D $\mathbf{X}_j$, la función de costo objetivo a minimizar es:
+\begin{equation}
+    E(\mathbf{P}, \mathbf{X}) = \sum_{i=1}^{m} \sum_{j=1}^{n} v_{ij} \left\| \mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j) \right\|^2
+\end{equation}
+donde $\mathbf{x}_{ij}$ es la medición del punto $j$ en la imagen $i$, $\pi(\cdot)$ denota el operador de proyección no lineal de la cámara, y $v_{ij} \in \{0,1\}$ es una variable indicadora binaria de la visibilidad del punto $\mathbf{X}_j$ en la cámara $i$. Esta función se minimiza típicamente empleando el algoritmo iterativo de Levenberg-Marquardt, el cual explota eficientemente la matriz Jacobiana dispersa característica de este problema.
 
-\subsection{Homografías (Transformaciones Proyectivas 2D-2D)}
-Una homografía es una transformación que mapea puntos de un plano en una imagen a puntos de ese mismo plano visto desde otra imagen. Sirve para, por ejemplo, "pegar" o alinear dos fotos que ven una misma pared o el suelo desde distintos ángulos.
+\subsection{Multi-View Stereo (MVS) y el Cuello de Botella Computacional}
 
-% TODO: Añadir la formulación algebraica básica (H) y detallar cómo se calcula a partir de correspondencias de puntos (vinculándolo al uso de SVD o DLT).
+Mientras que SfM proporciona un esqueleto 3D disperso y la orientación de las cámaras, \textit{Multi-View Stereo} (MVS) utiliza estos parámetros calculados para inferir la geometría subyacente de toda la superficie observada, generando una representación densa (mapas de profundidad o nubes de puntos densificadas) \cite{seitz2006comparison}. 
 
-\section{Extracción de Información Visual}
+Los algoritmos MVS operan buscando emparejamientos a nivel de píxel a través de las vistas basándose en medidas de consistencia fotométrica (ej. Correlación Cruzada Normalizada, NCC), guiados por las restricciones de la geometría epipolar y suposiciones de suavidad espacial e interpolación como en algoritmos modernos basados en \textit{PatchMatch}.
 
-\subsection{Deep Features vs SIFT Clásico}
-Para saber que un píxel en una imagen es el mismo que en otra imagen, necesitamos extraer características o descriptores (\textit{features}). Clásicamente, algoritmos como SIFT funcionaban buscando esquinas o gradientes locales y les asignaban un descriptor matemático.
+\textbf{Densificación como Cuello de Botella:} En los pipelines de reconstrucción clásicos, el MVS representa el cuello de botella computacional más severo \cite{schoenberger2016mvs}. Este proceso de densificación exige evaluar la fotoconsistencia para cada píxel de una imagen de referencia, cotejándolo contra múltiples imágenes superpuestas. A altas resoluciones (imágenes de varios megapíxeles), el espacio volumétrico de hipótesis de profundidad a explorar escala masivamente. Calcular las métricas de correlación sobre múltiples parches de píxeles para miles de millones de combinaciones espaciales implica un consumo exorbitante de ancho de banda de memoria y procesamiento aritmético. Esto provoca que la densificación clásica dependa invariablemente de una ejecución paralela intensiva (generalmente en GPUs) y requiera un tiempo de cómputo que frecuentemente imposibilita su despliegue en aplicaciones estrictas de tiempo real.
 
-Actualmente, las \textit{Deep Features} (características extraídas mediante redes neuronales) logran este objetivo de forma mucho más robusta frente a cambios drásticos de iluminación o falta de textura. La diferencia es que, mientras SIFT entiende el píxel de forma aislada y local, las redes neuronales entienden un contexto semántico mucho más amplio. Una desventaja de las \textit{Deep Features} es que, para ser tan robustas, necesitan pasadas por redes neuronales pesadas, haciéndolas más lentas que los métodos clásicos si no se dispone de hardware dedicado.
+\section{Segmentación Semántica y Detección}
 
-% TODO: Expandir las ventajas y desventajas de ambos enfoques (robustez vs costo computacional) e incluir un resumen de viñetas al final de la sección.
+La extracción de información semántica a partir de imágenes digitales es uno de los desafíos centrales en la visión por computadora. Este proceso implica la transición de una representación de bajo nivel (matrices de píxeles) a una abstracción de alto nivel donde se identifican, localizan y delinean objetos de interés. En esta sección se analizan dos paradigmas fundamentales: la detección de objetos en tiempo real mediante la arquitectura YOLO, y la segmentación semántica guiada por \textit{prompts} a través de los modelos SAM y FastSAM.
 
-\section{Estimación de Estado y Optimización Visual}
+\subsection{YOLO (You Only Look Once): Detección en Tiempo Real}
 
-\subsection{Problema Perspective-n-Point (PnP) para Tracking}
-El problema PnP busca responder a la pregunta pragmática: "si conozco las coordenadas 3D de ciertos puntos y sé dónde caen en mi imagen 2D, ¿dónde está mi cámara?". Resolver esto sirve para hacer \textit{tracking}, es decir, seguir la pose exacta de la cámara ($SE(3)$) frame a frame mientras la cámara se mueve por la ciudad.
+El modelo YOLO (You Only Look Once) \cite{redmon2016yolo} revolucionó la detección de objetos al replantear la tarea como un único problema de regresión directo desde los píxeles de la imagen hasta las coordenadas de las cajas delimitadoras (\textit{bounding boxes}) y las probabilidades de clase, eliminando la necesidad de los métodos tradicionales de propuestas de regiones.
 
-% TODO: Explicar métodos de resolución algebraicos (DLT, P3P) y cómo los hacemos robustos (ej. RANSAC) cuando hay correspondencias falsas (outliers).
+A nivel matemático, YOLO divide la imagen de entrada en una cuadrícula de $S \times S$. Si el centro de un objeto cae dentro de una celda de la cuadrícula, dicha celda es responsable de detectarlo. Cada celda predice $B$ cajas delimitadoras y sus respectivas puntuaciones de confianza (\textit{confidence scores}). La confianza refleja tanto la probabilidad de que la caja contenga un objeto como la precisión de dicha caja, definida como:
+\begin{equation}
+    \text{Confianza} = \text{Pr}(\text{Objeto}) \times \text{IoU}_{\text{pred}}^{\text{truth}}
+\end{equation}
+donde $\text{IoU}$ es la Intersección sobre la Unión entre la caja predicha y la verdad fundamental. 
 
-\subsection{Calibración y Bundle Adjustment}
-Una vez que tenemos una estimación inicial de dónde están nuestros puntos 3D y nuestras cámaras, lo juntamos con un proceso de optimización no lineal llamado \textit{Bundle Adjustment}. Este algoritmo funciona ajustando conjuntamente todos los parámetros para minimizar el error entre dónde dijimos que caería el punto y dónde cayó realmente en la imagen (error de reproyección).
+Cada caja delimitadora consta de cinco predicciones: $(x, y, w, h, \text{confianza})$. Además, cada celda predice las probabilidades condicionales de clase $C$, es decir, $\text{Pr}(\text{Clase}_i | \text{Objeto})$. 
 
-% TODO: Profundizar en las implicancias geométricas de trabajar con una cámara calibrada vs no calibrada, y detallar el proceso de optimización.
+El aprendizaje del modelo se rige por una función de pérdida multiparte (\textit{multi-part loss function}) basada en la suma de los errores cuadráticos, que optimiza simultáneamente la localización y la clasificación:
+\begin{equation}
+\begin{split}
+\mathcal{L} = \lambda_{\text{coord}} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{\text{obj}} \left[ (x_i - \hat{x}_i)^2 + (y_i - \hat{y}_i)^2 \right] \\
++ \lambda_{\text{coord}} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{\text{obj}} \left[ (\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2 \right] \\
++ \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{\text{obj}} (C_i - \hat{C}_i)^2 + \lambda_{\text{noobj}} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{\text{noobj}} (C_i - \hat{C}_i)^2 \\
++ \sum_{i=0}^{S^2} \mathbb{1}_{i}^{\text{obj}} \sum_{c \in \text{clases}} (p_i(c) - \hat{p}_i(c))^2
+\end{split}
+\end{equation}
+donde $\mathbb{1}_{ij}^{\text{obj}}$ indica si la $j$-ésima caja de la celda $i$ es responsable de la predicción, y $\lambda_{\text{coord}}$, $\lambda_{\text{noobj}}$ son factores de penalización que balancean los errores de localización frente a las clasificaciones. Esta arquitectura permite abstraer espacial y semánticamente la imagen en una sola pasada (\textit{forward pass}), posibilitando una inferencia a altas velocidades en tiempo real.
 
-\section{El Paradigma Clásico de Reconstrucción (Bottom-Up)}
+\subsection{Modelos Fundacionales de Segmentación: SAM y FastSAM}
 
-\subsection{Structure-from-Motion (SfM) y Triangulación}
-SfM toma todo lo visto anteriormente y construye una nube de puntos rala. Funciona triangulando las observaciones a través de múltiples vistas para calcular la profundidad. El problema es que esta geometría inicial sirve para darnos una idea estructural de la escena, pero carece de la conectividad para formar mallas limpias.
+Mientras que YOLO abstrae la imagen semánticamente en regiones rectangulares, la segmentación semántica fina busca una abstracción a nivel de píxel. El \textit{Segment Anything Model} (SAM) \cite{kirillov2023sam} es un modelo fundacional que permite una segmentación generalizable y robusta (\textit{Zero-Shot}) mediante indicaciones (\textit{prompts}). 
 
-% TODO: Detallar el flujo de generación inicial y por qué no es suficiente por sí solo para la reconstrucción final de mallas estructuradas.
+La arquitectura de SAM consta de tres componentes principales: un codificador de imágenes (\textit{Image Encoder}), un codificador de \textit{prompts} y un decodificador de máscaras. El codificador de imágenes está basado en Vision Transformers (ViT) \cite{dosovitskiy2020image}. En un ViT, la imagen de entrada $X \in \mathbb{R}^{H \times W \times C}$ se divide en una secuencia de parches 2D aplanados $x_p \in \mathbb{R}^{N \times (P^2 \cdot C)}$, donde $(P, P)$ es la resolución del parche y $N = HW/P^2$ es el número total de parches. Éstos se proyectan linealmente a un espacio latente de dimensión $D$, sumando \textit{embeddings} posicionales para preservar la topología espacial original.
 
-\subsection{Multi-View Stereo (MVS) y sus Limitaciones}
-Para rellenar los vacíos generados por SfM, el enfoque clásico aplica MVS. MVS intenta densificar la nube calculando la profundidad para todos los píxeles de la imagen mediante la comparación de múltiples vistas (fotoconsistencia).
+El núcleo de la abstracción semántica en el ViT es el mecanismo de atención propia (\textit{self-attention}), que calcula la correlación entre parches distantes. A nivel matemático, las matrices de Consultas (\textit{Queries} $Q$), Claves (\textit{Keys} $K$) y Valores (\textit{Values} $V$) se calculan mediante transformaciones lineales, formulando la atención como:
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+donde $d_k$ es la dimensión de las claves. Esta operación genera representaciones densas y semánticamente globales de la imagen. Simultáneamente, el codificador de \textit{prompts} proyecta coordenadas (puntos o cajas) y textos al mismo espacio latente continuo. Finalmente, el decodificador fusiona los \textit{embeddings} de imagen y \textit{prompt} mediante atención cruzada (\textit{cross-attention}) para generar probabilísticamente máscaras de segmentación de alta precisión.
 
-Una desventaja grande de MVS es que, con el fin de ser exhaustivo, es computacionalmente intratable para escalas urbanas masivas. Genera redundancia de datos y mucha "geometría basura", como ruido en superficies reflectantes o árboles. Es por este motivo que escalar un modelo \textit{bottom-up} resulta ineficiente.
+Pese a su asombroso poder de abstracción, la complejidad cuadrática del módulo de atención de ViT restringe el uso de SAM en dispositivos de tiempo real. Para resolver esto, Zhao et al. introdujeron \textbf{FastSAM} \cite{zhao2023fast}. FastSAM reformula el paradigma dependiente de \textit{prompts} de SAM y lo divide en dos etapas computacionalmente más eficientes:
+\begin{enumerate}
+    \item \textbf{Segmentación de Instancias Densa:} Mediante una red convolucional (CNN) optimizada, específicamente YOLOv8-seg, la imagen completa se procesa para extraer indiscriminadamente todas las instancias posibles en una sola pasada. Esto crea una abstracción a nivel semántico de todos los objetos en la imagen sin requerir \textit{prompts} de entrada durante esta fase de extracción pesada.
+    \item \textbf{Correspondencia Guiada por \textit{Prompts}:} Las indicaciones del usuario (puntos, cajas) se analizan matemáticamente y se emparejan a posteriori contra la colección precomputada de máscaras de instancia basándose en solapamientos espaciales y operaciones geométricas simples.
+\end{enumerate}
+Este enfoque elimina la necesidad de los pesados cálculos repetitivos del decodificador Transformer guiado, permitiendo que FastSAM opere de manera comparable a SAM pero acelerando el tiempo de inferencia cerca de 50 veces, volviéndolo idóneo para aplicaciones robóticas y de \textit{edge computing}.
 
-% TODO: Detallar brevemente el concepto de fotoconsistencia cuidando de ELIMINAR CUALQUIER MATEMÁTICA DENSA relacionada.
+\section{Extracción de Características Estructurales y Matching}
 
-\section{Alineación de Trayectorias y Restricciones Geométricas}
+\subsection{Del enfoque clásico a \textit{Deep Features}}
+Históricamente, la extracción de características dependía de algoritmos fundamentados en heurísticas diseñadas manualmente, como SIFT (Scale-Invariant Feature Transform). SIFT detecta puntos de interés identificando extremos locales en una pirámide del espacio de escalas construida mediante la Diferencia de Gaussianas (DoG), y describe dichos puntos utilizando histogramas de gradientes locales orientados. Sin embargo, su eficacia disminuye considerablemente bajo condiciones de variaciones extremas de iluminación o escasez de texturas.
 
-\subsection{Transformaciones de Similitud Sim(3) y Recuperación Visual}
-Cuando mapeamos una ciudad, procesamos múltiples grabaciones de video que nos generan trayectorias aisladas. Para juntar estos submapas sin sufrir por la acumulación de errores de escala (deriva), usamos transformaciones de similitud $Sim(3)$. Estas transformaciones funcionan ajustando la rotación, traslación y escala de golpe, lo que permite alinear los "espaguetis" de trayectorias en un mapa global asíncrono sin tener que re-optimizar toda la ciudad.
+El cambio de paradigma hacia arquitecturas de aprendizaje profundo ha consolidado el uso de \textit{Deep Features}, ejemplificado por modelos como SuperPoint \cite{detone2018superpoint}. SuperPoint procesa una imagen de entrada $I \in \mathbb{R}^{H \times W \times 1}$ empleando un codificador convolucional (tipo VGG) para generar un tensor de características. Este tensor alimenta simultáneamente a dos cabezales (\textit{decoders}): uno dedicado a la detección de puntos clave y otro a la descripción. Matemáticamente, el cabezal de descriptores produce un tensor semi-denso $\mathcal{D} \in \mathbb{R}^{H_c \times W_c \times D}$, donde $H_c = H/8$, $W_c = W/8$ y la dimensionalidad del descriptor es $D=256$. A través de una interpolación bicúbica, este tensor se sobremuestrea a la resolución original $H \times W$. Posteriormente, se aplica una normalización $L_2$ a nivel de píxel para asegurar que cada descriptor $\mathbf{d} \in \mathbb{R}^D$ tenga norma unitaria ($\|\mathbf{d}\|_2 = 1$). Esta proyección es crítica, pues facilita que el \textit{matching} posterior pueda ejecutarse eficientemente mediante el producto punto escalar.
 
-% TODO: Formular la corrección de deriva y explicar la ventaja de tener complejidad O(M) en la integración asíncrona.
+\subsection{Extracción de Nodos y Líneas (Co-PLNet) y Formación del \textit{Wireframe}}
+Una representación estructural más robusta trasciende el uso exclusivo de puntos aislados para construir un \textit{wireframe} (estructura alámbrica) $\mathcal{W} = (\mathcal{V}, \mathcal{E})$, un grafo bidimensional geométrico donde $\mathcal{V}$ es el conjunto de vértices (puntos clave o nodos) y $\mathcal{E}$ el conjunto de aristas (segmentos de línea).
 
-\subsection{Restricciones Geométricas: Coplanaridad y Manhattan-world}
-Para evitar que nuestra malla reconstruida dependa exclusivamente del escaneo visual ruidoso, imponemos reglas previas sobre cómo funciona la arquitectura real en las ciudades. Esto se conoce como la hipótesis \textit{Manhattan-world}. Asumimos que la gran mayoría de las estructuras urbanas están compuestas por superficies que son planas (coplanaridad) y que además, estas superficies suelen ser ortogonales o paralelas entre sí. Que juntos permiten filtrar el ruido y forzar modelos regulares y limpios.
+Los enfoques convencionales extraen puntos y líneas de forma inconexa y aplican heurísticas de reconciliación \textit{post-hoc}, lo que frecuentemente deriva en severas inconsistencias geométricas (ej. líneas que no intersecan ni culminan en nodos detectados). La arquitectura Co-PLNet (Collaborative Point-Line Network) \cite{wang2026coplnet} resuelve esta divergencia planteando la extracción como un problema de \textit{parsing} guiado por \textit{prompts}. 
 
-% TODO: Explicar cómo integramos estas restricciones para obligar a la geometría final a ser ordenada.
+Dentro de su formulación, el \textit{Point-Line Prompt Encoder} (PLP-Encoder) mapea detecciones iniciales en características espaciales compactas que fungen como restricciones matemáticas previas (\textit{prompts}). A su vez, el \textit{Cross-Guidance Line Decoder} (CGL-Decoder) utiliza un mecanismo de atención dispersa (\textit{sparse attention}) condicionado por dichos \textit{prompts}. De esta manera, la probabilidad conjunta de existencia de un segmento de línea $l_{ij} \in \mathcal{E}$ queda intrínsecamente condicionada por las distribuciones de probabilidad espacial de los nodos terminales $v_i, v_j \in \mathcal{V}$. Este intercambio iterativo de señales espaciales entre ramificaciones fuerza matemáticamente una consistencia geométrica de punto a línea directamente durante la inferencia, dando lugar al grafo o \textit{wireframe} estructurado.
 
-\section{Abstracción Geométrica y Modelos Fundacionales (Enfoque Top-Down)}
+\subsection{\textit{Graph Matching} con GlueStick: Emparejamiento Topológico 2D-2D}
+Una vez construidos los grafos $\mathcal{W}_A$ y $\mathcal{W}_B$ correspondientes a las imágenes $I_A$ e $I_B$, el proceso de asociación exige considerar tanto la similitud en la apariencia local como la coherencia topológica global. GlueStick \cite{pelaez2023gluestick} aborda este desafío mediante el uso de una Red Neuronal de Grafos (GNN) multicapa que unifica el \textit{matching} de puntos y líneas.
 
-\subsection{Modelos de Segmentación Semántica}
-En lugar de reconstruir ciegamente geometría que no nos importa, utilizamos modelos fundacionales recientes (como Segment Anything Model - SAM). Esto sirve para priorizar regiones semánticas relevantes (como fachadas de edificios) e ignorar zonas problemáticas y dinámicas (como el cielo, los vehículos o los peatones), ahorrando poder de cómputo.
+La arquitectura alterna capas de auto-atención (para propagar el contexto espacial dentro de la misma imagen y a lo largo de las líneas conectadas) y mecanismos de atención cruzada (\textit{cross-attention}) diseñados explícitamente para el \textit{matching} entre grafos. Matemáticamente, en la capa de atención cruzada, los nodos y aristas de $\mathcal{W}_A$ actúan como consultas (queries), mientras que los elementos de $\mathcal{W}_B$ proveen claves (keys) y valores (values). Definidas las matrices $Q \in \mathbb{R}^{N_A \times d}$, y $K, V \in \mathbb{R}^{N_B \times d}$, la actualización de las características viene dictaminada por la ecuación de la atención:
+\begin{equation}
+    \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K^T}{\sqrt{d}}\right) V
+\end{equation}
+donde el factor de escala $\sqrt{d}$ modula la magnitud del producto interno y previene gradientes desvanecientes. Este mecanismo de 2D-2D \textit{graph matching} enriquece el vector de cada elemento al "atender" y fusionar las características de sus homólogos prospectivos en la imagen opuesta, \textit{pegando} (gluing) la información visual y geométrica.
 
-% TODO: Elaborar sobre el uso de priors semánticos y su integración en el pipeline de reconstrucción.
+Finalmente, utilizando las representaciones conjuntas actualizadas, se computan dos matrices de afinidad: $M_P$ para nodos y $M_L$ para aristas. A fin de establecer asignaciones inyectivas (1 a 1), se maximiza la verosimilitud de las correspondencias mediante el algoritmo de Sinkhorn, modelándolo como un problema de transporte óptimo discreto que es resuelto a través de una capa bidireccional Dual-Softmax. Esto garantiza que el grafo topológico subyacente $\mathcal{W}_A$ se empareje de manera óptima y robusta con el de $\mathcal{W}_B$.
 
-\subsection{Extracción Topológica: Planos y Esquemas Alámbricos}
-Aquí es donde concretamos la visión \textit{top-down}. En lugar de crear nubes densas, usamos redes neuronales para analizar la imagen en 2D y detectar la estructura fundamental, como líneas largas, esquinas de edificios y esquemas alámbricos (wireframes). Toda esta información geométrica rala, una vez que la cruzamos con nuestras posiciones estimadas de la cámara en $SE(3)$, nos sirve para triangular directamente los nodos estructurales y sintetizar de forma algebraica una malla poligonal limpia, lista para ser texturizada.
+\section{Optimización Robusta y Geometría Planar}
 
-% TODO: Explicar cómo la inferencia 2D se transforma directamente en una malla, y cerrar con un resumen de todo el proceso.
+Esta sección aborda los fundamentos geométricos de la representación de planos en el espacio tridimensional, las transformaciones bidimensionales asociadas y los métodos robustos necesarios para estimar dichos modelos matemáticos en presencia de ruido y valores atípicos (outliers). Finalmente, se introduce la suposición del mundo Manhattan, una restricción geométrica fundamental en entornos estructurados.
+
+\subsection{Ecuación del Plano en 3D}
+En el espacio tridimensional $\mathbb{R}^3$, un plano puede ser definido unívocamente mediante un vector normal unitario $\mathbf{n} = (n_x, n_y, n_z)^\top$ y su distancia perpendicular al origen $d$. La ecuación general del plano para un punto $\mathbf{X} = (X, Y, Z)^\top$ que pertenece a dicho plano se expresa como:
+\begin{equation}
+    \mathbf{n}^\top \mathbf{X} + d = 0
+\end{equation}
+donde $\|\mathbf{n}\| = 1$. Alternativamente, en coordenadas homogéneas, el plano se puede representar mediante un vector $\boldsymbol{\pi} = (n_x, n_y, n_z, d)^\top$, tal que para cualquier punto homogéneo $\tilde{\mathbf{X}} = (X, Y, Z, 1)^\top$ en el plano, se cumple la condición de incidencia $\boldsymbol{\pi}^\top \tilde{\mathbf{X}} = 0$.
+
+\subsection{Homografías: Transformaciones 2D-2D}
+Al observar un plano tridimensional desde diferentes perspectivas, la relación entre las proyecciones de los puntos en los planos de imagen se describe mediante una transformación proyectiva plana conocida como \textit{homografía}. Dados los puntos en coordenadas homogéneas $\mathbf{x}$ en la primera imagen y $\mathbf{x}'$ en la segunda imagen, la homografía $\mathbf{H}$ (una matriz de $3 \times 3$ no singular y definida hasta un factor de escala) relaciona ambos puntos mediante:
+\begin{equation}
+    \mathbf{x}' \sim \mathbf{H} \mathbf{x}
+\end{equation}
+donde $\sim$ denota igualdad salvo por un factor de escala (igualdad proyectiva). Las homografías son esenciales para tareas como el mapeo de texturas, el ensamblaje de panoramas (\textit{image stitching}) y la rectificación de imágenes.
+
+\subsection{Algoritmos Robustos: RANSAC y LO-RANSAC}
+En aplicaciones de visión por computadora, la correspondencia de puntos para estimar modelos (como planos u homografías) suele estar contaminada por correspondencias falsas (\textit{outliers}). Para estimar el modelo correcto de forma robusta, se utiliza el algoritmo RANSAC (\textit{Random Sample Consensus}) \cite{fischler1981ransac}.
+
+RANSAC funciona muestreando iterativamente subconjuntos mínimos de datos para generar hipótesis del modelo y evaluando su consenso con el resto del conjunto de datos. El número de iteraciones $N$ necesarias para garantizar con una probabilidad $p$ que al menos una muestra mínima elegida (de tamaño $s$) esté libre de outliers es:
+\begin{equation}
+    N = \frac{\log(1 - p)}{\log(1 - (1 - e)^s)}
+\end{equation}
+donde $e$ es la probabilidad de que un punto aleatorio sea un outlier (proporción de outliers).
+
+Sin embargo, el RANSAC estándar asume erróneamente que una muestra sin outliers siempre produce el mejor modelo posible, ignorando los efectos del ruido en los datos correctos (\textit{inliers inexactos}). Para mitigar esto, se introdujo \textbf{LO-RANSAC} (\textit{Locally Optimized RANSAC}) \cite{chum2003locally}. Cada vez que LO-RANSAC encuentra un modelo mejor que el mejor modelo actual (con un mayor número de inliers), aplica una optimización local. Este paso ajusta los parámetros del modelo iterativamente utilizando todos los inliers detectados (por ejemplo, mediante un ajuste de mínimos cuadrados), mejorando la precisión del modelo y convergiendo más rápidamente a la solución óptima real.
+
+\subsection{La Suposición de Mundo Manhattan (Manhattan-world Assumption)}
+En entornos urbanos y de interiores artificiales, la geometría de la escena suele presentar regularidades estructurales muy marcadas. La suposición de Mundo Manhattan (\textit{Manhattan-world assumption}) \cite{coughlan1999manhattan} simplifica la geometría asumiendo que la gran mayoría de las superficies (suelos, techos, paredes) son planas y están alineadas con uno de los tres ejes principales de un sistema de coordenadas cartesiano global y mutuamente ortogonal.
+
+Bajo esta premisa, los vectores normales de los planos en la escena $\mathbf{n}_i$ tienden a ser paralelos a uno de los tres ejes principales $\{ \mathbf{e}_x, \mathbf{e}_y, \mathbf{e}_z \}$. Esta restricción reduce significativamente la complejidad geométrica, mitigando la ambigüedad en escenas sin textura y facilitando la estimación de la orientación de la cámara (\textit{pose}) mediante la detección de puntos de fuga ortogonales, así como la reconstrucción 3D robusta.
