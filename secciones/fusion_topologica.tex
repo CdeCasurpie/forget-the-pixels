@@ -1,0 +1,19 @@
+\chapter{Módulo II: Generación de Submapas y Fusión Topológica de Poses}
+
+\section{Inferencia de Submapas Secuenciales (Spaghettis)}
+% Explicar el procesamiento asíncrono y aislado de los fragmentos de video (cortados a \le 10 minutos) usando SfM/SLAM local para evitar el crecimiento lineal de errores acumulados. Cada submapa opera en su propio sistema de referencia local C_k.
+
+\section{Indexación Global y Visual Place Recognition (VPR)}
+% Formalizar el esquema de búsqueda espacial optimizada: uso de embeddings neuronales globales (ej. NetVLAD) de fotogramas representativos estructurados en estructuras de datos espaciales (octrees) y acotados estrictamente por restricciones heurísticas de GPS.
+
+\section{Estimación de Transformaciones en Sim(3)}
+% Detallar la resolución matemática del alineamiento de trayectorias completas:
+% 1. Matriz Esencial (E) inicial mediante LO-RANSAC entre pares coincidentes locales y globales para aislar \Delta R y la dirección de \Delta t.
+% 2. Recuperación de la escala absoluta (s) explotando las correspondencias 2D-3D con puntos previamente anclados en el mapa base C_0 mediante Perspective-n-Point (PnP).
+
+\section{Consenso de Transformaciones y Fusión Rígida del Grafo}
+% Explicar el filtro de rechazo de outliers basado en la consistencia de clústeres dominantes de matrices Sim(3) estimadas. 
+% Detallar la operación de multiplicación matricial directa que traslada y escala instantáneamente todo el recorrido continuo ("spaghetti") al sistema de coordenadas de la ciudad.
+
+\section{Gestión de Chunks Desconectados (Fallback y Cierre de Bucles Diferido)}
+% Formalizar el tratamiento de submapas que no alcanzan el umbral crítico de inliers de coincidencia. Almacenamiento aislado como grafos latentes en el Atlas y su posterior fusión diferida (deferred loop closure) cuando nuevas trayectorias actúen como puentes espaciales.

@@ -1,0 +1,185 @@
+\chapter{Módulo I: Pipeline de Segmentación y Abstracción Geométrica}
+
+El presente módulo constituye el núcleo diferencial de la arquitectura propuesta frente al paradigma clásico de reconstrucción bottom-up. Su objetivo es sustituir la densificación ciega a nivel de píxel por una cadena de inferencia semánticamente guiada que opera exclusivamente sobre las primitivas geométricas relevantes de la escena urbana: planos arquitectónicos y sus nodos de intersección estructural. El pipeline se ejecuta sobre cada fotograma de forma independiente, asumiendo que la matriz intrínseca $\mathbf{K}$ y la pose $\mathbf{T}_i \in SE(3)$ de cada cámara $i$ son conocidas a priori, ya sea por calibración offline o por el módulo de tracking.
+
+\section{Segmentación Semántica Plana (Plane Abstraction)}
+% Detallar la extracción de máscaras de regiones uniformes coplanares (fachadas, calzadas) mediante modelos fundacionales profundos (ej. SAM, Mask2Former).
+% Explicar el filtrado de regiones de alta frecuencia entrópica irrelevante (vegetación, oclusiones temporales).
+
+El primer paso del pipeline consiste en obtener, para cada fotograma $I_i$, un conjunto de máscaras coplanares $\Pi_i = \{\pi_1, \pi_2, \ldots, \pi_m\}$, donde cada máscara $\pi_k \subset \mathbb{R}^2$ delimita una región de la imagen que corresponde a una superficie dominante y plana de la escena, tales como fachadas, muros laterales y calzadas. Este paso cumple dos funciones: (1) proveer los dominios espaciales 2D sobre los cuales se restringirá la búsqueda de nodos estructurales, y (2) filtrar de forma anticipada las regiones de alta entropía visual que no contribuyen información geométrica útil, como vegetación, vehículos en movimiento y otros elementos de oclusión temporal.
+
+\subsection{Modelo de Segmentación Planar}
+ 
+Para la detección y parametrización algebraica de los planos, se emplea \textbf{ZeroPlane} \cite{liu2025zeroplane}, un \textit{framework} Transformer presentado en CVPR 2025 que realiza detección y reconstrucción 3D de planos en modo \textit{zero-shot} a partir de una única imagen RGB. A diferencia de métodos anteriores como PlaneRCNN o PlaneTR, cuya generalización se veía limitada al dominio de entrenamiento (interior o exterior), ZeroPlane fue entrenado sobre un \textit{benchmark} mixto de más de 14 conjuntos de datos con más de 560{,}000 anotaciones densas, lo que le confiere una capacidad de generalización adecuada para los entornos exteriores y heterogéneos que presenta Lima Metropolitana.
+ 
+El aporte técnico central de ZeroPlane relevante para este sistema es el desacoplamiento de la representación de la ecuación del plano. En lugar de optimizar conjuntamente el vector normal $\hat{n}_k \in \mathbb{R}^3$ y el desplazamiento escalar $d_k \in \mathbb{R}$ que define cada plano $\pi_k$ bajo la forma $\hat{n}_k^T \mathbf{X} + d_k = 0$, el modelo los estima de forma independiente mediante un paradigma de ``clasificación y posterior regresión'' (\textit{classification-then-regression}). Este desacoplamiento reduce la fragilidad de la optimización conjunta clásica y produce estimaciones de normales más consistentes, lo cual es directamente relevante para la etapa posterior de \textit{binding} coplanar.
+ 
+La salida de ZeroPlane para cada fotograma es un conjunto de tuplas:
+\begin{equation}
+    \Pi_i = \left\{ \left( M_k,\; \hat{n}_k,\; d_k \right) \right\}_{k=1}^{m}
+\end{equation}
+donde $M_k \in \{0,1\}^{H \times W}$ es la máscara binaria de segmentación de la instancia plana $k$ en la imagen de dimensiones $H \times W$, $\hat{n}_k \in S^2$ es el vector unitario normal al plano en el espacio de la cámara, y $d_k$ es su desplazamiento desde el origen. Estos parámetros definen completamente la restricción algebraica 3D que heredarán los nodos estructurales en la etapa de \textit{binding}.
+ 
+\subsection{Filtrado de Regiones de Alta Entropía}
+ 
+No todas las máscaras producidas por ZeroPlane son candidatas válidas para el pipeline de reconstrucción. Se aplica un filtro de selección sobre $\Pi_i$ basado en dos criterios complementarios:
+ 
+\begin{enumerate}
+    \item \textbf{Entropía textural}: Las regiones con alta varianza de gradiente local, como vegetación y superficies rugosas, no satisfacen la hipótesis de planaridad y son descartadas. Se calcula la entropía de Shannon sobre la magnitud del gradiente de la región enmascarada. Las máscaras cuya entropía supera un umbral $\tau_H$ son eliminadas del conjunto activo.
+    % [PENDIENTE] Definir empíricamente el valor de tau_H sobre un conjunto de frames representativos de Lima.
+    \item \textbf{Área mínima}: Las instancias planares cuya área en píxeles es inferior a un umbral $\tau_A$ se descartan, ya que no proveen suficientes nodos estructurales en la etapa siguiente para definir un polígono válido.
+    % [PENDIENTE] Definir tau_A en función de la resolución de captura (1080p).
+\end{enumerate}
+ 
+El conjunto filtrado $\tilde{\Pi}_i \subseteq \Pi_i$ es el que se propaga a las etapas siguientes del pipeline.
+
+\section{Extracción de Nodos Estructurales (Wireframe Parsing)}
+% Formalizar analíticamente la sustitución de keypoints heurísticos (SIFT/ORB) por detectores neuronales de vértices arquitectónicos V = {v_1, v_2, ...} y aristas semánticas en el plano 2D.
+
+El segundo paso sustituye el operador heurístico SIFT, cuyo objetivo es maximizar la densidad de correspondencias texturales, por un detector neuronal orientado exclusivamente a la recuperación de la topología geométrica de la escena: vértices de intersección arquitectónica y segmentos de arista estructural. El resultado es un conjunto de nodos $\mathcal{V}_i = \{v_j\}_{j=1}^{p}$ y aristas $\mathcal{E}_i = \{e_l\}_{l=1}^{q}$ que conforman el esquema alámbrico (\textit{wireframe}) 2D del fotograma.
+ 
+\subsection{Detector Neuronal: Co-PLNet}
+ 
+Para la extracción del wireframe se emplea \textbf{Co-PLNet} \cite{wang2026coplnet} (\textit{Collaborative Point-Line Network}), una arquitectura que aborda de forma unificada la detección de juntas (\textit{junctions}) y segmentos lineales, resolviendo el problema de inconsistencia topológica que presentan los detectores clásicos que predicen ambas primitivas de forma independiente.
+ 
+La contribución central de Co-PLNet es su \textit{Point-Line Prompt Encoder} (PLP-Encoder) y su \textit{Cross-Guidance Line Decoder} (CGL-Decoder). El PLP-Encoder codifica las detecciones tempranas de junctions en mapas espacialmente alineados que actúan como \textit{prompts} geométricos para el decodificador de líneas. El CGL-Decoder, a su vez, refina las predicciones de segmentos mediante atención dispersa condicionada en dichos prompts, forzando la consistencia topológica entre los nodos $v_j \in \mathcal{V}_i$ y las aristas $e_l \in \mathcal{E}_i$ del grafo resultante.
+ 
+Formalmente, el conjunto de nodos estructurales extraídos se define como:
+\begin{equation}
+    \mathcal{V}_i = \left\{ v_j = (u_j, w_j) \in \mathbb{R}^2 \;\middle|\; v_j \text{ es una junta arquitectónica en } I_i \right\}
+\end{equation}
+ 
+y el conjunto de aristas estructurales como:
+\begin{equation}
+    \mathcal{E}_i = \left\{ e_l = (v_a, v_b) \;\middle|\; v_a, v_b \in \mathcal{V}_i,\; e_l \text{ es un segmento de arista estructural} \right\}
+\end{equation}
+ 
+Esta representación es sustancialmente más compacta que la obtenida por SIFT. Mientras que SIFT produce típicamente entre $10^3$ y $10^4$ keypoints por imagen con alta redundancia sobre superficies texturadas, Co-PLNet extrae únicamente los vértices topológicamente significativos, reduciendo el espacio de nodos activos en varios órdenes de magnitud.
+ 
+\subsection{Justificación de la Sustitución de SIFT}
+ 
+La inadecuación de SIFT para el contexto de reconstrucción urbana estructurada se deriva de su función de costo. SIFT maximiza la detectabilidad de puntos de alta varianza local de escala-espacio (\textit{scale-space extrema}), lo cual lo sesga hacia regiones texturadas como ventanas, grafitis o superficies deterioradas, e ignora sistemáticamente las aristas de intersección de planos limpios, que son precisamente los elementos geométricamente determinantes de la arquitectura urbana. Al reemplazar SIFT por Co-PLNet, el conjunto de nodos activos queda condicionado por la topología de la escena en lugar de por sus propiedades de textura local.
+
+\section{Inyección de Restricciones Coplanares (Binding)}
+% Explicar la operación espacial 2D de anclaje lógico. Si un vértice estructural v_i se interseca con el dominio de la máscara plana \pi_k, hereda de forma estricta la restricción coplanar 3D, reduciendo drásticamente los grados de libertad en la optimización matemática de reproyección.
+
+Habiendo obtenido el conjunto de máscaras planares $\tilde{\Pi}_i$ y el grafo de wireframe $(\mathcal{V}_i, \mathcal{E}_i)$, el tercer paso realiza el \textit{binding}. La asignación de cada nodo estructural 2D $v_j$ a la instancia plana $\pi_k$ cuya máscara $M_k$ lo contiene. Esta operación es el puente semántico que transforma un punto 2D sin interpretación geométrica en un punto cuya posición 3D debe satisfacer la ecuación del plano $(\hat{n}_k, d_k)$ inferida por ZeroPlane.
+ 
+\subsection{Operación de Anclaje}
+ 
+La operación de \textit{binding} se define formalmente como la función de asignación:
+\begin{equation}
+    \beta: \mathcal{V}_i \rightarrow \tilde{\Pi}_i \cup \{\emptyset\}, \quad \beta(v_j) = \pi_k \iff M_k(v_j) = 1
+\end{equation}
+ 
+donde $M_k(v_j) = 1$ indica que el píxel correspondiente al nodo $v_j = (u_j, w_j)$ pertenece a la máscara de la instancia plana $\pi_k$. Si un nodo no intersecta ninguna máscara activa, se asigna al símbolo nulo $\emptyset$ y es tratado como un nodo libre, sin restricción coplanar, en la etapa de triangulación.
+ 
+En el caso de solapamiento entre máscaras —situación posible en regiones de oclusión parcial entre planos adyacentes— se adopta la política de asignación por mayor área de máscara en la vecindad local del nodo:
+\begin{equation}
+    \beta(v_j) = \underset{\pi_k : M_k(v_j)=1}{\arg\max} \sum_{(u,w) \in \mathcal{N}(v_j)} M_k(u,w)
+\end{equation}
+donde $\mathcal{N}(v_j)$ denota una vecindad cuadrada de radio $r$ en píxeles centrada en $v_j$.
+% [PENDIENTE] Definir experimentalmente el radio r óptimo para la resolución de captura.
+ 
+\subsection{Reducción de Grados de Libertad}
+ 
+La consecuencia más importante del \textit{binding} es la reducción del espacio de búsqueda para la triangulación 3D. Sin restricción coplanar, la reconstrucción de un punto 3D a partir de sus proyecciones en múltiples vistas requiere la resolución de un sistema sobredeterminado de ecuaciones de rayo con 3 grados de libertad incógnitos $(X, Y, Z)$. Con el \textit{binding}, el nodo $v_j$ asignado a $\pi_k$ debe satisfacer adicionalmente:
+\begin{equation}
+    \hat{n}_k^T \mathbf{X}_j + d_k = 0
+\end{equation}
+lo que reduce el espacio de solución de $\mathbb{R}^3$ a un plano 2D embebido en $\mathbb{R}^3$, disminuyendo los grados de libertad de 3 a 2. Esta restricción no solo acelera la triangulación, sino que además estabiliza geométricamente la solución en presencia de ruido en las poses de cámara, ya que el sistema tiene una restricción adicional independiente de las correspondencias visuales.
+
+\section{Triangulación Estructural Restringida (Sparse Ray-Intersection)}
+% Desarrollar las ecuaciones de intersección de rayos ópticos mediante descomposición en valores singulares (SVD). 
+% Explicar la optimización de búsqueda: restringir el matching de vértices homólogos únicamente sobre la vecindad de la línea epipolar reduciendo la complejidad a O(1) por plano.
+
+El cuarto paso reconstruye la posición tridimensional $\mathbf{X}_j \in \mathbb{R}^3$ de cada nodo estructural $v_j$ a partir de sus observaciones en múltiples vistas, aprovechando tanto la restricción epipolar para acotar el espacio de búsqueda de correspondencias homólogas como la restricción coplanar impuesta por el \textit{binding}.
+ 
+\subsection{Correspondencias entre Vistas mediante Restricción Epipolar}
+ 
+Para dos vistas $I_i$ e $I_{i'}$ con poses $\mathbf{T}_i, \mathbf{T}_{i'} \in SE(3)$ y matriz intrínseca compartida $\mathbf{K}$, la Matriz Fundamental $\mathbf{F}_{ii'}$ se computa directamente a partir de las poses conocidas:
+\begin{equation}
+    \mathbf{F}_{ii'} = \mathbf{K}^{-T} \mathbf{E}_{ii'} \mathbf{K}^{-1}, \quad \mathbf{E}_{ii'} = [\mathbf{t}_{ii'}]_\times \mathbf{R}_{ii'}
+\end{equation}
+donde $[\mathbf{t}_{ii'}]_\times$ es la matriz antisimétrica del vector de traslación relativa y $\mathbf{R}_{ii'}$ es la rotación relativa.
+ 
+Dado un nodo $v_j = (u_j, w_j)$ en la vista $I_i$, su línea epipolar correspondiente $\ell_j$ en la vista $I_{i'}$ se obtiene como:
+\begin{equation}
+    \ell_j = \mathbf{F}_{ii'} \tilde{v}_j
+\end{equation}
+donde $\tilde{v}_j = (u_j, w_j, 1)^T$ es el punto en coordenadas homogéneas. La búsqueda de la correspondencia $v_j'$ en $I_{i'}$ se restringe a los nodos de $\mathcal{V}_{i'}$ que se encuentran en la vecindad $\epsilon$ de la línea epipolar:
+\begin{equation}
+    \mathcal{C}(v_j, I_{i'}) = \left\{ v_l' \in \mathcal{V}_{i'} \;\middle|\; \frac{|\ell_j^T \tilde{v}_l'|}{\|\ell_j\|} < \epsilon \right\}
+\end{equation}
+ 
+Dado que el número de nodos en $\mathcal{V}_{i'}$ es pequeño (del orden de decenas a centenas por plano, no de miles), la búsqueda dentro de $\mathcal{C}$ tiene complejidad $\mathcal{O}(1)$ por plano en la práctica, frente a la complejidad $\mathcal{O}(N^2)$ del emparejamiento exhaustivo de SIFT.
+ 
+\subsection{Triangulación por SVD con Restricción Coplanar}
+ 
+Dado un nodo $v_j$ con correspondencia confirmada $v_j'$ y asignado al plano $\pi_k$, su posición 3D $\mathbf{X}_j$ se recupera resolviendo el sistema aumentado:
+\begin{equation}
+    \mathbf{A} \mathbf{X}_j = \mathbf{0}
+\end{equation}
+ 
+donde la matriz $\mathbf{A}$ incorpora tanto las ecuaciones de proyección de ambas vistas como la restricción coplanar:
+ 
+\begin{equation}
+    \mathbf{A} = \begin{pmatrix}
+        u_j (\mathbf{p}_3^i - \mathbf{p}_1^i) - (\mathbf{p}_1^i) \\
+        w_j (\mathbf{p}_3^i - \mathbf{p}_2^i) - (\mathbf{p}_2^i) \\
+        u_j' (\mathbf{p}_3^{i'} - \mathbf{p}_1^{i'}) - (\mathbf{p}_1^{i'}) \\
+        w_j' (\mathbf{p}_3^{i'} - \mathbf{p}_2^{i'}) - (\mathbf{p}_2^{i'}) \\
+        \hat{n}_k^T
+    \end{pmatrix}
+\end{equation}
+ 
+donde $\mathbf{p}_r^i$ denota la $r$-ésima fila de la matriz de proyección $\mathbf{P}_i = \mathbf{K}[\mathbf{R}_i | \mathbf{t}_i]$. La solución de mínimos cuadrados en norma-2 corresponde al vector singular derecho asociado al valor singular mínimo de $\mathbf{A}$, obtenido mediante Descomposición en Valores Singulares (SVD):
+\begin{equation}
+    \mathbf{X}_j = \arg\min_{\|\mathbf{X}\|=1} \|\mathbf{A}\mathbf{X}\|_2 = \mathbf{V}_{:, -1}
+\end{equation}
+donde $\mathbf{V}_{:,-1}$ es la última columna de la matriz $\mathbf{V}$ en la descomposición $\mathbf{A} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$.
+ 
+La fila adicional $\hat{n}_k^T$ en $\mathbf{A}$ impone que la solución yace en el plano $\pi_k$, actuando como regularizador geométrico y reduciendo la sensibilidad del resultado al error en las poses de cámara.
+ 
+\subsection{Rechazo de Outliers}
+ 
+Los nodos reconstruidos que presentan un alto error de reproyección residual $r_j$ son descartados mediante un umbral adaptativo. Formalmente, se conservan únicamente los nodos para los cuales:
+\begin{equation}
+    r_j = \frac{1}{2}\left( d(v_j, \mathbf{P}_i \tilde{\mathbf{X}}_j)^2 + d(v_j', \mathbf{P}_{i'} \tilde{\mathbf{X}}_j)^2 \right) < \tau_r
+\end{equation}
+donde $d(\cdot, \cdot)$ denota la distancia euclidiana en el plano imagen y $\tilde{\mathbf{X}}_j$ es la coordenada homogénea de $\mathbf{X}_j$.
+% [PENDIENTE] Evaluar empíricamente tau_r; se sugiere iniciar con tau_r = 2.0 píxeles^2.
+
+\section{Síntesis Procedimental y Mapeo UV por Homografía Directa}
+% Explicar cómo la obtención de los 4 u 8 vértices 3D permite instanciar directamente un polígono regular limpio en la malla final.
+% Detallar la generación fotorrealista de la textura: cálculo de la homografía directa entre el plano 3D y el fotograma de mayor resolución con menor distorsión angular, evitando promedios difusos o interpolaciones costosas.
+
+El quinto y último paso del Módulo I convierte el conjunto de nodos 3D estructurales triangulados en una malla poligonal texturizada. Esta etapa opera plano a plano: para cada instancia planar activa $\pi_k$, se recuperan sus nodos 3D anclados $\{\mathbf{X}_j : \beta(v_j) = \pi_k\}$, se instancia el polígono correspondiente y se le asigna una textura fotorrealista.
+ 
+\subsection{Instanciación del Polígono 3D}
+ 
+Los nodos 3D de $\pi_k$ definen el contorno del plano en el espacio de la escena. Para estructuras arquitectónicas rectangulares —el caso dominante en el entorno urbano de Lima— los nodos estructurales corresponden típicamente a los 4 vértices de la fachada. El polígono se instancia directamente como una cara cuadrilátera ordenada en sentido antihorario respecto al vector normal $\hat{n}_k$:
+\begin{equation}
+    F_k = (\mathbf{X}_{j_1}, \mathbf{X}_{j_2}, \mathbf{X}_{j_3}, \mathbf{X}_{j_4})
+\end{equation}
+ 
+Para planos con más de 4 vértices detectados —correspondientes a fachadas con articulaciones o retranqueos— se aplica una triangulación de Delaunay 2D sobre la proyección de los nodos en el sistema de coordenadas local del plano, garantizando que la triangulación resultante sea libre de triángulos degenerados. Esta triangulación local tiene complejidad $\mathcal{O}(p_k \log p_k)$ donde $p_k$ es el número de nodos del plano, que en la práctica es un valor pequeño y acotado.
+ 
+\subsection{Mapeo UV por Homografía Directa}
+ 
+La textura del polígono $F_k$ se extrae del fotograma $I^*_k$ que minimiza la distorsión angular de perspectiva, definido como:
+\begin{equation}
+    I^*_k = \underset{I_i : \pi_k \in \tilde{\Pi}_i}{\arg\max} \;\cos\theta_{ik}, \quad \cos\theta_{ik} = \hat{n}_k \cdot \hat{r}_{ik}
+\end{equation}
+donde $\hat{r}_{ik}$ es el vector unitario desde el centro óptico de la cámara $i$ hacia el centroide del plano $\pi_k$. El fotograma $I^*_k$ es aquel desde el cual el plano fue observado con el ángulo más ortogonal, minimizando el escorzo perspectivo y maximizando la resolución textural efectiva.
+ 
+La correspondencia entre los vértices 3D de $F_k$ y sus proyecciones 2D en $I^*_k$ define cuatro puntos de control que determinan unívocamente una homografía plana $\mathbf{H}_k \in \mathbb{R}^{3\times 3}$:
+\begin{equation}
+    \mathbf{H}_k = \underset{\mathbf{H}}{\arg\min} \sum_{j} \left\| \tilde{v}_j^* - \mathbf{H}\, \tilde{u}_j \right\|^2
+\end{equation}
+donde $\tilde{u}_j$ son las coordenadas UV normalizadas en el espacio de textura y $\tilde{v}_j^* = \mathbf{P}_{i^*} \tilde{\mathbf{X}}_j$ son las proyecciones en el fotograma seleccionado.
+ 
+La homografía $\mathbf{H}_k$ se aplica directamente para mapear cada fragmento del polígono $F_k$ al parche correspondiente de $I^*_k$, produciendo una textura sin interpolaciones adicionales. Este enfoque evita los artefactos de difuminado (\textit{blurring}) que introduce el promediado de múltiples vistas empleado en la fotogrametría clásica, ya que la textura proviene de una única imagen de alta calidad sin acumulación de errores de registro.
+ 
+El resultado final del Módulo I para el conjunto de fotogramas procesados es una malla poligonal ligera $\mathcal{M} = \{(F_k, \mathbf{H}_k, I^*_k)\}$, compuesta exclusivamente por caras planas con texturas de alta fidelidad, que constituye la base estructural para el refinamiento posterior o la integración en el mapa global descrito en el Módulo II.
+ 

@@ -1,0 +1,92 @@
+\chapter{Marco Teórico}
+
+Este capítulo establece las bases teóricas de nuestra arquitectura \textit{top-down} para reconstrucción 3D a escala urbana. Vamos a ir paso a paso, desde cómo una cámara proyecta el mundo en 2D, pasando por cómo calculamos dónde está la cámara, hasta entender por qué los métodos clásicos como MVS se vuelven demasiado pesados. A partir de ese problema, introducimos las herramientas que nos permiten solucionarlo: alineación geométrica asíncrona, restricciones estructurales y el uso de modelos de inteligencia artificial para ir directo a la geometría útil (mallas ligeras) sin pasar por el costoso modelado píxel por píxel.
+
+% TODO: Añadir aquí un bullet point o pequeño diagrama textual si es necesario para resumir la arquitectura general del capítulo y facilitar la lectura.
+
+\section{Geometría Computacional y Formación de la Imagen}
+
+\subsection{Modelo de Cámara Pinhole y Proyección Perspectiva}
+El modelo de cámara \textit{pinhole} (o estenopeica) es el concepto fundamental que usamos para entender cómo un punto 3D del mundo real termina viéndose en una imagen 2D. Funciona a través de proyectar rayos de luz a través de un solo punto central hacia un plano de imagen. 
+
+% TODO: Definir formalmente la matriz intrínseca (K) y extrínseca [R|t]. 
+% TODO: Formular la proyección geométrica del punto 3D al plano bidimensional.
+
+\subsection{Geometría Epipolar y Restricciones Multivista}
+La geometría epipolar sirve para relacionar lo que ven dos cámaras mirando una misma escena. Si tenemos un punto en la primera imagen, la geometría epipolar nos dice que ese mismo punto en la segunda imagen debe estar en algún lugar a lo largo de una línea específica (línea epipolar). Esto es clave porque reduce nuestra búsqueda de correspondencias de 2D (buscar en toda la imagen) a 1D (buscar solo sobre esa línea).
+
+% TODO: Explicar la Matriz Esencial (E) y Fundamental (F) conceptualmente. Asegurarse de mantener la formulación ligera y EVITAR LA MATEMÁTICA DENSA.
+% TODO: Mencionar la restricción epipolar de forma directa y clara.
+
+\section{Herramientas Matemáticas y Transformaciones}
+
+\subsection{Descomposición en Valores Singulares (SVD)}
+La Descomposición en Valores Singulares (SVD) es algo llamado factorización de matrices, que sirve para descomponer cualquier matriz compleja en partes más manejables. En visión computacional la usamos constantemente para resolver sistemas de ecuaciones lineales de forma robusta, como cuando queremos estimar matrices de rotación o calcular homografías.
+
+Una desventaja de usar SVD es que, computacionalmente, es una operación pesada si las dimensiones de nuestras matrices crecen demasiado.
+
+% TODO: Desarrollar la explicación de SVD, enfocándose en qué problema resuelve, cómo funciona y su aplicación específica en la optimización geométrica de este proyecto.
+
+\subsection{Homografías (Transformaciones Proyectivas 2D-2D)}
+Una homografía es una transformación que mapea puntos de un plano en una imagen a puntos de ese mismo plano visto desde otra imagen. Sirve para, por ejemplo, "pegar" o alinear dos fotos que ven una misma pared o el suelo desde distintos ángulos.
+
+% TODO: Añadir la formulación algebraica básica (H) y detallar cómo se calcula a partir de correspondencias de puntos (vinculándolo al uso de SVD o DLT).
+
+\section{Extracción de Información Visual}
+
+\subsection{Deep Features vs SIFT Clásico}
+Para saber que un píxel en una imagen es el mismo que en otra imagen, necesitamos extraer características o descriptores (\textit{features}). Clásicamente, algoritmos como SIFT funcionaban buscando esquinas o gradientes locales y les asignaban un descriptor matemático.
+
+Actualmente, las \textit{Deep Features} (características extraídas mediante redes neuronales) logran este objetivo de forma mucho más robusta frente a cambios drásticos de iluminación o falta de textura. La diferencia es que, mientras SIFT entiende el píxel de forma aislada y local, las redes neuronales entienden un contexto semántico mucho más amplio. Una desventaja de las \textit{Deep Features} es que, para ser tan robustas, necesitan pasadas por redes neuronales pesadas, haciéndolas más lentas que los métodos clásicos si no se dispone de hardware dedicado.
+
+% TODO: Expandir las ventajas y desventajas de ambos enfoques (robustez vs costo computacional) e incluir un resumen de viñetas al final de la sección.
+
+\section{Estimación de Estado y Optimización Visual}
+
+\subsection{Problema Perspective-n-Point (PnP) para Tracking}
+El problema PnP busca responder a la pregunta pragmática: "si conozco las coordenadas 3D de ciertos puntos y sé dónde caen en mi imagen 2D, ¿dónde está mi cámara?". Resolver esto sirve para hacer \textit{tracking}, es decir, seguir la pose exacta de la cámara ($SE(3)$) frame a frame mientras la cámara se mueve por la ciudad.
+
+% TODO: Explicar métodos de resolución algebraicos (DLT, P3P) y cómo los hacemos robustos (ej. RANSAC) cuando hay correspondencias falsas (outliers).
+
+\subsection{Calibración y Bundle Adjustment}
+Una vez que tenemos una estimación inicial de dónde están nuestros puntos 3D y nuestras cámaras, lo juntamos con un proceso de optimización no lineal llamado \textit{Bundle Adjustment}. Este algoritmo funciona ajustando conjuntamente todos los parámetros para minimizar el error entre dónde dijimos que caería el punto y dónde cayó realmente en la imagen (error de reproyección).
+
+% TODO: Profundizar en las implicancias geométricas de trabajar con una cámara calibrada vs no calibrada, y detallar el proceso de optimización.
+
+\section{El Paradigma Clásico de Reconstrucción (Bottom-Up)}
+
+\subsection{Structure-from-Motion (SfM) y Triangulación}
+SfM toma todo lo visto anteriormente y construye una nube de puntos rala. Funciona triangulando las observaciones a través de múltiples vistas para calcular la profundidad. El problema es que esta geometría inicial sirve para darnos una idea estructural de la escena, pero carece de la conectividad para formar mallas limpias.
+
+% TODO: Detallar el flujo de generación inicial y por qué no es suficiente por sí solo para la reconstrucción final de mallas estructuradas.
+
+\subsection{Multi-View Stereo (MVS) y sus Limitaciones}
+Para rellenar los vacíos generados por SfM, el enfoque clásico aplica MVS. MVS intenta densificar la nube calculando la profundidad para todos los píxeles de la imagen mediante la comparación de múltiples vistas (fotoconsistencia).
+
+Una desventaja grande de MVS es que, con el fin de ser exhaustivo, es computacionalmente intratable para escalas urbanas masivas. Genera redundancia de datos y mucha "geometría basura", como ruido en superficies reflectantes o árboles. Es por este motivo que escalar un modelo \textit{bottom-up} resulta ineficiente.
+
+% TODO: Detallar brevemente el concepto de fotoconsistencia cuidando de ELIMINAR CUALQUIER MATEMÁTICA DENSA relacionada.
+
+\section{Alineación de Trayectorias y Restricciones Geométricas}
+
+\subsection{Transformaciones de Similitud Sim(3) y Recuperación Visual}
+Cuando mapeamos una ciudad, procesamos múltiples grabaciones de video que nos generan trayectorias aisladas. Para juntar estos submapas sin sufrir por la acumulación de errores de escala (deriva), usamos transformaciones de similitud $Sim(3)$. Estas transformaciones funcionan ajustando la rotación, traslación y escala de golpe, lo que permite alinear los "espaguetis" de trayectorias en un mapa global asíncrono sin tener que re-optimizar toda la ciudad.
+
+% TODO: Formular la corrección de deriva y explicar la ventaja de tener complejidad O(M) en la integración asíncrona.
+
+\subsection{Restricciones Geométricas: Coplanaridad y Manhattan-world}
+Para evitar que nuestra malla reconstruida dependa exclusivamente del escaneo visual ruidoso, imponemos reglas previas sobre cómo funciona la arquitectura real en las ciudades. Esto se conoce como la hipótesis \textit{Manhattan-world}. Asumimos que la gran mayoría de las estructuras urbanas están compuestas por superficies que son planas (coplanaridad) y que además, estas superficies suelen ser ortogonales o paralelas entre sí. Que juntos permiten filtrar el ruido y forzar modelos regulares y limpios.
+
+% TODO: Explicar cómo integramos estas restricciones para obligar a la geometría final a ser ordenada.
+
+\section{Abstracción Geométrica y Modelos Fundacionales (Enfoque Top-Down)}
+
+\subsection{Modelos de Segmentación Semántica}
+En lugar de reconstruir ciegamente geometría que no nos importa, utilizamos modelos fundacionales recientes (como Segment Anything Model - SAM). Esto sirve para priorizar regiones semánticas relevantes (como fachadas de edificios) e ignorar zonas problemáticas y dinámicas (como el cielo, los vehículos o los peatones), ahorrando poder de cómputo.
+
+% TODO: Elaborar sobre el uso de priors semánticos y su integración en el pipeline de reconstrucción.
+
+\subsection{Extracción Topológica: Planos y Esquemas Alámbricos}
+Aquí es donde concretamos la visión \textit{top-down}. En lugar de crear nubes densas, usamos redes neuronales para analizar la imagen en 2D y detectar la estructura fundamental, como líneas largas, esquinas de edificios y esquemas alámbricos (wireframes). Toda esta información geométrica rala, una vez que la cruzamos con nuestras posiciones estimadas de la cámara en $SE(3)$, nos sirve para triangular directamente los nodos estructurales y sintetizar de forma algebraica una malla poligonal limpia, lista para ser texturizada.
+
+% TODO: Explicar cómo la inferencia 2D se transforma directamente en una malla, y cerrar con un resumen de todo el proceso.

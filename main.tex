@@ -1,0 +1,84 @@
+%% --------------------------------------------------------------------
+%% Template UTEC Tesis - By Cesitar (Restructured Version)
+%% --------------------------------------------------------------------
+\documentclass[a4paper,12pt,oneside]{tesisutec}
+
+\selectlanguage{spanish}
+
+%% Paquetes
+\usepackage[utf8]{inputenc}
+\usepackage[square, numbers, comma, sort&compress]{natbib}
+\usepackage[spanish]{babel}
+\usepackage{float}
+\usepackage[spanish,onelanguage,ruled,vlined]{algorithm2e}
+\usepackage{verbatim} 
+\usepackage{hyperref}
+\usepackage{orcidlink}
+\usepackage{notoccite}
+
+% Ubicación de las imágenes
+\graphicspath{{images/}}
+
+\makeatletter
+\def\algbackskip{\hskip-\ALG@thistlm}
+\makeatother
+
+\hypersetup{urlcolor=blue, colorlinks=true}
+
+\begin{document}
+
+\frontmatter
+
+\department{CIENCIAS DE LA COMPUTACIÓN}
+\degree{Licenciado}
+\major{Ciencias de la Computación}
+
+\title{Forget the Pixels: Reconstrucción 3D de Barranco basada en Abstracción Semántica y Geométrica}
+
+\author{
+  César Aarón Perales Rosales \orcid{0000-0000-0000-0000}\\[0.2cm]
+  Aaron Camacho \orcid{0000-0000-0000-0000}
+}
+
+\supervisor{
+  Eric Biagioli \orcid{0000-0000-0000-0000}
+}
+\date{2026}
+
+\maketitle
+
+\setstretch{1.5}
+
+\input{encabezados/dedicatoria}
+
+\newpage
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+
+\addtocontents{toc}{\vspace{1.5em}}
+
+%% ============================================================================
+\mainmatter
+\pagestyle{fancy}
+
+\input{secciones/resumen}
+\input{secciones/introduccion}
+\input{secciones/estado_arte}
+\input{secciones/marco_teorico}
+\input{secciones/arquitectura_sistema}
+\input{secciones/resultados_preliminares}
+
+%% ============================================================================
+\renewcommand{\bibname}{\hfill\Large\bf{REFERENCIAS BIBLIOGRÁFICAS}\hfill}
+
+\bibliographystyle{IEEEtran}
+\nocite{*}
+\bibliography{referencias} 
+
+%% ============================================================================
+\appendix
+
+\end{document}

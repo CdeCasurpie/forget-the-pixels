@@ -1,0 +1,16 @@
+\chapter{Resultados Preliminares}
+
+\section{Validación del Alineamiento Rígido Sim(3) sobre Submapas Desconectados}
+% Protocolo y Datos del Experimento:
+% Describir la prueba de concepto utilizando dos secuencias de video reales solapadas espacialmente en un sector urbano\textbf{} controlado.
+% Qué reportar aquí: Visualizaciones gráficas de las trayectorias estimadas antes y después del alineamiento por PnP+RANSAC. Tabular el error medio cuadrático (RMSE) de la traslación y rotación tras aplicar la matriz de similitud computada, validando el consenso del algoritmo de fusión de trayectorias individuales.
+
+\section{Evaluación Cuantitativa de la Reducción Paramétrica (Abstracción Dispersa vs MVS)}
+% Protocolo y Datos del Experimento:
+% Aislar un conjunto de fotogramas (3 a 5 imágenes) que enfoquen una estructura con fachadas planas predominantes.
+% Qué reportar aquí: Presentar una comparación directa de la densidad geométrica. Contrastar numéricamente el volumen de datos: la nube de puntos densa y ruidosa producida por un pipeline tradicional MVS (ej. COLMAP) frente al conjunto minimalista y exacto de nodos estructurales 3D (vértices y caras planas) instanciados por tu propuesta. Demostrar la erradicación del "ruido geométrico".
+
+\section{Análisis de Complejidad Temporal y Escalabilidad de Cómputo}
+% Protocolo y Datos del Experimento:
+% Benchmarking empírico de latencia algorítmica sobre un dataset acotado de fotogramas secuenciales urbanos.
+% Qué reportar aquí: Tabular los tiempos de cómputo desglosados. Comparar el tiempo consumido por la fase de densificación píxel a píxel del MVS tradicional (RTX 4090 baseline) frente al tiempo de inferencia combinado de los pasos de segmentación semántica (SAM) + triangulación dispersa O(1). Utilizar estos datos experimentales iniciales para validar empíricamente la viabilidad de escalamiento lineal del modelo propuesto para cubrir la totalidad de Lima Metropolitana.

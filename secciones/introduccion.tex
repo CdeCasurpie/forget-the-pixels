@@ -1,0 +1,38 @@
+\chapter{Introducción}
+
+\section{Problema}
+
+La reconstrucción tridimensional de entornos urbanos tiene aplicaciones críticas en el modelado arquitectónico, la planificación civil, las simulaciones y el entretenimiento interactivo. Sin embargo, escalar los algoritmos actuales para reconstruir un entorno urbano real a partir de secuencias de video monocular presenta un desafío computacional prohibitivo. 
+
+Los algoritmos clásicos de fotogrametría, tales como \textit{Structure-from-Motion} (SfM) y \textit{Multi-View Stereo} (MVS), operan procesando la información de manera iterativa a nivel de píxel. Las ciudades están repletas de primitivas geométricas evidentes; la estructura está dominada casi por completo por superficies planas continuas como fachadas, muros y calzadas. Los algoritmos MVS no solo fallan catastróficamente en estas superficies planas debido a su inherente carencia de textura, sino que, además, la generación de una densidad masiva de puntos sobre un simple plano resulta innecesaria y altamente ineficiente, saturando la memoria del sistema sin aportar valor estructural a la malla final.
+
+Para dimensionar esta limitación con datos realistas, se puede analizar el caso de Barranco, uno de los distritos más pequeños de la provincia de Lima, con una superficie de 2.808 km$^2$ \cite{wikipedia2023barranco}. Si calculamos una red transitable aproximada de 30 km, se requerirían unos 90 km de recorrido asumiendo 3 pasadas por calle para garantizar la cobertura total de aceras y redundancia visual. A una velocidad de caminata de 5 km/h para evitar el \textit{motion blur}, esto representa 18 horas de captura de video. Grabando a 30 fps para asegurar el solapamiento \cite{pix4d2024videophotogrammetry}, se obtiene un volumen de 1 944 000 fotogramas. Con 5 segundos por fotograma (siendo optimistas para la densificación MVS de alta resolución en \textit{hardware} de consumo \cite{schonberger2016structure}), el procesamiento secuencial nos da 9 720 000 segundos. Esto equivale a 2700 horas o, en términos prácticos, 112 días (casi 4 meses) de cálculo ininterrumpido. Se nota entonces que, incluso para uno de los distritos más pequeños de Lima, el MVS tradicional es inviable.
+
+Asimismo, alternativas algorítmicas modernas de renderizado neuronal como \textit{3D Gaussian Splatting} (3DGS) \cite{kerbl20233d} no solucionan este problema de escalabilidad. 3DGS es estrictamente un motor de optimización visual, no un extractor de geometría desde cero. Para evitar colapsar durante su entrenamiento, 3DGS depende de manera intrínseca de una inicialización geométrica previa (usualmente una nube semidensa provista por el propio SfM). Al depender de la fotogrametría clásica para arrancar, hereda su intratabilidad computacional.
+
+\section{Hipótesis y Planteamiento General}
+
+La conceptualización de esta investigación nace de una propuesta original fundamentada en la cognición espacial humana, cuya intuición ha sido validada recientemente por avances en el estado del arte. Del mismo modo en que un arquitecto es capaz de modelar y comprender un entorno utilizando únicamente abstracciones estructurales (como identificar contornos de muros y columnas) sin necesidad de proyectar mentalmente millones de puntos en el espacio, se propone que una inteligencia artificial puede imitar este comportamiento cognitivo. Esta premisa ha encontrado respaldo en investigaciones recientes; redes neuronales como Co-PLNet han demostrado la capacidad de abstraer \textit{wireframes} eficientemente al haber sido entrenadas con conjuntos de datos anotados bajo criterios humanos.
+
+A partir de este razonamiento, la hipótesis general postula que: \textbf{``Es posible reconstruir un entorno urbano en 3D basándose puramente en la abstracción de su arquitectura.''} Como consecuencia directa, este enfoque permite eludir por completo la costosa densificación masiva de puntos (MVS). Esta afirmación se justifica en que, al segmentar semánticamente los planos dominantes y extraer sus fronteras estructurales (\textit{wireframes}), el sistema algorítmico obtiene la información mínima y suficiente para completar matemáticamente los volúmenes del edificio.
+
+Esta solución algorítmica se sostiene sobre las siguientes suposiciones fundamentales:
+\begin{enumerate}
+    \item \textbf{El wireframe contiene la geometría esencial:} Sustentado en redes neuronales recientes como Co-PLNet \cite{wang2026coplnet}, se asume que los nodos y las líneas estructurales (\textit{wireframes}) extraídos de una imagen en 2D brindan toda la información arquitectónica pura necesaria para trazar las fronteras físicas de los edificios.
+    \item \textbf{La semántica define la planaridad:} Avalado por modelos del estado del arte en segmentación de planos urbanos (como PlaneRCNN \cite{liu2019planercnn} y ZeroPlane \cite{liu2025zeroplane}), es empíricamente factible identificar qué regiones de la imagen corresponden a planos arquitectónicos, permitiendo aislar y tratar matemáticamente a cada \textit{cara} de manera independiente.
+    \item \textbf{Fusión para el completado directo:} Esta es la principal interrogante a validar durante la investigación. Se plantea que, una vez reconocidas estas \textit{caras} semánticas, se pueden utilizar exclusivamente los puntos estructurales conocidos de sus fronteras para completar matemáticamente el polígono tridimensional, tal como lo haría un arquitecto al proyectar un plano vacío.
+\end{enumerate}
+
+\section{Objetivos de Investigación}
+
+\subsection{Objetivo General}
+
+Desarrollar una arquitectura computacional de reconstrucción tridimensional sustentada en la abstracción semántica y geométrica, que viabilice el modelado estructural del distrito de Barranco mediante el uso colaborativo de videos monoculares, reduciendo drásticamente la complejidad de procesamiento y eliminando la dependencia de la densificación clásica.
+
+\subsection{Objetivos Específicos}
+
+\begin{enumerate}
+    \item Diseñar un algoritmo híbrido de \textit{tracking} y extracción estructural basado en redes neuronales profundas (nodos y \textit{wireframes}) que evada los descriptores de textura tradicionales.
+    \item Implementar un flujo de procesamiento geométrico que inyecte restricciones semánticas (segmentación de planos) para completar matemática y directamente las caras del edificio, eludiendo por completo la fase de MVS.
+    \item Construir un sistema de indexación y alineación topológica mediante Optimización de Grafo de Poses (PGO), asistido por restricciones absolutas GPS, para ensamblar trayectorias locales inconexas dentro de un mapa global consistente de forma asíncrona.
+\end{enumerate}
