@@ -1,5 +1,6 @@
 \chapter*{Resumen}
-% Guía de Redacción:
-% Exponer concisamente el problema de la intratabilidad del MVS tradicional (O(N^2) y costo temporal/espacial).
-% Introducir el enfoque alternativo Top-Down: segmentación semántica de planos y wireframe parsing acoplado a la fusión jerárquica de trayectorias locales (spaghettis).
-% Declarar las métricas de eficiencia temporal y de reducción paramétrica logradas.
+
+La reconstrucción tridimensional de entornos urbanos mediante fotogrametría clásica (SfM y MVS) resulta computacionalmente intratable a escala de ciudad: la densificación a nivel de píxel falla sobre las superficies planas sin textura que dominan la arquitectura urbana y satura la memoria con millones de puntos redundantes, al punto de que reconstruir un distrito tan pequeño como Barranco demandaría meses de cómputo ininterrumpido. Las alternativas de renderizado neuronal, como \textit{3D Gaussian Splatting}, heredan esta barrera al depender del SfM para su inicialización. Frente a ello, este trabajo propone una arquitectura de reconstrucción \textit{top-down} que reemplaza la densificación masiva por la abstracción semántica y geométrica de la escena: el sistema extrae y rastrea \textit{wireframes} estructurales mediante redes neuronales (Co-PLNet y GlueStick), segmenta los planos arquitectónicos dominantes (ZeroPlane, PlaneRCNN, SAM) y completa matemáticamente cada cara con LO-RANSAC, eludiendo por completo la fase de MVS, mientras que las trayectorias capturadas de forma asíncrona se ensamblan en un mapa global consistente mediante Optimización de Grafo de Poses anclada con GPS. La propuesta se evalúa sobre el \textit{dataset} UrbanScene3D, contrastando la fidelidad geométrica y la eficiencia computacional frente al estado del arte, con el fin de viabilizar el modelado estructural de ciudades reales a partir de videos monoculares colaborativos.
+
+\vspace{0.5cm}
+\noindent\textbf{Palabras clave:} reconstrucción 3D urbana, abstracción semántica y geométrica, \textit{wireframe parsing}, segmentación de planos, reconstrucción libre de MVS.
