@@ -10,18 +10,18 @@
 \usepackage[style=ieee, backend=biber, citetracker=true]{biblatex}
 \addbibresource{referencias.bib}
 
-\DeclareCiteCommand{\cite}[\mkbibbrackets]
-  {\usebibmacro{prenote}}
-  {\usebibmacro{citeindex}%
-   \usebibmacro{cite}%
-   \ifciteseen
-     {}
-     {\mkbibfootnote{\fullcite{\thefield{entrykey}}}}%
-  }
-  {\multicitedelim}
-  {\usebibmacro{postnote}}
-
-\setlength{\skip\footins}{1cm}
+% \DeclareCiteCommand{\cite}[\mkbibbrackets]
+%   {\usebibmacro{prenote}}
+%   {\usebibmacro{citeindex}%
+%    \usebibmacro{cite}%
+%    \ifciteseen
+%      {}
+%      {\mkbibfootnote{\fullcite{\thefield{entrykey}}}}%
+%   }
+%   {\multicitedelim}
+%   {\usebibmacro{postnote}}
+%
+% \setlength{\skip\footins}{1cm}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
