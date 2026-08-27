@@ -107,7 +107,7 @@ Se utilizan arquitecturas neuronales de última generación, como Co-PLNet \cite
     \label{fig:coplnet_examples}
 \end{figure}
 
-Posteriormente, se aplican arquitecturas de grafos, específicamente GlueStick \cite{pelaez2023gluestick}, para realizar un emparejamiento robusto conjunto de puntos y líneas. Esto permite calcular una triangulación dispersa inicial que estima la pose de la cámara.
+Posteriormente, se aplican arquitecturas GNN especializadas, específicamente GlueStick \cite{pelaez2023gluestick}, para realizar un emparejamiento inyectivo robusto de puntos y líneas a través del algoritmo de asignación convexa de Sinkhorn. Naturalmente, el costo asintótico original del operador de atención cruzada de Sinkhorn escala a $\mathcal{O}(V^2)$, donde $V$ es la suma de primitivas (líneas y puntos). Para prevenir una explosión paramétrica en la memoria VRAM durante el modelado metropolitano, el pipeline adopta heurísticas de localidad (\textit{Pruning} espacial) en la capa de atención. Esta restricción explota el particionamiento conexo de las geometrías cercanas para inducir una matriz de afinidad rala (\textit{Sparse Affinity Matrix}), suprimiendo la conectividad entre nodos estructurales distantes. Esto permite computar de forma eficiente la triangulación geométrica y recuperar de manera estable el \textit{tracking} de cámara $\mathbf{T} \in SE(3)$.
 
 \subsection{Fase 3: Segmentación y Detección de Caras (Planos)}
 En esta etapa, el sistema inyecta restricciones semánticas para detectar y segmentar los planos arquitectónicos dominantes usando modelos especializados como ZeroPlane \cite{liu2025zeroplane}, PlaneRCNN \cite{liu2019planercnn}, o combinaciones robustas usando DUSt3R \cite{wang2024dust3r} y SAM. Como se ejemplifica en la Figura \ref{fig:plane_segmentation}, estas arquitecturas son capaces de identificar y aislar matemáticamente las distintas instancias planas que componen la escena.
@@ -125,23 +125,27 @@ Analíticamente, la segmentación de planos proporciona restricciones geométric
     \item \textbf{Resumen:} Se aíslan las caras planares útiles de las geometrías complejas garantizando que solo la estructura puramente arquitectónica guíe la reconstrucción 3D.
 \end{itemize}
 
-\subsection{Fase 4: Completado de Caras y Fusión Temporal}
-El reto en este punto es lograr mallas continuas a partir del flujo de video. Esto se soluciona fusionando temporalmente las caras segmentadas que apuntan al mismo plano físico a lo largo de los \textit{frames}.
+\subsection{Fase 4: Fusión Temporal, Tracking Semántico y Completado Geométrico}
+El reto algorítmico en este punto es lograr mallas continuas manteniendo la coherencia espacial a través del flujo de video sin acoplamiento temporal excesivo. Esto se resuelve estructurando un \textbf{Grafo de Seguimiento de Instancias (\textit{Instance Tracking Graph})} para fusionar temporalmente las caras segmentadas. Esta estructura de datos bidimensional rastrea la identidad topológica de los "super-segmentos" en tiempo de ejecución, propagando sus ID a través de \textit{bounding boxes} superpuestas entre fotogramas consecutivos con una complejidad de actualización asintótica acotada a $\mathcal{O}(I \log I)$ mediante árboles de particionamiento, siendo $I$ el número de instancias activas.
 
-Sobre estos \textit{super-segmentos} fusionados, el sistema recupera los puntos estructurales conocidos provenientes del \textit{wireframe} (Fase 2). La hipótesis técnica radica en que, al reconocer estas caras semánticas, podemos utilizar los nodos estructurales que habitan en ellas para completarlas matemáticamente. Con esos vértices estructurales proyectados, se aplica el algoritmo robusto LO-RANSAC \cite{lebeda2012loransac} para extraer la ecuación final del muro.
+Sobre este grafo cohesivo de segmentos fusionados, el sistema recupera los puntos estructurales conocidos provenientes del \textit{wireframe} (Fase 2). Para la instanciación paramétrica del plano subyacente $\boldsymbol{\pi}$, se emplea el algoritmo \textit{Locally-Optimized RANSAC} (LO-RANSAC) \cite{lebeda2012loransac}. Sin embargo, LO-RANSAC no se utiliza como un mero clasificador, sino como un optimizador estocástico riguroso. Su objetivo es hallar los coeficientes del plano 3D que minimicen la Función de Coste del Error de Reproyección Geométrico $\mathcal{L}_{\text{geom}}$ en las $M$ vistas donde el plano es co-visible:
+\begin{equation}
+    \boldsymbol{\pi}^* = \arg\min_{\boldsymbol{\pi}} \sum_{m=1}^{M} \sum_{\mathbf{x} \in \mathcal{S}_m} \rho \left( \left\| \mathbf{x} - f_m(\mathbf{P} \mathbf{X}(\mathbf{x}, \boldsymbol{\pi})) \right\|_\Sigma \right)
+\end{equation}
+Donde $\mathbf{x}$ son los nodos estructurales 2D, $\mathbf{P}$ es la matriz de cámara, y $\mathbf{X}$ es el rayo invertido intersecando el plano de hipótesis $\boldsymbol{\pi}$. La función $\rho(\cdot)$ es un estimador robusto (e.g., coste de Huber) que mitiga la contribución escalar de \textit{outliers} geométricos. La resolución de este coste no lineal garantiza que los vértices arquitectónicos sean retro-proyectados minimizando el error epipolar, garantizando así una instanciación algebraicamente estricta de los muros.
 
-% TODO: [Aquí se detallarán las matemáticas de LO-RANSAC en su respectivo capítulo de implementación]
+\subsection{Fase 5: Extracción de Fronteras, Reconciliación Topológica y Texturizado}
+RANSAC devuelve una abstracción matemática infinita. Esta fase sirve para delimitar físicamente esa superficie utilizando las líneas proyectadas del \textit{wireframe} (Fase 2) para recortar el plano infinito, estableciendo las fronteras reales del polígono arquitectónico.
 
-\subsection{Fase 5: Extracción de Fronteras y Texturizado}
-RANSAC devuelve una abstracción matemática infinita. Esta fase sirve para delimitar físicamente esa superficie utilizando las líneas proyectadas del \textit{wireframe} (Fase 2) para recortar el plano infinito, estableciendo las fronteras reales del muro.
+Sin embargo, como lo exige la geometría algorítmica, proyectar polígonos independientes genera topológicamente una "sopa de polígonos" (\textit{polygon soup}). Para evitar fallas críticas como intersecciones en T (\textit{T-junctions}) o modelos no estancos (\textit{non-watertight}) llenos de huecos, el sistema aplica un post-procesamiento de \textbf{Reconciliación Topológica}. Matemáticamente, se detectan los planos cuyas normales son altamente ortogonales (esquinas de un edificio) o colineales, y se intersectan espacialmente en $\mathbb{R}^3$ para fusionar ("coser") sus vértices frontera. Este ensamble algorítmico garantiza que la malla extraída preserve las invariantes topológicas de una variedad bidimensional (\textit{2-manifold surface}).
 
-Una vez instanciado este polígono 3D cerrado y finito, se le aplica el texturizado. Para garantizar un mapeo UV de alta fidelidad, se hace uso de una homografía directa desde el fotograma que se encuentre más ortogonal a la normal del plano.
+Una vez instanciado este polígono 3D cerrado y estanco, se le aplica el texturizado. Para garantizar un mapeo UV de alta fidelidad, se proyecta la textura desde el fotograma cuya pose posea el eje óptico más colineal con la normal de la superficie (es decir, maximizando el producto escalar $\mathbf{n} \cdot \mathbf{v}_{\text{cam}}$). 
 
-% TODO: [Aquí se detallará la ecuación de la homografía H en el capítulo correspondiente]
-
-\begin{itemize}
-    \item \textbf{Resumen:} Las líneas del wireframe recortan el plano infinito creando el modelo 3D final, que luego es pintado con el fotograma más alineado posible de esa pared.
-\end{itemize}
+El mapeo de textura no es un simple \textit{warp} 2D, sino una homografía inducida analíticamente por la geometría en $SE(3)$. Dado el plano infinito parametrizado como $\boldsymbol{\pi} = (\mathbf{n}^T, d)^T$, la matriz homográfica $\mathbf{H}$ que transfiere los píxeles de la cámara de textura hacia el plano estructural se deriva de la métrica proyectiva canónica:
+\begin{equation}
+    \mathbf{H} = \mathbf{K} \left( \mathbf{R} - \frac{\mathbf{t} \mathbf{n}^T}{d} \right) \mathbf{K}^{-1}
+\end{equation}
+Donde $\mathbf{R}$ y $\mathbf{t}$ corresponden a la rotación y traslación relativa entre la vista elegida y el sistema coordenado global del plano, permitiendo una extracción fotométrica algebraicamente exacta, exenta de distorsiones de perspectiva oblicua.
 
 \section{Infraestructura de la Base de Datos de Poses y Alineación Topológica}
 La captura asíncrona de datos urbanos a gran escala genera múltiples secuencias de video independientes, las cuales resultan en sub-mapas locales o trayectorias de cámara inconexas. El paradigma clásico comete el error de almacenar nubes de puntos densas directamente en una base de datos. Sin embargo, en esta propuesta arquitectónica \textbf{se prioriza almacenar el grafo de poses de la cámara en lugar de la geometría cruda}.
@@ -187,9 +191,13 @@ Esta decisión de diseño es crítica. Al guardar únicamente las transformacion
     \label{fig:pose_database}
 \end{figure}
 
-El desafío fundamental radica en la alineación topológica de estas trayectorias. A nivel algorítmico, esto requiere resolver un problema de Optimización de Grafo de Poses (\textit{Pose Graph Optimization}, PGO). Cuando existen co-visibilidades entre diferentes secuencias de video, el sistema extrae coincidencias y computa transformaciones de similitud $Sim(3)$ ---las cuales ajustan la rotación, traslación y escala de forma simultánea--- para anclar matemáticamente las trayectorias relativas sin necesidad de recalcular puntos.
+El desafío fundamental radica en la alineación topológica de estas trayectorias relativas hacia un marco de coordenadas global. A nivel algorítmico, esto exige resolver un problema de Optimización de Grafo de Poses (\textit{Pose Graph Optimization}, PGO). Dado que el grupo de similitud $Sim(3)$ posee 7 grados de libertad, la escala absoluta ($s$) es matemáticamente inobservable en secuencias monoculares puras debido a la ambigüedad de \textit{gauge}. 
 
-Para mitigar la acumulación de error inercial y de escala (\textit{drift}), intrínseco al rastreo monocular en distancias prolongadas, la infraestructura integra datos de telemetría GPS. Estos actúan como restricciones absolutas dentro del grafo de optimización. Esta arquitectura descentralizada y robusta garantiza la consistencia global a nivel metropolitano, facultando al sistema a ensamblar continuamente nuevos fragmentos de la ciudad sin la penalidad de tener que re-optimizar ninguna nube de puntos global desde cero.
+Para anclar las trayectorias y resolver $T \in Sim(3)$ entre sub-mapas, el sistema extrae coincidencias empleando el método de Horn (alineamiento de Procrustes) sobre la intersección de vértices estructurales (mínimo 3 puntos no colineales). El PGO formula la fusión global minimizando una función de coste multivariable que integra las odometrías relativas $\mathbf{T}_{ij} \in SE(3)$ con restricciones afines absolutas de la telemetría GPS para mitigar la deriva inercial (\textit{drift}). La función de energía sobre el estado $\mathcal{X} = \{ \mathbf{T}_i \}$ se define axiomáticamente como:
+\begin{equation}
+    E_{PGO}(\mathcal{X}) = \sum_{(i,j) \in \mathcal{E}} \left\| \log_{SE(3)}\left( \mathbf{T}_{ij}^{-1} (\mathbf{T}_i^{-1} \mathbf{T}_j) \right) \right\|_{\boldsymbol{\Sigma}_{ij}}^2 + \sum_{k \in \mathcal{C}} \left\| \mathbf{t}_k - \mathbf{p}_k^{\text{GPS}} \right\|_{\boldsymbol{\Sigma}_{\text{GPS}}}^2
+\end{equation}
+Para mitigar la acumulación de error inercial y de escala (\textit{drift}), intrínseco al rastreo monocular en distancias prolongadas, la infraestructura integra datos de telemetría GPS. Estos actúan como restricciones absolutas dentro del grafo de optimización. Para garantizar la \textbf{escalabilidad asintótica} de esta base de datos masiva, el sistema indexa espacialmente las posiciones de las cámaras $\mathbf{t}_i$ mediante una estructura jerárquica de particionamiento espacial bidimensional \textbf{KD-Tree}. Esto permite que las consultas computacionales de vecindad para la detección de cierres de bucle (Loop Closure) eludan la comparación exhaustiva ingenua $\mathcal{O}(N^2)$ a través de un volumen de datos masivo, reduciendo la complejidad de búsqueda y acoplamiento estructural a un costo logarítmico $\mathcal{O}(N \log N)$. Esta arquitectura descentralizada y algorítmicamente escalable garantiza la consistencia global a nivel metropolitano, facultando al sistema a ensamblar continuamente nuevos fragmentos de la ciudad sin la penalidad paramétrica de re-optimizar nubes de puntos densas.
 
 \section{Métricas de Evaluación y Entorno Experimental}
 Para evaluar rigurosamente la calidad de la reconstrucción y la eficiencia del modelo propuesto frente al estado del arte, se han definido métricas tanto geométricas como computacionales. Asimismo, se ha seleccionado un entorno de pruebas estandarizado que garantice la reproducibilidad del experimento.

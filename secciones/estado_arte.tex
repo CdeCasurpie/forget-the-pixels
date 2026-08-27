@@ -6,22 +6,28 @@ En este capítulo se revisan los avances en la reconstrucción visual, ordenados
 
 \section{De la Fotogrametría Clásica a la Representación Neural (2016 - 2023)}
 
-\subsection{El Cuello de Botella del MVS Clásico}
+\subsection{Multi View Stereo (MVS), el cuello de botella de la fotogrametría tradicional}
 
-El paradigma clásico de reconstrucción 3D está representado principalmente por \textbf{COLMAP} \cite{schonberger2016structure} (2016). Funciona a través de algo llamado Structure-from-Motion (SfM) para calcular la posición de las cámaras y lo junta con Multi-View Stereo (MVS), que juntos permiten la generación y densificación de una nube de puntos de la escena. Sirve para recuperar la geometría asumiendo que hay suficientes correspondencias visuales claras entre las imágenes.
+El paradigma clásico de reconstrucción 3D está representado principalmente por \textbf{COLMAP} \cite{schonberger2016structure} (2016). Funciona combinando \textit{Structure-from-Motion} (SfM) para calcular la posición de las cámaras con \textit{Multi-View Stereo} (MVS) para la densificación geométrica. Sin embargo, no importa qué tan rápido se capturen las imágenes o se realice el renderizado posterior, el MVS actúa como un verdadero cuello de botella restrictivo porque matemáticamente depende de un algoritmo de búsqueda exhaustiva que es intrínsecamente ineficiente y, en la práctica, teóricamente imposible de optimizar a escalas masivas.
 
-Una desventaja grande del MVS clásico es que, con el fin de ser robusto, ejecuta un emparejamiento exhaustivo a nivel de píxel entre todas las imágenes, es decir, su costo computacional es cuadrático. En entornos urbanos, donde predominan las fachadas repetitivas, ventanas reflectantes y superficies sin textura, este enfoque falla. Además, el costo computacional de densificar punto por punto vuelve inviable mapear trayectos largos de manera eficiente.
+Con el fin de ser robusto, el MVS debe ejecutar un emparejamiento píxel a píxel, lo que vuelve la estimación correcta de la profundidad de cada elemento un proceso absurdamente costoso y lento. Computacionalmente, el algoritmo se enfrenta a un desafío masivo:
+\begin{itemize}
+    \item Debe evaluar cientos de hipótesis de profundidad discretizadas para cada uno de los millones de píxeles de una imagen.
+    \item Cada hipótesis debe comprobarse proyectando el píxel contra varias imágenes fuente para medir el error fotométrico cruzado.
+\end{itemize}
 
-\subsection{NeRF y la dependencia de 3D Gaussian Splatting}
+A esta complejidad asintótica insuperable se suma un problema de viabilidad teórica absoluta: en zonas con paredes lisas, ventanas reflectantes y oclusiones (predominantes en la arquitectura), la información visual es insuficiente. En estas áreas, el problema matemático de correspondencia se vuelve totalmente ambiguo; ningún algoritmo de MVS puede recuperar información de profundidad que simplemente no existe, lo que hace fallar irremediablemente al enfoque clásico en entornos urbanos.
 
-Buscando una alternativa a los puntos discretos, en 2020 surgieron los Neural Radiance Fields (\textbf{NeRF}) \cite{mildenhall2020nerf}. Estos modelos codifican la geometría y la iluminación de una escena en los pesos de una red neuronal. El problema es que para renderizar una imagen ejecutan un rastreo de rayos continuo, lo que hace que entrenar y visualizar el modelo sea excesivamente lento para aplicaciones prácticas.
+\subsection{NeRF y 3D Gaussian Splatting}
+
+Buscando una alternativa a las nubes de puntos densas, en 2020 surgieron los Neural Radiance Fields (\textbf{NeRF}) \cite{mildenhall2020nerf}. Estos modelos codifican la geometría y la iluminación de una escena en los pesos de una red neuronal. El problema es que para renderizar una imagen ejecutan un rastreo de rayos continuo a lo largo del volumen del \textit{frustum} de la cámara, lo que ocasiona que entrenar y visualizar el modelo sea actualmente muy lento.
 
 Para solucionar el problema del renderizado, en 2023 se introdujo \textbf{3D Gaussian Splatting (3DGS)} \cite{kerbl20233d}. Este método funciona representando la escena con millones de gaussianas tridimensionales que se proyectan directamente en la pantalla, logrando una visualización en tiempo real. 
 
-Sin embargo, una desventaja grande de 3DGS es que, con el fin de evitar colapsar durante el entrenamiento y generar artefactos (\textit{floaters}), depende intrínsecamente de una inicialización geométrica casi perfecta. Es decir, 3DGS necesita arrancar con una nube de puntos previa (usualmente proveniente del lento SfM de COLMAP). En resumen:
+Sin embargo, ¿por qué no usamos 3D Gaussian Splatting de manera directa? La desventaja crítica de 3DGS es que, para evitar colapsar durante el entrenamiento y generar geometrías anómalas o "basura" (\textit{floaters}), depende intrínsecamente de una inicialización geométrica casi perfecta. Es decir, 3DGS requiere arrancar desde una nube de puntos previa altamente precisa (usualmente proveniente del lento SfM de COLMAP). En resumen:
 \begin{itemize}
     \item 3DGS acelera drásticamente el renderizado.
-    \item Pero hereda el cuello de botella del MVS clásico, ya que no puede entender la geometría inicial por sí solo.
+    \item Pero hereda el cuello de botella del MVS clásico, ya que no puede entender ni inicializar la topología por sí solo.
 \end{itemize}
 
 \section{Modelos Fundacionales y Superación del SfM (2024)}
