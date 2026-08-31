@@ -161,18 +161,46 @@ print(f"\033[92m[OK]\033[0m Malla construida: {lotes_observados} edif. calculado
 # ============================================================
 # 7. RENDER
 # ============================================================
-print("\033[92m[SUCCESS]\033[0m Abriendo visor 3D...")
-# Hacemos que los puntos originales de la nube destaquen (más oscuros o menos opacos)
-# Aquí dejamos los colores originales de COLMAP para contrastar sobre las mallas blancas.
+import pycolmap
 
-# Generar un material para que la malla de los edificios responda bonito a la luz
-# En Open3D, simplemente se ven con shading por defecto si tienen normales.
+print("\033[96m[INFO]\033[0m Cargando cámaras del dron para visualizarlas...")
+try:
+    rec = pycolmap.Reconstruction(os.path.join(DIR_BASE, "nube_sparse", "sparse_1fps_aligned.ply").replace("sparse_1fps_aligned.ply", "0_aligned"))
+    cam_meshes = []
+    
+    # Crear un material/color rojo para las camaras
+    for img_id, img in rec.images.items():
+        # ECEF
+        c_ecef = img.projection_center()
+        
+        # Transformar a UTM
+        x_u, y_u, z_u = transformer.transform(c_ecef[0], c_ecef[1], c_ecef[2])
+        
+        # Transformar a Local
+        x_l = x_u - centro_local[0]
+        y_l = y_u - centro_local[1]
+        z_l = z_u - centro_local[2] # Ajuste Z al centro local
+        
+        # Crear un pequeño tetraedro o esfera roja para representar la camara
+        # Usaremos octaedros/esferas pequeñas para mejor rendimiento
+        cam_mesh = o3d.geometry.TriangleMesh.create_octahedron(radius=2.0)
+        cam_mesh.paint_uniform_color([1.0, 0.0, 0.0]) # Rojo puro
+        cam_mesh.translate([x_l, y_l, z_l])
+        
+        cam_meshes.append(cam_mesh)
+        
+    print(f"\033[92m[SUCCESS]\033[0m Se cargaron {len(cam_meshes)} cámaras como indicadores rojos.")
+except Exception as e:
+    print(f"\033[93m[WARNING]\033[0m No se pudieron cargar las cámaras: {e}")
+    cam_meshes = []
+
+print("\033[92m[SUCCESS]\033[0m Abriendo visor 3D...")
 
 o3d.visualization.draw_geometries(
-    [pcd, final_mesh],
+    [pcd, final_mesh] + cam_meshes,
     window_name="PFC1 - Extrusión Paramétrica Catastro + Nube Sparse",
     width=1280,
     height=720,
-    mesh_show_wireframe=True,  # Dibuja los bordes de los edificios
+    mesh_show_wireframe=True,
     mesh_show_back_face=False
 )
