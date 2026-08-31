@@ -40,10 +40,32 @@ rec = pycolmap.Reconstruction(PATH_COLMAP)
 
 print("\033[96m[INFO]\033[0m Filtrando catastro al área del dron...")
 gdf = gpd.read_file(PATH_SHP).to_crs("EPSG:32718")
-MARGEN = 150.0
-min_x, max_x = np.min(points_utm[:, 0]) - MARGEN, np.max(points_utm[:, 0]) + MARGEN
-min_y, max_y = np.min(points_utm[:, 1]) - MARGEN, np.max(points_utm[:, 1]) + MARGEN
+min_x, max_x = np.min(points_utm[:, 0]) - 50.0, np.max(points_utm[:, 0]) + 50.0
+min_y, max_y = np.min(points_utm[:, 1]) - 50.0, np.max(points_utm[:, 1]) + 50.0
 gdf_filtrado = gdf.cx[min_x:max_x, min_y:max_y].copy()
+
+# ---> PARCHE DE ALINEACIÓN GEOESPACIAL <---
+PATH_OFFSET = os.path.join(DIR_BASE, "offset_config.json")
+OFFSET_X, OFFSET_Y, ANGLE_DEG = 0.0, 0.0, 0.0
+if os.path.exists(PATH_OFFSET):
+    try:
+        import json
+        with open(PATH_OFFSET, 'r') as f:
+            d = json.load(f)
+            OFFSET_X, OFFSET_Y = d.get('x', 0.0), d.get('y', 0.0)
+            ANGLE_DEG = d.get('angle', 0.0)
+    except: pass
+print(f"[PARCHE] Aplicando corrección de Catastro: X {OFFSET_X:+.2f}m, Y {OFFSET_Y:+.2f}m, Rot {ANGLE_DEG:+.2f}°")
+
+# Calcular centro local para pivot de rotación (mismo de siempre)
+transformer = pyproj.Transformer.from_crs("EPSG:4978", "EPSG:32718", always_xy=True)
+points_ecef = np.asarray(pcd.points)
+x_utm, y_utm, z_utm = transformer.transform(points_ecef[:, 0], points_ecef[:, 1], points_ecef[:, 2])
+centro_local = np.mean(np.column_stack((x_utm, y_utm, z_utm)), axis=0)
+
+gdf_filtrado.geometry = gdf_filtrado.geometry.rotate(ANGLE_DEG, origin=(centro_local[0], centro_local[1]))
+gdf_filtrado.geometry = gdf_filtrado.geometry.translate(xoff=OFFSET_X, yoff=OFFSET_Y)
+# ------------------------------------------
 
 # Calcular Alturas
 colors = np.asarray(pcd.colors)
@@ -142,8 +164,8 @@ triangulos_texturizados = 0
 # Convertir posiciones de camara a numpy
 cam_positions = {img.name: img.projection_center() for _, img in rec.images.items()}
 
-# Preparar motor de raycasting (Trimesh)
-intersector = trimesh.ray.ray_pyembree.RayMeshIntersector(mesh) if hasattr(trimesh.ray, 'ray_pyembree') else trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
+# Preparar motor de raycasting (Trimesh automático)
+intersector = mesh.ray
 
 for face_idx, face in enumerate(faces):
     # Obtener info en ECEF para matemática matemática fotogramétrica
@@ -169,7 +191,7 @@ for face_idx, face in enumerate(faces):
         if dist < 1.0 or dist > 150.0: continue
         
         dot = np.dot(ray / dist, normal_ecef)
-        if dot > 0.15: # Ve la cara frontalmente
+        if abs(dot) > 0.02: # Permitir ángulos rasantes y obviar el orden de los vértices (winding)
             cam = rec.cameras[img.camera_id]
             u1 = cam.img_from_cam(img.cam_from_world() * ve1)
             u2 = cam.img_from_cam(img.cam_from_world() * ve2)
@@ -196,8 +218,8 @@ for face_idx, face in enumerate(faces):
         dist_local = np.linalg.norm(ray_dir_local)
         ray_dir_local /= dist_local
         
-        # Desplazar origen ligerísimamente para no auto-intersectar la misma cara
-        ray_origen = centro_local_3d + ray_dir_local * 0.1
+        # Desplazar origen para no auto-intersectar la misma cara (evitar errores de precisión u overlap de lotes)
+        ray_origen = centro_local_3d + ray_dir_local * 0.5
         
         # Tirar el rayo!
         locations, index_ray, index_tri = intersector.intersects_location([ray_origen], [ray_dir_local])
