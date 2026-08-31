@@ -10,3 +10,13 @@
 *.lot
 *.gz
 *.synctex.gz
+
+# Datos pesados y binarios de reconstrucción (No commitear a Git)
+*.zip
+*.ply
+*.obj
+*.mtl
+*.bin
+investigation/Lotes/nube_densa/
+investigation/Lotes/nube_sparse/
+investigation/Lotes/images/
