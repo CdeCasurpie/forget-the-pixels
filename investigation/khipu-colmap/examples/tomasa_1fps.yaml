@@ -1,0 +1,36 @@
+# ==============================================================
+# Ejemplo: Reconstrucción sparse del video de Tomasa a 1 FPS
+# ==============================================================
+# Este es el config exacto que reproduce nuestro experimento
+# exitoso de 2026-08-31 (Job 50387 en Khipu).
+#
+# Uso:
+#   python colmap_pipeline.py validate examples/tomasa_1fps.yaml
+#   python colmap_pipeline.py run examples/tomasa_1fps.yaml
+
+experiment_name: "tomasa_1080p_1fps_sparse"
+workspace_base: "~/tesis_colmap"
+
+video_source: "~/tesis_colmap/tomasa/PasaarAColmapTomasa.MP4"
+
+gps_source:
+  type: "dji_srt"
+  file: "~/tesis_colmap/tomasa/DJI_20260827101346_0116_D.SRT"
+
+extraction:
+  fps: 1.0
+  resolution: 1080
+  quality: 2
+
+pipeline:
+  preset: "sparse_only"
+  camera_model: "OPENCV"
+  single_camera: true
+  sequential_overlap: 20
+  alignment_max_error: 3.0
+
+slurm:
+  partition: "gpu"
+  mem: "64G"
+  time: "12:00:00"
+  cpus: 16

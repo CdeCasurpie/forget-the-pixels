@@ -1,0 +1,9 @@
+# Preset: Solo reconstrucción dispersa (Sparse)
+# Genera poses de cámara + nube de puntos ligera (.ply)
+# Tiempo estimado: 15-30 min para ~200 imágenes a 1080p
+pipeline:
+  preset: "sparse_only"
+  camera_model: "OPENCV"
+  single_camera: true
+  sequential_overlap: 20
+  alignment_max_error: 3.0

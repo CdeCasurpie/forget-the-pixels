@@ -1,0 +1,12 @@
+# Preset: Pipeline completo (Sparse + Dense)
+# Genera nube densa (fused.ply) + malla 3D (meshed-poisson.ply)
+# INCLUYE protección contra OOM con caché de disco
+# Tiempo estimado: 1-3 horas para ~200 imágenes a 1080p
+pipeline:
+  preset: "sparse_and_dense"
+  camera_model: "OPENCV"
+  single_camera: true
+  sequential_overlap: 20
+  alignment_max_error: 3.0
+  fusion_use_cache: true
+  fusion_cache_size: 32

@@ -1,0 +1,8 @@
+# Preset: Reanudar fase densa
+# Usar cuando patch_match_stereo ya terminó pero stereo_fusion crasheó por OOM
+# Solo ejecuta: stereo_fusion (con caché) + poisson_mesher
+# Tiempo estimado: 5-20 min
+pipeline:
+  preset: "dense_resume"
+  fusion_use_cache: true
+  fusion_cache_size: 32
