@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """
 texture_lotes.py
-
-Proyección fotométrica (Olvida los Píxeles - Fase 3)
-Calcula las paredes de los lotes catastrales y usa la matemática de COLMAP
-para proyectar los píxeles de los drones directamente como texturas UV.
+Genera una malla 3D texturizada de los lotes utilizando Triángulos puros y Raycasting
+para evitar oclusiones y distorsiones afines (Perspective Splitting).
 """
 import open3d as o3d
 import geopandas as gpd
@@ -13,13 +11,12 @@ import numpy as np
 import pyproj
 import pycolmap
 from shapely.geometry import Polygon
-import shapely.affinity
+import trimesh
 import sys
 import os
 
-print("\033[96m[INFO]\033[0m Iniciando Proyección Fotométrica (Olvida los Píxeles)...")
+print("\033[96m[INFO]\033[0m Iniciando Proyección Fotométrica V2 (Triángulos + Raycasting)...")
 
-# 1. RUTAS
 DIR_BASE = os.path.dirname(os.path.abspath(__file__))
 PATH_NUBE = os.path.join(DIR_BASE, "nube_sparse", "sparse_1fps_aligned.ply")
 PATH_SHP = os.path.join(DIR_BASE, "shp_files", "BARRANCO_LM_geogpsperu_SuyoPomalia.shp")
@@ -27,217 +24,213 @@ PATH_COLMAP = os.path.join(DIR_BASE, "nube_sparse", "0_aligned")
 PATH_OBJ = os.path.join(DIR_BASE, "lotes_texturados.obj")
 PATH_MTL = os.path.join(DIR_BASE, "lotes_texturados.mtl")
 
-# 2. CARGAR DATA GEOMÉTRICA
 pcd = o3d.io.read_point_cloud(PATH_NUBE)
 points_ecef = np.asarray(pcd.points)
 
 transformer = pyproj.Transformer.from_crs("EPSG:4978", "EPSG:32718", always_xy=True)
+transformer_back = pyproj.Transformer.from_crs("EPSG:32718", "EPSG:4978", always_xy=True)
+
 x_utm, y_utm, z_utm = transformer.transform(points_ecef[:, 0], points_ecef[:, 1], points_ecef[:, 2])
 points_utm = np.column_stack((x_utm, y_utm, z_utm))
-centro_local = np.mean(points_utm, axis=0) # Origen local
+centro_local = np.mean(points_utm, axis=0)
+altura_suelo_utm = np.percentile(points_utm[:, 2], 5)
 
 print("\033[96m[INFO]\033[0m Cargando modelo COLMAP (poses)...")
-try:
-    rec = pycolmap.Reconstruction(PATH_COLMAP)
-    print(f"\033[92m[OK]\033[0m {len(rec.images)} imágenes con poses cargadas.")
-except Exception as e:
-    print(f"\033[91m[ERROR]\033[0m No se pudo cargar COLMAP: {e}")
-    sys.exit(1)
+rec = pycolmap.Reconstruction(PATH_COLMAP)
 
-# Usamos el catastro original (sin desplazar al origen) porque las cámaras
-# de COLMAP en este experimento están en coordenadas ECEF originales!
-# CUIDADO: La cámara de COLMAP está en ECEF. La proyección de ECEF a píxeles 
-# funciona directamente con img.cam_from_world() * punto_ECEF.
-# Por lo tanto, ¡todas nuestras intersecciones matemáticas deben hacerse en ECEF!
-
-# Pero el Shapefile está en UTM. Vamos a convertir el Shapefile a ECEF.
-print("\033[96m[INFO]\033[0m Convirtiendo Catastro UTM -> ECEF para texturizado...")
-gdf = gpd.read_file(PATH_SHP)
-if gdf.crs != "EPSG:32718":
-    gdf = gdf.to_crs("EPSG:32718")
-
-# Filtrar BBox en UTM para ser rápidos
+print("\033[96m[INFO]\033[0m Filtrando catastro al área del dron...")
+gdf = gpd.read_file(PATH_SHP).to_crs("EPSG:32718")
 MARGEN = 150.0
 min_x, max_x = np.min(points_utm[:, 0]) - MARGEN, np.max(points_utm[:, 0]) + MARGEN
 min_y, max_y = np.min(points_utm[:, 1]) - MARGEN, np.max(points_utm[:, 1]) + MARGEN
 gdf_filtrado = gdf.cx[min_x:max_x, min_y:max_y].copy()
 
-# Para calcular alturas en ECEF es complicado porque ECEF es curvo (es la Tierra).
-# Vamos a extraer los polígonos, asignarles Z en UTM (usando el 5to y 90mo percentil igual que extrude_lotes),
-# y LUEGO convertir los vértices de las paredes de UTM -> ECEF.
-transformer_back = pyproj.Transformer.from_crs("EPSG:32718", "EPSG:4978", always_xy=True)
-
-# Alturas en UTM
-altura_suelo_utm = np.percentile(points_utm[:, 2], 5)
-
-# Necesitamos unir puntos UTM a los polígonos UTM para sacar las alturas
-print("\033[96m[INFO]\033[0m Calculando alturas de los lotes...")
+# Calcular Alturas
 colors = np.asarray(pcd.colors)
 R, G, B = colors[:, 0], colors[:, 1], colors[:, 2]
-ExG = 2 * G - R - B
-is_veg = ExG > 0.05
 pcd_clean = o3d.geometry.PointCloud()
-pcd_clean.points = o3d.utility.Vector3dVector(points_utm[~is_veg])
-pcd_clean, ind = pcd_clean.remove_statistical_outlier(20, 1.5)
-pts_clean_utm = np.asarray(pcd_clean.points)
-
-df_pts = pd.DataFrame(pts_clean_utm, columns=['x', 'y', 'z'])
-geom_pts = gpd.points_from_xy(df_pts.x, df_pts.y)
-gdf_pts = gpd.GeoDataFrame(df_pts, geometry=geom_pts)
-joined = gpd.sjoin(gdf_pts, gdf_filtrado, how='inner', predicate='within')
+pcd_clean.points = o3d.utility.Vector3dVector(points_utm[(2 * G - R - B) <= 0.05])
+pcd_clean, _ = pcd_clean.remove_statistical_outlier(20, 1.5)
+df_pts = pd.DataFrame(np.asarray(pcd_clean.points), columns=['x', 'y', 'z'])
+joined = gpd.sjoin(gpd.GeoDataFrame(df_pts, geometry=gpd.points_from_xy(df_pts.x, df_pts.y), crs="EPSG:32718"), gdf_filtrado, how='inner', predicate='within')
 grouped = joined.groupby('index_right')
 
-# ============================================================
-# 3. TEXTURIZACIÓN Y ESCRITURA OBJ
-# ============================================================
-print("\033[96m[INFO]\033[0m Proyectando texturas y escribiendo OBJ...")
+print("\033[96m[INFO]\033[0m Construyendo geometría base (Triangulación de Lotes)...")
+vertices = []
+faces = []
 
-f_obj = open(PATH_OBJ, "w")
-f_mtl = open(PATH_MTL, "w")
+# Guardamos un mapeo de vértices a ECEF para la matemática de la cámara
+vertices_ecef = []
 
-f_obj.write(f"mtllib lotes_texturados.mtl\n")
-
-# Crear el MTL
-for img_id, img in rec.images.items():
-    f_mtl.write(f"newmtl mat_{img.name}\n")
-    f_mtl.write(f"Ka 0.0 0.0 0.0\nKd 1.0 1.0 1.0\n")
-    f_mtl.write(f"map_Kd images/{img.name}\n\n")
-
-vertex_idx = 1
-uv_idx = 1
-paredes_texturizadas = 0
+def add_vertex(u_x, u_y, u_z):
+    # Convertir a UTM local para el visualizador
+    v_local = [u_x - centro_local[0], u_y - centro_local[1], u_z]
+    vertices.append(v_local)
+    
+    # ECEF para proyecciones
+    e_x, e_y, e_z = transformer_back.transform(u_x, u_y, u_z)
+    vertices_ecef.append([e_x, e_y, e_z])
+    return len(vertices) - 1
 
 for idx, row in gdf_filtrado.iterrows():
     poly = row.geometry
     if poly is None: continue
     
-    # Altura en UTM
+    altura = 3.0
     if idx in grouped.groups:
         z_vals = grouped.get_group(idx)['z'].values
-        if len(z_vals) >= 5:
-            roof_z = np.percentile(z_vals, 90)
-            altura = max(3.0, roof_z - altura_suelo_utm)
-        else:
-            altura = 3.0
-    else:
-        altura = 3.0
+        if len(z_vals) >= 5: altura = max(3.0, np.percentile(z_vals, 90) - altura_suelo_utm)
         
     polygons = [poly] if isinstance(poly, Polygon) else list(poly.geoms)
-    
     for p in polygons:
         coords = list(p.exterior.coords)
         for i in range(len(coords)-1):
-            p1_utm = np.array(coords[i])
-            p2_utm = np.array(coords[i+1])
+            p1 = np.array(coords[i])
+            p2 = np.array(coords[i+1])
             
-            # Subdividir paredes largas en segmentos de max 3 metros
-            longitud = np.linalg.norm(p2_utm[:2] - p1_utm[:2])
+            # Subdividir para evitar estiramiento (máx 3m)
+            longitud = np.linalg.norm(p2[:2] - p1[:2])
             num_segs = max(1, int(np.ceil(longitud / 3.0)))
             
             for j in range(num_segs):
-                sp1_utm = p1_utm + (p2_utm - p1_utm) * (j / num_segs)
-                sp2_utm = p1_utm + (p2_utm - p1_utm) * ((j+1) / num_segs)
+                sp1 = p1 + (p2 - p1) * (j / num_segs)
+                sp2 = p1 + (p2 - p1) * ((j+1) / num_segs)
                 
-                # Vértices de la pared subdividida en UTM
-                v1_u = [sp1_utm[0], sp1_utm[1], altura_suelo_utm]
-                v2_u = [sp2_utm[0], sp2_utm[1], altura_suelo_utm]
-                v3_u = [sp2_utm[0], sp2_utm[1], altura_suelo_utm + altura]
-                v4_u = [sp1_utm[0], sp1_utm[1], altura_suelo_utm + altura]
+                i1 = add_vertex(sp1[0], sp1[1], altura_suelo_utm)
+                i2 = add_vertex(sp2[0], sp2[1], altura_suelo_utm)
+                i3 = add_vertex(sp2[0], sp2[1], altura_suelo_utm + altura)
+                i4 = add_vertex(sp1[0], sp1[1], altura_suelo_utm + altura)
                 
-                # Convertir a ECEF
-                x_e, y_e, z_e = transformer_back.transform(
-                    [v1_u[0], v2_u[0], v3_u[0], v4_u[0]],
-                    [v1_u[1], v2_u[1], v3_u[1], v4_u[1]],
-                    [v1_u[2], v2_u[2], v3_u[2], v4_u[2]]
-                )
-                v1_e = np.array([x_e[0], y_e[0], z_e[0]])
-                v2_e = np.array([x_e[1], y_e[1], z_e[1]])
-                v3_e = np.array([x_e[2], y_e[2], z_e[2]])
-                v4_e = np.array([x_e[3], y_e[3], z_e[3]])
+                # Crear DOS TRIÁNGULOS (en vez de un Quad)
+                faces.append([i1, i2, i3])
+                faces.append([i1, i3, i4])
                 
-                v1_local = np.array(v1_u) - np.append(centro_local[:2], 0)
-                v2_local = np.array(v2_u) - np.append(centro_local[:2], 0)
-                v3_local = np.array(v3_u) - np.append(centro_local[:2], 0)
-                v4_local = np.array(v4_u) - np.append(centro_local[:2], 0)
-                v1_local[2], v2_local[2], v3_local[2], v4_local[2] = v1_u[2], v2_u[2], v3_u[2], v4_u[2]
-                
-                f_obj.write(f"v {v1_local[0]:.4f} {v1_local[1]:.4f} {v1_local[2]:.4f}\n")
-                f_obj.write(f"v {v2_local[0]:.4f} {v2_local[1]:.4f} {v2_local[2]:.4f}\n")
-                f_obj.write(f"v {v3_local[0]:.4f} {v3_local[1]:.4f} {v3_local[2]:.4f}\n")
-                f_obj.write(f"v {v4_local[0]:.4f} {v4_local[1]:.4f} {v4_local[2]:.4f}\n")
-                
-                centro_ecef = (v1_e + v2_e + v3_e + v4_e) / 4.0
-                vec1 = v2_e - v1_e
-                vec2 = v4_e - v1_e
-                normal_ecef = np.cross(vec1, vec2)
-                norm = np.linalg.norm(normal_ecef)
-                if norm > 0: normal_ecef /= norm
-                
-                best_img = None
-                best_score = -9999
-                best_uvs = None
-                
-                for img_id, img in rec.images.items():
-                    cam_center = img.projection_center()
-                    ray = cam_center - centro_ecef
-                    dist = np.linalg.norm(ray)
-                    if dist < 1.0 or dist > 150.0: continue
-                    
-                    ray_dir = ray / dist
-                    dot = np.dot(ray_dir, normal_ecef)
-                    
-                    if dot > 0.1: # La camara ve la cara
-                        cam = rec.cameras[img.camera_id]
-                        # Proyectar las 4 esquinas
-                        uv1 = cam.img_from_cam(img.cam_from_world() * v1_e)
-                        uv2 = cam.img_from_cam(img.cam_from_world() * v2_e)
-                        uv3 = cam.img_from_cam(img.cam_from_world() * v3_e)
-                        uv4 = cam.img_from_cam(img.cam_from_world() * v4_e)
-                        
-                        if all(uv is not None for uv in [uv1, uv2, uv3, uv4]):
-                            # Validar que al menos estén DENTRO de los límites de la imagen
-                            uvs = [uv1, uv2, uv3, uv4]
-                            xs = [u[0] for u in uvs]; ys = [u[1] for u in uvs]
-                            if min(xs) >= 0 and max(xs) <= cam.width and min(ys) >= 0 and max(ys) <= cam.height:
-                                # Penalizar angulos malos y demasiada distancia
-                                area_en_pixeles = (max(xs) - min(xs)) * (max(ys) - min(ys))
-                                score = area_en_pixeles * dot # Premiamos el area de textura real proyectada
-                                if score > best_score:
-                                    best_score = score
-                                    best_img = img
-                                    best_uvs = uvs
-                                
-                if best_img is not None:
-                    cam = rec.cameras[best_img.camera_id]
-                    for uv in best_uvs:
-                        f_obj.write(f"vt {uv[0]/cam.width:.5f} {1.0 - uv[1]/cam.height:.5f}\n")
-                    f_obj.write(f"usemtl mat_{best_img.name}\n")
-                    f_obj.write(f"f {vertex_idx}/{uv_idx} {vertex_idx+1}/{uv_idx+1} {vertex_idx+2}/{uv_idx+2} {vertex_idx+3}/{uv_idx+3}\n")
-                    uv_idx += 4
-                    paredes_texturizadas += 1
-                else:
-                    f_obj.write(f"f {vertex_idx} {vertex_idx+1} {vertex_idx+2} {vertex_idx+3}\n")
-                    
-                vertex_idx += 4
-            
-        # Generar el Techo (Triangulación)
+        # Techos (triangulados)
         try:
-            import trimesh.creation
             techo_v, techo_f = trimesh.creation.triangulate_polygon(p)
-            start_techo_idx = vertex_idx
-            # Escribir vértices del techo
+            idx_start = len(vertices)
             for tv in techo_v:
-                tv_local = [tv[0] - centro_local[0], tv[1] - centro_local[1], altura_suelo_utm + altura]
-                f_obj.write(f"v {tv_local[0]:.4f} {tv_local[1]:.4f} {tv_local[2]:.4f}\n")
-                vertex_idx += 1
-            # Asignar un material nulo o el último para el techo
+                add_vertex(tv[0], tv[1], altura_suelo_utm + altura)
             for tf in techo_f:
-                f_obj.write(f"f {start_techo_idx + tf[0]} {start_techo_idx + tf[1]} {start_techo_idx + tf[2]}\n")
-        except Exception as e:
-            pass # Si falla triangulación geométrica compleja, saltar techo
+                # El techo está mirando hacia arriba (esperamos)
+                faces.append([idx_start + tf[0], idx_start + tf[1], idx_start + tf[2]])
+        except Exception:
+            pass
+
+vertices = np.array(vertices)
+faces = np.array(faces)
+vertices_ecef = np.array(vertices_ecef)
+
+mesh = trimesh.Trimesh(vertices=vertices, faces=faces, process=False)
+print(f"\033[92m[OK]\033[0m Malla abstracta creada: {len(faces)} triángulos.")
+
+print("\033[96m[INFO]\033[0m Calculando proyecciones y oclusiones (Raycasting)...")
+f_obj = open(PATH_OBJ, "w")
+f_mtl = open(PATH_MTL, "w")
+
+f_obj.write(f"mtllib lotes_texturados.mtl\n")
+for img_id, img in rec.images.items():
+    f_mtl.write(f"newmtl mat_{img.name}\nKa 0.0 0.0 0.0\nKd 1.0 1.0 1.0\nmap_Kd images/{img.name}\n\n")
+
+# Escribir vértices locales
+for v in vertices:
+    f_obj.write(f"v {v[0]:.4f} {v[1]:.4f} {v[2]:.4f}\n")
+
+uv_idx = 1
+triangulos_texturizados = 0
+
+# Convertir posiciones de camara a numpy
+cam_positions = {img.name: img.projection_center() for _, img in rec.images.items()}
+
+# Preparar motor de raycasting (Trimesh)
+intersector = trimesh.ray.ray_pyembree.RayMeshIntersector(mesh) if hasattr(trimesh.ray, 'ray_pyembree') else trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
+
+for face_idx, face in enumerate(faces):
+    # Obtener info en ECEF para matemática matemática fotogramétrica
+    ve1, ve2, ve3 = vertices_ecef[face[0]], vertices_ecef[face[1]], vertices_ecef[face[2]]
+    centro_ecef = (ve1 + ve2 + ve3) / 3.0
+    normal_ecef = np.cross(ve2 - ve1, ve3 - ve1)
+    n_norm = np.linalg.norm(normal_ecef)
+    if n_norm > 0: normal_ecef /= n_norm
+    
+    # Centro en coordenadas Locales para Raycasting
+    centro_local_3d = (vertices[face[0]] + vertices[face[1]] + vertices[face[2]]) / 3.0
+    
+    best_img = None
+    best_score = -1
+    best_uvs = None
+    
+    # Recolectar candidatos
+    candidatos = []
+    for _, img in rec.images.items():
+        cam_ecef = cam_positions[img.name]
+        ray = cam_ecef - centro_ecef
+        dist = np.linalg.norm(ray)
+        if dist < 1.0 or dist > 150.0: continue
+        
+        dot = np.dot(ray / dist, normal_ecef)
+        if dot > 0.15: # Ve la cara frontalmente
+            cam = rec.cameras[img.camera_id]
+            u1 = cam.img_from_cam(img.cam_from_world() * ve1)
+            u2 = cam.img_from_cam(img.cam_from_world() * ve2)
+            u3 = cam.img_from_cam(img.cam_from_world() * ve3)
+            
+            if u1 is not None and u2 is not None and u3 is not None:
+                xs = [u1[0], u2[0], u3[0]]
+                ys = [u1[1], u2[1], u3[1]]
+                if min(xs) >= 0 and max(xs) <= cam.width and min(ys) >= 0 and max(ys) <= cam.height:
+                    area = (max(xs) - min(xs)) * (max(ys) - min(ys))
+                    score = area * dot
+                    candidatos.append({'img': img, 'score': score, 'uvs': [u1, u2, u3], 'cam_ecef': cam_ecef, 'dist': dist, 'w': cam.width, 'h': cam.height})
+    
+    # Ordenar candidatos por mejor puntaje
+    candidatos.sort(key=lambda x: x['score'], reverse=True)
+    
+    # Validar oclusión usando Raycasting
+    for cand in candidatos:
+        # Trazar rayo desde el centro de la cara local hacia la camara en coord locales
+        cam_u_x, cam_u_y, cam_u_z = transformer.transform(cand['cam_ecef'][0], cand['cam_ecef'][1], cand['cam_ecef'][2])
+        cam_local = np.array([cam_u_x - centro_local[0], cam_u_y - centro_local[1], cam_u_z])
+        
+        ray_dir_local = cam_local - centro_local_3d
+        dist_local = np.linalg.norm(ray_dir_local)
+        ray_dir_local /= dist_local
+        
+        # Desplazar origen ligerísimamente para no auto-intersectar la misma cara
+        ray_origen = centro_local_3d + ray_dir_local * 0.1
+        
+        # Tirar el rayo!
+        locations, index_ray, index_tri = intersector.intersects_location([ray_origen], [ray_dir_local])
+        
+        occluded = False
+        if len(locations) > 0:
+            # Revisar si el choque es ANTES de llegar a la cámara
+            hit_dist = np.linalg.norm(locations[0] - ray_origen)
+            if hit_dist < dist_local - 1.0: # Si choca con algo 1 metro antes de la cámara...
+                occluded = True
+                
+        if not occluded:
+            best_img = cand['img']
+            best_uvs = cand['uvs']
+            cam_w = cand['w']
+            cam_h = cand['h']
+            break # Encontramos la mejor!
+            
+    if best_img is not None:
+        f_obj.write(f"vt {best_uvs[0][0]/cam_w:.5f} {1.0 - best_uvs[0][1]/cam_h:.5f}\n")
+        f_obj.write(f"vt {best_uvs[1][0]/cam_w:.5f} {1.0 - best_uvs[1][1]/cam_h:.5f}\n")
+        f_obj.write(f"vt {best_uvs[2][0]/cam_w:.5f} {1.0 - best_uvs[2][1]/cam_h:.5f}\n")
+        
+        f_obj.write(f"usemtl mat_{best_img.name}\n")
+        f_obj.write(f"f {face[0]+1}/{uv_idx} {face[1]+1}/{uv_idx+1} {face[2]+1}/{uv_idx+2}\n")
+        uv_idx += 3
+        triangulos_texturizados += 1
+    else:
+        # Sin textura
+        f_obj.write(f"f {face[0]+1} {face[1]+1} {face[2]+1}\n")
 
 f_obj.close()
 f_mtl.close()
 
-print(f"\033[92m[SUCCESS]\033[0m Se escribio {PATH_OBJ} con {paredes_texturizadas} paredes texturizadas perfectamente desde el dron.")
-print("\033[96m[INFO]\033[0m Ahora puedes abrir este archivo en Blender o con un visor 3D para asombrarte.")
+print(f"\033[92m[SUCCESS]\033[0m Proyección Fotométrica Finalizada.")
+print(f"\033[96m[INFO]\033[0m Se exportaron {triangulos_texturizados} triángulos texturizados perfectamente.")
