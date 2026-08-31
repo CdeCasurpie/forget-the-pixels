@@ -40,3 +40,15 @@ En lugar de reconstruir una malla densa que pesa decenas de GB, usaremos las pos
 - Se creará un archivo `.mtl` donde **cada foto del dron es declarada como un material único**.
 - Las coordenadas (u, v) de cada pared se calcularán multiplicando los vértices 3D del edificio por la matriz intrínseca/extrínseca de la mejor cámara que lo haya observado.
 - Resultado esperado: Un archivo `.obj` extremadamente ligero (abstracto) pero con texturas fotorrealistas en ultra-alta resolución, logrando eficiencia metropolitana.
+
+## Affine Texture Distortion and Occlusion (Phase 3 Challenges)
+
+During the photometric projection phase, two major graphics pipeline challenges were identified when writing custom `.obj` files:
+
+1. **Affine Texture Distortion (Perspective Splitting):**
+   When exporting massive CAD walls as `Quads` (4-vertex polygons) with perspective UV coordinates (from the drone's matrix), rendering engines like Blender divide these quads into two triangles and interpolate the UVs linearly. Because the original photo has non-linear perspective (foreshortening), linear interpolation across a large quad causes the texture to stretch and "break" along the diagonal.
+   *Solution:* Explicitly export the 3D meshes as triangles (not quads) and heavily subdivide long walls so that affine interpolation closely approximates the true perspective mapping.
+   
+2. **Ray-Tracing Occlusion:**
+   Projecting a triangle mathematically to a camera purely using the projection matrix ignores objects in between (like trees, roofs, or other buildings). This causes the drone to "paint" the background walls with pixels of foreground objects.
+   *Solution:* Use `trimesh.ray.intersects_location` in Python to shoot a ray from each triangle's centroid to the camera center. If the ray hits another building's geometry before reaching the camera, the camera is considered occluded and discarded.
