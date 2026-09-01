@@ -517,6 +517,8 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
         lines.append(f"    --workspace_format COLMAP \\")
         lines.append(f"    --input_type geometric \\")
         lines.append(f"    --output_path dense/fused.ply \\")
+        if dense_max_size:
+            lines.append(f"    --StereoFusion.max_image_size {dense_max_size} \\")
         lines.append(f"    {cache_flag} \\")
         lines.append(f"    {cache_size_flag}")
         lines.append("")
