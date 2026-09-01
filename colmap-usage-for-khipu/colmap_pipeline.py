@@ -500,7 +500,11 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
             lines.append(f"$COLMAP patch_match_stereo \\")
             lines.append(f"    --workspace_path dense/ \\")
             lines.append(f"    --workspace_format COLMAP \\")
-            lines.append(f"    --PatchMatchStereo.geom_consistency true")
+            dense_max_size = pipeline.get("dense_max_image_size", None)
+        if dense_max_size:
+            lines.append(f"    --PatchMatchStereo.max_image_size {dense_max_size} \\")
+            
+        lines.append(f"    --PatchMatchStereo.geom_consistency true")
             lines.append("")
             step += 1
 
@@ -543,6 +547,36 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
 # ============================================================
 def run_pipeline(config: dict, clean: bool = False):
     """Crea el workspace, genera el script SLURM y lo envia a la cola."""
+    # --- ESTIMACIÓN DE TIEMPOS ---
+    import subprocess, math
+    video_src = os.path.expanduser(config["video_source"])
+    fps = config.get("extraction", {}).get("fps", 1.0)
+    preset = config.get("pipeline", {}).get("preset", "sparse_only")
+    dense_max_size = config.get("pipeline", {}).get("dense_max_image_size", None)
+    
+    try:
+        res = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", video_src], capture_output=True, text=True)
+        duration = float(res.stdout.strip())
+        num_images = int(math.ceil(duration * fps))
+        
+        print_info(f"=== ESTIMACIÓN DE TIEMPO Y RECURSOS ===")
+        print_info(f"Video origen: {video_src} ({duration:.1f} segundos)")
+        print_info(f"Fotogramas estimados a extraer: ~{num_images} (a {fps} FPS)")
+        
+        if preset in ["sparse_and_dense", "dense_resume"]:
+            # Patch match: 480p ~3s/img, 1080p ~15s/img
+            is_480p = dense_max_size and int(dense_max_size) <= 854
+            time_per_img = 3.0 if is_480p else 15.0
+            total_sec = num_images * time_per_img
+            print_warn(f"Patch Match Stereo (Dense) a {'480p' if is_480p else 'Alta resolución'}: ~{total_sec/60.0:.1f} minutos (Ojo: 1 GPU en SLURM).")
+        
+        resp = input(f"[93m¿Deseas continuar con la ejecución? (y/N): [0m")
+        if resp.lower() not in ['y', 'yes']:
+            print_err("Operación cancelada por el usuario.")
+            sys.exit(0)
+    except Exception as e:
+        print_warn(f"No se pudo estimar el tiempo (requiere ffprobe): {e}")
+    # -------------------------------
     name = config.get("experiment_name", "unnamed")
     base = os.path.expanduser(config.get("workspace_base", "~/tesis_colmap"))
     workspace = os.path.join(base, name)
