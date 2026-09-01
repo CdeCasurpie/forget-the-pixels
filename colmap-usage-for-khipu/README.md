@@ -1,108 +1,90 @@
-# 🔧 khipu-colmap
+# Khipu COLMAP + Deep Learning Pipeline
 
-Mini-framework para ejecutar COLMAP en el clúster **Khipu** de UTEC sin morir en el intento.
+Este framework automatiza la reconstrucción 3D (Structure-from-Motion y Multi-View Stereo) a partir de videos de drones (con metadata GPS opcional) para ejecutarse en supercomputadoras bajo sistemas SLURM (como Khipu).
 
-Nacido de **5 iteraciones fallidas** y **7 bugs distintos**, este framework valida automáticamente todo antes de gastar un solo segundo de GPU.
+Soporta extracción tradicional (SIFT) e integración profunda de estado del arte usando `hloc` (SuperPoint + LightGlue).
 
-## Quick Start
+## Requisitos
+
+El entorno destino (clúster) debe tener instalado:
+- `colmap` (versión >= 3.13.0 recomendada)
+- `ffmpeg`
+- `python >= 3.10`
+- Paquetes de Python: `pycolmap`, `hloc`, `torch` (con soporte CUDA).
+
+## Uso
+
+El pipeline es manejado enteramente mediante archivos de configuración en formato JSON o YAML.
+
+### Comando Principal
 
 ```bash
-# 1. Copiar el framework a Khipu
-scp -r investigation/khipu-colmap/ cesar.perales@khipu:~/tesis_colmap/khipu-colmap/
-
-# 2. En Khipu: editar un config YAML
-cp ~/tesis_colmap/khipu-colmap/examples/tomasa_1fps.yaml mi_config.yaml
-nano mi_config.yaml
-
-# 3. Validar (sin gastar GPU)
-python ~/tesis_colmap/khipu-colmap/colmap_pipeline.py validate mi_config.yaml
-
-# 4. Ejecutar
-python ~/tesis_colmap/khipu-colmap/colmap_pipeline.py run mi_config.yaml
-
-# 4b. Ejecutar borrando workspace anterior (start fresh)
-python ~/tesis_colmap/khipu-colmap/colmap_pipeline.py run --clean mi_config.yaml
+python colmap_pipeline.py run config.json
 ```
 
-## Estructura del Config YAML
+Si deseas reiniciar un espacio de trabajo desde cero (borrar la reconstrucción anterior), usa el flag `--clean`:
 
-```yaml
-experiment_name: "mi_experimento"       # Nombre de la carpeta de trabajo
-workspace_base: "~/tesis_colmap"        # Directorio padre
-
-video_source: "~/ruta/al/video.MP4"     # Video fuente
-
-gps_source:
-  type: "dji_srt"                       # "dji_srt" | "exif" | "csv" | "none"
-  file: "~/ruta/al/archivo.SRT"         # Archivo GPS (no requerido si type=none)
-
-extraction:
-  fps: 1.0                              # Fotogramas por segundo a extraer
-  resolution: 1080                      # Altura en píxeles (ancho se escala auto)
-  quality: 2                            # Calidad JPEG (1=mejor, 31=peor)
-
-pipeline:
-  preset: "sparse_only"                 # "sparse_only" | "sparse_and_dense" | "dense_resume"
-  camera_model: "OPENCV"                # Modelo de cámara COLMAP
-  single_camera: true                   # ¿Todas las fotos son de la misma cámara?
-  sequential_overlap: 20                # Overlap para matching secuencial
-  alignment_max_error: 3.0              # Tolerancia GPS en metros
-  fusion_use_cache: true                # Usar caché de disco (anti-OOM)
-  fusion_cache_size: 32                 # Tamaño de caché en GB
-
-slurm:
-  partition: "gpu"
-  mem: "64G"                            # Máximo en Khipu: 64G
-  time: "12:00:00"
-  cpus: 16
+```bash
+python colmap_pipeline.py run --clean config.json
 ```
 
-## Presets
+## Estructura de la Configuración (JSON)
 
-| Preset | Qué hace | Tiempo estimado |
-|--------|----------|-----------------|
-| `sparse_only` | Poses de cámara + nube dispersa `.ply` | 15-30 min |
-| `sparse_and_dense` | Todo + nube densa + malla 3D | 1-3 horas |
-| `dense_resume` | Solo fusion + malla (para retomar tras OOM) | 5-20 min |
+Ejemplo de configuración completa:
 
-## Parsers de GPS
+```json
+{
+  "experiment_name": "reconstruccion_prueba",
+  "workspace_base": "~/tesis_colmap",
+  "video_source": "~/videos_dji/PasaarAColmapTomasa.MP4",
+  "gps_source": {
+    "type": "dji_srt",
+    "file": "~/videos_dji/DJI_20260827101346_0116_D.SRT"
+  },
+  "extraction": {
+    "fps": 2.0,
+    "resolution": 1080,
+    "quality": 2
+  },
+  "pipeline": {
+    "feature_extractor": "superpoint_lightglue",
+    "preset": "sparse_and_dense",
+    "dense_max_image_size": 854,
+    "sequential_overlap": 25
+  },
+  "slurm": {
+    "partition": "gpu",
+    "cpus": 16,
+    "mem": "64G",
+    "time": "48:00:00"
+  }
+}
+```
 
-| Tipo | Descripción | Ejemplo |
-|------|-------------|---------|
-| `dji_srt` | Archivo `.SRT` de dron DJI | Auto-detecta FPS del SRT |
-| `exif` | Fotos de celular con EXIF GPS | Lee lat/lon de cada `.jpg` |
-| `csv` | CSV manual (`filename,lat,lon,alt`) | Para GPS externo/RTK |
-| `none` | Sin GPS | Nube en coordenadas locales |
+### Explicación de los Parámetros
 
-## Validaciones Automáticas
+#### `video_source` y `gps_source`
+- Rutas absolutas a tu video y archivo de metadatos (opcional). Actualmente se soporta parsing nativo de subtítulos DJI `.SRT` para la alineación geográfica. Si no hay GPS, simplemente elimina la llave `gps_source`.
 
-El comando `validate` ejecuta **10 chequeos** antes de enviar el job:
+#### `extraction`
+- **fps**: Fotogramas a extraer por segundo. `1.0` a `2.0` suele ser ideal.
+- **resolution**: Altura de la imagen extraída (ej. `1080` para FullHD). 
 
-1. ✅ ¿El video fuente existe?
-2. ✅ ¿El archivo GPS existe y es parseable?
-3. ✅ ¿El regex detecta coordenadas?
-4. ✅ ¿El workspace está limpio?
-5. ✅ ¿El binario de COLMAP existe?
-6. ✅ ¿FFmpeg existe?
-7. ✅ ¿Python del conda env existe?
-8. ✅ ¿Memoria ≤ 64GB (límite Khipu)?
-9. ✅ ¿Flags compatibles con COLMAP 3.13.0?
-10. ✅ ¿GPS y frames están sincronizados?
+#### `pipeline`
+- **feature_extractor**: `sift` para extractor clásico de COLMAP. `superpoint_lightglue` para inyectar un script en tiempo de ejecución que utilizará `hloc` con soporte GPU para pareo de puntos.
+- **dense_max_image_size**: Resolución máxima (en el lado más largo) para calcular los mapas de profundidad estéreo (PatchMatch). `854` (480p) es súper rápido, `1280` (720p) ofrece más detalle pero toma horas, y más de `1920` (1080p) puede agotar la VRAM de la GPU.
+- **sequential_overlap**: Si usas `sift`, la cantidad de fotogramas adyacentes a emparejar. 
 
-## Bugs Conocidos que este Framework Previene
+#### `slurm`
+Configura los recursos del clúster. Es **vital** reservar suficiente tiempo (`time`) si usas MVS denso a alta resolución (se recomiendan al menos `24:00:00` o `48:00:00`).
 
-| Bug | Cómo lo previene |
-|-----|-----------------|
-| `$COLMAP: command not found` | Usa rutas absolutas hardcodeadas |
-| `--robust_alignment` crash | Blacklist de flags incompatibles |
-| `sparse/0_aligned/` vacía | Guard que detecta fallo y usa fallback |
-| `geo_priors.txt` vacío | Validación de regex + conteo pre-submit |
-| OOM en stereo_fusion | Flags de caché obligatorios en preset |
-| Desincronización GPS/frames | Auto-detección de FPS del SRT |
-| Mapper escribe en `sparse/0/0/` | Auto-detección con `find` |
+## ¿Qué hace exactamente el framework bajo la capota?
 
-## Documentación COLMAP
+1. Verifica las instalaciones locales y estima la cantidad de frames.
+2. Extrae las imágenes mediante `FFmpeg`.
+3. Convierte las coordenadas WGS84 a Cartesianas para alinear el modelo.
+4. Genera automáticamente un archivo de trabajo `colmap_job.sh` con los parámetros exactos y lo despacha a la cola de SLURM (`sbatch`).
+5. Parchea internamente la configuración (como el `max_depth_error` a 0.5) para solucionar problemas de tolerancia espacial donde COLMAP descarta la nube densa al escalar el mundo con datos GPS reales.
 
-- **CLI Reference:** https://colmap.github.io/cli.html
-- **Tutorial:** https://colmap.github.io/tutorial.html
-- **Versión en Khipu:** COLMAP 3.13.0 (con CUDA)
+## Autor / Tesis
+Desarrollado para la tesis de reconstrucción estructural urbana basada en segmentación de planos.

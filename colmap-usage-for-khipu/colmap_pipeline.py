@@ -413,25 +413,25 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
         feature_extractor = pipeline.get("feature_extractor", "sift")
         if feature_extractor == "sift":
             lines.append(f'echo "[{step}/{total_steps}] Extraccion de caracteristicas (SIFT)..."')
-            lines.append(f"$COLMAP feature_extractor \")
-            lines.append(f"    --database_path database.db \")
-            lines.append(f"    --image_path images/ \")
-            lines.append(f"    --ImageReader.camera_model {camera_model} \")
+            lines.append(f"$COLMAP feature_extractor \\")
+            lines.append(f"    --database_path database.db \\")
+            lines.append(f"    --image_path images/ \\")
+            lines.append(f"    --ImageReader.camera_model {camera_model} \\")
             lines.append(f"    --ImageReader.single_camera {single_camera}")
             lines.append("")
             step += 1
 
             lines.append(f'echo "[{step}/{total_steps}] Emparejamiento secuencial..."')
-            lines.append(f"$COLMAP sequential_matcher \")
-            lines.append(f"    --database_path database.db \")
+            lines.append(f"$COLMAP sequential_matcher \\")
+            lines.append(f"    --database_path database.db \\")
             lines.append(f"    --SequentialMatching.overlap {overlap}")
             lines.append("")
             step += 1
 
             lines.append(f'echo "[{step}/{total_steps}] Bundle Adjustment (Mapper)..."')
-            lines.append(f"$COLMAP mapper \")
-            lines.append(f"    --database_path database.db \")
-            lines.append(f"    --image_path images/ \")
+            lines.append(f"$COLMAP mapper \\")
+            lines.append(f"    --database_path database.db \\")
+            lines.append(f"    --image_path images/ \\")
             lines.append(f"    --output_path sparse/0/")
             lines.append("")
         else:
@@ -453,17 +453,19 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
             if ext == "superpoint": ext = "superpoint_aachen"
             
             lines.append(f"feature_conf = extract_features.confs['{ext}']")
-            lines.append(f"matcher_conf = match_features.confs['{feature_extractor}']")
+            mapped_extractor = feature_extractor.replace('_lightglue', '+lightglue')
+            lines.append(f"matcher_conf = match_features.confs['{mapped_extractor}']")
             
-            lines.append("from hloc import pairs_from_sequence")
-            lines.append(f"pairs_from_sequence.main(sfm_pairs, images, features=None, overlap={overlap}, quadratic_overlap=False)")
+            lines.append("from hloc import pairs_from_exhaustive")
+            lines.append("pairs_from_exhaustive.main(sfm_pairs, image_list=[p.name for p in sorted(images.iterdir())])")
             lines.append("features = extract_features.main(feature_conf, images, outputs)")
-            lines.append("matches = match_features.main(matcher_conf, sfm_pairs, features, outputs)")
+            lines.append("matches_path = outputs / 'matches.h5'")
+            lines.append("matches = match_features.main(matcher_conf, sfm_pairs, features=features, matches=matches_path)")
             
             lines.append("reconstruction.main(sfm_dir, images, sfm_pairs, features, matches, image_list=[p.name for p in sorted(images.iterdir())])")
             lines.append("EOF_HLOC")
             
-            lines.append(f"~/hloc_env/bin/python run_hloc.py")
+            lines.append(f"~/hloc_env_gpu/bin/python run_hloc.py")
             lines.append("")
             
             step += 2
@@ -535,13 +537,13 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
             lines.append(f"$COLMAP patch_match_stereo \\")
             lines.append(f"    --workspace_path dense/ \\")
             lines.append(f"    --workspace_format COLMAP \\")
-            dense_max_size = pipeline.get("dense_max_image_size", None)
+        dense_max_size = pipeline.get("dense_max_image_size", None)
         if dense_max_size:
             lines.append(f"    --PatchMatchStereo.max_image_size {dense_max_size} \\")
             
         lines.append(f"    --PatchMatchStereo.geom_consistency true")
-            lines.append("")
-            step += 1
+        lines.append("")
+        step += 1
 
         cache_flag = "--StereoFusion.use_cache 1" if use_cache else ""
         cache_size_flag = f"--StereoFusion.cache_size {cache_size}" if use_cache else ""
@@ -554,6 +556,8 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
         lines.append(f"    --output_path dense/fused.ply \\")
         if dense_max_size:
             lines.append(f"    --StereoFusion.max_image_size {dense_max_size} \\")
+            lines.append(f"    --StereoFusion.max_depth_error 0.5 \\")
+            lines.append(f"    --StereoFusion.max_normal_error 180 \\")
         lines.append(f"    {cache_flag} \\")
         lines.append(f"    {cache_size_flag}")
         lines.append("")
