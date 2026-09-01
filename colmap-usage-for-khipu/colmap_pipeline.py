@@ -410,28 +410,63 @@ def generate_slurm_script(config: dict, workspace: str) -> str:
             lines.append("")
             step += 1
 
-        lines.append(f'echo "[{step}/{total_steps}] Extraccion de caracteristicas (SIFT)..."')
-        lines.append(f"$COLMAP feature_extractor \\")
-        lines.append(f"    --database_path database.db \\")
-        lines.append(f"    --image_path images/ \\")
-        lines.append(f"    --ImageReader.camera_model {camera_model} \\")
-        lines.append(f"    --ImageReader.single_camera {single_camera}")
-        lines.append("")
-        step += 1
+        feature_extractor = pipeline.get("feature_extractor", "sift")
+        if feature_extractor == "sift":
+            lines.append(f'echo "[{step}/{total_steps}] Extraccion de caracteristicas (SIFT)..."')
+            lines.append(f"$COLMAP feature_extractor \")
+            lines.append(f"    --database_path database.db \")
+            lines.append(f"    --image_path images/ \")
+            lines.append(f"    --ImageReader.camera_model {camera_model} \")
+            lines.append(f"    --ImageReader.single_camera {single_camera}")
+            lines.append("")
+            step += 1
 
-        lines.append(f'echo "[{step}/{total_steps}] Emparejamiento secuencial..."')
-        lines.append(f"$COLMAP sequential_matcher \\")
-        lines.append(f"    --database_path database.db \\")
-        lines.append(f"    --SequentialMatching.overlap {overlap}")
-        lines.append("")
-        step += 1
+            lines.append(f'echo "[{step}/{total_steps}] Emparejamiento secuencial..."')
+            lines.append(f"$COLMAP sequential_matcher \")
+            lines.append(f"    --database_path database.db \")
+            lines.append(f"    --SequentialMatching.overlap {overlap}")
+            lines.append("")
+            step += 1
 
-        lines.append(f'echo "[{step}/{total_steps}] Bundle Adjustment (Mapper)..."')
-        lines.append(f"$COLMAP mapper \\")
-        lines.append(f"    --database_path database.db \\")
-        lines.append(f"    --image_path images/ \\")
-        lines.append(f"    --output_path sparse/0/")
-        lines.append("")
+            lines.append(f'echo "[{step}/{total_steps}] Bundle Adjustment (Mapper)..."')
+            lines.append(f"$COLMAP mapper \")
+            lines.append(f"    --database_path database.db \")
+            lines.append(f"    --image_path images/ \")
+            lines.append(f"    --output_path sparse/0/")
+            lines.append("")
+        else:
+            lines.append(f'echo "[{step}/{total_steps}] Extraccion y Matching con hloc ({feature_extractor})..."')
+            lines.append(f'cat << "EOF_HLOC" > run_hloc.py')
+            lines.append("import sys, os")
+            lines.append("from pathlib import Path")
+            lines.append("from hloc import extract_features, match_features, reconstruction")
+            lines.append("images = Path('images/')")
+            lines.append("outputs = Path('hloc_outputs/')")
+            lines.append("outputs.mkdir(exist_ok=True)")
+            
+            # Using sequential pairs if it's a video
+            lines.append("sfm_pairs = outputs / 'pairs.txt'")
+            lines.append("sfm_dir = Path('sparse/0')")
+            lines.append("sfm_dir.mkdir(parents=True, exist_ok=True)")
+            
+            ext = feature_extractor.split('_')[0]
+            if ext == "superpoint": ext = "superpoint_aachen"
+            
+            lines.append(f"feature_conf = extract_features.confs['{ext}']")
+            lines.append(f"matcher_conf = match_features.confs['{feature_extractor}']")
+            
+            lines.append("from hloc import pairs_from_sequence")
+            lines.append(f"pairs_from_sequence.main(sfm_pairs, images, features=None, overlap={overlap}, quadratic_overlap=False)")
+            lines.append("features = extract_features.main(feature_conf, images, outputs)")
+            lines.append("matches = match_features.main(matcher_conf, sfm_pairs, features, outputs)")
+            
+            lines.append("reconstruction.main(sfm_dir, images, sfm_pairs, features, matches, image_list=[p.name for p in sorted(images.iterdir())])")
+            lines.append("EOF_HLOC")
+            
+            lines.append(f"~/hloc_env/bin/python run_hloc.py")
+            lines.append("")
+            
+            step += 2
         lines.append("# Guard: Auto-detectar subcarpeta del mapper")
         lines.append('SPARSE_MODEL=$(find sparse/0/ -name "cameras.bin" -printf "%h\\n" '
                       '| head -1)')
