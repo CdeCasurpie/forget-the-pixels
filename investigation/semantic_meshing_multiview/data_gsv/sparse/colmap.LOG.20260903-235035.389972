@@ -1,0 +1,971 @@
+Log file created at: 2026/09/03 23:50:35
+Running on machine: ag001
+Running duration (h:mm:ss): 0:02:21
+Log line format: [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I20260903 23:50:35.327841 140648703325952 feature_matching.cc:195] === Feature matching & geometric verification ===
+I20260903 23:50:35.354434 140656773232384 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354488 140656764839680 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354516 140648694933248 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354520 140656967341824 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354571 140648678147840 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354573 140648686540544 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354613 140648661362432 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354633 140648669755136 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354649 140648652969728 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.354650 140648166455040 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.355709 140647218177792 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357111 140647931557632 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357114 140647856023296 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357115 140648090953472 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357136 140647965128448 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357148 140647621027584 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357154 140647209785088 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357149 140647780488960 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357168 140647411209984 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357164 140647201392384 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357184 140647461566208 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357184 140647360853760 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357198 140647679776512 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357206 140647394424576 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357210 140647528707840 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357212 140647704954624 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357212 140647192999680 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357220 140647402817280 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357228 140647109072640 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357239 140647184606976 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357243 140647755310848 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357244 140647889594112 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357247 140647226570496 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357252 140647377639168 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357253 140647511922432 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357258 140648057382656 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357268 140647587456768 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357270 140647134250752 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357273 140647478351616 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357277 140647822452480 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357279 140647335675648 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357281 140647839237888 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357290 140647604242176 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357291 140647260141312 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357309 140647469958912 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357310 140647234963200 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357315 140647503529728 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357316 140647100679936 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357334 140647293712128 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357337 140647276926720 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357344 140647117465344 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357345 140647939950336 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357345 140647629420288 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357361 140647730132736 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357366 140647369246464 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357371 140647167821568 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357376 140647646205696 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357377 140647914772224 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357378 140647176214272 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357391 140647746918144 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357392 140648074168064 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357401 140647302104832 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357404 140648048989952 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357309 140647151036160 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357410 140647579064064 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357416 140647713347328 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357429 140647872808704 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357431 140647495137024 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357435 140647553885952 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357439 140648065775360 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357444 140647268534016 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357459 140647318890240 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357469 140648099346176 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357470 140647738525440 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357472 140647688169216 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357486 140647058716416 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357487 140647344068352 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357497 140647537100544 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357503 140648158062336 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357513 140647327282944 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357520 140647797274368 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357541 140647814059776 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357550 140647352461056 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357558 140647427995392 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357566 140647906379520 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357574 140647125858048 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357583 140647386031872 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357597 140647285319424 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357604 140647671383808 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357632 140647520315136 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357637 140647419602688 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357653 140647654598400 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357659 140647092287232 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357683 140647805667072 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357704 140647923164928 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357706 140647788881664 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357346 140647570671360 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357719 140647864416000 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357729 140647662991104 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357743 140648082560768 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357762 140647562278656 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357775 140647595849472 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357785 140647083894528 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357804 140647545493248 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357838 140647453173504 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357861 140647067109120 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357885 140647251748608 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357906 140647956735744 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357942 140647830845184 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357966 140647310497536 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.357990 140647142643456 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358020 140647696561920 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358042 140647772096256 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358073 140647763703552 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358098 140647159428864 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358127 140647444780800 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358150 140647721740032 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358174 140647486744320 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358199 140647612634880 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358236 140647436388096 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358267 140647075501824 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358296 140647637812992 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358331 140647897986816 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358359 140647847630592 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358377 140647881201408 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358403 140647948343040 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358440 140648149669632 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358461 140647243355904 sift.cc:1565] Creating SIFT CPU feature matcher
+I20260903 23:50:35.358482 140648703325952 pairing.cc:822] Importing image pairs...
+I20260903 23:50:35.373971 140648703325952 pairing.cc:855] Processing block [1/11]
+I20260903 23:50:59.164693 140648703325952 feature_matching.cc:217] in 23.791s
+I20260903 23:50:59.164730 140648703325952 pairing.cc:855] Processing block [2/11]
+I20260903 23:51:22.315904 140648703325952 feature_matching.cc:217] in 23.151s
+I20260903 23:51:22.316078 140648703325952 pairing.cc:855] Processing block [3/11]
+I20260903 23:51:45.120581 140648703325952 feature_matching.cc:217] in 22.805s
+I20260903 23:51:45.120612 140648703325952 pairing.cc:855] Processing block [4/11]
+I20260903 23:52:09.607535 140648703325952 feature_matching.cc:217] in 24.487s
+I20260903 23:52:09.607721 140648703325952 pairing.cc:855] Processing block [5/11]
+I20260903 23:52:34.708988 140648703325952 feature_matching.cc:217] in 25.101s
+I20260903 23:52:34.709030 140648703325952 pairing.cc:855] Processing block [6/11]
+I20260903 23:53:00.036356 140648703325952 feature_matching.cc:217] in 25.327s
+I20260903 23:53:00.036535 140648703325952 pairing.cc:855] Processing block [7/11]
+I20260903 23:53:24.926217 140648703325952 feature_matching.cc:217] in 24.890s
+I20260903 23:53:24.926248 140648703325952 pairing.cc:855] Processing block [8/11]
+I20260903 23:53:50.318360 140648703325952 feature_matching.cc:217] in 25.392s
+I20260903 23:53:50.318411 140648703325952 pairing.cc:855] Processing block [9/11]
+I20260903 23:54:13.828521 140648703325952 feature_matching.cc:217] in 23.510s
+I20260903 23:54:13.828551 140648703325952 pairing.cc:855] Processing block [10/11]
+I20260903 23:54:37.275799 140648703325952 feature_matching.cc:217] in 23.447s
+I20260903 23:54:37.275842 140648703325952 pairing.cc:855] Processing block [11/11]
+I20260903 23:54:46.264902 140648703325952 feature_matching.cc:217] in 8.989s
+I20260903 23:54:46.264936 140648703325952 timer.cc:90] Elapsed time: 4.182 [minutes]
+I20260903 23:54:46.821694 140657148016448 incremental_pipeline.cc:278] Loading database
+I20260903 23:54:46.826211 140657148016448 database_cache.cc:72] Loading rigs...
+I20260903 23:54:46.827856 140657148016448 database_cache.cc:82]  160 in 0.002s
+I20260903 23:54:46.827867 140657148016448 database_cache.cc:90] Loading cameras...
+I20260903 23:54:46.829555 140657148016448 database_cache.cc:108]  160 in 0.002s
+I20260903 23:54:46.829560 140657148016448 database_cache.cc:116] Loading frames...
+I20260903 23:54:46.830640 140657148016448 database_cache.cc:126]  160 in 0.001s
+I20260903 23:54:46.830645 140657148016448 database_cache.cc:134] Loading matches...
+I20260903 23:54:46.889626 140657148016448 database_cache.cc:139]  8523 in 0.059s
+I20260903 23:54:46.889643 140657148016448 database_cache.cc:147] Loading images...
+I20260903 23:54:47.107930 140657148016448 database_cache.cc:241]  160 in 0.218s (connected 160, loaded 160)
+I20260903 23:54:47.107980 140657148016448 database_cache.cc:255] Loading pose priors...
+I20260903 23:54:47.109081 140657148016448 database_cache.cc:263]  0 in 0.001s
+I20260903 23:54:47.109086 140657148016448 database_cache.cc:271] Building correspondence graph...
+I20260903 23:54:47.195709 140657148016448 database_cache.cc:300]  in 0.087s (ignored 0)
+I20260903 23:54:47.195851 140657148016448 timer.cc:90] Elapsed time: 0.006 [minutes]
+I20260903 23:54:47.202258 140657148016448 incremental_pipeline.cc:390] Finding good initial image pair
+I20260903 23:54:47.249261 140657148016448 incremental_pipeline.cc:414] Registering initial image pair #101 and #100
+I20260903 23:54:47.255029 140657148016448 incremental_pipeline.cc:432] Global bundle adjustment
+I20260903 23:54:47.354101 140657148016448 incremental_pipeline.cc:537] Registering image #20 (num_reg_frames=2)
+I20260903 23:54:47.354115 140657148016448 incremental_pipeline.cc:540] => Image sees 378 / 2909 points
+I20260903 23:54:47.525535 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:47.729108 140657148016448 incremental_pipeline.cc:537] Registering image #21 (num_reg_frames=3)
+I20260903 23:54:47.729123 140657148016448 incremental_pipeline.cc:540] => Image sees 182 / 2701 points
+I20260903 23:54:47.867885 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:47.916464 140657148016448 incremental_pipeline.cc:537] Registering image #11 (num_reg_frames=4)
+I20260903 23:54:47.916479 140657148016448 incremental_pipeline.cc:540] => Image sees 483 / 2931 points
+I20260903 23:54:48.078035 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:48.152138 140657148016448 incremental_pipeline.cc:537] Registering image #10 (num_reg_frames=5)
+I20260903 23:54:48.152154 140657148016448 incremental_pipeline.cc:540] => Image sees 761 / 3325 points
+I20260903 23:54:48.397280 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:48.483691 140657148016448 incremental_pipeline.cc:537] Registering image #2 (num_reg_frames=6)
+I20260903 23:54:48.483706 140657148016448 incremental_pipeline.cc:540] => Image sees 890 / 2888 points
+I20260903 23:54:48.672126 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:48.787232 140657148016448 incremental_pipeline.cc:537] Registering image #3 (num_reg_frames=7)
+I20260903 23:54:48.787247 140657148016448 incremental_pipeline.cc:540] => Image sees 705 / 2678 points
+I20260903 23:54:48.993631 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:49.124771 140657148016448 incremental_pipeline.cc:537] Registering image #12 (num_reg_frames=8)
+I20260903 23:54:49.124787 140657148016448 incremental_pipeline.cc:540] => Image sees 769 / 2466 points
+I20260903 23:54:49.324310 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:49.506312 140657148016448 incremental_pipeline.cc:537] Registering image #4 (num_reg_frames=9)
+I20260903 23:54:49.506330 140657148016448 incremental_pipeline.cc:540] => Image sees 661 / 2440 points
+I20260903 23:54:49.685969 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:49.791913 140657148016448 incremental_pipeline.cc:537] Registering image #1 (num_reg_frames=10)
+I20260903 23:54:49.791933 140657148016448 incremental_pipeline.cc:540] => Image sees 889 / 2832 points
+I20260903 23:54:50.111197 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:50.520647 140657148016448 incremental_pipeline.cc:537] Registering image #92 (num_reg_frames=11)
+I20260903 23:54:50.520666 140657148016448 incremental_pipeline.cc:540] => Image sees 724 / 2960 points
+I20260903 23:54:50.797537 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:51.098808 140657148016448 incremental_pipeline.cc:537] Registering image #91 (num_reg_frames=12)
+I20260903 23:54:51.098827 140657148016448 incremental_pipeline.cc:540] => Image sees 695 / 3390 points
+I20260903 23:54:51.360866 140657148016448 incremental_pipeline.cc:537] Registering image #9 (num_reg_frames=13)
+I20260903 23:54:51.360883 140657148016448 incremental_pipeline.cc:540] => Image sees 813 / 2881 points
+I20260903 23:54:51.664267 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:52.723523 140657148016448 incremental_pipeline.cc:537] Registering image #90 (num_reg_frames=14)
+I20260903 23:54:52.723541 140657148016448 incremental_pipeline.cc:540] => Image sees 793 / 2974 points
+I20260903 23:54:52.982819 140657148016448 incremental_pipeline.cc:537] Registering image #84 (num_reg_frames=15)
+I20260903 23:54:52.982834 140657148016448 incremental_pipeline.cc:540] => Image sees 955 / 3175 points
+I20260903 23:54:53.294225 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:54.932880 140657148016448 incremental_pipeline.cc:537] Registering image #83 (num_reg_frames=16)
+I20260903 23:54:54.932899 140657148016448 incremental_pipeline.cc:540] => Image sees 889 / 3278 points
+I20260903 23:54:55.207539 140657148016448 incremental_pipeline.cc:537] Registering image #26 (num_reg_frames=17)
+I20260903 23:54:55.207556 140657148016448 incremental_pipeline.cc:540] => Image sees 871 / 2980 points
+I20260903 23:54:55.592572 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:54:57.000595 140657148016448 incremental_pipeline.cc:537] Registering image #22 (num_reg_frames=18)
+I20260903 23:54:57.000614 140657148016448 incremental_pipeline.cc:540] => Image sees 887 / 2223 points
+I20260903 23:54:57.261147 140657148016448 incremental_pipeline.cc:537] Registering image #89 (num_reg_frames=19)
+I20260903 23:54:57.261163 140657148016448 incremental_pipeline.cc:540] => Image sees 654 / 2581 points
+I20260903 23:54:57.556005 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:00.229895 140657148016448 incremental_pipeline.cc:537] Registering image #25 (num_reg_frames=20)
+I20260903 23:55:00.229914 140657148016448 incremental_pipeline.cc:540] => Image sees 925 / 2926 points
+I20260903 23:55:00.511465 140657148016448 incremental_pipeline.cc:537] Registering image #27 (num_reg_frames=21)
+I20260903 23:55:00.511485 140657148016448 incremental_pipeline.cc:540] => Image sees 619 / 2771 points
+I20260903 23:55:00.718033 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:02.526758 140657148016448 incremental_pipeline.cc:537] Registering image #13 (num_reg_frames=22)
+I20260903 23:55:02.526778 140657148016448 incremental_pipeline.cc:540] => Image sees 918 / 2011 points
+I20260903 23:55:02.837446 140657148016448 incremental_pipeline.cc:537] Registering image #85 (num_reg_frames=23)
+I20260903 23:55:02.837485 140657148016448 incremental_pipeline.cc:540] => Image sees 829 / 2537 points
+I20260903 23:55:03.168329 140657148016448 incremental_pipeline.cc:537] Registering image #93 (num_reg_frames=24)
+I20260903 23:55:03.168347 140657148016448 incremental_pipeline.cc:540] => Image sees 915 / 2459 points
+I20260903 23:55:03.451718 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:06.180489 140657148016448 incremental_pipeline.cc:537] Registering image #102 (num_reg_frames=25)
+I20260903 23:55:06.180509 140657148016448 incremental_pipeline.cc:540] => Image sees 710 / 1992 points
+I20260903 23:55:06.493251 140657148016448 incremental_pipeline.cc:537] Registering image #5 (num_reg_frames=26)
+I20260903 23:55:06.493269 140657148016448 incremental_pipeline.cc:540] => Image sees 581 / 2081 points
+I20260903 23:55:06.708559 140657148016448 incremental_pipeline.cc:537] Registering image #28 (num_reg_frames=27)
+I20260903 23:55:06.708576 140657148016448 incremental_pipeline.cc:540] => Image sees 558 / 2489 points
+I20260903 23:55:06.944324 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:10.397399 140657148016448 incremental_pipeline.cc:537] Registering image #8 (num_reg_frames=28)
+I20260903 23:55:10.397425 140657148016448 incremental_pipeline.cc:540] => Image sees 586 / 2393 points
+I20260903 23:55:10.584951 140657148016448 incremental_pipeline.cc:537] Registering image #19 (num_reg_frames=29)
+I20260903 23:55:10.584967 140657148016448 incremental_pipeline.cc:540] => Image sees 675 / 3054 points
+I20260903 23:55:10.920966 140657148016448 incremental_pipeline.cc:537] Registering image #16 (num_reg_frames=30)
+I20260903 23:55:10.920984 140657148016448 incremental_pipeline.cc:540] => Image sees 630 / 3140 points
+I20260903 23:55:11.122113 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:12.178885 140657148016448 incremental_pipeline.cc:537] Registering image #18 (num_reg_frames=31)
+I20260903 23:55:12.178904 140657148016448 incremental_pipeline.cc:540] => Image sees 651 / 2717 points
+I20260903 23:55:12.387090 140657148016448 incremental_pipeline.cc:537] Registering image #17 (num_reg_frames=32)
+I20260903 23:55:12.387106 140657148016448 incremental_pipeline.cc:540] => Image sees 689 / 2459 points
+I20260903 23:55:12.578071 140657148016448 incremental_pipeline.cc:537] Registering image #96 (num_reg_frames=33)
+I20260903 23:55:12.578088 140657148016448 incremental_pipeline.cc:540] => Image sees 642 / 2210 points
+I20260903 23:55:12.795961 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:13.524498 140657148016448 incremental_pipeline.cc:537] Registering image #99 (num_reg_frames=34)
+I20260903 23:55:13.524518 140657148016448 incremental_pipeline.cc:540] => Image sees 649 / 2542 points
+I20260903 23:55:13.726041 140657148016448 incremental_pipeline.cc:537] Registering image #109 (num_reg_frames=35)
+I20260903 23:55:13.726058 140657148016448 incremental_pipeline.cc:540] => Image sees 859 / 2272 points
+I20260903 23:55:14.043361 140657148016448 incremental_pipeline.cc:537] Registering image #98 (num_reg_frames=36)
+I20260903 23:55:14.043380 140657148016448 incremental_pipeline.cc:540] => Image sees 556 / 2251 points
+I20260903 23:55:14.209100 140657148016448 incremental_pipeline.cc:537] Registering image #97 (num_reg_frames=37)
+I20260903 23:55:14.209116 140657148016448 incremental_pipeline.cc:540] => Image sees 664 / 2619 points
+I20260903 23:55:14.386704 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:16.989678 140657148016448 incremental_pipeline.cc:537] Registering image #106 (num_reg_frames=38)
+I20260903 23:55:16.989701 140657148016448 incremental_pipeline.cc:540] => Image sees 631 / 2324 points
+I20260903 23:55:17.188577 140657148016448 incremental_pipeline.cc:537] Registering image #15 (num_reg_frames=39)
+I20260903 23:55:17.188593 140657148016448 incremental_pipeline.cc:540] => Image sees 790 / 2944 points
+I20260903 23:55:17.479710 140657148016448 incremental_pipeline.cc:537] Registering image #7 (num_reg_frames=40)
+I20260903 23:55:17.479728 140657148016448 incremental_pipeline.cc:540] => Image sees 902 / 2115 points
+I20260903 23:55:17.788983 140657148016448 incremental_pipeline.cc:537] Registering image #24 (num_reg_frames=41)
+I20260903 23:55:17.789000 140657148016448 incremental_pipeline.cc:540] => Image sees 793 / 2017 points
+I20260903 23:55:18.029671 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:19.854104 140657148016448 incremental_pipeline.cc:537] Registering image #23 (num_reg_frames=42)
+I20260903 23:55:19.854123 140657148016448 incremental_pipeline.cc:540] => Image sees 789 / 2167 points
+I20260903 23:55:20.064746 140657148016448 incremental_pipeline.cc:537] Registering image #14 (num_reg_frames=43)
+I20260903 23:55:20.064763 140657148016448 incremental_pipeline.cc:540] => Image sees 884 / 1969 points
+W20260903 23:55:20.185556 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:20.187567 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:20.189442 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:20.209912 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:20.211778 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:55:20.295223 140657148016448 incremental_pipeline.cc:537] Registering image #105 (num_reg_frames=44)
+I20260903 23:55:20.295239 140657148016448 incremental_pipeline.cc:540] => Image sees 774 / 2921 points
+I20260903 23:55:20.539771 140657148016448 incremental_pipeline.cc:537] Registering image #104 (num_reg_frames=45)
+I20260903 23:55:20.539788 140657148016448 incremental_pipeline.cc:540] => Image sees 766 / 2389 points
+I20260903 23:55:20.754068 140657148016448 incremental_pipeline.cc:537] Registering image #103 (num_reg_frames=46)
+I20260903 23:55:20.754084 140657148016448 incremental_pipeline.cc:540] => Image sees 732 / 2177 points
+I20260903 23:55:20.985402 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:25.105981 140657148016448 incremental_pipeline.cc:537] Registering image #108 (num_reg_frames=47)
+I20260903 23:55:25.106000 140657148016448 incremental_pipeline.cc:540] => Image sees 836 / 2090 points
+I20260903 23:55:25.339151 140657148016448 incremental_pipeline.cc:537] Registering image #6 (num_reg_frames=48)
+I20260903 23:55:25.339170 140657148016448 incremental_pipeline.cc:540] => Image sees 637 / 1813 points
+W20260903 23:55:25.461272 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:25.467969 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:25.469423 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:25.470871 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:25.472319 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:25.473776 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:55:25.553224 140657148016448 incremental_pipeline.cc:537] Registering image #112 (num_reg_frames=49)
+I20260903 23:55:25.553241 140657148016448 incremental_pipeline.cc:540] => Image sees 555 / 3103 points
+I20260903 23:55:25.776370 140657148016448 incremental_pipeline.cc:537] Registering image #110 (num_reg_frames=50)
+I20260903 23:55:25.776387 140657148016448 incremental_pipeline.cc:540] => Image sees 859 / 2059 points
+I20260903 23:55:26.141108 140657148016448 incremental_pipeline.cc:537] Registering image #111 (num_reg_frames=51)
+I20260903 23:55:26.141126 140657148016448 incremental_pipeline.cc:540] => Image sees 768 / 2466 points
+I20260903 23:55:26.383569 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:55:31.522786 140657148016448 incremental_pipeline.cc:537] Registering image #107 (num_reg_frames=52)
+I20260903 23:55:31.522806 140657148016448 incremental_pipeline.cc:540] => Image sees 570 / 1683 points
+I20260903 23:55:31.757215 140657148016448 incremental_pipeline.cc:537] Registering image #117 (num_reg_frames=53)
+I20260903 23:55:31.757257 140657148016448 incremental_pipeline.cc:540] => Image sees 797 / 2507 points
+I20260903 23:55:32.104796 140657148016448 incremental_pipeline.cc:537] Registering image #116 (num_reg_frames=54)
+I20260903 23:55:32.104815 140657148016448 incremental_pipeline.cc:540] => Image sees 831 / 2021 points
+I20260903 23:55:32.395097 140657148016448 incremental_pipeline.cc:537] Registering image #115 (num_reg_frames=55)
+I20260903 23:55:32.395115 140657148016448 incremental_pipeline.cc:540] => Image sees 589 / 2016 points
+I20260903 23:55:32.605861 140657148016448 incremental_pipeline.cc:537] Registering image #114 (num_reg_frames=56)
+I20260903 23:55:32.605878 140657148016448 incremental_pipeline.cc:540] => Image sees 673 / 2977 points
+I20260903 23:55:32.803304 140657148016448 incremental_pipeline.cc:537] Registering image #113 (num_reg_frames=57)
+I20260903 23:55:32.803321 140657148016448 incremental_pipeline.cc:540] => Image sees 597 / 3225 points
+I20260903 23:55:33.014767 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:55:36.137598 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:55:39.429772 140657148016448 incremental_pipeline.cc:537] Registering image #124 (num_reg_frames=58)
+I20260903 23:55:39.429792 140657148016448 incremental_pipeline.cc:540] => Image sees 711 / 2997 points
+I20260903 23:55:39.635580 140657148016448 incremental_pipeline.cc:537] Registering image #125 (num_reg_frames=59)
+I20260903 23:55:39.635597 140657148016448 incremental_pipeline.cc:540] => Image sees 844 / 2826 points
+I20260903 23:55:39.916781 140657148016448 incremental_pipeline.cc:537] Registering image #81 (num_reg_frames=60)
+I20260903 23:55:39.916799 140657148016448 incremental_pipeline.cc:540] => Image sees 507 / 2555 points
+I20260903 23:55:40.172035 140657148016448 incremental_pipeline.cc:537] Registering image #88 (num_reg_frames=61)
+I20260903 23:55:40.172052 140657148016448 incremental_pipeline.cc:540] => Image sees 643 / 2535 points
+I20260903 23:55:40.385899 140657148016448 incremental_pipeline.cc:537] Registering image #82 (num_reg_frames=62)
+I20260903 23:55:40.385916 140657148016448 incremental_pipeline.cc:540] => Image sees 571 / 2873 points
+I20260903 23:55:40.693033 140657148016448 incremental_pipeline.cc:537] Registering image #32 (num_reg_frames=63)
+I20260903 23:55:40.693081 140657148016448 incremental_pipeline.cc:540] => Image sees 743 / 2496 points
+I20260903 23:55:40.973717 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:55:42.398220 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.462817 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.484026 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.545281 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.609333 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.670250 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.731113 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.751866 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.855863 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.876300 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:42.938470 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:43.041735 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:43.063373 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:43.891533 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:43.912152 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.013911 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.035165 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.141332 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.164323 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.271879 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.334386 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.356048 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.420793 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.487456 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.510468 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.615545 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.680032 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.700900 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.767125 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.831495 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.853247 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:44.958502 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:45.024950 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:45.046317 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:45.113763 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:45.919320 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:45.982784 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.006170 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.104295 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.126332 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.230689 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.252751 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.313017 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.375362 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.436270 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.457599 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.562737 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.584992 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.724562 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.746269 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.927774 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:46.947310 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:47.053596 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:47.076102 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:47.137951 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:55:47.293197 140657148016448 incremental_pipeline.cc:537] Registering image #29 (num_reg_frames=64)
+I20260903 23:55:47.293216 140657148016448 incremental_pipeline.cc:540] => Image sees 596 / 2272 points
+I20260903 23:55:47.512745 140657148016448 incremental_pipeline.cc:537] Registering image #77 (num_reg_frames=65)
+I20260903 23:55:47.512760 140657148016448 incremental_pipeline.cc:540] => Image sees 633 / 2424 points
+W20260903 23:55:47.612844 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.619562 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.626264 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.627644 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.634329 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.641004 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.647681 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.649057 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.655748 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.746239 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.752488 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.753762 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.769883 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.771165 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.782343 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:55:47.788558 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:55:47.806067 140657148016448 incremental_pipeline.cc:537] Registering image #76 (num_reg_frames=66)
+I20260903 23:55:47.806079 140657148016448 incremental_pipeline.cc:540] => Image sees 690 / 2744 points
+I20260903 23:55:48.134051 140657148016448 incremental_pipeline.cc:537] Registering image #30 (num_reg_frames=67)
+I20260903 23:55:48.134072 140657148016448 incremental_pipeline.cc:540] => Image sees 576 / 1742 points
+I20260903 23:55:48.337202 140657148016448 incremental_pipeline.cc:537] Registering image #132 (num_reg_frames=68)
+I20260903 23:55:48.337217 140657148016448 incremental_pipeline.cc:540] => Image sees 593 / 2874 points
+I20260903 23:55:48.563793 140657148016448 incremental_pipeline.cc:537] Registering image #133 (num_reg_frames=69)
+I20260903 23:55:48.563810 140657148016448 incremental_pipeline.cc:540] => Image sees 702 / 2794 points
+I20260903 23:55:48.832817 140657148016448 incremental_pipeline.cc:537] Registering image #126 (num_reg_frames=70)
+I20260903 23:55:48.832833 140657148016448 incremental_pipeline.cc:540] => Image sees 727 / 2892 points
+I20260903 23:55:49.078621 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:55:52.343060 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.363399 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.473914 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.495522 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.652278 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.673375 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.821608 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:52.842206 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:55:54.788205 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:55:57.690490 140657148016448 incremental_pipeline.cc:537] Registering image #118 (num_reg_frames=71)
+I20260903 23:55:57.690509 140657148016448 incremental_pipeline.cc:540] => Image sees 785 / 2872 points
+I20260903 23:55:58.015666 140657148016448 incremental_pipeline.cc:537] Registering image #123 (num_reg_frames=72)
+I20260903 23:55:58.015708 140657148016448 incremental_pipeline.cc:540] => Image sees 529 / 3003 points
+I20260903 23:55:58.179778 140657148016448 incremental_pipeline.cc:537] Registering image #131 (num_reg_frames=73)
+I20260903 23:55:58.179792 140657148016448 incremental_pipeline.cc:540] => Image sees 518 / 3257 points
+I20260903 23:55:58.360077 140657148016448 incremental_pipeline.cc:537] Registering image #122 (num_reg_frames=74)
+I20260903 23:55:58.360092 140657148016448 incremental_pipeline.cc:540] => Image sees 529 / 3153 points
+I20260903 23:55:58.539551 140657148016448 incremental_pipeline.cc:537] Registering image #130 (num_reg_frames=75)
+I20260903 23:55:58.539567 140657148016448 incremental_pipeline.cc:540] => Image sees 618 / 3292 points
+I20260903 23:55:58.751163 140657148016448 incremental_pipeline.cc:537] Registering image #121 (num_reg_frames=76)
+I20260903 23:55:58.751179 140657148016448 incremental_pipeline.cc:540] => Image sees 877 / 2923 points
+I20260903 23:55:58.954497 140657148016448 incremental_pipeline.cc:537] Registering image #129 (num_reg_frames=77)
+I20260903 23:55:58.954515 140657148016448 incremental_pipeline.cc:540] => Image sees 976 / 3202 points
+I20260903 23:55:59.190516 140657148016448 incremental_pipeline.cc:537] Registering image #137 (num_reg_frames=78)
+I20260903 23:55:59.190533 140657148016448 incremental_pipeline.cc:540] => Image sees 683 / 3187 points
+I20260903 23:55:59.443249 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:56:06.184478 140657148016448 incremental_pipeline.cc:537] Registering image #138 (num_reg_frames=79)
+I20260903 23:56:06.184497 140657148016448 incremental_pipeline.cc:540] => Image sees 733 / 3153 points
+I20260903 23:56:06.416161 140657148016448 incremental_pipeline.cc:537] Registering image #139 (num_reg_frames=80)
+I20260903 23:56:06.416178 140657148016448 incremental_pipeline.cc:540] => Image sees 628 / 3242 points
+I20260903 23:56:06.660400 140657148016448 incremental_pipeline.cc:537] Registering image #140 (num_reg_frames=81)
+I20260903 23:56:06.660419 140657148016448 incremental_pipeline.cc:540] => Image sees 1069 / 3290 points
+I20260903 23:56:06.916510 140657148016448 incremental_pipeline.cc:537] Registering image #153 (num_reg_frames=82)
+I20260903 23:56:06.916527 140657148016448 incremental_pipeline.cc:540] => Image sees 699 / 2973 points
+I20260903 23:56:07.120577 140657148016448 incremental_pipeline.cc:537] Registering image #136 (num_reg_frames=83)
+I20260903 23:56:07.120593 140657148016448 incremental_pipeline.cc:540] => Image sees 674 / 2268 points
+I20260903 23:56:07.305795 140657148016448 incremental_pipeline.cc:537] Registering image #144 (num_reg_frames=84)
+I20260903 23:56:07.305823 140657148016448 incremental_pipeline.cc:540] => Image sees 755 / 3146 points
+I20260903 23:56:07.496791 140657148016448 incremental_pipeline.cc:537] Registering image #128 (num_reg_frames=85)
+I20260903 23:56:07.496808 140657148016448 incremental_pipeline.cc:540] => Image sees 892 / 2903 points
+I20260903 23:56:07.729341 140657148016448 incremental_pipeline.cc:537] Registering image #145 (num_reg_frames=86)
+I20260903 23:56:07.729358 140657148016448 incremental_pipeline.cc:540] => Image sees 823 / 2936 points
+I20260903 23:56:07.990962 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:56:09.466536 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.542383 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.612760 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.636296 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.707557 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.780743 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.852617 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.876242 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:09.997696 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.020055 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.135677 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.158232 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.277461 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.300907 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.420178 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:10.444280 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:56:14.333638 140657148016448 incremental_pipeline.cc:537] Registering image #127 (num_reg_frames=87)
+I20260903 23:56:14.333673 140657148016448 incremental_pipeline.cc:540] => Image sees 713 / 3090 points
+I20260903 23:56:14.532349 140657148016448 incremental_pipeline.cc:537] Registering image #120 (num_reg_frames=88)
+I20260903 23:56:14.532367 140657148016448 incremental_pipeline.cc:540] => Image sees 846 / 3027 points
+I20260903 23:56:14.791300 140657148016448 incremental_pipeline.cc:537] Registering image #146 (num_reg_frames=89)
+I20260903 23:56:14.791318 140657148016448 incremental_pipeline.cc:540] => Image sees 654 / 2563 points
+I20260903 23:56:15.007626 140657148016448 incremental_pipeline.cc:537] Registering image #152 (num_reg_frames=90)
+I20260903 23:56:15.007642 140657148016448 incremental_pipeline.cc:540] => Image sees 654 / 2719 points
+I20260903 23:56:15.232132 140657148016448 incremental_pipeline.cc:537] Registering image #160 (num_reg_frames=91)
+I20260903 23:56:15.232149 140657148016448 incremental_pipeline.cc:540] => Image sees 628 / 3226 points
+I20260903 23:56:15.524834 140657148016448 incremental_pipeline.cc:537] Registering image #119 (num_reg_frames=92)
+I20260903 23:56:15.524849 140657148016448 incremental_pipeline.cc:540] => Image sees 641 / 2899 points
+I20260903 23:56:15.732571 140657148016448 incremental_pipeline.cc:537] Registering image #149 (num_reg_frames=93)
+I20260903 23:56:15.732587 140657148016448 incremental_pipeline.cc:540] => Image sees 640 / 2874 points
+I20260903 23:56:15.990031 140657148016448 incremental_pipeline.cc:537] Registering image #141 (num_reg_frames=94)
+I20260903 23:56:15.990048 140657148016448 incremental_pipeline.cc:540] => Image sees 854 / 2675 points
+I20260903 23:56:16.273257 140657148016448 incremental_pipeline.cc:537] Registering image #148 (num_reg_frames=95)
+I20260903 23:56:16.273273 140657148016448 incremental_pipeline.cc:540] => Image sees 830 / 3166 points
+I20260903 23:56:16.570446 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:56:30.225713 140657148016448 incremental_pipeline.cc:537] Registering image #134 (num_reg_frames=96)
+I20260903 23:56:30.225732 140657148016448 incremental_pipeline.cc:540] => Image sees 829 / 2163 points
+I20260903 23:56:30.510324 140657148016448 incremental_pipeline.cc:537] Registering image #150 (num_reg_frames=97)
+I20260903 23:56:30.510340 140657148016448 incremental_pipeline.cc:540] => Image sees 714 / 2397 points
+I20260903 23:56:30.747945 140657148016448 incremental_pipeline.cc:537] Registering image #143 (num_reg_frames=98)
+I20260903 23:56:30.747962 140657148016448 incremental_pipeline.cc:540] => Image sees 693 / 2710 points
+I20260903 23:56:30.970573 140657148016448 incremental_pipeline.cc:537] Registering image #142 (num_reg_frames=99)
+I20260903 23:56:30.970590 140657148016448 incremental_pipeline.cc:540] => Image sees 908 / 2408 points
+I20260903 23:56:31.258754 140657148016448 incremental_pipeline.cc:537] Registering image #151 (num_reg_frames=100)
+I20260903 23:56:31.258771 140657148016448 incremental_pipeline.cc:540] => Image sees 617 / 2388 points
+I20260903 23:56:31.442252 140657148016448 incremental_pipeline.cc:537] Registering image #157 (num_reg_frames=101)
+I20260903 23:56:31.442271 140657148016448 incremental_pipeline.cc:540] => Image sees 730 / 2746 points
+I20260903 23:56:31.720733 140657148016448 incremental_pipeline.cc:537] Registering image #147 (num_reg_frames=102)
+I20260903 23:56:31.720749 140657148016448 incremental_pipeline.cc:540] => Image sees 671 / 2796 points
+I20260903 23:56:31.946787 140657148016448 incremental_pipeline.cc:537] Registering image #156 (num_reg_frames=103)
+I20260903 23:56:31.946804 140657148016448 incremental_pipeline.cc:540] => Image sees 796 / 2806 points
+I20260903 23:56:32.209690 140657148016448 incremental_pipeline.cc:537] Registering image #155 (num_reg_frames=104)
+I20260903 23:56:32.209708 140657148016448 incremental_pipeline.cc:540] => Image sees 604 / 2474 points
+I20260903 23:56:32.421616 140657148016448 incremental_pipeline.cc:537] Registering image #154 (num_reg_frames=105)
+I20260903 23:56:32.421632 140657148016448 incremental_pipeline.cc:540] => Image sees 700 / 2553 points
+I20260903 23:56:32.715301 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:56:42.395982 140657148016448 incremental_pipeline.cc:537] Registering image #158 (num_reg_frames=106)
+I20260903 23:56:42.396006 140657148016448 incremental_pipeline.cc:540] => Image sees 733 / 2612 points
+I20260903 23:56:42.656470 140657148016448 incremental_pipeline.cc:537] Registering image #78 (num_reg_frames=107)
+I20260903 23:56:42.656489 140657148016448 incremental_pipeline.cc:540] => Image sees 721 / 2710 points
+I20260903 23:56:42.928196 140657148016448 incremental_pipeline.cc:537] Registering image #87 (num_reg_frames=108)
+I20260903 23:56:42.928214 140657148016448 incremental_pipeline.cc:540] => Image sees 634 / 2864 points
+I20260903 23:56:43.147274 140657148016448 incremental_pipeline.cc:537] Registering image #86 (num_reg_frames=109)
+I20260903 23:56:43.147290 140657148016448 incremental_pipeline.cc:540] => Image sees 907 / 2341 points
+I20260903 23:56:43.403134 140657148016448 incremental_pipeline.cc:537] Registering image #95 (num_reg_frames=110)
+I20260903 23:56:43.403153 140657148016448 incremental_pipeline.cc:540] => Image sees 690 / 2647 points
+I20260903 23:56:43.638404 140657148016448 incremental_pipeline.cc:537] Registering image #94 (num_reg_frames=111)
+I20260903 23:56:43.638422 140657148016448 incremental_pipeline.cc:540] => Image sees 932 / 2800 points
+I20260903 23:56:43.963843 140657148016448 incremental_pipeline.cc:537] Registering image #37 (num_reg_frames=112)
+I20260903 23:56:43.963861 140657148016448 incremental_pipeline.cc:540] => Image sees 589 / 2330 points
+I20260903 23:56:44.002801 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:56:44.002804 140657148016448 incremental_pipeline.cc:537] Registering image #79 (num_reg_frames=112)
+I20260903 23:56:44.002807 140657148016448 incremental_pipeline.cc:540] => Image sees 588 / 3000 points
+I20260903 23:56:44.224247 140657148016448 incremental_pipeline.cc:537] Registering image #43 (num_reg_frames=113)
+I20260903 23:56:44.224263 140657148016448 incremental_pipeline.cc:540] => Image sees 519 / 3243 points
+I20260903 23:56:44.262053 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:56:44.262056 140657148016448 incremental_pipeline.cc:537] Registering image #73 (num_reg_frames=113)
+I20260903 23:56:44.262059 140657148016448 incremental_pipeline.cc:540] => Image sees 609 / 1914 points
+I20260903 23:56:44.426336 140657148016448 incremental_pipeline.cc:537] Registering image #135 (num_reg_frames=114)
+I20260903 23:56:44.426373 140657148016448 incremental_pipeline.cc:540] => Image sees 616 / 1516 points
+I20260903 23:56:44.634640 140657148016448 incremental_pipeline.cc:537] Registering image #44 (num_reg_frames=115)
+I20260903 23:56:44.634660 140657148016448 incremental_pipeline.cc:540] => Image sees 585 / 2525 points
+I20260903 23:56:44.859599 140657148016448 incremental_pipeline.cc:537] Registering image #69 (num_reg_frames=116)
+I20260903 23:56:44.859615 140657148016448 incremental_pipeline.cc:540] => Image sees 613 / 2220 points
+I20260903 23:56:45.087774 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:56:50.141344 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.171772 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.263317 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.352529 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.448009 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.477983 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.626100 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.657111 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.752748 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.847086 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.936086 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:50.966330 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.058875 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.150373 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.246382 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.340088 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.374044 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.527539 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.558306 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.648641 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.738760 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.839073 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:51.868146 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.295711 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.445318 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.544805 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.576342 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.665460 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.753914 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.844989 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:53.872169 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:54.017464 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:54.047830 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:54.141954 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:54.234836 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:54.326973 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.442795 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.536407 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.628648 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.724121 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.820170 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.918204 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:56.949844 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.043755 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.190605 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.221310 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.320115 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.411333 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.623650 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.712131 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.743589 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.894790 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:57.927508 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:58.021137 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:58.112306 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:56:58.145187 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:56:58.466527 140657148016448 incremental_pipeline.cc:537] Registering image #65 (num_reg_frames=116)
+I20260903 23:56:58.466545 140657148016448 incremental_pipeline.cc:540] => Image sees 541 / 2462 points
+I20260903 23:56:58.505716 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:56:58.505719 140657148016448 incremental_pipeline.cc:537] Registering image #68 (num_reg_frames=116)
+I20260903 23:56:58.505722 140657148016448 incremental_pipeline.cc:540] => Image sees 644 / 2384 points
+I20260903 23:56:58.751470 140657148016448 incremental_pipeline.cc:537] Registering image #66 (num_reg_frames=117)
+I20260903 23:56:58.751489 140657148016448 incremental_pipeline.cc:540] => Image sees 521 / 2176 points
+I20260903 23:56:58.789400 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:56:58.789403 140657148016448 incremental_pipeline.cc:537] Registering image #159 (num_reg_frames=117)
+I20260903 23:56:58.789406 140657148016448 incremental_pipeline.cc:540] => Image sees 473 / 3038 points
+I20260903 23:56:59.033671 140657148016448 incremental_pipeline.cc:537] Registering image #47 (num_reg_frames=118)
+I20260903 23:56:59.033687 140657148016448 incremental_pipeline.cc:540] => Image sees 470 / 3020 points
+I20260903 23:56:59.070519 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:56:59.070522 140657148016448 incremental_pipeline.cc:537] Registering image #75 (num_reg_frames=118)
+I20260903 23:56:59.070524 140657148016448 incremental_pipeline.cc:540] => Image sees 474 / 2617 points
+I20260903 23:56:59.215742 140657148016448 incremental_pipeline.cc:537] Registering image #74 (num_reg_frames=119)
+I20260903 23:56:59.215758 140657148016448 incremental_pipeline.cc:540] => Image sees 546 / 2030 points
+I20260903 23:56:59.418761 140657148016448 incremental_pipeline.cc:537] Registering image #70 (num_reg_frames=120)
+I20260903 23:56:59.418776 140657148016448 incremental_pipeline.cc:540] => Image sees 527 / 1912 points
+I20260903 23:56:59.660836 140657148016448 incremental_pipeline.cc:537] Registering image #61 (num_reg_frames=121)
+I20260903 23:56:59.660852 140657148016448 incremental_pipeline.cc:540] => Image sees 542 / 2111 points
+I20260903 23:56:59.850643 140657148016448 incremental_pipeline.cc:537] Registering image #53 (num_reg_frames=122)
+I20260903 23:56:59.850660 140657148016448 incremental_pipeline.cc:540] => Image sees 516 / 2410 points
+I20260903 23:57:00.039738 140657148016448 incremental_pipeline.cc:537] Registering image #62 (num_reg_frames=123)
+I20260903 23:57:00.039752 140657148016448 incremental_pipeline.cc:540] => Image sees 557 / 2570 points
+I20260903 23:57:00.189444 140657148016448 incremental_pipeline.cc:537] Registering image #54 (num_reg_frames=124)
+I20260903 23:57:00.189459 140657148016448 incremental_pipeline.cc:540] => Image sees 531 / 2895 points
+I20260903 23:57:00.360050 140657148016448 incremental_pipeline.cc:537] Registering image #57 (num_reg_frames=125)
+I20260903 23:57:00.360072 140657148016448 incremental_pipeline.cc:540] => Image sees 480 / 2491 points
+I20260903 23:57:00.398164 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:00.398168 140657148016448 incremental_pipeline.cc:537] Registering image #60 (num_reg_frames=125)
+I20260903 23:57:00.398170 140657148016448 incremental_pipeline.cc:540] => Image sees 538 / 1885 points
+I20260903 23:57:00.578651 140657148016448 incremental_pipeline.cc:537] Registering image #45 (num_reg_frames=126)
+I20260903 23:57:00.578666 140657148016448 incremental_pipeline.cc:540] => Image sees 599 / 2233 points
+I20260903 23:57:00.786332 140657148016448 incremental_pipeline.cc:537] Registering image #52 (num_reg_frames=127)
+I20260903 23:57:00.786348 140657148016448 incremental_pipeline.cc:540] => Image sees 604 / 2277 points
+I20260903 23:57:01.007790 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:57:07.348259 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:07.444749 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:07.614681 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.100169 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.131755 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.291858 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.386407 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.420056 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.514343 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.612637 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.709536 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.804554 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.836949 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:10.933391 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.024976 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.125074 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.154185 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.256607 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.351106 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.447695 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.479328 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.573851 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.667512 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.761502 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.789887 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:11.950669 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.369534 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.464127 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.556747 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.653852 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.682060 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.837178 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:13.865949 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.025516 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.054173 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.145008 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.241906 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.338902 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.372642 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.465853 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.560141 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.656290 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.746109 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.839937 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.867481 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:14.965543 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:15.057306 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:15.150254 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:15.184725 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.487687 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.585198 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.616723 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.712012 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.810182 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.906948 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:17.935240 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.103835 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.134053 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.283543 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.384507 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.416226 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.575127 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:18.605225 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:57:19.013101 140657148016448 incremental_pipeline.cc:537] Registering image #80 (num_reg_frames=127)
+I20260903 23:57:19.013119 140657148016448 incremental_pipeline.cc:540] => Image sees 458 / 2699 points
+I20260903 23:57:19.049715 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:19.049718 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=127)
+I20260903 23:57:19.049721 140657148016448 incremental_pipeline.cc:540] => Image sees 467 / 2910 points
+I20260903 23:57:19.083640 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:19.083643 140657148016448 incremental_pipeline.cc:537] Registering image #59 (num_reg_frames=127)
+I20260903 23:57:19.083645 140657148016448 incremental_pipeline.cc:540] => Image sees 420 / 2184 points
+I20260903 23:57:19.238848 140657148016448 incremental_pipeline.cc:537] Registering image #51 (num_reg_frames=128)
+I20260903 23:57:19.238863 140657148016448 incremental_pipeline.cc:540] => Image sees 521 / 2151 points
+I20260903 23:57:19.370230 140657148016448 incremental_pipeline.cc:537] Registering image #58 (num_reg_frames=129)
+I20260903 23:57:19.370245 140657148016448 incremental_pipeline.cc:540] => Image sees 566 / 2404 points
+I20260903 23:57:19.552053 140657148016448 incremental_pipeline.cc:537] Registering image #50 (num_reg_frames=130)
+I20260903 23:57:19.552074 140657148016448 incremental_pipeline.cc:540] => Image sees 624 / 2046 points
+I20260903 23:57:19.723199 140657148016448 incremental_pipeline.cc:537] Registering image #49 (num_reg_frames=131)
+I20260903 23:57:19.723214 140657148016448 incremental_pipeline.cc:540] => Image sees 552 / 2334 points
+I20260903 23:57:19.940515 140657148016448 incremental_pipeline.cc:537] Registering image #72 (num_reg_frames=132)
+I20260903 23:57:19.940531 140657148016448 incremental_pipeline.cc:540] => Image sees 428 / 2395 points
+I20260903 23:57:19.977730 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:19.977733 140657148016448 incremental_pipeline.cc:537] Registering image #38 (num_reg_frames=132)
+I20260903 23:57:19.977736 140657148016448 incremental_pipeline.cc:540] => Image sees 493 / 2787 points
+I20260903 23:57:20.012630 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.012633 140657148016448 incremental_pipeline.cc:537] Registering image #67 (num_reg_frames=132)
+I20260903 23:57:20.012635 140657148016448 incremental_pipeline.cc:540] => Image sees 435 / 2274 points
+I20260903 23:57:20.209583 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=133)
+I20260903 23:57:20.209599 140657148016448 incremental_pipeline.cc:540] => Image sees 415 / 2864 points
+I20260903 23:57:20.245520 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.245523 140657148016448 incremental_pipeline.cc:537] Registering image #48 (num_reg_frames=133)
+I20260903 23:57:20.245526 140657148016448 incremental_pipeline.cc:540] => Image sees 457 / 2672 points
+I20260903 23:57:20.281710 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.281713 140657148016448 incremental_pipeline.cc:537] Registering image #46 (num_reg_frames=133)
+I20260903 23:57:20.281715 140657148016448 incremental_pipeline.cc:540] => Image sees 429 / 2635 points
+I20260903 23:57:20.465031 140657148016448 incremental_pipeline.cc:537] Registering image #71 (num_reg_frames=134)
+I20260903 23:57:20.465046 140657148016448 incremental_pipeline.cc:540] => Image sees 371 / 1938 points
+I20260903 23:57:20.500196 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.500199 140657148016448 incremental_pipeline.cc:537] Registering image #33 (num_reg_frames=134)
+I20260903 23:57:20.500201 140657148016448 incremental_pipeline.cc:540] => Image sees 423 / 2418 points
+I20260903 23:57:20.535608 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.535632 140657148016448 incremental_pipeline.cc:537] Registering image #36 (num_reg_frames=134)
+I20260903 23:57:20.535635 140657148016448 incremental_pipeline.cc:540] => Image sees 390 / 2609 points
+I20260903 23:57:20.571101 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.571104 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=134)
+I20260903 23:57:20.571106 140657148016448 incremental_pipeline.cc:540] => Image sees 398 / 2962 points
+I20260903 23:57:20.603442 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.603445 140657148016448 incremental_pipeline.cc:537] Registering image #56 (num_reg_frames=134)
+I20260903 23:57:20.603447 140657148016448 incremental_pipeline.cc:540] => Image sees 382 / 2548 points
+I20260903 23:57:20.638444 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.638447 140657148016448 incremental_pipeline.cc:537] Registering image #64 (num_reg_frames=134)
+I20260903 23:57:20.638449 140657148016448 incremental_pipeline.cc:540] => Image sees 375 / 2657 points
+I20260903 23:57:20.675681 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.675683 140657148016448 incremental_pipeline.cc:537] Registering image #42 (num_reg_frames=134)
+I20260903 23:57:20.675686 140657148016448 incremental_pipeline.cc:540] => Image sees 365 / 2733 points
+I20260903 23:57:20.712836 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.712839 140657148016448 incremental_pipeline.cc:537] Registering image #40 (num_reg_frames=134)
+I20260903 23:57:20.712841 140657148016448 incremental_pipeline.cc:540] => Image sees 396 / 2298 points
+I20260903 23:57:20.746150 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:20.746153 140657148016448 incremental_pipeline.cc:537] Registering image #31 (num_reg_frames=134)
+I20260903 23:57:20.746155 140657148016448 incremental_pipeline.cc:540] => Image sees 412 / 1628 points
+I20260903 23:57:20.984369 140657148016448 incremental_pipeline.cc:537] Registering image #41 (num_reg_frames=135)
+I20260903 23:57:20.984386 140657148016448 incremental_pipeline.cc:540] => Image sees 408 / 1852 points
+I20260903 23:57:21.022069 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:21.022072 140657148016448 incremental_pipeline.cc:537] Registering image #63 (num_reg_frames=135)
+I20260903 23:57:21.022075 140657148016448 incremental_pipeline.cc:540] => Image sees 367 / 2833 points
+I20260903 23:57:21.056311 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:21.056314 140657148016448 incremental_pipeline.cc:537] Registering image #55 (num_reg_frames=135)
+I20260903 23:57:21.056316 140657148016448 incremental_pipeline.cc:540] => Image sees 281 / 2782 points
+I20260903 23:57:21.088802 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:21.088805 140657148016448 incremental_pipeline.cc:537] Registering image #44 (num_reg_frames=135)
+I20260903 23:57:21.088807 140657148016448 incremental_pipeline.cc:540] => Image sees 941 / 2525 points
+I20260903 23:57:21.358001 140657148016448 incremental_pipeline.cc:537] Registering image #43 (num_reg_frames=136)
+I20260903 23:57:21.358017 140657148016448 incremental_pipeline.cc:540] => Image sees 850 / 3243 points
+I20260903 23:57:21.586922 140657148016448 incremental_pipeline.cc:537] Registering image #66 (num_reg_frames=137)
+I20260903 23:57:21.586937 140657148016448 incremental_pipeline.cc:540] => Image sees 828 / 2176 points
+I20260903 23:57:21.812669 140657148016448 incremental_pipeline.cc:537] Registering image #57 (num_reg_frames=138)
+I20260903 23:57:21.812685 140657148016448 incremental_pipeline.cc:540] => Image sees 874 / 2491 points
+I20260903 23:57:22.041254 140657148016448 incremental_pipeline.cc:537] Registering image #65 (num_reg_frames=139)
+I20260903 23:57:22.041271 140657148016448 incremental_pipeline.cc:540] => Image sees 804 / 2462 points
+I20260903 23:57:22.273643 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:57:32.639246 140657148016448 incremental_pipeline.cc:537] Registering image #73 (num_reg_frames=140)
+I20260903 23:57:32.639269 140657148016448 incremental_pipeline.cc:540] => Image sees 833 / 1914 points
+I20260903 23:57:32.884710 140657148016448 incremental_pipeline.cc:537] Registering image #37 (num_reg_frames=141)
+I20260903 23:57:32.884726 140657148016448 incremental_pipeline.cc:540] => Image sees 690 / 2330 points
+I20260903 23:57:33.069876 140657148016448 incremental_pipeline.cc:537] Registering image #47 (num_reg_frames=142)
+I20260903 23:57:33.069892 140657148016448 incremental_pipeline.cc:540] => Image sees 536 / 3020 points
+I20260903 23:57:33.107233 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:33.107236 140657148016448 incremental_pipeline.cc:537] Registering image #72 (num_reg_frames=142)
+I20260903 23:57:33.107239 140657148016448 incremental_pipeline.cc:540] => Image sees 524 / 2395 points
+I20260903 23:57:33.281838 140657148016448 incremental_pipeline.cc:537] Registering image #47 (num_reg_frames=143)
+I20260903 23:57:33.281855 140657148016448 incremental_pipeline.cc:540] => Image sees 540 / 3020 points
+I20260903 23:57:33.318848 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:33.318851 140657148016448 incremental_pipeline.cc:537] Registering image #80 (num_reg_frames=143)
+I20260903 23:57:33.318853 140657148016448 incremental_pipeline.cc:540] => Image sees 611 / 2699 points
+W20260903 23:57:33.427763 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.431889 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.435985 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.436953 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.444196 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.445180 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.449259 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.453367 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:57:33.515093 140657148016448 incremental_pipeline.cc:537] Registering image #71 (num_reg_frames=144)
+I20260903 23:57:33.515108 140657148016448 incremental_pipeline.cc:540] => Image sees 488 / 1938 points
+I20260903 23:57:33.680514 140657148016448 incremental_pipeline.cc:537] Registering image #38 (num_reg_frames=145)
+I20260903 23:57:33.680529 140657148016448 incremental_pipeline.cc:540] => Image sees 562 / 2787 points
+I20260903 23:57:33.716100 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:33.716103 140657148016448 incremental_pipeline.cc:537] Registering image #63 (num_reg_frames=145)
+I20260903 23:57:33.716105 140657148016448 incremental_pipeline.cc:540] => Image sees 494 / 2833 points
+W20260903 23:57:33.803198 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.808543 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.809095 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.809642 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:57:33.853741 140657148016448 incremental_pipeline.cc:537] Registering image #64 (num_reg_frames=146)
+I20260903 23:57:33.853756 140657148016448 incremental_pipeline.cc:540] => Image sees 532 / 2657 points
+W20260903 23:57:33.950178 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.955412 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.956101 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.956790 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.961981 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.964924 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:33.967866 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:57:34.014931 140657148016448 incremental_pipeline.cc:537] Registering image #38 (num_reg_frames=147)
+I20260903 23:57:34.014946 140657148016448 incremental_pipeline.cc:540] => Image sees 566 / 2787 points
+I20260903 23:57:34.050525 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.050528 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=147)
+I20260903 23:57:34.050530 140657148016448 incremental_pipeline.cc:540] => Image sees 517 / 2910 points
+I20260903 23:57:34.085312 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.085315 140657148016448 incremental_pipeline.cc:537] Registering image #56 (num_reg_frames=147)
+I20260903 23:57:34.085317 140657148016448 incremental_pipeline.cc:540] => Image sees 496 / 2548 points
+I20260903 23:57:34.257909 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=148)
+I20260903 23:57:34.257924 140657148016448 incremental_pipeline.cc:540] => Image sees 518 / 2910 points
+I20260903 23:57:34.293463 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.293466 140657148016448 incremental_pipeline.cc:537] Registering image #33 (num_reg_frames=148)
+I20260903 23:57:34.293468 140657148016448 incremental_pipeline.cc:540] => Image sees 528 / 2418 points
+I20260903 23:57:34.329901 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.329904 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=148)
+I20260903 23:57:34.329906 140657148016448 incremental_pipeline.cc:540] => Image sees 459 / 2864 points
+I20260903 23:57:34.366405 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.366407 140657148016448 incremental_pipeline.cc:537] Registering image #36 (num_reg_frames=148)
+I20260903 23:57:34.366410 140657148016448 incremental_pipeline.cc:540] => Image sees 470 / 2609 points
+I20260903 23:57:34.402243 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.402245 140657148016448 incremental_pipeline.cc:537] Registering image #48 (num_reg_frames=148)
+I20260903 23:57:34.402248 140657148016448 incremental_pipeline.cc:540] => Image sees 508 / 2672 points
+I20260903 23:57:34.439123 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.439125 140657148016448 incremental_pipeline.cc:537] Registering image #55 (num_reg_frames=148)
+I20260903 23:57:34.439128 140657148016448 incremental_pipeline.cc:540] => Image sees 422 / 2782 points
+W20260903 23:57:34.548884 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:57:34.549503 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:57:34.596174 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=149)
+I20260903 23:57:34.596189 140657148016448 incremental_pipeline.cc:540] => Image sees 466 / 2864 points
+I20260903 23:57:34.632473 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.632477 140657148016448 incremental_pipeline.cc:537] Registering image #33 (num_reg_frames=149)
+I20260903 23:57:34.632479 140657148016448 incremental_pipeline.cc:540] => Image sees 531 / 2418 points
+I20260903 23:57:34.829335 140657148016448 incremental_pipeline.cc:537] Registering image #36 (num_reg_frames=150)
+I20260903 23:57:34.829352 140657148016448 incremental_pipeline.cc:540] => Image sees 472 / 2609 points
+I20260903 23:57:34.865456 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.865459 140657148016448 incremental_pipeline.cc:537] Registering image #48 (num_reg_frames=150)
+I20260903 23:57:34.865462 140657148016448 incremental_pipeline.cc:540] => Image sees 510 / 2672 points
+I20260903 23:57:34.902492 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.902495 140657148016448 incremental_pipeline.cc:537] Registering image #42 (num_reg_frames=150)
+I20260903 23:57:34.902497 140657148016448 incremental_pipeline.cc:540] => Image sees 425 / 2733 points
+I20260903 23:57:34.940480 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:34.940482 140657148016448 incremental_pipeline.cc:537] Registering image #41 (num_reg_frames=150)
+I20260903 23:57:34.940485 140657148016448 incremental_pipeline.cc:540] => Image sees 483 / 1852 points
+I20260903 23:57:35.187444 140657148016448 incremental_pipeline.cc:537] Registering image #42 (num_reg_frames=151)
+I20260903 23:57:35.187460 140657148016448 incremental_pipeline.cc:540] => Image sees 549 / 2733 points
+I20260903 23:57:35.423094 140657148016448 incremental_pipeline.cc:537] Registering image #40 (num_reg_frames=152)
+I20260903 23:57:35.423110 140657148016448 incremental_pipeline.cc:540] => Image sees 622 / 2298 points
+I20260903 23:57:35.634696 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=153)
+I20260903 23:57:35.634711 140657148016448 incremental_pipeline.cc:540] => Image sees 460 / 2962 points
+I20260903 23:57:35.667454 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:35.667462 140657148016448 incremental_pipeline.cc:537] Registering image #47 (num_reg_frames=153)
+I20260903 23:57:35.667464 140657148016448 incremental_pipeline.cc:540] => Image sees 587 / 3020 points
+I20260903 23:57:35.667491 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:35.667492 140657148016448 incremental_pipeline.cc:548] => Image sees 3811 / 5426 correspondences
+I20260903 23:57:37.349870 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:57:43.366150 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:43.396769 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:43.576903 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:43.682058 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:43.712820 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:46.872519 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:46.982036 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:57:47.082130 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:57:48.954967 140657148016448 incremental_pipeline.cc:537] Registering image #37 (num_reg_frames=152)
+I20260903 23:57:48.954987 140657148016448 incremental_pipeline.cc:540] => Image sees 729 / 2330 points
+I20260903 23:57:49.122942 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=153)
+I20260903 23:57:49.122957 140657148016448 incremental_pipeline.cc:540] => Image sees 438 / 2962 points
+I20260903 23:57:49.155315 140657148016448 incremental_pipeline.cc:563] => Could not register, trying another image.
+I20260903 23:57:49.155324 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=153)
+I20260903 23:57:49.155326 140657148016448 incremental_pipeline.cc:540] => Image sees 438 / 2962 points
+I20260903 23:57:49.155328 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:49.155330 140657148016448 incremental_pipeline.cc:548] => Image sees 3627 / 5344 correspondences
+I20260903 23:57:50.923160 140657148016448 incremental_pipeline.cc:537] Registering image #38 (num_reg_frames=154)
+I20260903 23:57:50.923177 140657148016448 incremental_pipeline.cc:540] => Image sees 546 / 2787 points
+I20260903 23:57:50.923179 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:50.923181 140657148016448 incremental_pipeline.cc:548] => Image sees 4851 / 5044 correspondences
+I20260903 23:57:52.669060 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=155)
+I20260903 23:57:52.669086 140657148016448 incremental_pipeline.cc:540] => Image sees 554 / 2910 points
+I20260903 23:57:52.669089 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:52.669090 140657148016448 incremental_pipeline.cc:548] => Image sees 3504 / 5032 correspondences
+I20260903 23:57:54.401251 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=156)
+I20260903 23:57:54.401267 140657148016448 incremental_pipeline.cc:540] => Image sees 484 / 2864 points
+I20260903 23:57:54.401270 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:54.401272 140657148016448 incremental_pipeline.cc:548] => Image sees 3827 / 5029 correspondences
+I20260903 23:57:56.056597 140657148016448 incremental_pipeline.cc:537] Registering image #36 (num_reg_frames=157)
+I20260903 23:57:56.056613 140657148016448 incremental_pipeline.cc:540] => Image sees 470 / 2609 points
+I20260903 23:57:56.056616 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:57:56.056618 140657148016448 incremental_pipeline.cc:548] => Image sees 4621 / 4672 correspondences
+I20260903 23:58:31.127228 140657148016448 incremental_pipeline.cc:537] Registering image #48 (num_reg_frames=158)
+I20260903 23:58:31.127256 140657148016448 incremental_pipeline.cc:540] => Image sees 586 / 2672 points
+I20260903 23:58:31.127259 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:31.127261 140657148016448 incremental_pipeline.cc:548] => Image sees 3202 / 4708 correspondences
+I20260903 23:58:33.097733 140657148016448 incremental_pipeline.cc:537] Registering image #47 (num_reg_frames=159)
+I20260903 23:58:33.097752 140657148016448 incremental_pipeline.cc:540] => Image sees 591 / 3020 points
+I20260903 23:58:33.097754 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:33.097756 140657148016448 incremental_pipeline.cc:548] => Image sees 5426 / 5426 correspondences
+I20260903 23:58:35.440645 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:58:50.299642 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=155)
+I20260903 23:58:50.299677 140657148016448 incremental_pipeline.cc:540] => Image sees 520 / 2962 points
+I20260903 23:58:50.299680 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:50.299682 140657148016448 incremental_pipeline.cc:548] => Image sees 3760 / 5344 correspondences
+I20260903 23:58:52.233918 140657148016448 incremental_pipeline.cc:537] Registering image #38 (num_reg_frames=156)
+I20260903 23:58:52.233937 140657148016448 incremental_pipeline.cc:540] => Image sees 619 / 2787 points
+I20260903 23:58:52.233940 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:52.233942 140657148016448 incremental_pipeline.cc:548] => Image sees 5028 / 5044 correspondences
+I20260903 23:58:54.305657 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=157)
+I20260903 23:58:54.305673 140657148016448 incremental_pipeline.cc:540] => Image sees 572 / 2910 points
+I20260903 23:58:54.305676 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:54.305678 140657148016448 incremental_pipeline.cc:548] => Image sees 3545 / 5032 correspondences
+I20260903 23:58:56.030060 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=158)
+I20260903 23:58:56.030080 140657148016448 incremental_pipeline.cc:540] => Image sees 497 / 2864 points
+I20260903 23:58:56.030082 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:56.030084 140657148016448 incremental_pipeline.cc:548] => Image sees 3875 / 5029 correspondences
+I20260903 23:58:57.642730 140657148016448 incremental_pipeline.cc:537] Registering image #36 (num_reg_frames=159)
+I20260903 23:58:57.642749 140657148016448 incremental_pipeline.cc:540] => Image sees 482 / 2609 points
+I20260903 23:58:57.642752 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:58:57.642754 140657148016448 incremental_pipeline.cc:548] => Image sees 4672 / 4672 correspondences
+W20260903 23:58:59.345520 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:58:59.345680 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:58:59.345690 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:58:59.346216 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+W20260903 23:58:59.346226 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: Eigen failure. Unable to perform dense Cholesky factorization.
+I20260903 23:58:59.485807 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:59:04.274585 140657148016448 incremental_pipeline.cc:537] Registering image #39 (num_reg_frames=157)
+I20260903 23:59:04.274663 140657148016448 incremental_pipeline.cc:540] => Image sees 482 / 2962 points
+I20260903 23:59:04.274667 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:59:04.274668 140657148016448 incremental_pipeline.cc:548] => Image sees 5322 / 5344 correspondences
+I20260903 23:59:06.422076 140657148016448 incremental_pipeline.cc:537] Registering image #34 (num_reg_frames=158)
+I20260903 23:59:06.422094 140657148016448 incremental_pipeline.cc:540] => Image sees 574 / 2910 points
+I20260903 23:59:06.422097 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:59:06.422098 140657148016448 incremental_pipeline.cc:548] => Image sees 3564 / 5032 correspondences
+I20260903 23:59:08.170128 140657148016448 incremental_pipeline.cc:537] Registering image #35 (num_reg_frames=159)
+I20260903 23:59:08.170146 140657148016448 incremental_pipeline.cc:540] => Image sees 499 / 2864 points
+I20260903 23:59:08.170148 140657148016448 incremental_pipeline.cc:546] Registering image with structure-less fallback
+I20260903 23:59:08.170150 140657148016448 incremental_pipeline.cc:548] => Image sees 5029 / 5029 correspondences
+I20260903 23:59:09.899253 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+W20260903 23:59:11.785121 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:59:11.892398 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:59:12.003900 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:59:12.111888 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+W20260903 23:59:12.142854 140657148016448 levenberg_marquardt_strategy.cc:123] Linear solver failure. Failed to compute a step: CHOLMOD warning: Matrix not positive definite.
+I20260903 23:59:14.609287 140657148016448 incremental_pipeline.cc:79] Retriangulation and Global bundle adjustment
+I20260903 23:59:18.127084 140657148016448 incremental_pipeline.cc:723] Keeping successful reconstruction
+I20260903 23:59:18.369231 140657148016448 timer.cc:90] Elapsed time: 4.520 [minutes]

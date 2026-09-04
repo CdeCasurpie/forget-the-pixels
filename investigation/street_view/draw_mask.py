@@ -44,7 +44,7 @@ def main():
         # Asegurarnos de que el primer punto toque el borde izquierdo y el ultimo el derecho
         pts_list = points.copy()
         pts_list.insert(0, (0, pts_list[0][1]))
-        pts_list.append((w-1, pts_list[-1][1]))
+        pts_list.append((w-1, pts_list[0][1])) # Obliga a que la costura der/izq coincida perfectamente en Y
         
         # Cerrar el poligono por la parte de abajo
         pts_list.append((w-1, h-1))

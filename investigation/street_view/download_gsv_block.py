@@ -32,7 +32,7 @@ def get_bounding_box_panos(lat_center, lon_center, max_count=40):
                         
     return panos[:max_count]
 
-def create_perspective_split(img, pano_id, out_dir, fov=90):
+def create_perspective_split(img, pano_id, out_dir, fov=55):
     h, w = img.shape[:2]
     out_size = 1024
     K = np.array([
