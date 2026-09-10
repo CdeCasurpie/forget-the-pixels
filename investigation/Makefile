@@ -29,6 +29,24 @@ help:
 	@echo "     crea conexiones (aristas) y las fusiona en un grafo unificado"
 	@echo "     para formar una malla maestra de toda la cuadra."
 	@echo "======================================================================"
+	@echo "    PIPELINE AUTOMATIZADO DE STREET VIEW (HLOC + KHIPU)"
+	@echo "======================================================================"
+	@echo ""
+	@echo "make run-gsv-route-selector"
+	@echo "  -> Paso 1: Interfaz 2D para seleccionar interactivamente la ruta "
+	@echo "     de panoramas desde Google Maps."
+	@echo ""
+	@echo "make run-gsv-downloader"
+	@echo "  -> Paso 2: Descarga los panoramas y aplica el corte perspectivo "
+	@echo "     matemático con FOV 135 para maximizar la superposición."
+	@echo ""
+	@echo "make run-gsv-khipu-deploy PROJECT_NAME=mi_ruta"
+	@echo "  -> Paso 3: Sube la carpeta a Khipu y encola el trabajo HLOC."
+	@echo "     (Ejecuta extraccion SuperPoint y emparejamiento LightGlue)."
+	@echo ""
+	@echo "make run-view-gsv-sparse"
+	@echo "  -> Paso 4: Visualiza la nube alineada final tras descargarse."
+	@echo "======================================================================"
 
 run-semantic:
 	$(PYTHON_ENV) semantic_meshing/interactive_mesher.py
@@ -56,3 +74,27 @@ run-gsv-cloud:
 run-multiview-gsv:
 	@echo "Visualizando fotogrametria real de Street View con SuperPoint..."
 	$(PYTHON_ENV) semantic_meshing_multiview/interactive_mesher_gsv.py
+
+# ==========================================
+# Pipeline HLOC GSV Automatizado
+# ==========================================
+PROJECT_NAME ?= gsv_default_project
+
+run-gsv-route-selector:
+	$(PYTHON_ENV) street_view/interactive_route_selector.py
+
+run-gsv-downloader:
+	$(PYTHON_ENV) street_view/download_custom_route.py
+
+run-gsv-khipu-deploy:
+	bash street_view/deploy_to_khipu.sh street_view/data_custom_route $(PROJECT_NAME)
+
+run-view-gsv-sparse:
+	$(PYTHON_ENV) street_view/view_sparse_cloud.py street_view/sparse_sp_135_aligned/
+
+# ==========================================
+# Geo-Proyector Generativo (Lotes + Rerun)
+# ==========================================
+run-geo-proyector:
+	@echo "Lanzando el Visualizador de Auditoría (Fase 1)..."
+	$(PYTHON_ENV) lotes_projection/main.py
