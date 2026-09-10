@@ -98,3 +98,15 @@ run-view-gsv-sparse:
 run-geo-proyector:
 	@echo "Lanzando el Visualizador de Auditoría (Fase 1)..."
 	$(PYTHON_ENV) lotes_projection/main.py
+
+export-crops:
+	@echo "Extrayendo metadatos 2D para Khipu (Fase 2)..."
+	$(PYTHON_ENV) lotes_projection/export_crops.py
+
+test-crop:
+	@echo "Simulando input a SAM (eligiendo lote aleatorio)..."
+	$(PYTHON_ENV) lotes_projection/test_local_crop.py
+
+preview-lots:
+	@echo "Mostrando en 3D los lotes que pasaron los filtros..."
+	$(PYTHON_ENV) lotes_projection/preview_selected_lots.py
