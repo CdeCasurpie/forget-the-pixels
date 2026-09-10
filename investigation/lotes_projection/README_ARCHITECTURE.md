@@ -1,80 +1,34 @@
-# 🏙️ Arquitectura: Geo-Proyector de Lotes Generativo
+# [AI_CONTEXT] Memoria Estática del Agente: Geo-Proyector Generativo
+**ATENCIÓN AGENTE (ANTIGRAVITY / LLM):** Si estás leyendo esto, tu contexto anterior probablemente se truncó. Este documento contiene la arquitectura estricta y los contratos de datos para construir el "Geo-Proyector Generativo". NO te desvíes de estas reglas.
 
-Este documento describe la arquitectura oficial para el pipeline de **Reconstrucción Urbana Generativa**. El objetivo de este experimento es usar polígonos del Catastro (GIS) como "anclas espaciales" para extraer máscaras perfectas de edificios desde Google Street View, y posteriormente usar esas imágenes en IAs Generativas (Image-to-3D), resolviendo el problema de falta de escala y posicionamiento global de las IAs actuales.
+## 1. Meta Global del Sistema
+Cruzar datos espaciales 2D (Catastro/Shapefiles) con poses de cámaras 3D (COLMAP/Street View) para proyectar el polígono de cada edificio sobre la foto 2D. Esta proyección genera un Bounding Box matemático que se usa como Prompt Positivo para recortar la imagen (offline usando MobileSAM en Khipu). El objetivo es alimentar a modelos Image-to-3D con imágenes aisladas de edificios para re-escalar las mallas generadas devuelta a su coordenada GPS.
 
----
+## 2. Arquitectura de Fases (Contrato)
+*   **Fase 1 (Local / Laptop):** Director matemático. Código en Python que carga datos, convierte a ENU local, extruye lotes y proyecta a 2D. Se valida el resultado usando Rerun.io (0 IAs pesadas aquí).
+*   **Fase 2 (Batch / Khipu):** El archivo `crops_metadata.json` (output de la Fase 1) se procesa en el clúster con MobileSAM (offline mode, pesos `.pth` en caché) inyectando los Z-Buffers vecinos como prompts negativos (evita llevarse el cielo/árboles).
 
-## 1. Diseño del Sistema: "Director y Obrero" (Cliente-Servidor)
-Para mantener la fluidez interactiva y evitar saturar recursos, el pipeline se divide rígidamente en dos fases:
+## 3. Estructura de Módulos (Código)
+El código debe ir en `investigation/lotes_projection/` y respetar esta estructura POO estricta:
 
-### Fase 1: El Visualizador de Auditoría ("El Director" - Local en Laptop)
-*   **Propósito:** Interfaz interactiva a 60 FPS para auditar que la matemática de proyección 3D a 2D sea perfecta.
-*   **Tecnología:** Matemática de matrices (NumPy, PyProj) y **Rerun.io** (Visualizador nativo de tensores). *NO USA OPEN3D* para la interfaz 2D/3D dual para evitar sobrecarga del event-loop.
-*   **Sin IA:** No se ejecutan redes neuronales aquí para mantener la laptop fría.
-*   **Output:** Genera un archivo con las coordenadas 2D (Bounding Boxes) aprobadas.
+### `models.py`
+*   `Camera`: Atributos: `camera_id`, `pose (4x4 matrix en local ENU)`, `K (3x3 matriz intrínseca)`, `image_path`, `is_360 (bool)`.
+*   `CadastralLot`: Atributos: `lot_id`, `polygon_2d (Shapely)`, `z_min (float)`, `z_max (float)`. Método `get_3d_bounding_box() -> np.ndarray (8x3)`.
 
-### Fase 2: La Fábrica de Máscaras ("El Obrero" - Batch en Khipu)
-*   **Propósito:** Recortar miles de imágenes masivamente usando inteligencia artificial.
-*   **Tecnología:** SLURM Job, **MobileSAM / FastSAM** (inferencia ultrarrápida de 40MB).
-*   **Modo Offline:** Para evadir la falta de internet en los nodos de cómputo de Khipu, los pesos del modelo (`.pth`/`.pt`) se descargan previamente desde el nodo de acceso (Login Node) y se cargan localmente.
+### `loaders.py`
+*   `CRSManager`: Convierte `ECEF (EPSG:4978)` de COLMAP y `UTM (EPSG:32718)` del Catastro a un sistema Euclidiano Local **ENU (East-North-Up)** restando el centroide del Tile (evita Jittering de float32).
+*   `DataLoader`: Lee `cameras.bin/images.bin/points3D.bin` (pycolmap) y cruza con `gpd.read_file(shp)`. Aplica `offset_config.json` al Shapefile (Translación X,Y y Rotación).
 
----
+### `projection.py`
+*   `ZBufferProjector`: Implementa $x = K[R|t]X$. Entra un `CadastralLot` y una `Camera`. Retorna `[xmin, ymin, xmax, ymax]` y `is_visible (bool)` calculando que el lote esté por delante del plano de la cámara (depth > 0).
 
-## 2. Los 4 Módulos del Código (POO)
+### `visualizer.py` (usando Rerun.io)
+*   `PipelineLogger`: Wrapper alrededor de `import rerun as rr`. Registra `rr.log("world/camera", rr.Pinhole(...))`, `rr.log("world/lots", rr.Boxes3D(...))`. NO usar Open3D para UI compleja.
 
-El código se divide en 4 pilares estrictamente modulares:
+## 4. Guía de Manejo de Errores (Troubleshooting Interno)
+1.  **Jittering/Vibración 3D:** El `CRSManager` falló. Revisa si olvidaste restar el `centro_local` a la cámara o al lote.
+2.  **Lotes Desfasados del COLMAP:** El catastro de Lima tiene error de GPS. Modifica `offset_config.json` para hacer micro-ajuste, NO alteres la cámara.
+3.  **Oclusiones en SAM:** Si SAM recorta el árbol, el `ZBufferProjector` debe generar puntos de sampleo en los píxeles con $Z_{real} < Z_{edificio}$ y pasarlos a la Fase 2 como `negative_prompts`.
+4.  **Error Offline SAM en Khipu:** Instancia el modelo con rutas estáticas: `MobileSAM(checkpoint="./weights/mobile_sam.pt")`.
 
-### A. GIS & Alineación (`CRSManager` & `GISLoader`)
-*   **Problema resuelto:** El GPS crudo sufre de deriva y curvatura terrestre (jitter en Float32).
-*   **Mecanismo:** Divide Lima en *Tiles* (cuadrículas) de 500x500m. Transforma coordenadas esféricas WGS84 a un plano Euclidiano Local **ENU (East-North-Up)** con cota cero localizada. Esto ancla firmemente las cámaras de COLMAP al catastro.
-
-### B. Proyección Geométrica (`ZBufferProjector`)
-*   **Mecanismo:** Cruza la nube de puntos con los polígonos del catastro para hallar la altura real del techo. Extruye el lote creando un "Prisma Fantasma 3D".
-*   Aplica la ecuación $x = K[R|t]X$ para proyectar los vértices del prisma sobre el plano de imagen de la cámara.
-*   Renderiza un mapa de profundidad matemático para obtener el Bounding Box exacto.
-
-### C. Visión Computacional (`CVPipelineOrchestrator` - Khipu)
-*   **Problema resuelto:** El Bounding Box recuadra el edificio, pero también incluye postes, árboles y cielo.
-*   **Mecanismo de "Depth-Prompted SAM":**
-    1. Prompt Positivo: El Bounding Box completo.
-    2. Prompt Negativo (Puntos Rojos): Usa un mapa de profundidad para encontrar objetos "más cerca" que la pared del edificio (ej. autos, árboles) y los marca como negativos. Marca también las casas vecinas proyectadas.
-    3. Resultado: MobileSAM extrae una máscara con precisión de píxel del edificio aislado.
-
-### D. Visualización (`PipelineLogger`)
-*   Singleton que envía logs secuenciales a `Rerun.io`. Permite usar un slider en la línea de tiempo para navegar cámara por cámara, viendo a la izquierda el mapa 3D y a la derecha la foto 2D con los Bounding Boxes dibujados encima, sin programar GUIs personalizadas.
-
----
-
-## 3. Flujo de Trabajo (Step-by-Step)
-
-1. **Preparación (Local):** Ejecutar el script base apuntando a la ruta descargada de Street View y el Shapefile del distrito.
-2. **Auditoría (Local):** Abrir Rerun.io. Deslizar la línea de tiempo. Si los rectángulos verdes calzan sobre los edificios, exportar configuración.
-3. **Despliegue (Local -> Khipu):** Subir carpeta a Khipu junto con el archivo de coordenadas.
-4. **Procesamiento (Khipu):** Lanzar `sbatch job_masks.sh`. Khipu usará MobileSAM offline.
-5. **Generación 3D (Futuro):** Las imágenes aisladas (fondo transparente) se envían a CRM/TripoSR para generar mallas hiper-realistas que reemplazarán los prismas simples.
-
----
-
-## 4. Guía de Debugging y Solución de Problemas 🚨
-
-Si algo falla durante el desarrollo o la ejecución, sigue esta guía:
-
-### A. Los edificios "tiemblan" o flotan en el visor 3D (Jittering)
-*   **Causa:** Se te olvidó aplicar el `CRSManager`. Estás usando coordenadas WGS84 o UTM globales directo en un motor gráfico de 32-bits.
-*   **Solución:** Verifica que el centroide del *Tile* (500x500m) se esté restando a todas las coordenadas (cámaras y vértices) para forzar el origen $(0,0,0)$ local (Sistema ENU).
-
-### B. El Bounding Box sale movido unos metros a la izquierda/derecha
-*   **Causa:** Desfase clásico del catastro estatal vs el GPS de Google.
-*   **Solución:** Usa los controles de Offset ($X, Y, Rotación$) en el `PipelineLogger` para micro-ajustar el Shapefile. Estos valores se guardan en `offset_config.json`.
-
-### C. MobileSAM falla en Khipu por "Connection Timeout"
-*   **Causa:** Khipu está intentando descargar los pesos de HuggingFace/PyTorch desde un nodo de cómputo sin salida a internet.
-*   **Solución:** Entra al nodo de acceso de Khipu vía SSH. Escribe un script corto en Python que importe MobileSAM para forzar la descarga de los pesos en la caché (`~/.cache/torch/hub/checkpoints/`). Asegúrate de que tu script en Khipu apunte a esta ruta local.
-
-### D. La máscara de SAM se está llevando el árbol de adelante
-*   **Causa:** El Z-Buffer no está inyectando correctamente los *Puntos Negativos*.
-*   **Solución:** Activa el flag de depuración visual `DEBUG_DEPTH=True`. Esto exportará una foto donde verás puntos rojos sobre el árbol. Ajusta el umbral de tolerancia de profundidad (ej. considerar "oclusión" a cualquier cosa que esté > 2 metros por delante del plano de la fachada).
-
-### E. Rerun.io se pone súper lento o congela la laptop
-*   **Causa:** Estás cargando toda la ciudad (cientos de miles de vértices y cientos de imágenes de alta resolución) en la misma línea de tiempo, saturando la RAM.
-*   **Solución:** Llama a `flush_memory()` al cambiar de *Tile* o procesa rutas de máximo 50 panoramas por sesión de auditoría.
+*(Fin del Contexto Estático)*
