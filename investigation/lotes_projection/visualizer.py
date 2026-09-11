@@ -73,23 +73,33 @@ class PipelineLogger:
         
         # 4. Loguear los Bounding Boxes y Siluetas proyectadas en 2D
         if projected_lots:
-            all_strips = []
             box_mins = []
             box_sizes = []
             labels = []
+            all_faces = []
             
-            for strips_2d, bbox, lot_id in projected_lots:
-                all_strips.extend(strips_2d)
+            for faces_2d, bbox, lot_id in projected_lots:
+                all_faces.extend(faces_2d)
                 xmin, ymin, xmax, ymax = bbox
                 box_mins.append([xmin, ymin])
                 box_sizes.append([xmax - xmin, ymax - ymin])
                 labels.append(f"Lote {lot_id}")
                 
-            # Dibujar la silueta exacta en 2D (Wireframe rojo)
-            rr.log("world/camera/image/wireframe", rr.LineStrips2D(all_strips, colors=[255, 0, 0, 200]))
+            # Painter's Algorithm: Ordenar de más lejos a más cerca
+            all_faces.sort(key=lambda f: f['depth'], reverse=True)
             
-            # Dibujar el Bounding Box exacto en amarillo tenue (Para visualizadar el input de SAM)
+            # Crear Overlay RGBA (Solid rendering con bordes rojos y fondo negro semi-transparente)
+            overlay = np.zeros((cam.height, cam.width, 4), dtype=np.uint8)
+            for face in all_faces:
+                pts = np.array(face['pts'], np.int32).reshape((-1, 1, 2))
+                # Relleno negro/gris oscuro semi-transparente para ocluir lo de atrás
+                cv2.fillPoly(overlay, [pts], (20, 20, 20, 230))
+                # Borde Rojo vivo
+                cv2.polylines(overlay, [pts], isClosed=True, color=(255, 0, 0, 255), thickness=3)
+                
+            # Dibujar en Rerun
+            rr.log("world/camera/image/solid_overlay", rr.Image(overlay))
             rr.log("world/camera/image/sam_boxes", rr.Boxes2D(mins=box_mins, sizes=box_sizes, labels=labels, colors=[255, 255, 0, 50]))
         else:
-            rr.log("world/camera/image/wireframe", rr.Clear.flat())
+            rr.log("world/camera/image/solid_overlay", rr.Clear.flat())
             rr.log("world/camera/image/sam_boxes", rr.Clear.flat())
