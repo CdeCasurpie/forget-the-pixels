@@ -114,6 +114,15 @@ class PipelineLogger:
                 box_sizes.append([xmax - xmin, ymax - ymin])
                 labels.append(f"Lote {lot_id} | {score_total:.2f}")
             
+            # Filtrar SAM boxes: solo lotes con score >= umbral
+            SCORE_THRESHOLD = 0.5
+            good_mins, good_sizes, good_labels = [], [], []
+            for i, (faces, bbox, lot_id) in enumerate(all_lot_data):
+                if lot_scores[lot_id] >= SCORE_THRESHOLD:
+                    good_mins.append(box_mins[i])
+                    good_sizes.append(box_sizes[i])
+                    good_labels.append(labels[i])
+            
             # --- PANEL 1: Render sólido (Painter's Algorithm) ---
             all_render = []
             for faces, bbox, lot_id in all_lot_data:
@@ -153,9 +162,12 @@ class PipelineLogger:
                                cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255,255,255,255), 1)
             rr.log("world/camera/image/score_heatmap", rr.Image(overlay_score))
             
-            # SAM boxes (solo para lotes con buen score)
-            rr.log("world/camera/image/sam_boxes", rr.Boxes2D(
-                mins=box_mins, sizes=box_sizes, labels=labels, colors=[255, 255, 0, 50]))
+            # SAM boxes (solo lotes con buen score)
+            if good_mins:
+                rr.log("world/camera/image/sam_boxes", rr.Boxes2D(
+                    mins=good_mins, sizes=good_sizes, labels=good_labels, colors=[255, 255, 0, 50]))
+            else:
+                rr.log("world/camera/image/sam_boxes", rr.Clear.flat())
         else:
             rr.log("world/camera/image/solid_overlay", rr.Clear.flat())
             rr.log("world/camera/image/score_heatmap", rr.Clear.flat())
