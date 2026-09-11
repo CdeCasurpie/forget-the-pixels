@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import os
 from models import Camera, CadastralLot
+from projection import ZBufferProjector
 
 class PipelineLogger:
     """ Singleton wrapper para enviar telemetría a Rerun.io """
@@ -49,6 +50,20 @@ class PipelineLogger:
                    rr.LineStrips3D(strips, colors=[0, 255, 0, 150]), 
                    static=True)
 
+    @staticmethod
+    def _score_to_color(score):
+        """Mapea score [0, 1] a color RGB: rojo(0) -> amarillo(0.5) -> verde(1.0)"""
+        t = min(max(score, 0.0), 1.0)
+        if t < 0.5:
+            r = 255
+            g = int(255 * (t / 0.5))
+            b = 0
+        else:
+            r = int(255 * (1.0 - (t - 0.5) / 0.5))
+            g = 255
+            b = 0
+        return (r, g, b)
+
     def log_camera_step(self, step_idx: int, cam: Camera, image_path: str, projected_lots: list):
         """ Loguea una cámara en un instante de tiempo específico (slider) """
         rr.set_time("frame", sequence=step_idx)
@@ -71,35 +86,77 @@ class PipelineLogger:
                 img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 rr.log("world/camera/image", rr.Image(img_rgb))
         
-        # 4. Loguear los Bounding Boxes y Siluetas proyectadas en 2D
+        # 4. Render sólido + Score Heatmap
         if projected_lots:
             box_mins = []
             box_sizes = []
             labels = []
-            all_faces = []
             
-            for faces_2d, bbox, lot_id in projected_lots:
-                all_faces.extend(faces_2d)
+            all_lot_data = []
+            all_faces_flat = []
+            
+            for faces, bbox, lot_id in projected_lots:
+                all_lot_data.append((faces, bbox, lot_id))
+                all_faces_flat.extend(faces)
+            
+            # Calcular scores por lote
+            lot_scores = {}
+            lot_face_scores = {}
+            
+            for faces, bbox, lot_id in all_lot_data:
+                other = [f for f in all_faces_flat if f not in faces]
+                score_total, face_scores = ZBufferProjector.compute_lot_score(faces, cam, other)
+                lot_scores[lot_id] = score_total
+                lot_face_scores[lot_id] = face_scores
+                
                 xmin, ymin, xmax, ymax = bbox
                 box_mins.append([xmin, ymin])
                 box_sizes.append([xmax - xmin, ymax - ymin])
-                labels.append(f"Lote {lot_id}")
-                
-            # Painter's Algorithm: Ordenar de más lejos a más cerca
-            all_faces.sort(key=lambda f: f['depth'], reverse=True)
+                labels.append(f"Lote {lot_id} | {score_total:.2f}")
             
-            # Crear Overlay RGBA (Solid rendering con bordes rojos y fondo negro semi-transparente)
-            overlay = np.zeros((cam.height, cam.width, 4), dtype=np.uint8)
-            for face in all_faces:
+            # --- PANEL 1: Render sólido (Painter's Algorithm) ---
+            all_render = []
+            for faces, bbox, lot_id in all_lot_data:
+                for face in faces:
+                    all_render.append(face)
+            all_render.sort(key=lambda f: f['depth'], reverse=True)
+            
+            overlay_solid = np.zeros((cam.height, cam.width, 4), dtype=np.uint8)
+            for face in all_render:
                 pts = np.array(face['pts'], np.int32).reshape((-1, 1, 2))
-                # Relleno negro/gris oscuro semi-transparente para ocluir lo de atrás
-                cv2.fillPoly(overlay, [pts], (20, 20, 20, 230))
-                # Borde Rojo vivo
-                cv2.polylines(overlay, [pts], isClosed=True, color=(255, 0, 0, 255), thickness=3)
-                
-            # Dibujar en Rerun
-            rr.log("world/camera/image/solid_overlay", rr.Image(overlay))
-            rr.log("world/camera/image/sam_boxes", rr.Boxes2D(mins=box_mins, sizes=box_sizes, labels=labels, colors=[255, 255, 0, 50]))
+                cv2.fillPoly(overlay_solid, [pts], (20, 20, 20, 230))
+                cv2.polylines(overlay_solid, [pts], isClosed=True, color=(255, 0, 0, 255), thickness=3)
+            rr.log("world/camera/image/solid_overlay", rr.Image(overlay_solid))
+            
+            # --- PANEL 2: Score Heatmap (coloreado por cara, RGBA semi-transparente) ---
+            score_render = []
+            for faces, bbox, lot_id in all_lot_data:
+                fscores = lot_face_scores[lot_id]
+                for fi, face in enumerate(faces):
+                    score_render.append((face, fscores[fi], lot_id))
+            score_render.sort(key=lambda x: x[0]['depth'], reverse=True)
+            
+            overlay_score = np.zeros((cam.height, cam.width, 4), dtype=np.uint8)
+            for face, fscore, lot_id in score_render:
+                pts = np.array(face['pts'], np.int32).reshape((-1, 1, 2))
+                if fscore < 1e-6:
+                    color = (40, 40, 40)
+                else:
+                    color = self._score_to_color(fscore)
+                cv2.fillPoly(overlay_score, [pts], (*color, 128))
+                cv2.polylines(overlay_score, [pts], isClosed=True, color=(255, 255, 255, 200), thickness=1)
+                # Número de score en cada cara
+                fp = np.array(face['pts'])
+                cx, cy = int(np.mean(fp[:, 0])), int(np.mean(fp[:, 1]))
+                if 0 < cx < cam.width and 0 < cy < cam.height:
+                    cv2.putText(overlay_score, f"{fscore:.2f}", (cx-15, cy),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255,255,255,255), 1)
+            rr.log("world/camera/image/score_heatmap", rr.Image(overlay_score))
+            
+            # SAM boxes (solo para lotes con buen score)
+            rr.log("world/camera/image/sam_boxes", rr.Boxes2D(
+                mins=box_mins, sizes=box_sizes, labels=labels, colors=[255, 255, 0, 50]))
         else:
             rr.log("world/camera/image/solid_overlay", rr.Clear.flat())
+            rr.log("world/camera/image/score_heatmap", rr.Clear.flat())
             rr.log("world/camera/image/sam_boxes", rr.Clear.flat())

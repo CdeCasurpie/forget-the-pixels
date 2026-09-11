@@ -135,12 +135,19 @@ class DataLoader:
             
         gdf.geometry = gdf.geometry.translate(xoff=-orig_utm[0], yoff=-orig_utm[1])
         
+        # Filtrar solo lotes dentro del bbox de la nube de puntos + 20m padding
+        pad = 20.0
+        xmin_cloud, xmax_cloud = pts_enu[:, 0].min() - pad, pts_enu[:, 0].max() + pad
+        ymin_cloud, ymax_cloud = pts_enu[:, 1].min() - pad, pts_enu[:, 1].max() + pad
+        
         lots = []
         for idx, row in gdf.iterrows():
             poly = row.geometry
             if poly is None: continue
             
             minx, miny, maxx, maxy = poly.bounds
+            if maxx < xmin_cloud or minx > xmax_cloud or maxy < ymin_cloud or miny > ymax_cloud:
+                continue
             mask = (pts_enu[:, 0] >= minx) & (pts_enu[:, 0] <= maxx) & \
                    (pts_enu[:, 1] >= miny) & (pts_enu[:, 1] <= maxy)
             pts_in_box = pts_enu[mask]
