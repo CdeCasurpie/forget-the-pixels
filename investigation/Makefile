@@ -40,6 +40,16 @@ help:
 	@echo "  -> Paso 2: Descarga los panoramas y aplica el corte perspectivo "
 	@echo "     matemático con FOV 135 para maximizar la superposición."
 	@echo ""
+	@echo "make run-gsv-step1"
+	@echo "  -> Baseline nuevo: descarga panoramas 360 y guarda heading/orientación."
+	@echo "     No ejecuta todavía proyección, SAM ni SAM3D Objects."
+	@echo ""
+	@echo "make run-gsv-step1-route"
+	@echo "  -> Baseline nuevo usando custom_route.json como entrada."
+	@echo ""
+	@echo "make view-gsv-north"
+	@echo "  -> Recorre los panoramas con N/B y muestra siempre la vista norte."
+	@echo ""
 	@echo "make run-gsv-khipu-deploy PROJECT_NAME=mi_ruta"
 	@echo "  -> Paso 3: Sube la carpeta a Khipu y encola el trabajo HLOC."
 	@echo "     (Ejecuta extraccion SuperPoint y emparejamiento LightGlue)."
@@ -85,6 +95,33 @@ run-gsv-route-selector:
 
 run-gsv-downloader:
 	$(PYTHON_ENV) street_view/download_custom_route.py
+
+# ==========================================
+# Baseline nuevo: Adquisición GSV, Paso 1
+# ==========================================
+GSV_STEP1_LAT ?= -12.137248
+GSV_STEP1_LON ?= -77.020423
+GSV_STEP1_COUNT ?= 10
+GSV_STEP1_OUTPUT ?= proy_geom/steps/step1_acquisition/data/sample_route
+
+run-gsv-step1:
+	@echo "Descargando panoramas 360 para el baseline (Paso 1)..."
+	$(PYTHON_ENV) proy_geom/steps/step1_acquisition/run.py \
+		--lat $(GSV_STEP1_LAT) \
+		--lon $(GSV_STEP1_LON) \
+		--count $(GSV_STEP1_COUNT) \
+		--output $(GSV_STEP1_OUTPUT)
+
+run-gsv-step1-route:
+	@echo "Descargando panoramas 360 desde custom_route.json..."
+	$(PYTHON_ENV) proy_geom/steps/step1_acquisition/run.py \
+		--route-json ../custom_route.json \
+		--output proy_geom/steps/step1_acquisition/data/custom_route
+
+view-gsv-north:
+	@echo "Abriendo visor de validación: vista fija hacia el norte..."
+	$(PYTHON_ENV) proy_geom/steps/step1_acquisition/view_north.py \
+		--dataset proy_geom/steps/step1_acquisition/data/sample_route
 
 run-gsv-khipu-deploy:
 	bash street_view/deploy_to_khipu.sh street_view/data_custom_route $(PROJECT_NAME)
