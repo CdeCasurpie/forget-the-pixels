@@ -6,6 +6,12 @@ segmentación/generación.
 
 ## Organización
 
+La rama procedural posterior al Paso 5 valida reproyección, construye una
+entrada multivista por lote, observa el límite techo/cielo y ajusta altura.
+La arquitectura reutilizable está documentada en
+[`ARCHITECTURE.md`](ARCHITECTURE.md). `steps/` guarda evidencia y CLI; `src/`
+contiene los módulos canónicos.
+
 Actualización: los pasos 3 y 4 se ejecutan offline con las panorámicas locales.
 `make run-gsv-step3` genera perspectivas horizontales y `make run-gsv-step4`
 genera elevaciones. `make test-gsv-projection` valida geometría sintética.
@@ -23,7 +29,12 @@ su carpeta es `steps/step5_cylindrical_facade` y sus variables son
 | `src/geometry_projection/experiment.py` | Adaptador CLI compartido: entrada/salida y evidencias de los pasos 3 y 4 |
 | `src/cadastral_geometry` | CRS, localización de lote, aristas y bearings de cuadrícula |
 | `src/camera_selection` | Visibilidad 2D, autooclusión y selección de las K cámaras visibles más cercanas |
-| Futuro `facade_observations` | Agrupar vistas, máscaras y calibración para ajuste procedural |
+| `src/domain` | Contratos tipados de lote, pose, observación, altura, especificación y malla |
+| `src/datasets` | Paquete versionado de entrada por lote y vistas seleccionadas |
+| `src/facade_observations` | Evidencia 2D de fachada; actualmente límite cielo/techo |
+| `src/structural_estimation` | Alineación, ajuste de altura y regularización arquitectónica de pisos |
+| `src/procedural_modeling` | Especificación que alimentará la gramática procedural |
+| `src/texturing`, `src/exporters`, `src/pipeline` | Contratos preparados para textura, exportación y API pública |
 
 Los pasos 2 y 5 comparten ahora las mismas funciones de visibilidad. El Paso 2
 conserva su ranking experimental por proximidad; el Paso 5 exige además una
@@ -57,7 +68,9 @@ proy_geom/
 
 La regla del proyecto es mantener en `steps/` los experimentos reproducibles
 y sus evidencias, mientras que `src/` contiene los módulos que se reutilizarán
-en los siguientes pasos del pipeline.
+en los siguientes pasos del pipeline. Los prototipos `multiview_input` y
+`height_estimation` permanecen como adaptadores de compatibilidad; el código
+nuevo usa `datasets`, `facade_observations` y `structural_estimation`.
 
 ## Paso 1 completado: adquisición Street View
 
