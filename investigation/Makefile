@@ -50,6 +50,17 @@ help:
 	@echo "make view-gsv-north"
 	@echo "  -> Recorre los panoramas con N/B y muestra siempre la vista norte."
 	@echo ""
+	@echo "make run-gsv-step2"
+	@echo "  -> Calcula bearing/yaw hacia la arista cercana del lote y genera"
+	@echo "     un mapa con norte gris, heading rojo y objetivo verde."
+	@echo ""
+	@echo "make run-gsv-step2-random"
+	@echo "  -> Escoge un lote aleatorio desde el archivo local de Barranco"
+	@echo "     y calcula el Top 2 sin consultar Google ni descargar imágenes."
+	@echo ""
+	@echo "make download-gsv-metadata-barranco"
+	@echo "  -> Cosecha metadata GSV de Barranco con checkpoints, sin imágenes."
+	@echo ""
 	@echo "make run-gsv-khipu-deploy PROJECT_NAME=mi_ruta"
 	@echo "  -> Paso 3: Sube la carpeta a Khipu y encola el trabajo HLOC."
 	@echo "     (Ejecuta extraccion SuperPoint y emparejamiento LightGlue)."
@@ -122,6 +133,88 @@ view-gsv-north:
 	@echo "Abriendo visor de validación: vista fija hacia el norte..."
 	$(PYTHON_ENV) proy_geom/steps/step1_acquisition/view_north.py \
 		--dataset proy_geom/steps/step1_acquisition/data/sample_route
+
+# ==========================================
+# Baseline nuevo: cálculo vectorial, Paso 2
+# ==========================================
+GSV_STEP2_DATASET ?= proy_geom/steps/step1_acquisition/data/sample_route
+GSV_STEP2_OUTPUT ?= proy_geom/steps/step2_vector_to_lots/outputs
+GSV_STEP2_LOT_ROW ?= 1515
+GSV_STEP2_OBJECTID ?=
+GSV_STEP2_MAX_DISTANCE_M ?= 100
+GSV_STEP2_MIN_ROAD_CLEARANCE_M ?= 1
+GSV_STEP2_MIN_FRONTAL_COSINE ?= 0.5
+GSV_STEP2_AREA_LAT ?= -12.137248
+GSV_STEP2_AREA_LON ?= -77.020423
+GSV_STEP2_AREA_RADIUS_M ?= 250
+GSV_STEP2_CANDIDATES ?= proy_geom/steps/step2_vector_to_lots/data/random_candidates
+GSV_STEP2_MAX_NODES ?= 30
+GSV_BARRANCO_METADATA ?= proy_geom/steps/step2_vector_to_lots/data/barranco_metadata
+GSV_BARRANCO_GRID_M ?= 180
+GSV_BARRANCO_MAX_PANOS ?= 0
+GSV_BARRANCO_INCLUDE_HISTORICAL ?= false
+GSV_BARRANCO_MIN_YEAR ?= 2020
+GSV_BARRANCO_MAX_YEAR ?= 2025
+GSV_COVERAGE_METADATA ?= $(GSV_STEP2_CANDIDATES)/metadata.json
+
+run-gsv-step2:
+	@echo "Calculando vectores y visibilidad 2D hacia el lote objetivo..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/visualize.py \
+		--dataset $(GSV_STEP2_DATASET) \
+		--output $(GSV_STEP2_OUTPUT) \
+		--lot-row $(GSV_STEP2_LOT_ROW) \
+		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
+		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
+		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		$(if $(GSV_STEP2_OBJECTID),--objectid $(GSV_STEP2_OBJECTID),)
+
+run-gsv-step2-random-live:
+	@echo "Seleccionando lote aleatorio y consultando solo metadata GSV cercana..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/select_candidates.py \
+		--lat $(GSV_STEP2_AREA_LAT) \
+		--lon $(GSV_STEP2_AREA_LON) \
+		--area-radius-m $(GSV_STEP2_AREA_RADIUS_M) \
+		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
+		--max-nodes $(GSV_STEP2_MAX_NODES) \
+		--output $(GSV_STEP2_CANDIDATES)
+	@echo "Calculando el ranking con esas cámaras, sin descargar imágenes..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/visualize.py \
+		--dataset $(GSV_STEP2_CANDIDATES) \
+		--output $(GSV_STEP2_OUTPUT) \
+		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
+		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
+		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		--selection-json $(GSV_STEP2_CANDIDATES)/selection.json
+
+run-gsv-step2-random:
+	@echo "Seleccionando lote aleatorio desde la metadata local de Barranco..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/select_from_archive.py \
+		--archive $(GSV_BARRANCO_METADATA)/metadata.json \
+		--output $(GSV_STEP2_CANDIDATES) \
+		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M)
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/visualize.py \
+		--dataset $(GSV_STEP2_CANDIDATES) \
+		--output $(GSV_STEP2_OUTPUT) \
+		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
+		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
+		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		--selection-json $(GSV_STEP2_CANDIDATES)/selection.json
+
+download-gsv-metadata-barranco:
+	@echo "Recolectando metadata GSV de Barranco (reanudable, sin imágenes)..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/harvest_barranco_metadata.py \
+		--output $(GSV_BARRANCO_METADATA) \
+		--grid-spacing-m $(GSV_BARRANCO_GRID_M) \
+		--max-panoramas $(GSV_BARRANCO_MAX_PANOS) \
+		--min-year $(GSV_BARRANCO_MIN_YEAR) \
+		--max-year $(GSV_BARRANCO_MAX_YEAR) \
+		$(if $(filter true,$(GSV_BARRANCO_INCLUDE_HISTORICAL)),--include-historical,--no-include-historical)
+
+view-gsv-metadata-coverage:
+	@echo "Generando mapa de cobertura de la metadata GSV disponible..."
+	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/view_metadata_coverage.py \
+		--metadata $(GSV_COVERAGE_METADATA) \
+		--output $(GSV_STEP2_OUTPUT)/barranco_camera_coverage.png
 
 run-gsv-khipu-deploy:
 	bash street_view/deploy_to_khipu.sh street_view/data_custom_route $(PROJECT_NAME)
