@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import numpy as np
 from shapely.geometry import Polygon, box
 import trimesh
+import geopandas as gpd
 from domain.models import BuildingSpecification, HeightEstimate, RoofSpecification
 from procedural_modeling.grammar import generate_mesh, triangulate_polygon
 from procedural_modeling.layout import propose_building
@@ -19,9 +20,29 @@ from procedural_modeling.mesh_builder import MeshBuilder
 from procedural_modeling.io import read_specification
 from exporters.obj_exporter import export_obj
 from exporters.glb_exporter import export_glb
+from cadastral_geometry.street_fronts import street_facing_edges
+from procedural_modeling.block import build_block_specifications, load_height_fits
 
 
 class GrammarTests(unittest.TestCase):
+    def test_street_fronts_reject_shared_wall_and_batch_skips_missing_height(self):
+        lots = gpd.GeoDataFrame(
+            {"objectid": [10, 11, 12]},
+            geometry=[box(0, 0, 4, 4), box(4, 0, 8, 4), box(0, 7, 4, 11)],
+            crs=32718,
+        )
+        edges = street_facing_edges(lots, 0)
+        shared = next(edge for edge in edges if edge.outward_normal_xy[0] > 0.9)
+        self.assertFalse(shared.is_street_facing)
+        self.assertGreaterEqual(sum(edge.is_street_facing for edge in edges), 2)
+        heights = {10: HeightEstimate(6.1, 1.0, ("pano",), 5.6, 2, 2.8)}
+        specs, report = build_block_specifications(lots, heights, setback_m=0.2)
+        self.assertEqual([item[0] for item in specs], [10])
+        self.assertEqual(
+            {item["reason"] for item in report if item["status"] == "skipped"},
+            {"missing_height"},
+        )
+
     def test_foliage_is_closed_and_outward(self):
         builder = MeshBuilder(box(0, 0, 2, 2))
         builder.foliage((1, 1, 0.7), (0.4, 0.4, 0.4), np.random.default_rng(42))

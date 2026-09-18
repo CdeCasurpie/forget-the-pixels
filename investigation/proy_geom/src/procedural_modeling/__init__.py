@@ -5,6 +5,7 @@ from .grammar import generate_mesh
 from .layout import propose_building
 from .io import read_specification
 from .validation import validate_mesh
+from .block import load_height_fits, select_block_lots, build_block_specifications
 
 __all__ = [
     "build_building_specification",
@@ -13,4 +14,7 @@ __all__ = [
     "propose_building",
     "read_specification",
     "validate_mesh",
+    "load_height_fits",
+    "select_block_lots",
+    "build_block_specifications",
 ]

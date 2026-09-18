@@ -326,3 +326,20 @@ test-crop:
 preview-lots:
 	@echo "Mostrando en 3D los lotes que pasaron los filtros..."
 	$(PYTHON_ENV) lotes_projection/preview_selected_lots.py
+
+.PHONY: run-procedural-proposal test-procedural-proposal
+PROCEDURAL_SEED ?= 42
+PROCEDURAL_SPEC ?=
+run-procedural-proposal:
+	$(PYTHON_ENV) proy_geom/steps/step10_procedural_generation_test/run.py \
+		--seed $(PROCEDURAL_SEED) $(if $(PROCEDURAL_SPEC),--spec "$(PROCEDURAL_SPEC)",--cadastre)
+
+test-procedural-proposal:
+	PYTHONPATH=proy_geom/src $(PYTHON_ENV) -m unittest discover -s proy_geom/tests -p 'test_procedural_grammar.py' -v
+
+.PHONY: run-procedural-block
+GSV_STEP11_OBJECTID ?= 1134979
+GSV_STEP11_HEIGHT_FIT ?= proy_geom/steps/step9_height_fit/outputs/height_fit.json
+run-procedural-block:
+	$(PYTHON_ENV) proy_geom/steps/step11_block_generation/run.py \
+		--objectid $(GSV_STEP11_OBJECTID) --height-fit $(GSV_STEP11_HEIGHT_FIT)

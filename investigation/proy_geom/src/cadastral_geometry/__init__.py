@@ -1,10 +1,12 @@
 """Metric cadastral geometry (EPSG:32718 for Barranco)."""
+
 import math
 import geopandas as gpd
 from pyproj import Transformer
 from shapely.geometry import Point, Polygon, LineString
 
 TARGET_CRS = "EPSG:32718"
+
 
 def bearing_from_north(origin: Point, target: Point) -> float:
     """Bearing de cuadrícula, en grados, medido en sentido horario desde norte."""
@@ -32,7 +34,14 @@ def edge_midpoints(polygon: Polygon) -> list[tuple[int, Point, Point, Point]]:
     for index, (start, end) in enumerate(zip(coordinates, coordinates[1:])):
         start_point = Point(start)
         end_point = Point(end)
-        edges.append((index, start_point, end_point, LineString([start, end]).interpolate(0.5, normalized=True)))
+        edges.append(
+            (
+                index,
+                start_point,
+                end_point,
+                LineString([start, end]).interpolate(0.5, normalized=True),
+            )
+        )
     if not edges:
         raise ValueError("El lote no tiene una arista exterior válida")
     return edges
@@ -58,3 +67,6 @@ def find_target_lot(gdf: gpd.GeoDataFrame, lat: float, lon: float, tolerance_m: 
             f"La coordenada no cae en un lote; el más cercano está a {distance:.2f} m."
         )
     return int(index), gdf.loc[index], point, distance
+
+
+from .street_fronts import StreetEdge, street_facing_edges, annotate_street_fronts

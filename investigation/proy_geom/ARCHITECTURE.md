@@ -109,3 +109,12 @@ seleccionados. La malla es un ensamblaje de componentes, no una unión booleana
 global. Los ejemplos incluyen parámetros explícitos de demostración, no nuevas
 mediciones. Las unidades, ejes, límites, parámetros y comandos reproducibles
 están en [la documentación del paso 10](steps/step10_procedural_generation_test/README.md).
+
+## Generación por cuadra (Step 11)
+
+`cadastral_geometry/street_fronts.py` infiere frentes candidatos mediante el
+espacio libre exterior entre lotes; no depende de que una arista sea larga. El
+lote central y un radio forman un área de trabajo, y `procedural_modeling/block.py`
+solo genera las mallas de los `objectid` que tienen un ajuste de altura de Step
+9. El manifiesto retiene explícitamente los faltantes. El contrato, comandos y
+límites están en [Step 11](steps/step11_block_generation/README.md).
