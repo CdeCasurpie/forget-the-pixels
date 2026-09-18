@@ -1,4 +1,5 @@
 """Translate measured reconstruction evidence into grammar-ready parameters."""
+
 from __future__ import annotations
 
 from dataclasses import asdict
@@ -9,7 +10,9 @@ from domain import BuildingSpecification, HeightEstimate, ReconstructionInput
 from structural_estimation import regularize_height_to_floors
 
 
-def build_building_specification(reconstruction_input: ReconstructionInput, height_fit: dict) -> BuildingSpecification:
+def build_building_specification(
+    reconstruction_input: ReconstructionInput, height_fit: dict
+) -> BuildingSpecification:
     """Build the neutral LOD1 specification; no mesh or architectural grammar yet."""
     regularized = regularize_height_to_floors(height_fit["height_m"])
     height = HeightEstimate(
@@ -25,12 +28,17 @@ def build_building_specification(reconstruction_input: ReconstructionInput, heig
         footprint_xy=reconstruction_input.lot.footprint_xy,
         crs=reconstruction_input.lot.crs,
         height=height,
-        metadata={"objectid": reconstruction_input.lot.objectid, "alignment": reconstruction_input.alignment},
+        metadata={
+            "objectid": reconstruction_input.lot.objectid,
+            "alignment": reconstruction_input.alignment,
+        },
     )
 
 
-def write_building_specification(specification: BuildingSpecification, output: Path) -> None:
+def write_building_specification(
+    specification: BuildingSpecification, output: Path
+) -> None:
     """Persist a grammar-ready specification without committing to a mesh format."""
-    payload = {"schema_version": 1, **asdict(specification)}
+    payload = {"schema_version": 2, **asdict(specification)}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")

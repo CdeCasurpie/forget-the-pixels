@@ -1,0 +1,275 @@
+{
+  "schema_version": 2,
+  "footprint_xy": [
+    [
+      0.2,
+      9.8
+    ],
+    [
+      0.2,
+      0.3
+    ],
+    [
+      4.8,
+      0.3
+    ],
+    [
+      4.8,
+      9.8
+    ],
+    [
+      0.2,
+      9.8
+    ]
+  ],
+  "crs": "EPSG:32718",
+  "height": {
+    "continuous_height_m": 5.6,
+    "reprojection_rmse_px": 0.0,
+    "used_pano_ids": [],
+    "regularized_height_m": 5.6,
+    "floor_count": 2,
+    "floor_height_m": 2.8,
+    "quality": "authored_hypothesis"
+  },
+  "facade_edges": [
+    {
+      "edge_id": "edge_0",
+      "vertex_a": [
+        0.2,
+        9.8
+      ],
+      "vertex_b": [
+        0.2,
+        0.3
+      ],
+      "width_m": 9.5,
+      "normal_xy": [
+        -1.0,
+        -0.0
+      ],
+      "floor_levels_m": [
+        0.0,
+        2.8,
+        5.6
+      ],
+      "wall_color_rgb": [
+        211,
+        211,
+        202
+      ],
+      "openings": [],
+      "observed": false,
+      "is_front": false,
+      "assigned_views": [],
+      "cladding": "stucco",
+      "balcony_pattern": "vertical",
+      "services": false
+    },
+    {
+      "edge_id": "edge_1",
+      "vertex_a": [
+        0.2,
+        0.3
+      ],
+      "vertex_b": [
+        4.8,
+        0.3
+      ],
+      "width_m": 4.6,
+      "normal_xy": [
+        0.0,
+        -1.0
+      ],
+      "floor_levels_m": [
+        0.0,
+        2.8,
+        5.6
+      ],
+      "wall_color_rgb": [
+        211,
+        211,
+        202
+      ],
+      "openings": [
+        {
+          "kind": "door",
+          "u_m": 0.3,
+          "v_m": 0.04,
+          "width_m": 0.95,
+          "height_m": 2.3,
+          "frame_width_m": 0.06,
+          "recess_m": 0.08,
+          "source": "assumed",
+          "view_id": null,
+          "score": 0.0,
+          "style": "transom",
+          "grille": false,
+          "mullion_columns": 2,
+          "mullion_rows": 3,
+          "balcony_depth_m": 0.75
+        },
+        {
+          "kind": "window",
+          "u_m": 1.55,
+          "v_m": 0.85,
+          "width_m": 2.7499999999999996,
+          "height_m": 1.5,
+          "frame_width_m": 0.06,
+          "recess_m": 0.08,
+          "source": "assumed",
+          "view_id": null,
+          "score": 0.0,
+          "style": "transom",
+          "grille": true,
+          "mullion_columns": 3,
+          "mullion_rows": 2,
+          "balcony_depth_m": 0.75
+        },
+        {
+          "kind": "window",
+          "u_m": 1.4749999999999999,
+          "v_m": 3.65,
+          "width_m": 1.65,
+          "height_m": 1.5,
+          "frame_width_m": 0.06,
+          "recess_m": 0.08,
+          "source": "assumed",
+          "view_id": null,
+          "score": 0.0,
+          "style": "sliding",
+          "grille": true,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "balcony_depth_m": 0.75
+        }
+      ],
+      "observed": false,
+      "is_front": true,
+      "assigned_views": [],
+      "cladding": "stucco",
+      "balcony_pattern": "vertical",
+      "services": true
+    },
+    {
+      "edge_id": "edge_2",
+      "vertex_a": [
+        4.8,
+        0.3
+      ],
+      "vertex_b": [
+        4.8,
+        9.8
+      ],
+      "width_m": 9.5,
+      "normal_xy": [
+        1.0,
+        -0.0
+      ],
+      "floor_levels_m": [
+        0.0,
+        2.8,
+        5.6
+      ],
+      "wall_color_rgb": [
+        211,
+        211,
+        202
+      ],
+      "openings": [],
+      "observed": false,
+      "is_front": false,
+      "assigned_views": [],
+      "cladding": "stucco",
+      "balcony_pattern": "vertical",
+      "services": false
+    },
+    {
+      "edge_id": "edge_3",
+      "vertex_a": [
+        4.8,
+        9.8
+      ],
+      "vertex_b": [
+        0.2,
+        9.8
+      ],
+      "width_m": 4.6,
+      "normal_xy": [
+        0.0,
+        1.0
+      ],
+      "floor_levels_m": [
+        0.0,
+        2.8,
+        5.6
+      ],
+      "wall_color_rgb": [
+        211,
+        211,
+        202
+      ],
+      "openings": [],
+      "observed": false,
+      "is_front": false,
+      "assigned_views": [],
+      "cladding": "stucco",
+      "balcony_pattern": "vertical",
+      "services": false
+    }
+  ],
+  "setback": {
+    "depth_m": 0.3,
+    "surface": "pavement",
+    "boundary": "open",
+    "boundary_height_m": 1.8,
+    "source": "assumed",
+    "edge_indices": [
+      0
+    ],
+    "gate_width_m": 2.8
+  },
+  "roof": {
+    "kind": "flat",
+    "slope_deg": 0,
+    "parapet_height_m": 0.5,
+    "source": "assumed",
+    "terrace_room": true,
+    "canopy": true,
+    "water_tank": true
+  },
+  "metadata": {
+    "objectid": null,
+    "style": "narrow",
+    "source": "procedural_hypothesis",
+    "front_edge_indices": [
+      0
+    ],
+    "footprint_source": "setback_from_parcel"
+  },
+  "parcel_xy": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      5.0,
+      0.0
+    ],
+    [
+      5.0,
+      10.0
+    ],
+    [
+      0.0,
+      10.0
+    ],
+    [
+      0.0,
+      0.0
+    ]
+  ],
+  "footprint_holes": [],
+  "parcel_holes": [],
+  "seed": 42
+}

@@ -1,4 +1,5 @@
 """Typed, serializable contracts independent from CLI, plotting, and export."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -51,6 +52,7 @@ class Alignment2D:
 @dataclass(frozen=True)
 class ReconstructionInput:
     """Everything known before inferring a building from multiple views."""
+
     lot: LotGeometry
     views: tuple[PanoramaView, ...]
     alignment: Alignment2D
@@ -85,12 +87,11 @@ class HeightEstimate:
     quality: str = "unreviewed"
 
 
-
 @dataclass(frozen=True)
 class Opening:
-    kind: str              # "window" | "door" | "gate"
-    u_m: float             # posición horizontal en la fachada (centro o borde, definamos borde izquierdo por ahora)
-    v_m: float             # posición vertical (base de la abertura)
+    kind: str  # window | door | gate | balcony_window
+    u_m: float  # borde izquierdo, distancia desde vertex_a en metros
+    v_m: float  # posición vertical (base de la abertura)
     width_m: float
     height_m: float
     frame_width_m: float = 0.06
@@ -98,6 +99,12 @@ class Opening:
     source: str = "assumed"
     view_id: str | None = None
     score: float = 0.0
+    style: str = "sliding"  # sliding | casement | transom | paneled
+    grille: bool = False
+    mullion_columns: int = 2
+    mullion_rows: int = 2
+    balcony_depth_m: float = 0.75
+
 
 @dataclass(frozen=True)
 class FacadeSpecification:
@@ -112,6 +119,10 @@ class FacadeSpecification:
     observed: bool = False
     is_front: bool = False
     assigned_views: tuple[str, ...] = ()
+    cladding: str = "stucco"  # stucco | horizontal
+    balcony_pattern: str = "vertical"  # vertical | diamond
+    services: bool = False
+
 
 @dataclass(frozen=True)
 class SetbackSpecification:
@@ -120,6 +131,9 @@ class SetbackSpecification:
     boundary: str = "open"
     boundary_height_m: float = 1.8
     source: str = "assumed"
+    edge_indices: tuple[int, ...] = ()  # parcel exterior after CCW normalization
+    gate_width_m: float = 2.8
+
 
 @dataclass(frozen=True)
 class RoofSpecification:
@@ -127,10 +141,15 @@ class RoofSpecification:
     slope_deg: float = 0.0
     parapet_height_m: float = 0.5
     source: str = "assumed"
+    terrace_room: bool = True
+    canopy: bool = True
+    water_tank: bool = True
+
 
 @dataclass(frozen=True)
 class BuildingSpecification:
-    """Geometry and rules consumed by the future procedural mesh generator."""
+    """Explicit geometry and rules consumed by the procedural mesh generator."""
+
     footprint_xy: tuple[tuple[float, float], ...]
     crs: str
     height: HeightEstimate
@@ -138,13 +157,19 @@ class BuildingSpecification:
     setback: SetbackSpecification | None = None
     roof: RoofSpecification = field(default_factory=RoofSpecification)
     metadata: dict[str, Any] = field(default_factory=dict)
+    parcel_xy: tuple[tuple[float, float], ...] | None = None
+    footprint_holes: tuple[tuple[tuple[float, float], ...], ...] = ()
+    parcel_holes: tuple[tuple[tuple[float, float], ...], ...] = ()
+    seed: int = 0
 
 
 @dataclass(frozen=True)
 class MeshData:
     """Renderer-independent mesh representation for future OBJ/GLB exporters."""
+
     vertices: np.ndarray
     faces: np.ndarray
     uv: np.ndarray | None = None
     face_materials: np.ndarray | None = None
     materials: tuple[dict[str, Any], ...] = ()
+    parts: tuple[dict[str, Any], ...] = ()

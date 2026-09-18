@@ -5,4 +5,5 @@ opencv-python
 geopandas
 matplotlib
 pyproj
-shapely
+shapely>=2.1
+trimesh>=4

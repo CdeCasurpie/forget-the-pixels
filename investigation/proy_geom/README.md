@@ -4,6 +4,12 @@ Este directorio contiene el pipeline experimental para reconstrucción urbana
 top-down a partir de Street View, catastro y posteriormente modelos de
 segmentación/generación.
 
+## Generación procedural detallada
+
+El paso 10 genera OBJ/MTL y GLB, con fachadas, balcones, cercos selectivos y
+azoteas mediante una gramática reproducible. Desde `investigation/` ejecutar
+`make run-procedural-proposal`. Ver [parámetros, ejemplos y límites](steps/step10_procedural_generation_test/README.md).
+
 ## Organización
 
 La rama procedural posterior al Paso 5 valida reproyección, construye una
@@ -33,8 +39,9 @@ su carpeta es `steps/step5_cylindrical_facade` y sus variables son
 | `src/datasets` | Paquete versionado de entrada por lote y vistas seleccionadas |
 | `src/facade_observations` | Evidencia 2D de fachada; actualmente límite cielo/techo |
 | `src/structural_estimation` | Alineación, ajuste de altura y regularización arquitectónica de pisos |
-| `src/procedural_modeling` | Especificación que alimentará la gramática procedural |
-| `src/texturing`, `src/exporters`, `src/pipeline` | Contratos preparados para textura, exportación y API pública |
+| `src/procedural_modeling` | Gramática, composición, triangulación y validación de mallas |
+| `src/exporters` | OBJ/MTL y GLB con materiales y grupos semánticos |
+| `src/texturing`, `src/pipeline` | Contratos preparados para texturas fotográficas y API pública |
 
 Los pasos 2 y 5 comparten ahora las mismas funciones de visibilidad. El Paso 2
 conserva su ranking experimental por proximidad; el Paso 5 exige además una

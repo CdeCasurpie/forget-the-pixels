@@ -264,6 +264,44 @@ run-gsv-step4:
 test-gsv-projection:
 	$(PYTHON_ENV) -m unittest discover -s proy_geom/tests -v
 
+.PHONY: run-gsv-reprojection
+GSV_CAMERA_HEIGHT ?= 2.5
+GSV_ALIGNMENT_STEP ?= 0.1
+.PHONY: view-gsv-alignment
+view-gsv-alignment:
+	$(PYTHON_ENV) proy_geom/steps/step6_reprojection_sanity/view_alignment.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) --step $(GSV_ALIGNMENT_STEP) \
+		--camera-height $(GSV_CAMERA_HEIGHT)
+
+.PHONY: view-gsv-alignment-batch
+view-gsv-alignment-batch:
+	$(PYTHON_ENV) proy_geom/steps/step6_reprojection_sanity/view_alignment_batch.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) --top-k 5 --step $(GSV_ALIGNMENT_STEP) \
+		--camera-height $(GSV_CAMERA_HEIGHT)
+
+run-gsv-reprojection:
+	$(PYTHON_ENV) proy_geom/steps/step6_reprojection_sanity/run.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) \
+		--top-k 8 --height 10
+
+.PHONY: run-gsv-step7 run-gsv-step8 run-gsv-step9
+
+run-gsv-step8:
+	$(PYTHON_ENV) proy_geom/steps/step8_roof_boundary/run.py
+
+run-gsv-step9: run-gsv-step8
+	$(PYTHON_ENV) proy_geom/steps/step9_height_fit/run.py
+
+GSV_STEP7_OBJECTID ?= 1134979
+GSV_STEP7_OUTPUT ?= proy_geom/steps/step7_multiview_input/outputs/lot_$(GSV_STEP7_OBJECTID).json
+
+run-gsv-step7:
+	@echo "Construyendo input multivista reproducible por lote..."
+	$(PYTHON_ENV) proy_geom/steps/step7_multiview_input/run.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) \
+		--objectid $(GSV_STEP7_OBJECTID) \
+		--output $(GSV_STEP7_OUTPUT)
+
 run-gsv-khipu-deploy:
 	bash street_view/deploy_to_khipu.sh street_view/data_custom_route $(PROJECT_NAME)
 
