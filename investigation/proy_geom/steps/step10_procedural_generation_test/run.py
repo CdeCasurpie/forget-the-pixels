@@ -6,9 +6,7 @@ import geopandas as gpd
 from domain.models import BuildingSpecification, FacadeSpecification, Opening, HeightEstimate, RoofSpecification
 from procedural_modeling.grammar import generate_mesh
 from exporters.obj_exporter import export_obj
-
 import numpy as np
-import random
 
 def run():
     print("Loading cadastre...")
@@ -19,19 +17,11 @@ def run():
         
     target_lots = [1134711, 1134712, 1135743]
     
-    # We will simulate different Barranco typologies for each lot
-    styles = {
-        1134711: {"floors": 2, "style": "setback_fence"},
-        1134712: {"floors": 3, "style": "storefront"},
-        1135743: {"floors": 4, "style": "residential_direct"}
-    }
-    
     for objectid in target_lots:
         row = gdf[gdf['objectid'] == objectid]
         if row.empty:
             row = gdf[gdf['objectid'] == objectid]
             if row.empty:
-                print(f"Lot {objectid} not found!")
                 continue
             
         geom = row.geometry.iloc[0]
@@ -39,24 +29,17 @@ def run():
         coords = np.array(geom.exterior.coords)
         local_coords = coords - [centroid.x, centroid.y]
         
-        style_info = styles.get(objectid, {"floors": 2, "style": "residential_direct"})
-        floors = style_info["floors"]
-        style = style_info["style"]
+        floors = 3 if objectid == 1135743 else 2
+        floor_h = 2.8
         
         height_est = HeightEstimate(
-            continuous_height_m=floors * 2.8,
+            continuous_height_m=floors * floor_h,
             reprojection_rmse_px=0.0,
             used_pano_ids=(),
-            regularized_height_m=floors * 2.8,
+            regularized_height_m=floors * floor_h,
             floor_count=floors,
-            floor_height_m=2.8
+            floor_height_m=floor_h
         )
-        
-        # Identify the "front" edge. Usually the shortest edge facing a street, 
-        # or we just pick edge 0 for this test.
-        # Actually, let's find the edge closest to the bottom of the bounding box as a simple heuristic,
-        # or just edge 0.
-        front_idx = 0
         
         facades = []
         for i in range(len(local_coords) - 1):
@@ -68,52 +51,38 @@ def run():
                 continue
             normal = (dy/width, -dx/width)
             
-            is_front = (i == front_idx)
+            # Put windows on any edge longer than 3.5 meters
+            is_front = width > 3.5
             openings = []
             
-            # Barranco rules: Only put windows on the front (or back), side walls are usually blind in Lima
             if is_front:
-                if style == "storefront":
-                    # Ground floor is a big business (bodega)
-                    openings.append(Opening(kind="storefront", u_m=0.2, v_m=0.0, width_m=width-0.4, height_m=2.5, recess_m=0.2))
-                    # Upper floors have wide windows
-                    for f in range(1, floors):
-                        openings.append(Opening(kind="wide_window", u_m=0.5, v_m=f*2.8 + 1.0, width_m=width-1.0, height_m=1.4, recess_m=0.1))
+                # Ground floor: Door and Windows
+                # Door at 0.5m from the left
+                openings.append(Opening(kind="door", u_m=0.5, v_m=0.0, width_m=1.0, height_m=2.2, recess_m=0.1))
                 
-                elif style == "setback_fence":
-                    # The actual facade will be pushed back in grammar.py, but for openings:
-                    # Ground floor: Door and window
-                    openings.append(Opening(kind="door", u_m=1.0, v_m=0.0, width_m=1.0, height_m=2.2, recess_m=0.1))
-                    openings.append(Opening(kind="window", u_m=2.5, v_m=1.0, width_m=1.5, height_m=1.2, recess_m=0.1))
-                    # Upper floor: Balcony window
-                    for f in range(1, floors):
-                        openings.append(Opening(kind="balcony_window", u_m=2.0, v_m=f*2.8 + 0.2, width_m=2.0, height_m=2.0, recess_m=0.1))
-                        
-                elif style == "residential_direct":
-                    # Direct to street
-                    openings.append(Opening(kind="garage", u_m=0.5, v_m=0.0, width_m=2.5, height_m=2.4, recess_m=0.1))
-                    if width > 4.0:
-                        openings.append(Opening(kind="door", u_m=3.5, v_m=0.0, width_m=1.0, height_m=2.2, recess_m=0.1))
+                # Windows on the rest of the ground floor
+                u_curr = 2.5
+                while u_curr + 1.5 < width - 0.5:
+                    openings.append(Opening(kind="window", u_m=u_curr, v_m=1.0, width_m=1.5, height_m=1.4, recess_m=0.1))
+                    u_curr += 2.5 # Gap between windows
                     
-                    for f in range(1, floors):
-                        bay_width = width / max(1, round(width / 3.0))
-                        for b in range(max(1, round(width / 3.0))):
-                            u_c = (b + 0.5) * bay_width
-                            if b % 2 == 0:
-                                openings.append(Opening(kind="window", u_m=u_c-0.6, v_m=f*2.8 + 1.0, width_m=1.2, height_m=1.4, recess_m=0.1))
-                            else:
-                                openings.append(Opening(kind="balcony_window", u_m=u_c-0.8, v_m=f*2.8 + 0.2, width_m=1.6, height_m=2.0, recess_m=0.1))
-            else:
-                # Side walls are blind in Lima row-houses!
-                pass
-                
+                # Upper floors: Balconies and Windows
+                for f in range(1, floors):
+                    u_curr = 0.5
+                    while u_curr + 1.5 < width - 0.5:
+                        if u_curr == 0.5:
+                            openings.append(Opening(kind="balcony_window", u_m=u_curr, v_m=f*floor_h + 0.2, width_m=1.5, height_m=2.0, recess_m=0.1))
+                        else:
+                            openings.append(Opening(kind="window", u_m=u_curr, v_m=f*floor_h + 1.0, width_m=1.5, height_m=1.4, recess_m=0.1))
+                        u_curr += 2.5
+
             facades.append(FacadeSpecification(
                 edge_id=f"edge_{i}",
                 vertex_a=tuple(A),
                 vertex_b=tuple(B),
                 width_m=width,
                 normal_xy=normal,
-                floor_levels_m=tuple(f*2.8 for f in range(floors+1)),
+                floor_levels_m=tuple(f*floor_h for f in range(floors+1)),
                 openings=tuple(openings),
                 is_front=is_front
             ))
@@ -124,7 +93,7 @@ def run():
             height=height_est,
             facade_edges=tuple(facades),
             roof=RoofSpecification(kind="flat"),
-            metadata={"style": style}
+            metadata={}
         )
         
         mesh = generate_mesh(spec)
