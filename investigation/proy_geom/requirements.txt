@@ -1,2 +1,8 @@
 streetlevel
 Pillow
+numpy
+opencv-python
+geopandas
+matplotlib
+pyproj
+shapely

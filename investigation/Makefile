@@ -144,6 +144,7 @@ GSV_STEP2_OBJECTID ?=
 GSV_STEP2_MAX_DISTANCE_M ?= 100
 GSV_STEP2_MIN_ROAD_CLEARANCE_M ?= 1
 GSV_STEP2_MIN_FRONTAL_COSINE ?= 0.5
+GSV_STEP2_TOP_K ?= 5
 GSV_STEP2_AREA_LAT ?= -12.137248
 GSV_STEP2_AREA_LON ?= -77.020423
 GSV_STEP2_AREA_RADIUS_M ?= 250
@@ -166,6 +167,7 @@ run-gsv-step2:
 		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
 		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
 		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		--top-k $(GSV_STEP2_TOP_K) \
 		$(if $(GSV_STEP2_OBJECTID),--objectid $(GSV_STEP2_OBJECTID),)
 
 run-gsv-step2-random-live:
@@ -184,6 +186,7 @@ run-gsv-step2-random-live:
 		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
 		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
 		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		--top-k $(GSV_STEP2_TOP_K) \
 		--selection-json $(GSV_STEP2_CANDIDATES)/selection.json
 
 run-gsv-step2-random:
@@ -198,6 +201,7 @@ run-gsv-step2-random:
 		--max-camera-distance-m $(GSV_STEP2_MAX_DISTANCE_M) \
 		--min-road-clearance-m $(GSV_STEP2_MIN_ROAD_CLEARANCE_M) \
 		--min-frontal-cosine $(GSV_STEP2_MIN_FRONTAL_COSINE) \
+		--top-k $(GSV_STEP2_TOP_K) \
 		--selection-json $(GSV_STEP2_CANDIDATES)/selection.json
 
 download-gsv-metadata-barranco:
@@ -215,6 +219,50 @@ view-gsv-metadata-coverage:
 	$(PYTHON_ENV) proy_geom/steps/step2_vector_to_lots/view_metadata_coverage.py \
 		--metadata $(GSV_COVERAGE_METADATA) \
 		--output $(GSV_STEP2_OUTPUT)/barranco_camera_coverage.png
+
+# ==========================================
+# Paso 5: proyección cilíndrica de fachada
+# ==========================================
+GSV_STEP5_LAT ?= -12.135895
+GSV_STEP5_LON ?= -77.019184
+GSV_STEP5_TOP_K ?= 4
+GSV_STEP5_MAX_DISTANCE_M ?= 150
+GSV_STEP5_FOV ?= 120
+GSV_STEP5_WIDTH ?= 1600
+GSV_STEP5_ZOOM ?= 3
+GSV_STEP5_OUTPUT ?= proy_geom/steps/step5_cylindrical_facade/outputs/lot_-12.135895_-77.019184
+
+run-gsv-step5:
+	@echo "Descargando las cuatro cámaras visibles y proyectando fachada..."
+	$(PYTHON_ENV) proy_geom/steps/step5_cylindrical_facade/run.py \
+		--lat $(GSV_STEP5_LAT) \
+		--lon $(GSV_STEP5_LON) \
+		--top-k $(GSV_STEP5_TOP_K) \
+		--max-distance-m $(GSV_STEP5_MAX_DISTANCE_M) \
+		--horizontal-fov-deg $(GSV_STEP5_FOV) \
+		--width $(GSV_STEP5_WIDTH) \
+		--zoom $(GSV_STEP5_ZOOM) \
+		--output $(GSV_STEP5_OUTPUT)
+
+.PHONY: run-gsv-step3 run-gsv-step4 run-gsv-step5 test-gsv-projection
+GSV_PROJECTION_MANIFEST ?= $(GSV_STEP5_OUTPUT)/projection_metadata.json
+GSV_RECT_FOV ?= 90
+GSV_RECT_WIDTH ?= 1200
+GSV_RECT_HEIGHT ?= 900
+GSV_STEP4_PITCHES ?= -30 0 30 60
+
+run-gsv-step3:
+	$(PYTHON_ENV) proy_geom/steps/step3_rectilinear_facade/run.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) --horizontal-fov-deg $(GSV_RECT_FOV) \
+		--width $(GSV_RECT_WIDTH) --height $(GSV_RECT_HEIGHT)
+
+run-gsv-step4:
+	$(PYTHON_ENV) proy_geom/steps/step4_pitch_control/run.py \
+		--manifest $(GSV_PROJECTION_MANIFEST) --horizontal-fov-deg $(GSV_RECT_FOV) \
+		--width $(GSV_RECT_WIDTH) --height $(GSV_RECT_HEIGHT) --pitches $(GSV_STEP4_PITCHES)
+
+test-gsv-projection:
+	$(PYTHON_ENV) -m unittest discover -s proy_geom/tests -v
 
 run-gsv-khipu-deploy:
 	bash street_view/deploy_to_khipu.sh street_view/data_custom_route $(PROJECT_NAME)

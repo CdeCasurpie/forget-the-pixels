@@ -7,7 +7,7 @@ objetivo. Para cada cámara:
 2. calcula el punto medio de cada arista exterior del lote;
 3. asigna a cada arista `1` si su punto medio es visible y `0` si la línea
    corta otro polígono catastral;
-4. suma esos puntajes para cada cámara y selecciona el Top 2;
+4. ordena las cámaras por distancia al lote y selecciona las 5 más cercanas;
 5. calcula el `bearing`/`yaw` hacia la arista más cercana por punto medio;
 6. dibuja norte en gris, heading de la cámara en rojo y dirección al lote en verde.
 
@@ -42,8 +42,9 @@ outputs/step2_analysis.json
 ```
 
 Los números junto a las cámaras corresponden a la secuencia del
-`metadata.json` del Paso 1. En las cámaras Top 2 aparece además su score entre
-paréntesis. Una `x` naranja indica score cero.
+`metadata.json` del Paso 1. En las cinco cámaras seleccionadas aparece además
+su distancia al lote entre paréntesis. Una `x` naranja indica score geométrico
+cero; ese score se conserva como diagnóstico y ya no decide la selección.
 
 Antes de puntuar, se eliminan panorámicas repetidas y se conservan únicamente
 las cámaras cuya posición está dentro del radio configurado alrededor del lote.
@@ -68,7 +69,7 @@ make run-gsv-step2-random
 
 Este comando no consulta Google. Escoge aleatoriamente entre todos los lotes
 del shapefile que tengan al menos una cámara cercana en el archivo maestro,
-filtra esas cámaras y ejecuta el Top 2.
+filtra esas cámaras y ejecuta el Top 5 por distancia.
 
 Primero se construye o reanuda el archivo maestro:
 
@@ -89,26 +90,26 @@ conserva como `make run-gsv-step2-random-live`. Ese comando:
 - consulta panoramas vecinos de Street View alrededor del centroide;
 - guarda únicamente `pano_id`, GPS, fecha y orientación;
 - filtra las cámaras a menos de `GSV_STEP2_MAX_DISTANCE_M`;
-- ejecuta el ranking Top 2 con esos candidatos.
+- ejecuta el ranking Top 5 por distancia con esos candidatos.
 
 No se llama a `get_panorama` y no se crean archivos JPG. Los candidatos quedan
 en `data/random_candidates/metadata.json` y `selection.json`.
 
 La puntuación también considera auto-oclusión: una arista recibe cero cuando el
 rayo hacia su punto medio atraviesa el interior del propio lote objetivo. Las
-cámaras con score cero no pueden entrar al Top 2.
+El score no elimina una cámara del Top 5; permite revisar posteriormente si una
+de las cinco más cercanas tiene colisiones o mala frontalidad.
 
-También se aplican dos controles de calidad espacial:
+También se aplican controles de calidad espacial:
 
-- la cámara debe estar fuera de todos los polígonos catastrales y al menos a
-  `GSV_STEP2_MIN_ROAD_CLEARANCE_M=1` metro de sus bordes;
+- si la cámara cae dentro de un polígono por el desfase GPS, ese polígono se
+  ignora como oclusor de sus propios rayos; los demás lotes siguen bloqueando;
 - la fachada debe verse con suficiente frontalidad. El valor por defecto
   `GSV_STEP2_MIN_FRONTAL_COSINE=0.5` acepta como máximo 60° respecto a la
   normal de la arista.
 
-Esto evita escoger una cámara aparentemente visible pero colocada sobre una
-casa por desalineamiento GPS, o una vista tan rasante que no sirve para
-reconstruir la fachada.
+La posición original y los polígonos contenedores quedan registrados en el
+JSON para auditar el desfase; no se mueve artificialmente la cámara.
 
 El score es binario y auditable:
 
