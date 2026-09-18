@@ -85,14 +85,58 @@ class HeightEstimate:
     quality: str = "unreviewed"
 
 
+
+@dataclass(frozen=True)
+class Opening:
+    kind: str              # "window" | "door" | "gate"
+    u_m: float             # posición horizontal en la fachada (centro o borde, definamos borde izquierdo por ahora)
+    v_m: float             # posición vertical (base de la abertura)
+    width_m: float
+    height_m: float
+    frame_width_m: float = 0.06
+    recess_m: float = 0.08
+    source: str = "assumed"
+    view_id: str | None = None
+    score: float = 0.0
+
+@dataclass(frozen=True)
+class FacadeSpecification:
+    edge_id: str
+    vertex_a: tuple[float, float]
+    vertex_b: tuple[float, float]
+    width_m: float
+    normal_xy: tuple[float, float]
+    floor_levels_m: tuple[float, ...]
+    wall_color_rgb: tuple[int, int, int] = (200, 190, 170)
+    openings: tuple[Opening, ...] = ()
+    observed: bool = False
+    is_front: bool = False
+    assigned_views: tuple[str, ...] = ()
+
+@dataclass(frozen=True)
+class SetbackSpecification:
+    depth_m: float = 0.0
+    surface: str = "pavement"
+    boundary: str = "open"
+    boundary_height_m: float = 1.8
+    source: str = "assumed"
+
+@dataclass(frozen=True)
+class RoofSpecification:
+    kind: str = "flat"
+    slope_deg: float = 0.0
+    parapet_height_m: float = 0.5
+    source: str = "assumed"
+
 @dataclass(frozen=True)
 class BuildingSpecification:
     """Geometry and rules consumed by the future procedural mesh generator."""
     footprint_xy: tuple[tuple[float, float], ...]
     crs: str
     height: HeightEstimate
-    facade_edges: tuple[dict[str, Any], ...] = ()
-    roof: dict[str, Any] = field(default_factory=lambda: {"kind": "flat"})
+    facade_edges: tuple[FacadeSpecification, ...] = ()
+    setback: SetbackSpecification | None = None
+    roof: RoofSpecification = field(default_factory=RoofSpecification)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
