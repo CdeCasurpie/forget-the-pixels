@@ -10,6 +10,10 @@ El paso 10 genera OBJ/MTL y GLB, con fachadas, balcones, cercos selectivos y
 azoteas mediante una gramática reproducible. Desde `investigation/` ejecutar
 `make run-procedural-proposal`. Ver [parámetros, ejemplos y límites](steps/step10_procedural_generation_test/README.md).
 
+La explicación completa del algoritmo actual, contratos, limitaciones,
+materiales PBR y expansión de familias está en
+[PROCEDURAL_GENERATION_PLAN.md](PROCEDURAL_GENERATION_PLAN.md).
+
 ## Organización
 
 La rama procedural posterior al Paso 5 valida reproyección, construye una
