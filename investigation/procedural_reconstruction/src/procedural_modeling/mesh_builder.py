@@ -2,6 +2,10 @@
 
 Components form an architectural assembly, not a Boolean-unioned manifold.
 Constrained triangulation preserves concavities and courtyard holes.
+
+UV coordinates are metric: UV = (world_distance / texture_scale).
+Vertices are duplicated at UV seams and hard edges so normals and UVs
+are independent per face-corner.
 """
 
 import numpy as np
@@ -32,67 +36,178 @@ def triangles(polygon):
 class MeshBuilder:
     def __init__(self, parcel, appearance=BuildingAppearance()):
         self.parcel = parcel
-        self.vertices, self.faces, self.face_materials, self.parts = [], [], [], []
-        self.materials = [material_to_dict(material) for material in resolve_materials(appearance)]
+        # Per-face-vertex storage: every face gets its own 3 vertex slots.
+        # This gives clean UV seams and hard normals at every edge.
+        self.vertices = []   # list of (x, y, z)
+        self.uvs = []        # list of (u, v) — one per vertex
+        self.faces = []      # list of (i, j, k) — indices into vertices/uvs
+        self.face_materials = []
+        self.parts = []
+        self.materials = [material_to_dict(m) for m in resolve_materials(appearance)]
         self.material_index = {m["name"]: i for i, m in enumerate(self.materials)}
 
-    def solid(self, shape, bottom, top, material="plaster", semantic="wall"):
-        """Extrude polygon between scalar or affine height fields, clipping first."""
+    # ── UV helpers ───────────────────────────────────────────────────
+
+    @staticmethod
+    def _uv_for_cap(x, y, scale):
+        """Metric UV for a horizontal cap (roof / floor)."""
+        return (x / scale, y / scale)
+
+    @staticmethod
+    def _uv_for_wall(u_along, z, scale):
+        """Metric UV for a vertical wall face.
+
+        u_along = distance along the wall from a fixed origin,
+        z = vertical world coordinate.
+        """
+        return (u_along / scale, z / scale)
+
+    # ── Core primitive: emit one triangle with explicit UVs ──────────
+
+    def _emit_face(self, points_xyz, uvs, material_idx):
+        """Append one triangle.  Each call duplicates vertices for hard edges."""
+        base = len(self.vertices)
+        for (x, y, z), (u, v) in zip(points_xyz, uvs):
+            self.vertices.append((float(x), float(y), float(z)))
+            self.uvs.append((float(u), float(v)))
+        self.faces.append((base, base + 1, base + 2))
+        self.face_materials.append(material_idx)
+
+    # ── solid() with metric UV ──────────────────────────────────────
+
+    def solid(self, shape, bottom, top, material="plaster", semantic="wall",
+              *, facade_origin=None, facade_tangent=None, uv_scale=1.0):
+        """Extrude polygon between scalar or affine height fields.
+
+        If facade_origin and facade_tangent are given, wall UVs are
+        measured along the facade tangent from that origin.  Otherwise,
+        wall UVs fall back to edge-local distance.
+
+        Cap UVs (top / bottom) are always world XY / uv_scale.
+        """
         if material not in self.material_index:
             raise ValueError(f"Unknown material slot: {material}")
+        mat_idx = self.material_index[material]
         start = len(self.faces)
-        local_indices = {}
-
-        def vertex(x, y, z):
-            key = (float(x), float(y), float(z))
-            if key not in local_indices:
-                local_indices[key] = len(self.vertices)
-                self.vertices.append(key)
-            return local_indices[key]
 
         def height(value, xy):
             return value(*xy) if callable(value) else value
-
-        def face(points):
-            self.faces.append(tuple(vertex(*p) for p in points))
-            self.face_materials.append(self.material_index[material])
 
         clipped = shape.intersection(self.parcel)
         for poly in polygons(clipped):
             coords = np.array(poly.exterior.coords)[:, :2]
             if any(height(top, p) <= height(bottom, p) for p in coords):
                 raise ValueError("Solid must have positive thickness everywhere")
+
+            # ── Cap faces (top and bottom) ──
             for tri in triangles(poly):
-                face([(x, y, height(top, (x, y))) for x, y in tri])
-                face([(x, y, height(bottom, (x, y))) for x, y in tri[::-1]])
+                # Top cap
+                pts_top = [(x, y, height(top, (x, y))) for x, y in tri]
+                uvs_top = [self._uv_for_cap(x, y, uv_scale) for x, y in tri]
+                self._emit_face(pts_top, uvs_top, mat_idx)
+
+                # Bottom cap (reversed winding)
+                pts_bot = [(x, y, height(bottom, (x, y))) for x, y in tri[::-1]]
+                uvs_bot = [self._uv_for_cap(x, y, uv_scale) for x, y in tri[::-1]]
+                self._emit_face(pts_bot, uvs_bot, mat_idx)
+
+            # ── Wall faces ──
             for ring in [poly.exterior, *poly.interiors]:
                 points = list(ring.coords)
                 for a, b in zip(points[:-1], points[1:]):
-                    p = (*a[:2], height(bottom, a[:2]))
-                    q = (*b[:2], height(bottom, b[:2]))
-                    r = (*b[:2], height(top, b[:2]))
-                    s = (*a[:2], height(top, a[:2]))
-                    face([p, q, r])
-                    face([p, r, s])
-        if len(self.faces) > start:
-            self.parts.append(
-                {
-                    "name": semantic,
-                    "face_start": start,
-                    "face_count": len(self.faces) - start,
-                }
-            )
+                    ax, ay = a[:2]
+                    bx, by = b[:2]
 
-    def box(self, a, t, n, u1, u2, z1, z2, w1, w2, material="plaster", semantic="wall"):
+                    # Compute u_along for this edge
+                    if facade_origin is not None and facade_tangent is not None:
+                        # Project onto facade tangent
+                        fo = np.asarray(facade_origin, float)
+                        ft = np.asarray(facade_tangent, float)
+                        u_a = float(np.dot(np.array([ax, ay]) - fo, ft))
+                        u_b = float(np.dot(np.array([bx, by]) - fo, ft))
+                    else:
+                        # Edge-local: a is 0, b is edge length
+                        u_a = 0.0
+                        u_b = float(np.hypot(bx - ax, by - ay))
+
+                    z_bot_a = height(bottom, (ax, ay))
+                    z_bot_b = height(bottom, (bx, by))
+                    z_top_a = height(top, (ax, ay))
+                    z_top_b = height(top, (bx, by))
+
+                    p = (ax, ay, z_bot_a)
+                    q = (bx, by, z_bot_b)
+                    r = (bx, by, z_top_b)
+                    s = (ax, ay, z_top_a)
+
+                    # Triangle 1: p, q, r
+                    self._emit_face(
+                        [p, q, r],
+                        [
+                            self._uv_for_wall(u_a, z_bot_a, uv_scale),
+                            self._uv_for_wall(u_b, z_bot_b, uv_scale),
+                            self._uv_for_wall(u_b, z_top_b, uv_scale),
+                        ],
+                        mat_idx,
+                    )
+                    # Triangle 2: p, r, s
+                    self._emit_face(
+                        [p, r, s],
+                        [
+                            self._uv_for_wall(u_a, z_bot_a, uv_scale),
+                            self._uv_for_wall(u_b, z_top_b, uv_scale),
+                            self._uv_for_wall(u_a, z_top_a, uv_scale),
+                        ],
+                        mat_idx,
+                    )
+
+        if len(self.faces) > start:
+            self.parts.append({
+                "name": semantic,
+                "face_start": start,
+                "face_count": len(self.faces) - start,
+            })
+
+    # ── box() with facade-aligned UV ────────────────────────────────
+
+    def box(self, a, t, n, u1, u2, z1, z2, w1, w2,
+            material="plaster", semantic="wall",
+            *, uv_origin_u=None):
+        """Axis-aligned box in facade-local coordinates.
+
+        uv_origin_u: if set, UV u-coordinate is measured from this
+        facade-absolute value rather than from u1, giving continuity
+        across neighbouring boxes that share the same facade.
+        """
         if min(u2 - u1, z2 - z1, w2 - w1) <= 1e-7:
             return
-        shape = Polygon(
-            [
-                np.asarray(a) + u * t + w * n
-                for u, w in [(u1, w1), (u2, w1), (u2, w2), (u1, w2)]
-            ]
+
+        a = np.asarray(a, float)
+        t = np.asarray(t, float)
+        n = np.asarray(n, float)
+
+        shape = Polygon([
+            a + u * t + w * n
+            for u, w in [(u1, w1), (u2, w1), (u2, w2), (u1, w2)]
+        ])
+
+        # Get material scale
+        mat_dict = self.materials[self.material_index[material]]
+        uv_scale = mat_dict.get("real_scale_m", 1.0)
+
+        # Facade origin for UV: the (0,0) point in facade space
+        facade_origin = a[:2]
+        facade_tangent = t[:2]
+        tlen = np.linalg.norm(facade_tangent)
+        if tlen > 1e-8:
+            facade_tangent = facade_tangent / tlen
+
+        self.solid(
+            shape, z1, z2, material, semantic,
+            facade_origin=facade_origin,
+            facade_tangent=facade_tangent,
+            uv_scale=uv_scale,
         )
-        self.solid(shape, z1, z2, material, semantic)
 
     def beam(self, a, b, radius=0.018, material="metal", semantic="rail"):
         """Round beam; reject rather than leave any triangle outside the parcel."""
@@ -100,34 +215,64 @@ class MeshBuilder:
             raise ValueError(f"Unknown material slot: {material}")
         a, b = np.array(a, float), np.array(b, float)
         direction = b - a
-        if np.linalg.norm(direction) < 1e-8:
+        length = np.linalg.norm(direction)
+        if length < 1e-8:
             return
-        direction /= np.linalg.norm(direction)
+        direction /= length
         axis = np.eye(3)[np.argmin(np.abs(direction))]
         u = np.cross(direction, axis)
         u /= np.linalg.norm(u)
         v = np.cross(direction, u)
         angles = np.arange(8) * np.pi / 4
         ring = radius * (np.cos(angles)[:, None] * u + np.sin(angles)[:, None] * v)
-        vertices = np.vstack((a + ring, b + ring, a[None], b[None]))
+        verts = np.vstack((a + ring, b + ring, a[None], b[None]))
         from shapely.geometry import MultiPoint
 
-        if not self.parcel.covers(MultiPoint(vertices[:, :2]).convex_hull):
+        if not self.parcel.covers(MultiPoint(verts[:, :2]).convex_hull):
             return
-        start, offset = len(self.faces), len(self.vertices)
-        self.vertices.extend(vertices.tolist())
+
+        mat_idx = self.material_index[material]
+        mat_dict = self.materials[mat_idx]
+        uv_scale = mat_dict.get("real_scale_m", 1.0)
+        start = len(self.faces)
+        circumference = 2 * np.pi * radius
+
         for i in range(8):
             j = (i + 1) % 8
-            for f in [(i, j, j + 8), (i, j + 8, i + 8), (16, j, i), (17, i + 8, j + 8)]:
-                self.faces.append(tuple(offset + k for k in f))
-                self.face_materials.append(self.material_index[material])
-        self.parts.append(
-            {
-                "name": semantic,
-                "face_start": start,
-                "face_count": len(self.faces) - start,
-            }
-        )
+            # UV for beam: u = angle fraction * circumference, v = length along beam
+            u_i = (i / 8) * circumference / uv_scale
+            u_j = (j / 8) * circumference / uv_scale
+            v0 = 0.0
+            v1 = length / uv_scale
+
+            # Side quad: two triangles
+            self._emit_face(
+                [tuple(verts[i]), tuple(verts[j]), tuple(verts[j + 8])],
+                [(u_i, v0), (u_j, v0), (u_j, v1)],
+                mat_idx,
+            )
+            self._emit_face(
+                [tuple(verts[i]), tuple(verts[j + 8]), tuple(verts[i + 8])],
+                [(u_i, v0), (u_j, v1), (u_i, v1)],
+                mat_idx,
+            )
+            # End caps
+            self._emit_face(
+                [tuple(verts[16]), tuple(verts[j]), tuple(verts[i])],
+                [(0.5, 0.5), (u_j, 0.0), (u_i, 0.0)],
+                mat_idx,
+            )
+            self._emit_face(
+                [tuple(verts[17]), tuple(verts[i + 8]), tuple(verts[j + 8])],
+                [(0.5, 0.5), (u_i, 1.0), (u_j, 1.0)],
+                mat_idx,
+            )
+
+        self.parts.append({
+            "name": semantic,
+            "face_start": start,
+            "face_count": len(self.faces) - start,
+        })
 
     def foliage(self, center, radii, rng, segments=10, rings=5):
         """Closed low-poly ellipsoid with seeded, gently irregular leaf clusters."""
@@ -139,49 +284,77 @@ class MeshBuilder:
             phi = np.pi * i / (rings + 1)
             for j in range(segments):
                 theta = 2 * np.pi * j / segments
-                radius = rng.uniform(0.90, 1.10)
+                r = rng.uniform(0.90, 1.10)
                 points.append(
                     tuple(
-                        radius
-                        * np.array(
-                            [
-                                np.sin(phi) * np.cos(theta),
-                                np.sin(phi) * np.sin(theta),
-                                np.cos(phi),
-                            ]
-                        )
+                        r
+                        * np.array([
+                            np.sin(phi) * np.cos(theta),
+                            np.sin(phi) * np.sin(theta),
+                            np.cos(phi),
+                        ])
                     )
                 )
         points.append((0.0, 0.0, -1.0))
-        vertices = np.asarray(points) * radii + center
-        if not self.parcel.covers(MultiPoint(vertices[:, :2]).convex_hull):
+        verts = np.asarray(points) * radii + center
+        if not self.parcel.covers(MultiPoint(verts[:, :2]).convex_hull):
             return
-        faces = []
+
+        mat_idx = self.material_index["leaf"]
+        start = len(self.faces)
+
+        # Spherical UV for foliage
         for j in range(segments):
             k = (j + 1) % segments
-            faces.append((0, 1 + j, 1 + k))
+            # Top fan
+            self._emit_face(
+                [tuple(verts[0]), tuple(verts[1 + j]), tuple(verts[1 + k])],
+                [(0.5, 1.0), (j / segments, 1 - 1 / (rings + 1)),
+                 (k / segments, 1 - 1 / (rings + 1))],
+                mat_idx,
+            )
+            # Middle rings
             for i in range(rings - 1):
-                upper, lower = 1 + i * segments, 1 + (i + 1) * segments
-                faces.extend(
-                    [
-                        (upper + j, lower + j, lower + k),
-                        (upper + j, lower + k, upper + k),
-                    ]
+                upper = 1 + i * segments
+                lower = 1 + (i + 1) * segments
+                v_upper = 1 - (i + 1) / (rings + 1)
+                v_lower = 1 - (i + 2) / (rings + 1)
+                self._emit_face(
+                    [tuple(verts[upper + j]), tuple(verts[lower + j]),
+                     tuple(verts[lower + k])],
+                    [(j / segments, v_upper), (j / segments, v_lower),
+                     (k / segments, v_lower)],
+                    mat_idx,
                 )
+                self._emit_face(
+                    [tuple(verts[upper + j]), tuple(verts[lower + k]),
+                     tuple(verts[upper + k])],
+                    [(j / segments, v_upper), (k / segments, v_lower),
+                     (k / segments, v_upper)],
+                    mat_idx,
+                )
+            # Bottom fan
             last = 1 + (rings - 1) * segments
-            faces.append((len(vertices) - 1, last + k, last + j))
-        start, offset = len(self.faces), len(self.vertices)
-        self.vertices.extend(vertices.tolist())
-        self.faces.extend(tuple(offset + k for k in f) for f in faces)
-        self.face_materials.extend([self.material_index["leaf"]] * len(faces))
+            self._emit_face(
+                [tuple(verts[len(verts) - 1]), tuple(verts[last + k]),
+                 tuple(verts[last + j])],
+                [(0.5, 0.0), (k / segments, 1 / (rings + 1)),
+                 (j / segments, 1 / (rings + 1))],
+                mat_idx,
+            )
+
         self.parts.append(
-            {"name": "shrub", "face_start": start, "face_count": len(faces)}
+            {"name": "shrub", "face_start": start,
+             "face_count": len(self.faces) - start}
         )
 
     def finish(self):
+        verts = np.asarray(self.vertices, float).reshape(-1, 3)
+        uv = np.asarray(self.uvs, float).reshape(-1, 2) if self.uvs else None
         return MeshData(
-            np.asarray(self.vertices, float).reshape(-1, 3),
+            verts,
             np.asarray(self.faces, int).reshape(-1, 3),
+            uv=uv,
             face_materials=np.asarray(self.face_materials, int),
             materials=tuple(self.materials),
             parts=tuple(self.parts),

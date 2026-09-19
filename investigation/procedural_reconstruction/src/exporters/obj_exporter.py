@@ -26,14 +26,19 @@ def export_obj(mesh: MeshData, output_path: Path, y_up: bool = False):
             mtl_lines.append(f"illum {4 if opacity < 0.999 else 2}")
             mtl_lines.append("")
 
+    has_uv = mesh.uv is not None and len(mesh.uv) == len(mesh.vertices)
+
     # Write vertices
     for v in mesh.vertices:
         if y_up:
-            # Convert Z-up to Y-up
-            # X_new = X, Y_new = Z, Z_new = -Y
             obj_lines.append(f"v {v[0]:.6f} {v[2]:.6f} {-v[1]:.6f}")
         else:
             obj_lines.append(f"v {v[0]:.6f} {v[1]:.6f} {v[2]:.6f}")
+
+    # Write texture coordinates
+    if has_uv:
+        for uv in mesh.uv:
+            obj_lines.append(f"vt {uv[0]:.6f} {uv[1]:.6f}")
 
     # Write faces
     current_mat = None
@@ -48,8 +53,13 @@ def export_obj(mesh: MeshData, output_path: Path, y_up: bool = False):
                 obj_lines.append(f"usemtl {mat_name}")
                 current_mat = mat_name
 
-        # OBJ is 1-indexed
-        obj_lines.append(f"f {f[0]+1} {f[1]+1} {f[2]+1}")
+        # OBJ is 1-indexed; use v/vt format when UVs are present
+        if has_uv:
+            obj_lines.append(
+                f"f {f[0]+1}/{f[0]+1} {f[1]+1}/{f[1]+1} {f[2]+1}/{f[2]+1}"
+            )
+        else:
+            obj_lines.append(f"f {f[0]+1} {f[1]+1} {f[2]+1}")
 
     output_path.write_text("\n".join(obj_lines))
     mtl_path.write_text("\n".join(mtl_lines))
