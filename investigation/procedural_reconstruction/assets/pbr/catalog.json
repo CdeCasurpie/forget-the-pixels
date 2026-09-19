@@ -1,0 +1,78 @@
+{
+  "stucco_rough": {
+    "id": "ArmChair_01",
+    "maps": {
+      "diffuse": "assets/pbr/stucco_rough/stucco_rough_Diffuse.jpg",
+      "rough": "assets/pbr/stucco_rough/stucco_rough_Rough.jpg",
+      "nor_gl": "assets/pbr/stucco_rough/stucco_rough_nor_gl.jpg",
+      "arm": "assets/pbr/stucco_rough/stucco_rough_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  },
+  "concrete_fine": {
+    "id": "ArmChair_01",
+    "maps": {
+      "diffuse": "assets/pbr/concrete_fine/concrete_fine_Diffuse.jpg",
+      "rough": "assets/pbr/concrete_fine/concrete_fine_Rough.jpg",
+      "nor_gl": "assets/pbr/concrete_fine/concrete_fine_nor_gl.jpg",
+      "arm": "assets/pbr/concrete_fine/concrete_fine_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  },
+  "brick_red": {
+    "id": "red_bricks_04",
+    "maps": {
+      "diffuse": "assets/pbr/brick_red/brick_red_Diffuse.jpg",
+      "ao": "assets/pbr/brick_red/brick_red_AO.jpg",
+      "rough": "assets/pbr/brick_red/brick_red_Rough.jpg",
+      "nor_gl": "assets/pbr/brick_red/brick_red_nor_gl.jpg",
+      "arm": "assets/pbr/brick_red/brick_red_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  },
+  "wood_planks": {
+    "id": "wood_planks",
+    "maps": {
+      "diffuse": "assets/pbr/wood_planks/wood_planks_Diffuse.jpg",
+      "ao": "assets/pbr/wood_planks/wood_planks_AO.jpg",
+      "rough": "assets/pbr/wood_planks/wood_planks_Rough.jpg",
+      "nor_gl": "assets/pbr/wood_planks/wood_planks_nor_gl.jpg",
+      "arm": "assets/pbr/wood_planks/wood_planks_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  },
+  "metal_corrugated": {
+    "id": "corrugated_iron_02",
+    "maps": {
+      "diffuse": "assets/pbr/metal_corrugated/metal_corrugated_Diffuse.jpg",
+      "ao": "assets/pbr/metal_corrugated/metal_corrugated_AO.jpg",
+      "rough": "assets/pbr/metal_corrugated/metal_corrugated_Rough.jpg",
+      "nor_gl": "assets/pbr/metal_corrugated/metal_corrugated_nor_gl.jpg",
+      "arm": "assets/pbr/metal_corrugated/metal_corrugated_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  },
+  "pavement": {
+    "id": "cobblestone_large_01",
+    "maps": {
+      "diffuse": "assets/pbr/pavement/pavement_Diffuse.jpg",
+      "ao": "assets/pbr/pavement/pavement_AO.jpg",
+      "rough": "assets/pbr/pavement/pavement_Rough.jpg",
+      "nor_gl": "assets/pbr/pavement/pavement_nor_gl.jpg",
+      "arm": "assets/pbr/pavement/pavement_arm.jpg"
+    },
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "normal_convention": "opengl"
+  }
+}

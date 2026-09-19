@@ -1,5 +1,6 @@
 """Future facade rectification, view choice, UV mapping, and texture atlases."""
 
 from .contracts import FacadeTextureRequest
+from .library import MaterialLibrary
 
-__all__ = ["FacadeTextureRequest"]
+__all__ = ["FacadeTextureRequest", "MaterialLibrary"]

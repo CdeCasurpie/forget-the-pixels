@@ -17,11 +17,12 @@ from .models import (
     PanoramaView,
     ReconstructionInput,
     RoofObservation,
+    TextureSet,
 )
 
 __all__ = [
     "Alignment2D", "BuildingAppearance", "BuildingSpecification", "CameraPose",
     "ExteriorStairSpecification", "FacadeMaterialRegion", "FacadeProjection",
     "FacadeSpecification", "HeightEstimate", "LotGeometry", "MaterialSpecification",
-    "MeshData", "Opening", "PanoramaView", "ReconstructionInput", "RoofObservation",
+    "MeshData", "Opening", "PanoramaView", "ReconstructionInput", "RoofObservation", "TextureSet",
 ]

@@ -197,6 +197,24 @@ class RoofSpecification:
     water_tank: bool = True
 
 
+
+@dataclass(frozen=True)
+class TextureSet:
+    """A collection of PBR texture maps defining a material's surface."""
+
+    name: str
+    base_color_path: str | None = None
+    normal_path: str | None = None
+    orm_path: str | None = None
+    roughness_path: str | None = None
+    metallic_path: str | None = None
+    ao_path: str | None = None
+    scale_u: float = 1.0
+    scale_v: float = 1.0
+    normal_convention: str = "opengl"
+    provenance: str = "unknown"
+
+
 @dataclass(frozen=True)
 class MaterialSpecification:
     """One semantic PBR material selected by the architectural grammar."""
