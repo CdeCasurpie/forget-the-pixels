@@ -1,9 +1,0 @@
-streetlevel
-Pillow
-numpy
-opencv-python
-geopandas
-matplotlib
-pyproj
-shapely>=2.1
-trimesh>=4
