@@ -521,5 +521,67 @@
     "path": "kloppenheim_06_2k.hdr",
     "sha256": "620cf7fd4b31e602ccb57da492efd43a38cd4b0858206d2475cb1d83a0efb08e",
     "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/kloppenheim_06_2k.hdr"
+  },
+  "concrete_clean": {
+    "provenance": "polyhaven:brushed_concrete_03",
+    "license": "CC0",
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "concrete_clean/concrete_clean_base_color.jpg",
+      "normal": "concrete_clean/concrete_clean_normal.jpg",
+      "orm": "concrete_clean/concrete_clean_orm.jpg",
+      "roughness": "concrete_clean/concrete_clean_roughness.jpg",
+      "ao": "concrete_clean/concrete_clean_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "1b76a9867b410e295e5df09fe2b667a9280ac1145bf4b66e96015594421fc6a0",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brushed_concrete_03/brushed_concrete_03_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "f937e4832f18737b73f98c601344796765669038b00a0f6d5d4f567fd4aeb661",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brushed_concrete_03/brushed_concrete_03_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "04dfd236edcb0ad18f52ca6b604da835b83f29596c4012ae358bea0853292a88",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brushed_concrete_03/brushed_concrete_03_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "67a2db32e7fdde4a56c2443161972eea0fa6ee6830c9a9b5e451902d4a1b5f2c",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brushed_concrete_03/brushed_concrete_03_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "14dad2929b7b94409f540f23bfcff22688ee744b63145372510e8c5f367c9975",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brushed_concrete_03/brushed_concrete_03_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
   }
 }

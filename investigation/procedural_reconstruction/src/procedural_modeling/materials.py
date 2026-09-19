@@ -10,16 +10,17 @@ from domain.models import BuildingAppearance, MaterialSpecification
 DEFAULT_MATERIALS = (
     MaterialSpecification("plaster", "stucco", (0.79, 0.80, 0.77), 0.82, texture_set="stucco_smooth", real_scale_m=1.0),
     MaterialSpecification("accent", "painted_stucco", (0.38, 0.48, 0.43), 0.75, texture_set="stucco_smooth", real_scale_m=1.0),
-    MaterialSpecification("stone", "concrete", (0.56, 0.58, 0.56), 0.78, texture_set="concrete_fine", real_scale_m=0.8),
+    MaterialSpecification("stone", "concrete", (0.56, 0.58, 0.56), 0.78, texture_set="concrete_clean", real_scale_m=0.8),
     MaterialSpecification("frame", "painted_aluminium", (0.80, 0.81, 0.78), 0.32, metallic=0.65, texture_set="painted_metal", real_scale_m=0.5),
     MaterialSpecification("glass", "glass", (0.12, 0.20, 0.23), 0.08, opacity=0.34, texture_set="glass_clean", real_scale_m=1.0),
     MaterialSpecification("metal", "painted_steel", (0.19, 0.22, 0.23), 0.30, metallic=0.75, texture_set="painted_metal", real_scale_m=0.5),
     MaterialSpecification("wood", "wood", (0.38, 0.28, 0.19), 0.55, texture_set="wood_vertical", real_scale_m=1.2),
     MaterialSpecification("brick", "brick", (0.60, 0.43, 0.31), 0.88, texture_set="brick_running_bond", real_scale_m=0.55),
     MaterialSpecification("roof", "corrugated_metal", (0.49, 0.53, 0.54), 0.42, metallic=0.72, texture_set="galvanized_corrugated", real_scale_m=1.0),
-    MaterialSpecification("leaf", "foliage", (0.30, 0.40, 0.27), 0.88, texture_set="leaf_cluster", real_scale_m=0.7),
+    # Shrub foliage: parameter-only (leaf_cluster is ground grass, not bush texture)
+    MaterialSpecification("leaf", "foliage", (0.30, 0.40, 0.27), 0.88, texture_set=None, real_scale_m=0.7),
     MaterialSpecification("soil", "soil", (0.29, 0.27, 0.23), 0.96, texture_set="dry_soil", real_scale_m=1.0),
-    MaterialSpecification("concrete", "concrete", (0.64, 0.65, 0.62), 0.86, texture_set="concrete_fine", real_scale_m=1.0),
+    MaterialSpecification("concrete", "concrete", (0.64, 0.65, 0.62), 0.86, texture_set="concrete_clean", real_scale_m=1.0),
     MaterialSpecification("pavement", "paving", (0.58, 0.59, 0.56), 0.90, texture_set="concrete_pavers", real_scale_m=1.2),
 )
 
