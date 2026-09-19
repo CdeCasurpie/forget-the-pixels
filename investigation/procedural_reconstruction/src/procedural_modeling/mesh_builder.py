@@ -93,7 +93,7 @@ class MeshBuilder:
     # ── solid() with metric UV ──────────────────────────────────────
 
     def solid(self, shape, bottom, top, material="plaster", semantic="wall",
-              *, facade_origin=None, facade_tangent=None, facade_normal=None, uv_scale=1.0):
+              *, facade_origin=None, facade_tangent=None, facade_normal=None, uv_scale=None):
         """Extrude polygon between scalar or affine height fields.
 
         If facade_origin and facade_tangent are given, wall UVs are
@@ -105,6 +105,10 @@ class MeshBuilder:
         if material not in self.material_index:
             raise ValueError(f"Unknown material slot: {material}")
         mat_idx = self.material_index[material]
+        if uv_scale is None:
+            uv_scale = self.materials[mat_idx].get("real_scale_m", 1.0)
+        if not np.isfinite(uv_scale) or uv_scale <= 0:
+            raise ValueError("UV scale must be finite and positive")
         start = len(self.faces)
 
         def height(value, xy):
@@ -147,6 +151,11 @@ class MeshBuilder:
                         else:
                             u_a = float(np.dot(np.array([ax, ay]) - fo, fn))
                             u_b = float(np.dot(np.array([bx, by]) - fo, fn))
+                        edge_length = np.linalg.norm(edge_vec)
+                        if not np.isclose(abs(u_b-u_a), edge_length):
+                            axis = edge_vec / edge_length
+                            u_a = float(np.dot(np.array([ax, ay])-fo, axis))
+                            u_b = u_a + edge_length
                     else:
                         # Edge-local: a is 0, b is edge length
                         u_a = 0.0
@@ -264,7 +273,7 @@ class MeshBuilder:
             j = (i + 1) % 8
             # UV for beam: u = angle fraction * circumference, v = length along beam
             u_i = (i / 8) * circumference / uv_scale
-            u_j = (j / 8) * circumference / uv_scale
+            u_j = ((i + 1) / 8) * circumference / uv_scale
             v0 = 0.0
             v1 = length / uv_scale
 
@@ -282,12 +291,14 @@ class MeshBuilder:
             # End caps
             self._emit_face(
                 [tuple(verts[16]), tuple(verts[j]), tuple(verts[i])],
-                [(0.5, 0.5), (u_j, 0.0), (u_i, 0.0)],
+                [(0, 0), tuple(radius*np.array([np.cos(angles[j]), np.sin(angles[j])])/uv_scale),
+                 tuple(radius*np.array([np.cos(angles[i]), np.sin(angles[i])])/uv_scale)],
                 mat_idx,
             )
             self._emit_face(
                 [tuple(verts[17]), tuple(verts[i + 8]), tuple(verts[j + 8])],
-                [(0.5, 0.5), (u_i, 1.0), (u_j, 1.0)],
+                [(0, 0), tuple(radius*np.array([np.cos(angles[i]), np.sin(angles[i])])/uv_scale),
+                 tuple(radius*np.array([np.cos(angles[j]), np.sin(angles[j])])/uv_scale)],
                 mat_idx,
             )
 

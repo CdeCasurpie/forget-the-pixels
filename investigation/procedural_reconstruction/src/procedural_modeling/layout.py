@@ -33,6 +33,7 @@ def propose_building(
     roof_kind="flat",
     objectid=None,
     detail_level="composed",
+    architectural_family="auto",
 ):
     if detail_level not in ("basic", "composed"):
         raise ValueError("detail_level must be basic or composed")
@@ -181,13 +182,13 @@ def propose_building(
                 cladding="horizontal" if style == "corner" else "stucco",
                 balcony_pattern="diamond" if style == "corner" else "vertical",
                 services=front and style == "narrow",
-                wall_material="plaster",
-                ground_floor_material="accent" if style == "narrow" else None,
+                wall_material="plaster" if front else "brick",
+                ground_floor_material="accent" if (front and style == "narrow") else None,
             )
         )
     if detail_level == "composed":
         facade_specs = [compose_facade(f, parcel, style) for f in facade_specs]
-    return BuildingSpecification(
+    result = BuildingSpecification(
         tuple(map(tuple, coords)),
         "EPSG:32718",
         HeightEstimate(
@@ -216,3 +217,7 @@ def propose_building(
         appearance=appearance_for_style(style, color, seed),
         seed=seed,
     )
+    if architectural_family != "legacy":
+        from .families import apply_family
+        result = apply_family(result, architectural_family)
+    return result

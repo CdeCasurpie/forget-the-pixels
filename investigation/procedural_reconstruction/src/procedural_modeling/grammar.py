@@ -59,6 +59,16 @@ def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
 
 
 def opening(mb, a, t, n, op, pattern):
+    if op.prefab != "legacy":
+        from .prefabs import build_opening
+        build_opening(mb, a, t, n, op)
+        if op.kind == "balcony_window":
+            left, right, depth = op.u_m-.12, op.u_m+op.width_m+.12, op.balcony_depth_m
+            shape = Polygon([a+t*x+n*d for x,d in [(left,0),(right,0),(right,depth),(left,depth)]])
+            if mb.parcel.covers(shape.buffer(.04, join_style=2)):
+                mb.box(a,t,n,left,right,op.v_m-.12,op.v_m,-.02,depth,"concrete","balcony_slab")
+                railing(mb,a,t,n,left,right,op.v_m,depth-.04,pattern)
+        return
     u, v, w, h = op.u_m, op.v_m, op.width_m, op.height_m
     f, recess = min(op.frame_width_m, w / 5, h / 5), op.recess_m
 
@@ -256,6 +266,9 @@ def projection(mb, a, t, n, feature):
         )
     else:
         add(u, u + w, v, v + h, f"facade_projection_{feature.kind}")
+    if feature.label:
+        from .prefabs import sign_letters
+        sign_letters(mb,a,t,n,feature)
 
 
 def exterior_stair(mb, a, t, n, stair, facade_length):
@@ -395,11 +408,19 @@ def facade(mb, f, total_height):
             or feature.v_m + feature.height_m > total_height + 0.5
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
+    structural_us = []
+    if not f.is_front and length > 0.5:
+        structural_us = [0.25, length - 0.25]
+        # Add intermediate columns every ~4 meters
+        for inter_u in np.arange(4.0, length - 0.5, 4.0):
+            structural_us.extend([inter_u - 0.125, inter_u + 0.125])
+            
     us = sorted(
         set(
             [0.0, length]
             + [x for op in ops for x in [op.u_m, op.u_m + op.width_m]]
             + [x for r in regions for x in [r.u_m, r.u_m + r.width_m]]
+            + structural_us
         )
     )
     zs = sorted(
@@ -407,6 +428,7 @@ def facade(mb, f, total_height):
             [0.0, total_height]
             + [z for op in ops for z in [op.v_m, op.v_m + op.height_m]]
             + [z for r in regions for z in [r.v_m, r.v_m + r.height_m]]
+            + ([z for fl in f.floor_levels_m[1:] for z in [fl - 0.20, fl]] if not f.is_front else [])
         )
     )
     for u1, u2 in zip(us[:-1], us[1:]):
@@ -431,7 +453,31 @@ def facade(mb, f, total_height):
                 )
                 if area.covers(midpoint):
                     wall_material = region.material_slot
-            mb.box(a, t, n, u1, u2, z1, z2, -0.20, 0, wall_material, "wall")
+            
+            depth_outer = 0
+            if not f.is_front:
+                is_concrete = False
+                # Losas horizontales (vigas)
+                for fl in f.floor_levels_m[1:]:
+                    if fl - 0.201 < midpoint.y < fl + 0.001:
+                        is_concrete = True
+                        break
+                # Columnas verticales
+                if midpoint.x < 0.25 or midpoint.x > length - 0.25:
+                    is_concrete = True
+                else:
+                    for inter_u in np.arange(4.0, length - 0.5, 4.0):
+                        if inter_u - 0.126 < midpoint.x < inter_u + 0.126:
+                            is_concrete = True
+                            break
+                            
+                if is_concrete:
+                    wall_material = "concrete"
+                    depth_outer = 0.0  # Flush with lot boundary
+                else:
+                    depth_outer = -0.015  # Brick inset slightly to show concrete frame
+                    
+            mb.box(a, t, n, u1, u2, z1, z2, -0.20, depth_outer, wall_material, "wall")
             if f.is_front and f.cladding == "horizontal":
                 for y in np.arange(np.ceil(z1 / 0.24) * 0.24, z2 - 0.018, 0.24):
                     mb.box(
@@ -454,7 +500,7 @@ def facade(mb, f, total_height):
     for stair in stairs:
         exterior_stair(mb, a, t, n, stair, length)
     mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
-    if f.is_front:
+    if f.is_front and f.ornamented:
         for z in f.floor_levels_m[1:]:
             mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
         for u in [0.04, length - 0.16]:
@@ -618,7 +664,7 @@ def roof_details(mb, poly, h, roof, rng):
                 strip,
                 lambda x, y: z(x, y) + 0.035,
                 lambda x, y: z(x, y) + 0.065,
-                "stone",
+                "roof",
                 "corrugation",
             )
         for x in [x0 + 0.05, x1 - 0.05]:
@@ -627,11 +673,23 @@ def roof_details(mb, poly, h, roof, rng):
     if roof.water_tank:
         center = Point(x1 - 0.36, y1 - 0.38)
         radius = min(0.30, (x1 - x0) / 5)
+        # Brick/Concrete base for the tank
+        base_tank = box(center.x - radius - 0.05, center.y - radius - 0.05, center.x + radius + 0.05, center.y + radius + 0.05)
+        mb.solid(base_tank, h, h + 0.12, "brick", "tank_base")
+        
         tank = center.buffer(radius, quad_segs=8)
-        mb.solid(tank, h + 0.12, h + 0.92, "metal", "water_tank")
-        for z in [h + 0.18, h + 0.44, h + 0.72, h + 0.90]:
-            mb.solid(tank.buffer(0.018), z, z + 0.025, "stone", "tank_rib")
-
+        mb.solid(tank, h + 0.12, h + 0.92, "plastic", "water_tank")
+        for z_rib in [h + 0.18, h + 0.44, h + 0.72, h + 0.90]:
+            mb.solid(tank.buffer(0.018), z_rib, z_rib + 0.025, "plastic", "tank_rib")
+            
+    # Fierros de espera (Rebars) at lot corners
+    for coord in poly.exterior.coords[:-1]:
+        # Spawn 2 thin rebars slightly offset at each column corner
+        for offset in [(0.05, 0.05), (-0.05, -0.05)]:
+            cx, cy = coord[0] + offset[0], coord[1] + offset[1]
+            if poly.contains(Point(cx, cy)):
+                rebar_h = h + roof.parapet_height_m + rng.uniform(0.6, 1.2)
+                mb.beam((cx, cy, h), (cx, cy, rebar_h), 0.008, semantic="rebar")
 
 def boundary_and_garden(mb, spec, poly, rng):
     s = spec.setback

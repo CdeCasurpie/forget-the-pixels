@@ -45,6 +45,14 @@ def validate_material(material: MaterialSpecification) -> None:
 def resolve_materials(appearance: BuildingAppearance) -> tuple[MaterialSpecification, ...]:
     """Merge explicit grammar materials over backwards-compatible defaults."""
     merged = {material.slot: material for material in DEFAULT_MATERIALS}
+    for material in (
+        MaterialSpecification("interior", "interior", (.12, .105, .09), .95),
+        MaterialSpecification("curtain", "fabric", (.78, .75, .65), .95),
+        MaterialSpecification("sign", "paint", (.12, .29, .40), .65),
+        MaterialSpecification("plastic", "plastic", (0.05, 0.05, 0.05), 0.50, texture_set=None, real_scale_m=1.0),
+        MaterialSpecification("rebar", "rusted_metal", (0.20, 0.12, 0.08), 0.85, metallic=0.6, texture_set=None, real_scale_m=1.0),
+    ):
+        merged[material.slot] = material
     seen = set()
     for material in appearance.materials:
         if material.slot in seen:
