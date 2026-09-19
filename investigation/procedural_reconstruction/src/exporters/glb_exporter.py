@@ -3,6 +3,8 @@
 from pathlib import Path
 import numpy as np
 import trimesh
+from PIL import Image
+from texturing.library import MaterialLibrary
 
 
 def export_glb(mesh, path):
@@ -39,6 +41,7 @@ def export_glb(mesh, path):
             )
 
             opacity = float(material.get("opacity", 1.0))
+            # Construct PBR material
             pbr_mat = trimesh.visual.material.PBRMaterial(
                 name=material["name"],
                 baseColorFactor=[*material["color"], opacity],
@@ -47,6 +50,37 @@ def export_glb(mesh, path):
                 alphaMode="BLEND" if opacity < 0.999 else "OPAQUE",
                 doubleSided=material.get("family") == "glass",
             )
+            
+            # Connect texture images if available
+            texture_set_name = material.get("texture_set")
+            if texture_set_name and has_uv:
+                lib = MaterialLibrary(Path(__file__).parent.parent.parent / "assets" / "pbr" / "catalog.json")
+                if lib.get_texture_set(texture_set_name):
+                    maps = lib.load_all_maps(texture_set_name)
+                    if "base_color" in maps:
+                        try:
+                            # Apply tint if color isn't purely white
+                            img = maps["base_color"].convert("RGBA")
+                            tint = np.array([*material["color"], opacity])
+                            if not np.allclose(tint[:3], 1.0, atol=0.05):
+                                arr = np.array(img).astype(float) / 255.0
+                                arr[:,:,0] *= tint[0]
+                                arr[:,:,1] *= tint[1]
+                                arr[:,:,2] *= tint[2]
+                                img = Image.fromarray((arr * 255).astype(np.uint8))
+                            pbr_mat.baseColorTexture = img
+                            # Reset color factor to white so texture isn't doubly-tinted
+                            pbr_mat.baseColorFactor = [1.0, 1.0, 1.0, opacity]
+                        except Exception as e:
+                            print(f"Error processing base_color for {texture_set_name}: {e}")
+                            
+                    if "normal" in maps:
+                        pbr_mat.normalTexture = maps["normal"]
+                            
+                    if "orm" in maps:
+                        # Trimesh PBRMaterial uses metallicRoughnessTexture for ORM
+                        pbr_mat.metallicRoughnessTexture = maps["orm"]
+
 
             if has_uv:
                 sub_uv = mesh.uv[used]

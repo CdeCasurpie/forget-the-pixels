@@ -49,17 +49,34 @@ class MeshBuilder:
     # ── UV helpers ───────────────────────────────────────────────────
 
     @staticmethod
-    def _uv_for_cap(x, y, scale):
-        """Metric UV for a horizontal cap (roof / floor)."""
-        return (x / scale, y / scale)
+    def _cap_uvs(points_3d, scale):
+        """Metric UV for a cap triangle, accounting for slope surface distance.
+        Uses a consistent basis for coplanar triangles."""
+        p0, p1, p2 = [np.array(p) for p in points_3d]
+        n = np.cross(p1 - p0, p2 - p0)
+        norm = np.linalg.norm(n)
+        if norm < 1e-8:
+            return [(p[0]/scale, p[1]/scale) for p in points_3d]
+        n = n / norm
+        
+        # If perfectly flat (n is vertical)
+        if abs(n[2]) > 0.9999:
+            return [(p[0]/scale, p[1]/scale) for p in points_3d]
+            
+        # Sloped: consistent basis. Strike line is horizontal along the plane.
+        strike = np.cross(n, np.array([0.0, 0.0, 1.0]))
+        strike_len = np.linalg.norm(strike)
+        if strike_len < 1e-8:
+            u_axis = np.array([1.0, 0.0, 0.0])
+        else:
+            u_axis = strike / strike_len
+            
+        v_axis = np.cross(n, u_axis)
+        
+        return [(np.dot(p, u_axis)/scale, np.dot(p, v_axis)/scale) for p in points_3d]
 
     @staticmethod
     def _uv_for_wall(u_along, z, scale):
-        """Metric UV for a vertical wall face.
-
-        u_along = distance along the wall from a fixed origin,
-        z = vertical world coordinate.
-        """
         return (u_along / scale, z / scale)
 
     # ── Core primitive: emit one triangle with explicit UVs ──────────
@@ -76,7 +93,7 @@ class MeshBuilder:
     # ── solid() with metric UV ──────────────────────────────────────
 
     def solid(self, shape, bottom, top, material="plaster", semantic="wall",
-              *, facade_origin=None, facade_tangent=None, uv_scale=1.0):
+              *, facade_origin=None, facade_tangent=None, facade_normal=None, uv_scale=1.0):
         """Extrude polygon between scalar or affine height fields.
 
         If facade_origin and facade_tangent are given, wall UVs are
@@ -103,13 +120,11 @@ class MeshBuilder:
             for tri in triangles(poly):
                 # Top cap
                 pts_top = [(x, y, height(top, (x, y))) for x, y in tri]
-                uvs_top = [self._uv_for_cap(x, y, uv_scale) for x, y in tri]
-                self._emit_face(pts_top, uvs_top, mat_idx)
+                self._emit_face(pts_top, self._cap_uvs(pts_top, uv_scale), mat_idx)
 
                 # Bottom cap (reversed winding)
                 pts_bot = [(x, y, height(bottom, (x, y))) for x, y in tri[::-1]]
-                uvs_bot = [self._uv_for_cap(x, y, uv_scale) for x, y in tri[::-1]]
-                self._emit_face(pts_bot, uvs_bot, mat_idx)
+                self._emit_face(pts_bot, self._cap_uvs(pts_bot, uv_scale), mat_idx)
 
             # ── Wall faces ──
             for ring in [poly.exterior, *poly.interiors]:
@@ -119,12 +134,19 @@ class MeshBuilder:
                     bx, by = b[:2]
 
                     # Compute u_along for this edge
-                    if facade_origin is not None and facade_tangent is not None:
-                        # Project onto facade tangent
+                    if facade_origin is not None and facade_tangent is not None and facade_normal is not None:
                         fo = np.asarray(facade_origin, float)
                         ft = np.asarray(facade_tangent, float)
-                        u_a = float(np.dot(np.array([ax, ay]) - fo, ft))
-                        u_b = float(np.dot(np.array([bx, by]) - fo, ft))
+                        fn = np.asarray(facade_normal, float)
+                        edge_vec = np.array([bx - ax, by - ay])
+                        
+                        # Project onto either tangent or normal depending on which is dominant
+                        if abs(np.dot(edge_vec, ft)) > abs(np.dot(edge_vec, fn)):
+                            u_a = float(np.dot(np.array([ax, ay]) - fo, ft))
+                            u_b = float(np.dot(np.array([bx, by]) - fo, ft))
+                        else:
+                            u_a = float(np.dot(np.array([ax, ay]) - fo, fn))
+                            u_b = float(np.dot(np.array([bx, by]) - fo, fn))
                     else:
                         # Edge-local: a is 0, b is edge length
                         u_a = 0.0
@@ -206,6 +228,7 @@ class MeshBuilder:
             shape, z1, z2, material, semantic,
             facade_origin=facade_origin,
             facade_tangent=facade_tangent,
+            facade_normal=n[:2] / np.linalg.norm(n[:2]) if np.linalg.norm(n[:2]) > 1e-8 else n[:2],
             uv_scale=uv_scale,
         )
 

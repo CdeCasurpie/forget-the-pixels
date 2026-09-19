@@ -136,7 +136,7 @@ class GrammarTests(unittest.TestCase):
         builder = MeshBuilder(box(0, 0, 2, 2))
         builder.foliage((1, 1, 0.7), (0.4, 0.4, 0.4), np.random.default_rng(42))
         mesh = builder.finish()
-        tree = trimesh.Trimesh(mesh.vertices, mesh.faces, process=False)
+        tree = trimesh.Trimesh(mesh.vertices, mesh.faces, process=True)
         self.assertTrue(tree.is_watertight)
         self.assertTrue(tree.is_winding_consistent)
         self.assertGreater(tree.volume, 0)
@@ -184,7 +184,7 @@ class GrammarTests(unittest.TestCase):
         builder = MeshBuilder(parcel)
         builder.solid(box(-1, -1, 6, 6), 0, 2)
         mesh = builder.finish()
-        m = trimesh.Trimesh(mesh.vertices, mesh.faces, process=False)
+        m = trimesh.Trimesh(mesh.vertices, mesh.faces, process=True)
         self.assertTrue(m.is_watertight)
         self.assertTrue(m.is_winding_consistent)
         self.assertAlmostEqual(m.volume, parcel.area * 2, places=7)
@@ -314,3 +314,19 @@ class GrammarTests(unittest.TestCase):
             np.testing.assert_allclose(
                 scene.bounds, [rotated.min(0), rotated.max(0)], atol=1e-5
             )
+
+    def test_no_degenerate_uv_triangles(self):
+        builder = MeshBuilder(box(0, 0, 10, 10))
+        builder.box((1, 1, 0), (1, 0, 0), (0, 1, 0), 0, 2, 0, 3, 0, 1, material="plaster")
+        mesh = builder.finish()
+        self.assertIsNotNone(mesh.uv)
+        
+        degenerate_count = 0
+        for face in mesh.faces:
+            uvs = mesh.uv[face]
+            area = abs(0.5 * ((uvs[1,0] - uvs[0,0]) * (uvs[2,1] - uvs[0,1]) - 
+                              (uvs[2,0] - uvs[0,0]) * (uvs[1,1] - uvs[0,1])))
+            if area < 1e-7:
+                degenerate_count += 1
+        
+        self.assertEqual(degenerate_count, 0, f"Found degenerate UV triangles")
