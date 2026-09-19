@@ -32,10 +32,10 @@ class MaterialLibrary:
                 
             tset = TextureSet(
                 name=name,
-                base_color_path=maps.get("diffuse"),
-                normal_path=maps.get("nor_gl"),
-                orm_path=maps.get("arm"),
-                roughness_path=maps.get("rough"),
+                base_color_path=maps.get("base_color"),
+                normal_path=maps.get("normal"),
+                orm_path=maps.get("orm"),
+                roughness_path=maps.get("roughness"),
                 metallic_path=maps.get("metallic"),
                 ao_path=maps.get("ao"),
                 scale_u=info.get("scale_u", 1.0),

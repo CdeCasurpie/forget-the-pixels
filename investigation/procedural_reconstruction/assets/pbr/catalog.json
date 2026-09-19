@@ -1,78 +1,525 @@
 {
-  "stucco_rough": {
-    "id": "ArmChair_01",
-    "maps": {
-      "diffuse": "assets/pbr/stucco_rough/stucco_rough_Diffuse.jpg",
-      "rough": "assets/pbr/stucco_rough/stucco_rough_Rough.jpg",
-      "nor_gl": "assets/pbr/stucco_rough/stucco_rough_nor_gl.jpg",
-      "arm": "assets/pbr/stucco_rough/stucco_rough_arm.jpg"
-    },
+  "stucco_smooth": {
+    "provenance": "polyhaven:white_plaster_02",
+    "license": "CC0",
     "scale_u": 2.0,
     "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "stucco_smooth/stucco_smooth_base_color.jpg",
+      "normal": "stucco_smooth/stucco_smooth_normal.jpg",
+      "orm": "stucco_smooth/stucco_smooth_orm.jpg",
+      "roughness": "stucco_smooth/stucco_smooth_roughness.jpg",
+      "ao": "stucco_smooth/stucco_smooth_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "2bb1115821715dfd8bbd1c5a294a5bb43b97d5c46b1aa8aa8f744bcaf5eeeb10",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "4ff1fe957cd161b07f721fe6c28a9459c8c2e8ec65627a26c16e483a07c80d85",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "01a479ced98447569958ccb6d396ed700dc9f8fd3197c86e52836382b24126c6",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/white_plaster_02/white_plaster_02_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
   },
   "concrete_fine": {
-    "id": "ArmChair_01",
-    "maps": {
-      "diffuse": "assets/pbr/concrete_fine/concrete_fine_Diffuse.jpg",
-      "rough": "assets/pbr/concrete_fine/concrete_fine_Rough.jpg",
-      "nor_gl": "assets/pbr/concrete_fine/concrete_fine_nor_gl.jpg",
-      "arm": "assets/pbr/concrete_fine/concrete_fine_arm.jpg"
-    },
+    "provenance": "polyhaven:concrete_wall_003",
+    "license": "CC0",
     "scale_u": 2.0,
     "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "concrete_fine/concrete_fine_base_color.jpg",
+      "normal": "concrete_fine/concrete_fine_normal.jpg",
+      "orm": "concrete_fine/concrete_fine_orm.jpg",
+      "roughness": "concrete_fine/concrete_fine_roughness.jpg",
+      "ao": "concrete_fine/concrete_fine_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "7d1d4b9f5ed1aa3e6385ef3232e26e123a3dac5f364e44f9f34784e39bf8d6bb",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_003/concrete_wall_003_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "9ab358a9d51aa2a361103cf6587ee0b598fa57ad8f38b40cccc8015b867938ac",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_003/concrete_wall_003_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "55987cae8c5d6eb0bb09bf4cf65d45267a747294eb63b291757501e1664af51f",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_003/concrete_wall_003_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "dca206a636ecca1ced60fb66bc0ec15d71b3c611179fec6ee5dad96786efcc25",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_003/concrete_wall_003_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "ao": {
+        "sha256": "91faf88ad6b964468c2783f452611c65f867946765127923a644a0c1632e6a3b",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_003/concrete_wall_003_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
   },
-  "brick_red": {
-    "id": "red_bricks_04",
-    "maps": {
-      "diffuse": "assets/pbr/brick_red/brick_red_Diffuse.jpg",
-      "ao": "assets/pbr/brick_red/brick_red_AO.jpg",
-      "rough": "assets/pbr/brick_red/brick_red_Rough.jpg",
-      "nor_gl": "assets/pbr/brick_red/brick_red_nor_gl.jpg",
-      "arm": "assets/pbr/brick_red/brick_red_arm.jpg"
-    },
+  "wood_vertical": {
+    "provenance": "polyhaven:wooden_planks",
+    "license": "CC0",
     "scale_u": 2.0,
     "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "wood_vertical/wood_vertical_base_color.jpg",
+      "normal": "wood_vertical/wood_vertical_normal.jpg",
+      "orm": "wood_vertical/wood_vertical_orm.jpg",
+      "roughness": "wood_vertical/wood_vertical_roughness.jpg",
+      "ao": "wood_vertical/wood_vertical_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "1273876d6f92fb1a1d29c1bb28f548a9256154187531e84f993b56e347f1d17b",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wooden_planks/wooden_planks_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "6c85ff0a410a2993cc09d25859d7d735bc05e9f15dc51393d2e58aa2ce8a0916",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wooden_planks/wooden_planks_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "4f4201d86653299329a8f743b9b4962359cbcc2d5c306e64e6eaab4e27f05c77",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wooden_planks/wooden_planks_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "c1b1a7e3266a082d66f1c786a28a05674227158684d655e42ab2420e47ae746e",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wooden_planks/wooden_planks_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "ao": {
+        "sha256": "f47617e92aa618aae3c288c01df81c42037fb4e7b1476706caaccf85145d0bfc",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wooden_planks/wooden_planks_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
   },
-  "wood_planks": {
-    "id": "wood_planks",
+  "brick_running_bond": {
+    "provenance": "polyhaven:red_bricks_04",
+    "license": "CC0",
+    "scale_u": 1.0,
+    "scale_v": 1.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
     "maps": {
-      "diffuse": "assets/pbr/wood_planks/wood_planks_Diffuse.jpg",
-      "ao": "assets/pbr/wood_planks/wood_planks_AO.jpg",
-      "rough": "assets/pbr/wood_planks/wood_planks_Rough.jpg",
-      "nor_gl": "assets/pbr/wood_planks/wood_planks_nor_gl.jpg",
-      "arm": "assets/pbr/wood_planks/wood_planks_arm.jpg"
+      "base_color": "brick_running_bond/brick_running_bond_base_color.jpg",
+      "normal": "brick_running_bond/brick_running_bond_normal.jpg",
+      "orm": "brick_running_bond/brick_running_bond_orm.jpg",
+      "roughness": "brick_running_bond/brick_running_bond_roughness.jpg",
+      "ao": "brick_running_bond/brick_running_bond_ao.jpg"
     },
-    "scale_u": 2.0,
-    "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "metadata": {
+      "base_color": {
+        "sha256": "c3a51662fd3e859242d949843e88e8ca7ae50dd3bb57c4cad5b544d0a16111cd",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_bricks_04/red_bricks_04_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "cb9d3da93ef192ddbe5f649b15bd940fe2631bb8715002ff31a0f19294b354da",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_bricks_04/red_bricks_04_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "cd09ad1d86122a5eae9c18034025be95664ba031ac2739cc34371efe112fd69b",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_bricks_04/red_bricks_04_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "793b7206535ccdfe285d4f90366019cb13c56bae9cdcefab6bb49065155875dd",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_bricks_04/red_bricks_04_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "ea7d7ce926a507fe9c42fe436bb452f974a9aeb91013e8acfcdf00a0e58c70c9",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_bricks_04/red_bricks_04_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      }
+    }
   },
-  "metal_corrugated": {
-    "id": "corrugated_iron_02",
-    "maps": {
-      "diffuse": "assets/pbr/metal_corrugated/metal_corrugated_Diffuse.jpg",
-      "ao": "assets/pbr/metal_corrugated/metal_corrugated_AO.jpg",
-      "rough": "assets/pbr/metal_corrugated/metal_corrugated_Rough.jpg",
-      "nor_gl": "assets/pbr/metal_corrugated/metal_corrugated_nor_gl.jpg",
-      "arm": "assets/pbr/metal_corrugated/metal_corrugated_arm.jpg"
-    },
+  "galvanized_corrugated": {
+    "provenance": "polyhaven:corrugated_iron_02",
+    "license": "CC0",
     "scale_u": 2.0,
     "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "galvanized_corrugated/galvanized_corrugated_base_color.jpg",
+      "normal": "galvanized_corrugated/galvanized_corrugated_normal.jpg",
+      "orm": "galvanized_corrugated/galvanized_corrugated_orm.jpg",
+      "roughness": "galvanized_corrugated/galvanized_corrugated_roughness.jpg",
+      "ao": "galvanized_corrugated/galvanized_corrugated_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "7a7b43099d015c1b08ebb175da5965caeae44b86de65a727b3fffa20a7c69a93",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "9743c93668689c36a67e9c4dc8d6a0870fe91202f82dcdaf70ddc330c12f9ecb",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "da4197f5b3e199ef693082836ca803f9d5cad2b4998a1c1c3dc4ac384f93a890",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "56ec8d8b04bac56b5d85ee2f35256b7b00d8c7a0ef13e6791cdabc5c05ed2f4b",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "dfea78180dcf1436eaa9eaa1ddb18bca17bbf8be3155bdf0169e497f17a5345c",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
   },
-  "pavement": {
-    "id": "cobblestone_large_01",
-    "maps": {
-      "diffuse": "assets/pbr/pavement/pavement_Diffuse.jpg",
-      "ao": "assets/pbr/pavement/pavement_AO.jpg",
-      "rough": "assets/pbr/pavement/pavement_Rough.jpg",
-      "nor_gl": "assets/pbr/pavement/pavement_nor_gl.jpg",
-      "arm": "assets/pbr/pavement/pavement_arm.jpg"
-    },
+  "leaf_cluster": {
+    "provenance": "polyhaven:leafy_grass",
+    "license": "CC0",
     "scale_u": 2.0,
     "scale_v": 2.0,
-    "normal_convention": "opengl"
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "leaf_cluster/leaf_cluster_base_color.jpg",
+      "normal": "leaf_cluster/leaf_cluster_normal.jpg",
+      "orm": "leaf_cluster/leaf_cluster_orm.jpg",
+      "roughness": "leaf_cluster/leaf_cluster_roughness.jpg",
+      "ao": "leaf_cluster/leaf_cluster_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "cfa40bc9d9417d1852db8753a8d5917f110c40101179f63543c382e39bc05e4a",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "832328216adc0a7e1f70a31d5ee48c9ab7f2152d83816122736cf42ac4b2ebd6",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "95432451cb2693794459fe7ea339ea9ffdb5959c40373740f80a4aa1703f089d",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "0c2a1d91aacb8e54a496051b59854e51e456fe858abeade778e308359ef16463",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "ao": {
+        "sha256": "0a53eeb9a89531b5d2ceb42f5d86f320396612844dc376c8f0d6d93d6e14cefa",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
+  },
+  "dry_soil": {
+    "provenance": "polyhaven:farm_soil",
+    "license": "CC0",
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "dry_soil/dry_soil_base_color.jpg",
+      "normal": "dry_soil/dry_soil_normal.jpg",
+      "orm": "dry_soil/dry_soil_orm.jpg",
+      "roughness": "dry_soil/dry_soil_roughness.jpg",
+      "ao": "dry_soil/dry_soil_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "bfa2850109d1018ecb25342d9f17a5a81e826f7c67edfcaa7c878b60e62cc010",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/farm_soil/farm_soil_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "d67b68bf19c1176af28b19cbc55e13365ef4653faa7a00650fe9ffed5e03b35a",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/farm_soil/farm_soil_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "77612d6d3ebd9229843d1e277c87a5f63583d5cbfa9e92a79f39730b8ac468a5",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/farm_soil/farm_soil_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "e20991112d705bfb0fce2fe2e8f770b5ec62dfd31c5636aa096b9e0dd2765c17",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/farm_soil/farm_soil_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "882414d2f6f4ae20f7dc8c5f6d9eba84d1b4f314527d6881acb38419cd5ef0d9",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/farm_soil/farm_soil_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
+  },
+  "concrete_pavers": {
+    "provenance": "polyhaven:rectangular_paving",
+    "license": "CC0",
+    "scale_u": 2.0,
+    "scale_v": 2.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {
+      "base_color": "concrete_pavers/concrete_pavers_base_color.jpg",
+      "normal": "concrete_pavers/concrete_pavers_normal.jpg",
+      "orm": "concrete_pavers/concrete_pavers_orm.jpg",
+      "roughness": "concrete_pavers/concrete_pavers_roughness.jpg",
+      "ao": "concrete_pavers/concrete_pavers_ao.jpg"
+    },
+    "metadata": {
+      "base_color": {
+        "sha256": "23f3da5644a95fbcc1916165c8b03ac74d0836ce4b6f5bf2a28b0266dcdf84c5",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_paving/rectangular_paving_diff_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "normal": {
+        "sha256": "0c3a0b827ce1e240ae52f447b773d52d9712730c8b81a6aa323a4df4c84f1108",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_paving/rectangular_paving_nor_gl_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "orm": {
+        "sha256": "3d08e42a6c743c1c9c0e288cdf662f9462e412225fef0b622f703063d7c49f2c",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_paving/rectangular_paving_arm_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "RGB"
+      },
+      "roughness": {
+        "sha256": "4d6a475b6c6c33e34c9dd42546dbe01eed5cc2cd704fddf574d8e2013414b3a8",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_paving/rectangular_paving_rough_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      },
+      "ao": {
+        "sha256": "0f6716ef0c94c3c888cca96113e72b44a74e9d3e9ccc6dd26bff26ca3ecf2665",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rectangular_paving/rectangular_paving_ao_1k.jpg",
+        "resolution": [
+          1024,
+          1024
+        ],
+        "channels": "L"
+      }
+    }
+  },
+  "painted_metal": {
+    "provenance": "parameter_only",
+    "license": "CC0",
+    "scale_u": 1.0,
+    "scale_v": 1.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {},
+    "metadata": {}
+  },
+  "glass_clean": {
+    "provenance": "parameter_only",
+    "license": "CC0",
+    "scale_u": 1.0,
+    "scale_v": 1.0,
+    "scale_is_estimated": true,
+    "normal_convention": "opengl",
+    "maps": {},
+    "metadata": {}
+  },
+  "hdri_exterior_day": {
+    "provenance": "polyhaven:kloppenheim_06",
+    "license": "CC0",
+    "path": "kloppenheim_06_2k.hdr",
+    "sha256": "620cf7fd4b31e602ccb57da492efd43a38cd4b0858206d2475cb1d83a0efb08e",
+    "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/kloppenheim_06_2k.hdr"
   }
 }
