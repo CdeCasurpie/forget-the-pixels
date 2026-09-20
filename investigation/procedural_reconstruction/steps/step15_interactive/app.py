@@ -36,7 +36,7 @@ def generate_interactive(seed, use, lot_type, arch_lang, profile, side_finish, f
     ctx = ParcelContext(polygon=tuple(lot_poly.exterior.coords))
 
     total_h = floors * 3.5
-    buf = 0.10  # inward buffer so walls don't sit exactly on the parcel edge
+    buf = 0.0  # Removing artificial buffer so building perfectly masks lot lines
 
     # ── 2. Build masses ──────────────────────────────────────────────
     masses = []
