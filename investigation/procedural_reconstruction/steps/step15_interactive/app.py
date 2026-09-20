@@ -103,7 +103,8 @@ def generate_interactive(seed, use, lot_type, arch_lang, profile, side_finish, f
             front_setback=front_setback, side_setback=0.0,
             primary_color=rgb, side_wall_finish=side_finish, seed=seed,
             has_fence=(has_fence and front_setback >= 1.0),
-            fence_type=fence_type
+            fence_type=fence_type,
+            is_corner=(lot_type == "Esquina (Corner)")
         ),
         context=ctx, site_plan=site, facades=(), components=(), seed=seed
     )

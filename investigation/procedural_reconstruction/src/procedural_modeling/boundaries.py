@@ -46,26 +46,26 @@ def generate_boundaries(context: ParcelContext, program: BuildingProgram, site_p
             c = list(seg.coords)
             sp1 = np.array(c[0])
             sp2 = np.array(c[-1])
-            seg_length = np.linalg.norm(sp2 - sp1)
             
             # The front edge of the parcel is always near y=0 in our coordinate system
             is_front = (abs(sp1[1]) < 0.1 and abs(sp2[1]) < 0.1)
             
-            if is_front:
-                if getattr(program, 'has_fence', True):
-                    boundaries.append(BoundarySpec(
-                        line=seg,
-                        kind=getattr(program, 'fence_type', 'reja'),
-                        height=2.8,
-                        gate_u=0.2, gate_width=1.0,     # Pedestrian
-                        garage_u=1.5, garage_width=3.5  # Garage
-                    ))
-            else:
-                # Side medianera wall enclosing the yard
+            # If it's a corner lot, x=0 is also a street edge
+            is_side_street = getattr(program, 'is_corner', False) and (abs(sp1[0]) < 0.1 and abs(sp2[0]) < 0.1)
+            
+            is_street = is_front or is_side_street
+            
+            if is_street:
                 boundaries.append(BoundarySpec(
                     line=seg,
-                    kind="solid_wall",
-                    height=2.8
+                    kind=getattr(program, 'fence_type', 'reja'),
+                    height=3.2,
+                    gate_u=0.2 if is_front else None, 
+                    gate_width=1.0,
+                    garage_u=1.5 if is_front else None, 
+                    garage_width=3.5
                 ))
+            # WE NO LONGER GENERATE BOUNDARIES FOR NON-STREET EDGES!
+            # (Neighbouring houses are assumed to enclose the lot)
                     
     return boundaries

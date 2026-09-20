@@ -1309,22 +1309,21 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
 
 
 def _draw_fence(builder, a, t, n, length, bnd, rng, base_mat="plaster", style="reja"):
-    h = bnd.height if style != "low" else 0.6
+    h = bnd.height if style != "low" else 1.2  # Total height of low fence is 1.2m
+    base_h = 0.6 # Height of the solid base part
 
     def is_gate(u):
-        if style == "low": return False
         if bnd.gate_u is not None and bnd.gate_u <= u <= bnd.gate_u + bnd.gate_width:
             return True
-        if bnd.garage_u is not None and bnd.garage_u <= u <= bnd.garage_u + bnd.garage_width:
+        if style != "low" and bnd.garage_u is not None and bnd.garage_u <= u <= bnd.garage_u + bnd.garage_width:
             return True
         return False
         
     points = [0.0]
-    if style != "low":
-        if bnd.gate_u is not None:
-            points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
-        if bnd.garage_u is not None:
-            points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
+    if bnd.gate_u is not None:
+        points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
+    if style != "low" and bnd.garage_u is not None:
+        points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
     points.append(length)
     points = sorted(list(set(points)))
 
@@ -1337,15 +1336,50 @@ def _draw_fence(builder, a, t, n, length, bnd, rng, base_mat="plaster", style="r
     for u1, u2 in solid_segments:
         if style == "reja":
             # Brick base + metal bars
-            builder.box(a, t, n, u1, u2, 0.0, 0.6, -0.15, 0.0, "brick", "wall")
+            builder.box(a, t, n, u1, u2, 0.0, base_h, -0.15, 0.0, "brick", "wall")
             bars_count = int((u2 - u1) / 0.15)
             if bars_count > 0:
                 step = (u2 - u1) / bars_count
                 for i in range(bars_count):
                     bar_u = u1 + i * step
-                    builder.box(a, t, n, bar_u, bar_u + 0.02, 0.6, h, -0.09, -0.07, "metal", "fence")
+                    builder.box(a, t, n, bar_u, bar_u + 0.02, base_h, h, -0.09, -0.07, "metal", "fence")
             # Top rail
             builder.box(a, t, n, u1, u2, h - 0.05, h, -0.10, -0.06, "metal", "fence")
+        
+        elif style == "low":
+            # Base concrete wall
+            builder.box(a, t, n, u1, u2, 0.0, base_h, -0.20, 0.0, "plaster", "wall")
+            # Top rail of base wall
+            builder.box(a, t, n, u1, u2, base_h - 0.05, base_h, -0.25, 0.05, "stone", "cornice")
+            
+            # Pillars every ~1.5m
+            pillar_spacing = 1.5
+            num_pillars = max(2, int(round((u2 - u1) / pillar_spacing)) + 1)
+            pillar_step = (u2 - u1) / (num_pillars - 1) if num_pillars > 1 else 0
+            
+            for i in range(num_pillars):
+                p_u = u1 + i * pillar_step
+                p_start = max(u1, p_u - 0.15)
+                p_end = min(u2, p_u + 0.15)
+                # Pillar
+                builder.box(a, t, n, p_start, p_end, 0.0, h, -0.22, 0.02, "plaster", "column")
+                # Pillar cap
+                builder.box(a, t, n, p_start - 0.02, p_end + 0.02, h, h + 0.1, -0.25, 0.05, "stone", "cornice")
+            
+            # Metal bars between pillars
+            for i in range(num_pillars - 1):
+                p1 = u1 + i * pillar_step + 0.15
+                p2 = u1 + (i + 1) * pillar_step - 0.15
+                if p2 > p1:
+                    bars_count = int((p2 - p1) / 0.15)
+                    if bars_count > 0:
+                        step = (p2 - p1) / bars_count
+                        for j in range(bars_count):
+                            bar_u = p1 + j * step
+                            builder.box(a, t, n, bar_u, bar_u + 0.02, base_h, h, -0.11, -0.09, "metal", "fence")
+                    # Top rail for metal
+                    builder.box(a, t, n, p1, p2, h - 0.02, h, -0.12, -0.08, "metal", "fence")
+        
         else:
             # Solid wall
             builder.box(a, t, n, u1, u2, 0.0, h, -0.15, 0.0, base_mat, "wall")
@@ -1354,10 +1388,9 @@ def _draw_fence(builder, a, t, n, length, bnd, rng, base_mat="plaster", style="r
                 builder.box(a, t, n, u1, u2, h - 0.1, h, -0.20, 0.05, base_mat, "cornice")
 
     # Draw gates
-    if style != "low":
-        if bnd.gate_u is not None:
-            builder.box(a, t, n, bnd.gate_u, bnd.gate_u + bnd.gate_width,
-                        0.0, h * 0.8, -0.10, -0.05, "metal", "pedestrian_gate")
-        if bnd.garage_u is not None:
-            builder.box(a, t, n, bnd.garage_u, bnd.garage_u + bnd.garage_width,
-                        0.0, h * 0.9, -0.10, -0.05, "metal", "garage_door")
+    if bnd.gate_u is not None:
+        builder.box(a, t, n, bnd.gate_u, bnd.gate_u + bnd.gate_width,
+                    0.0, h * (0.8 if style != "low" else 1.0), -0.10, -0.05, "metal", "pedestrian_gate")
+    if style != "low" and bnd.garage_u is not None:
+        builder.box(a, t, n, bnd.garage_u, bnd.garage_u + bnd.garage_width,
+                    0.0, h * 0.9, -0.10, -0.05, "metal", "garage_door")

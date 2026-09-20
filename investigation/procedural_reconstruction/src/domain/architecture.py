@@ -25,6 +25,7 @@ class BuildingProgram:
     side_wall_finish: str = "raw"
     has_fence: bool = True
     fence_type: str = "reja"
+    is_corner: bool = False
 
 @dataclass(frozen=True)
 class ParcelContext:
