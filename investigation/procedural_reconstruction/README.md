@@ -6,6 +6,12 @@ segmentación/generación.
 
 ## Generación procedural detallada
 
+La ampliación por referencias está documentada en
+[ARCHITECTURAL_FAMILIES.md](ARCHITECTURAL_FAMILIES.md): seis familias independientes
+del frente del lote, prefabs de puertas/ventanas, cortinas, rejas y carteles.
+Ejecutar `python steps/step10_procedural_generation_test/family_gallery.py` desde
+este directorio para generar los seis ejemplos editables y sus GLB.
+
 El paso 10 genera OBJ/MTL y GLB, con fachadas, balcones, cercos selectivos y
 azoteas mediante una gramática reproducible. Desde `investigation/` ejecutar
 `make run-procedural-proposal`. Ver [parámetros, ejemplos y límites](steps/step10_procedural_generation_test/README.md).

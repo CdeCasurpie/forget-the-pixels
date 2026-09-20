@@ -104,6 +104,9 @@ class Opening:
     mullion_columns: int = 2
     mullion_rows: int = 2
     balcony_depth_m: float = 0.75
+    prefab: str = "legacy"  # slim_window | wood_panel | metal_gate | roller | storefront | louver
+    curtain: float = 0.0  # fraction covered from the sides
+    grille_pattern: str = "vertical"  # vertical | grid | diamond
 
 
 @dataclass(frozen=True)
@@ -133,6 +136,7 @@ class FacadeProjection:
     border_width_m: float = 0.18
     source: str = "assumed"
     score: float = 0.0
+    label: str = ""  # optional relief lettering for sign panels
 
 
 @dataclass(frozen=True)
@@ -173,6 +177,7 @@ class FacadeSpecification:
     material_regions: tuple[FacadeMaterialRegion, ...] = ()
     projections: tuple[FacadeProjection, ...] = ()
     exterior_stairs: tuple[ExteriorStairSpecification, ...] = ()
+    ornamented: bool = True
 
 
 @dataclass(frozen=True)

@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--no-render", action="store_true")
     parser.add_argument("--cadastre", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--family", default="auto", help="Architectural family or legacy")
     parser.add_argument(
         "--spec",
         type=Path,
@@ -145,7 +146,7 @@ def main():
     for name, parcel, options in examples:
         print("Generating", name, flush=True)
         spec = (
-            loaded if args.spec else propose_building(parcel, seed=args.seed, **options)
+            loaded if args.spec else propose_building(parcel, seed=args.seed, architectural_family=args.family, **options)
         )
         if not args.spec and name.startswith("lot_"):
             original = gdf[gdf.objectid == int(name[4:])].geometry.iloc[0]

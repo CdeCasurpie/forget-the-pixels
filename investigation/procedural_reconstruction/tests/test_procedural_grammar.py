@@ -243,7 +243,8 @@ class GrammarTests(unittest.TestCase):
     def test_fence_only_on_selected_edges_and_expected_detail(self):
         parcel = Polygon([(0, 0), (10, 0), (10, 12), (0, 12)])
         spec = propose_building(
-            parcel, style="corner", front_edges=(0,), boundary="fence", setback_m=1.5
+            parcel, style="corner", front_edges=(0,), boundary="fence", setback_m=1.5,
+            architectural_family="legacy",
         )
         mesh = generate_mesh(spec)
         names = {p["name"] for p in mesh.parts}

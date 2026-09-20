@@ -7,7 +7,10 @@ from PIL import Image
 from texturing.library import MaterialLibrary
 
 
-def export_glb(mesh, path):
+def export_glb(mesh, path, *, library=None):
+    catalog = Path(__file__).resolve().parents[2] / "assets/pbr/catalog.json"
+    lib = library or (MaterialLibrary(catalog) if catalog.exists() else None)
+    material_cache = {}
     scene = trimesh.Scene()
     transform = np.array(
         [[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], float
@@ -42,9 +45,11 @@ def export_glb(mesh, path):
 
             opacity = float(material.get("opacity", 1.0))
             # Construct PBR material
-            pbr_mat = trimesh.visual.material.PBRMaterial(
+            color = np.asarray(material["color"], float)
+            color = np.where(color <= .04045, color / 12.92, ((color + .055) / 1.055)**2.4)
+            pbr_mat = material_cache.get(mi) or trimesh.visual.material.PBRMaterial(
                 name=material["name"],
-                baseColorFactor=[*material["color"], opacity],
+                baseColorFactor=[*color, opacity],
                 metallicFactor=float(material.get("metallic", 0.0)),
                 roughnessFactor=float(material.get("roughness", 0.8)),
                 alphaMode="BLEND" if opacity < 0.999 else "OPAQUE",
@@ -53,24 +58,14 @@ def export_glb(mesh, path):
             
             # Connect texture images if available
             texture_set_name = material.get("texture_set")
-            if texture_set_name and has_uv:
-                lib = MaterialLibrary(Path(__file__).parent.parent.parent / "assets" / "pbr" / "catalog.json")
+            if texture_set_name and has_uv and lib and mi not in material_cache:
                 if lib.get_texture_set(texture_set_name):
                     maps = lib.load_all_maps(texture_set_name)
                     if "base_color" in maps:
                         try:
                             # Apply tint if color isn't purely white
-                            img = maps["base_color"].convert("RGBA")
-                            tint = np.array([*material["color"], opacity])
-                            if not np.allclose(tint[:3], 1.0, atol=0.05):
-                                arr = np.array(img).astype(float) / 255.0
-                                arr[:,:,0] *= tint[0]
-                                arr[:,:,1] *= tint[1]
-                                arr[:,:,2] *= tint[2]
-                                img = Image.fromarray((arr * 255).astype(np.uint8))
-                            pbr_mat.baseColorTexture = img
-                            # Reset color factor to white so texture isn't doubly-tinted
-                            pbr_mat.baseColorFactor = [1.0, 1.0, 1.0, opacity]
+                            # Keep shared sRGB image; linear factor handles tint.
+                            pbr_mat.baseColorTexture = maps["base_color"]
                         except Exception as e:
                             print(f"Error processing base_color for {texture_set_name}: {e}")
                             
@@ -80,10 +75,20 @@ def export_glb(mesh, path):
                     if "orm" in maps:
                         # Trimesh PBRMaterial uses metallicRoughnessTexture for ORM
                         pbr_mat.metallicRoughnessTexture = maps["orm"]
+                        pbr_mat.occlusionTexture = maps["orm"]
+                        pbr_mat.roughnessFactor = 1.0
+                        pbr_mat.metallicFactor = 1.0
+                    elif "ao" in maps:
+                        pbr_mat.occlusionTexture = maps["ao"]
 
 
+            material_cache[mi] = pbr_mat
             if has_uv:
-                sub_uv = mesh.uv[used]
+                sub_uv = mesh.uv[used].copy()
+                tset = lib.get_texture_set(texture_set_name) if lib else None
+                if tset:
+                    # Undo legacy metres/tile, then apply physical catalog scale once.
+                    sub_uv *= material.get("real_scale_m", 1.0) / np.array([tset.scale_u, tset.scale_v])
                 sub.visual = trimesh.visual.TextureVisuals(
                     uv=sub_uv, material=pbr_mat
                 )
@@ -93,4 +98,9 @@ def export_glb(mesh, path):
             scene.add_geometry(sub, node_name=f"{label}_{mi}", transform=transform)
 
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    Path(path).write_bytes(scene.export(file_type="glb"))
+    def postprocess(tree):
+        by_name = {m["name"]: m for m in mesh.materials}
+        for m in tree.get("materials", []):
+            if "normalTexture" in m:
+                m["normalTexture"]["scale"] = by_name[m["name"]].get("normal_strength", 1.0)
+    Path(path).write_bytes(trimesh.exchange.gltf.export_glb(scene, tree_postprocessor=postprocess))
