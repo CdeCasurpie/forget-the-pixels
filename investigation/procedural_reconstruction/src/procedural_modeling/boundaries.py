@@ -65,7 +65,12 @@ def generate_boundaries(context: ParcelContext, program: BuildingProgram, site_p
                     garage_u=1.5 if is_front else None, 
                     garage_width=3.5
                 ))
-            # WE NO LONGER GENERATE BOUNDARIES FOR NON-STREET EDGES!
-            # (Neighbouring houses are assumed to enclose the lot)
+            else:
+                # Side boundaries connecting the house to the front fence (or enclosing backyards).
+                boundaries.append(BoundarySpec(
+                    line=seg,
+                    kind="solid_wall",
+                    height=3.2
+                ))
                     
     return boundaries
