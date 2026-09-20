@@ -1292,8 +1292,14 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
             continue
         # n_vec from _outward_normal already points outward
 
-        if bnd.kind == "fence":
-            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng)
+        if bnd.kind in ("fence", "reja"):
+            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng, "plaster", "reja")
+        elif bnd.kind == "ladrillos":
+            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng, "brick", "solid")
+        elif bnd.kind == "concreto":
+            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng, "plaster", "solid")
+        elif bnd.kind == "concreto_bajo":
+            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng, "plaster", "low")
         else:
             # Solid perimeter wall (muro ciego)
             builder.box(a, t_vec, n_vec, 0.0, length, 0.0, bnd.height,
@@ -1302,75 +1308,56 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
     return builder.finish()
 
 
-def _draw_fence(builder, a, t, n, length, bnd, rng):
-    """Draw a typical Peruvian front fence: brick base + metal bars + gates."""
-    h = bnd.height
+def _draw_fence(builder, a, t, n, length, bnd, rng, base_mat="plaster", style="reja"):
+    h = bnd.height if style != "low" else 0.6
 
     def is_gate(u):
+        if style == "low": return False
         if bnd.gate_u is not None and bnd.gate_u <= u <= bnd.gate_u + bnd.gate_width:
             return True
         if bnd.garage_u is not None and bnd.garage_u <= u <= bnd.garage_u + bnd.garage_width:
             return True
         return False
         
-    # Get segments that are NOT gates
-    solid_segments = []
     points = [0.0]
-    if bnd.gate_u is not None:
-        points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
-    if bnd.garage_u is not None:
-        points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
+    if style != "low":
+        if bnd.gate_u is not None:
+            points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
+        if bnd.garage_u is not None:
+            points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
     points.append(length)
-    points.sort()
-    
-    for i in range(0, len(points)-1):
-        u1, u2 = points[i], points[i+1]
-        if u2 - u1 < 0.05: continue
-        mid_u = (u1 + u2) / 2.0
-        if not is_gate(mid_u):
-            solid_segments.append((u1, u2))
+    points = sorted(list(set(points)))
 
-    for (u1, u2) in solid_segments:
-        # Low brick base
-        builder.box(a, t, n, u1, u2, 0.0, 0.8, -0.15, 0.0, "brick", "wall")
-        # Cap on brick base
-        builder.box(a, t, n, u1, u2, 0.8, 0.85, -0.18, 0.03, "stone", "parapet_cap")
-        
-        # Top & mid horizontal rails
-        builder.box(a, t, n, u1, u2, h - 0.04, h, -0.08, -0.02, "metal", "fence")
-        builder.box(a, t, n, u1, u2, 0.85 + (h - 0.85) * 0.5 - 0.012,
-                    0.85 + (h - 0.85) * 0.5 + 0.012, -0.07, -0.03, "metal", "security_crossbar")
+    solid_segments = []
+    for i in range(len(points) - 1):
+        mid = (points[i] + points[i+1]) / 2.0
+        if not is_gate(mid):
+            solid_segments.append((points[i], points[i+1]))
 
-    # Vertical metal bars (every 12cm)
-    for u_bar in np.arange(0.05, length - 0.05, 0.12):
-        if not is_gate(u_bar):
-            builder.box(a, t, n, u_bar - 0.012, u_bar + 0.012, 0.85, h, -0.06, -0.04, "metal", "security_bar")
+    for u1, u2 in solid_segments:
+        if style == "reja":
+            # Brick base + metal bars
+            builder.box(a, t, n, u1, u2, 0.0, 0.6, -0.15, 0.0, "brick", "wall")
+            bars_count = int((u2 - u1) / 0.15)
+            if bars_count > 0:
+                step = (u2 - u1) / bars_count
+                for i in range(bars_count):
+                    bar_u = u1 + i * step
+                    builder.box(a, t, n, bar_u, bar_u + 0.02, 0.6, h, -0.09, -0.07, "metal", "fence")
+            # Top rail
+            builder.box(a, t, n, u1, u2, h - 0.05, h, -0.10, -0.06, "metal", "fence")
+        else:
+            # Solid wall
+            builder.box(a, t, n, u1, u2, 0.0, h, -0.15, 0.0, base_mat, "wall")
+            # For solid tall walls, add a top cornice
+            if style == "solid":
+                builder.box(a, t, n, u1, u2, h - 0.1, h, -0.20, 0.05, base_mat, "cornice")
 
-    # Garage door (Portón)
-    if bnd.garage_u is not None:
-        gu, gw = bnd.garage_u, bnd.garage_width
-        # Columns
-        builder.box(a, t, n, gu - 0.12, gu, 0.0, h, -0.22, 0.06, "concrete", "column")
-        builder.box(a, t, n, gu + gw, gu + gw + 0.12, 0.0, h, -0.22, 0.06, "concrete", "column")
-        # Header beam
-        builder.box(a, t, n, gu - 0.12, gu + gw + 0.12, h - 0.18, h, -0.25, 0.10, "concrete", "header")
-        # Horizontal metal panels
-        for pz in np.arange(0.02, h - 0.2, 0.35):
-            builder.box(a, t, n, gu, gu + gw, pz, pz + 0.33, -0.12, 0.0, "metal", "gate")
-        # Door handle
-        builder.box(a, t, n, gu + gw - 0.18, gu + gw - 0.13,
-                    0.85, 1.02, -0.025, 0.05, "metal", "door_handle")
-
-    # Pedestrian gate
-    if bnd.gate_u is not None:
-        pu, pw = bnd.gate_u, bnd.gate_width
-        # Frame
-        builder.box(a, t, n, pu - 0.04, pu, 0.0, h, -0.12, 0.04, "metal", "frame")
-        builder.box(a, t, n, pu + pw, pu + pw + 0.04, 0.0, h, -0.12, 0.04, "metal", "frame")
-        # Gate panel (vertical bars)
-        for u_bar in np.arange(pu + 0.05, pu + pw - 0.03, 0.10):
-            builder.box(a, t, n, u_bar, u_bar + 0.016, 0.0, h,
-                        -0.06, -0.04, "metal", "security_bar")
-        # Threshold
-        builder.box(a, t, n, pu - 0.04, pu + pw + 0.04, 0.0, 0.035,
-                    -0.15, 0.12, "stone", "threshold")
+    # Draw gates
+    if style != "low":
+        if bnd.gate_u is not None:
+            builder.box(a, t, n, bnd.gate_u, bnd.gate_u + bnd.gate_width,
+                        0.0, h * 0.8, -0.10, -0.05, "metal", "pedestrian_gate")
+        if bnd.garage_u is not None:
+            builder.box(a, t, n, bnd.garage_u, bnd.garage_u + bnd.garage_width,
+                        0.0, h * 0.9, -0.10, -0.05, "metal", "garage_door")

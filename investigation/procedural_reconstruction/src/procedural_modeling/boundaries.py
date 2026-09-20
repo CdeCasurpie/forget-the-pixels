@@ -45,15 +45,18 @@ def generate_boundaries(context: ParcelContext, program: BuildingProgram, site_p
             sp2 = np.array(c[-1])
             seg_length = np.linalg.norm(sp2 - sp1)
             
-            # If it's the front edge (Y approx 0)
-            if abs(sp1[1]) < 0.1 and abs(sp2[1]) < 0.1:
-                boundaries.append(BoundarySpec(
-                    line=seg,
-                    kind="fence",
-                    height=2.8,
-                    gate_u=0.2, gate_width=1.0,     # Pedestrian
-                    garage_u=1.5, garage_width=3.5  # Garage
-                ))
+            # The front edge of the parcel is always near y=0 in our coordinate system
+            is_front = (abs(sp1[1]) < 0.1 and abs(sp2[1]) < 0.1)
+            
+            if is_front:
+                if getattr(program, 'has_fence', True):
+                    boundaries.append(BoundarySpec(
+                        line=seg,
+                        kind=getattr(program, 'fence_type', 'reja'),
+                        height=2.8,
+                        gate_u=0.2, gate_width=1.0,     # Pedestrian
+                        garage_u=1.5, garage_width=3.5  # Garage
+                    ))
             else:
                 # Side medianera wall enclosing the yard
                 boundaries.append(BoundarySpec(

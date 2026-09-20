@@ -23,6 +23,8 @@ class BuildingProgram:
     side_setback: float = 0.0
     primary_color: tuple[float, float, float] = (0.8, 0.8, 0.8)
     side_wall_finish: str = "raw"
+    has_fence: bool = True
+    fence_type: str = "reja"
 
 @dataclass(frozen=True)
 class ParcelContext:
