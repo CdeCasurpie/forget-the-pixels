@@ -9,6 +9,11 @@ from shapely.geometry import Polygon, Point, LineString, box
 from shapely.geometry.polygon import orient
 from domain import BuildingSpecification
 from .mesh_builder import MeshBuilder, triangles, polygons
+from domain.architecture import BuildingSpecificationV4
+from domain.models import FacadeSpecification, Opening, RoofSpecification
+from procedural_modeling.exposure import calculate_mass_exposures
+from procedural_modeling.materials import appearance_for_style
+from procedural_modeling.mesh_builder import MeshData
 
 
 def triangulate_polygon(polygon, z_height):
@@ -480,6 +485,15 @@ def facade(mb, f, total_height):
                 else:
                     # Muro premium tarrajeado: completamente plano y continuo
                     depth_outer = 0.0
+            else:
+                # ── PHASE B: Recessed ground floor ───────────────────────
+                # On front walls of 3+ story buildings, the ground floor is
+                # pushed back ~12cm to create a shadow / entrance effect.
+                first_floor_z = f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
+                if len(f.floor_levels_m) >= 4 and midpoint.y < first_floor_z:
+                    depth_outer = -0.12  # Recessed ground floor
+                else:
+                    depth_outer = 0.0
                     
             mb.box(a, t, n, u1, u2, z1, z2, -0.20, depth_outer, wall_material, "wall")
             if f.is_front and f.cladding == "horizontal":
@@ -503,6 +517,24 @@ def facade(mb, f, total_height):
         projection(mb, a, t, n, feature)
     for stair in stairs:
         exterior_stair(mb, a, t, n, stair, length)
+
+    # ── PHASE A: Floor slab protrusions (losas de entrepiso voladas) ─────
+    # These are the exposed concrete floor slabs that protrude from every
+    # inter-floor boundary. This is THE single biggest depth cue on any
+    # Peruvian facade, regardless of style.
+    if f.is_front and len(f.floor_levels_m) > 2:
+        for z in f.floor_levels_m[1:-1]:  # Skip ground (0) and roof
+            # Thick concrete slab band: 15cm tall, protrudes 15cm
+            mb.box(a, t, n, -0.02, length + 0.02,
+                   z - 0.15, z, -0.02, 0.15,
+                   "concrete", "floor_slab")
+        # Top cornice / alero superior: overhangs 20cm
+        mb.box(a, t, n, -0.04, length + 0.04,
+               total_height - 0.10, total_height,
+               -0.02, 0.20,
+               "concrete", "top_cornice")
+
+    # ── Existing ornamentation (plinth, floor bands, pilasters) ──────────
     if f.style != "premium":
         mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
         if f.is_front and f.ornamented:
@@ -522,6 +554,15 @@ def facade(mb, f, total_height):
                     "stone",
                     "corner_pilaster",
                 )
+    # ── PHASE D: Intermediate pilasters (columnas intermedias) ───────
+    # Structural columns that protrude 4-6cm from the wall surface,
+    # spaced every ~3.5m. Common in all Lima construction styles.
+    if f.is_front and length > 5.0:
+        for inter_u in np.arange(3.5, length - 1.0, 3.5):
+            mb.box(a, t, n, inter_u - 0.06, inter_u + 0.06,
+                   0, total_height, -0.02, 0.05,
+                   "concrete", "intermediate_pilaster")
+
     if f.is_front and f.ornamented:
         if f.services and length > 3.5:
             # Air conditioning condenser, louvers, brackets and a drainpipe.
@@ -946,3 +987,398 @@ def generate_mesh(spec: BuildingSpecification):
     roof_details(mb, poly, height, spec.roof, rng)
     boundary_and_garden(mb, spec, poly, rng)
     return mb.finish()
+"""V4 procedural grammar — delegates rich detail to the battle-tested legacy functions.
+
+Instead of reimplementing windows/facades/roofs from scratch, this module
+translates V4 contracts (MassSpec, SitePlan, exposure Z-bands) into legacy
+FacadeSpecification objects and calls grammar.facade() / grammar.roof_details()
+directly.  This preserves every millimetre of detail (jambs, curtains, mullions,
+structural columns, cladding, water tanks, rebars) while gaining the multi-mass
+and exposure capabilities of the V4 architecture.
+"""
+
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+def _outward_normal(p1, p2, footprint_poly):
+    """Return (tangent, normal, length) with normal pointing OUT of the polygon."""
+    a = np.asarray(p1, float)
+    b = np.asarray(p2, float)
+    t = b - a
+    length = float(np.linalg.norm(t))
+    if length < 1e-4:
+        return None, None, 0.0
+    t /= length
+    n = np.array([t[1], -t[0]])
+    mid = a + t * (length / 2.0)
+    if footprint_poly.contains(Point(mid + n * 0.01)):
+        n = -n
+    return t, n, length
+
+
+def _is_front_edge(n_vec, spec):
+    """
+    Determine whether a wall edge faces the street.
+    In the multi-mass V4, we check:
+      1. If spec has explicit_fronts — use those.
+      2. Fallback: the edge whose outward normal has the largest -Y component.
+    For now we keep the simple heuristic (normal pointing roughly towards -Y).
+    """
+    return n_vec[1] < -0.3
+
+
+class ZOffsetMeshBuilder:
+    """Wraps MeshBuilder to translate Z coordinates for band-local facade logic."""
+    def __init__(self, builder, z_offset):
+        self._builder = builder
+        self._z_offset = z_offset
+
+    def box(self, a, t, n, u1, u2, z1, z2, w1, w2, *args, **kwargs):
+        return self._builder.box(a, t, n, u1, u2, z1 + self._z_offset, z2 + self._z_offset, w1, w2, *args, **kwargs)
+        
+    def beam(self, a, b, *args, **kwargs):
+        a_shifted = (a[0], a[1], a[2] + self._z_offset)
+        b_shifted = (b[0], b[1], b[2] + self._z_offset)
+        return self._builder.beam(a_shifted, b_shifted, *args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self._builder, name)
+
+
+def _floor_levels_for_band(mass, z_bottom, z_top):
+    """Extract floor levels that fall within [z_bottom, z_top]."""
+    levels = [z for z in mass.floor_levels if z_bottom <= z <= z_top]
+    if not levels or levels[0] > z_bottom + 0.01:
+        levels.insert(0, z_bottom)
+    if levels[-1] < z_top - 0.01:
+        levels.append(z_top)
+    return tuple(levels)
+
+
+def _generate_openings_for_wall(length, floor_levels, is_front, program, rng):
+    """
+    Create highly varied legacy Opening objects for a wall segment.
+    Uses program.use to pick commercial vs residential, and randomizes frames heavily.
+    """
+    openings = []
+    if not is_front:
+        return tuple(openings)
+
+    # Decide a unified style for this wall to keep some consistency
+    wall_residential_prefab = "legacy" if rng.random() < 0.8 else "slim_window"
+    
+    for fi in range(len(floor_levels) - 1):
+        z_floor = floor_levels[fi]
+        z_ceil = floor_levels[fi + 1]
+        fh = z_ceil - z_floor
+        is_ground = (z_floor < 0.5)
+        # v_m is relative to the BAND bottom
+        v_base = z_floor - floor_levels[0]
+
+        if program.use in ("commercial", "mixed") and is_ground:
+            # Large shopfront openings or huge gates
+            margin = 0.6
+            bay_w = min(3.0, length - margin * 2)
+            num_bays = max(1, int((length - margin * 2) / bay_w))
+            start = (length - num_bays * bay_w) / 2.0
+            for b in range(num_bays):
+                u = start + b * bay_w + 0.1
+                w = bay_w - 0.2
+                if w < 1.0 or u + w > length - 0.12:
+                    continue
+                # 30% legacy thick gate, 35% roller, 35% storefront
+                r = rng.random()
+                prefab_type = "legacy" if r < 0.3 else ("roller" if r < 0.65 else "storefront")
+                openings.append(Opening(
+                    kind="gate" if prefab_type != "storefront" else "window", 
+                    u_m=u, v_m=v_base + 0.0,
+                    width_m=w, height_m=min(fh - 0.3, 3.0),
+                    frame_width_m=0.08, recess_m=0.12 if prefab_type == "legacy" else 0.06,
+                    mullion_columns=max(1, int(w / 1.5)),
+                    mullion_rows=1, style="paneled",
+                    prefab=prefab_type, curtain=0.0, grille=False,
+                ))
+        else:
+            # Residential windows
+            win_w = 1.6 if program.finish_profile == "premium" else float(rng.uniform(1.0, 1.4))
+            win_h = 1.6 if program.finish_profile == "premium" else float(rng.uniform(1.2, 1.5))
+            sill_v = 0.5 if program.finish_profile == "premium" else float(rng.uniform(0.7, 1.0))
+            spacing = win_w + float(rng.uniform(0.8, 1.5))
+
+            num_wins = int((length - 0.5) / spacing)
+            if num_wins < 1:
+                continue
+            start_u = (length - num_wins * spacing) / 2.0 + (spacing - win_w) / 2.0
+
+            for wi in range(num_wins):
+                u = start_u + wi * spacing
+                v = v_base + sill_v
+                if u < 0.12 or u + win_w > length - 0.12:
+                    continue
+                if v + win_h > (z_ceil - floor_levels[0]) - 0.10:
+                    continue
+                
+                # Ground floor door
+                if is_ground and wi == 0 and program.use == "residential":
+                    door_w = min(1.2, win_w)
+                    openings.append(Opening(
+                        kind="door", u_m=u, v_m=v_base + 0.0,
+                        width_m=door_w, height_m=min(fh - 0.3, 2.4),
+                        frame_width_m=0.08, recess_m=0.12,
+                        mullion_columns=1, mullion_rows=3,
+                        style="paneled", prefab="legacy" if rng.random() < 0.7 else "wood_panel",
+                        curtain=0.0, grille=False,
+                    ))
+                    continue
+
+                has_grille = (rng.random() < 0.6) if program.finish_profile != "premium" else False
+                curtain_frac = float(rng.uniform(0.15, 0.6)) if rng.random() < 0.7 else 0.0
+                
+                # ── PHASE C: Modern balconies on upper floors ────────────
+                # Premium buildings with 3+ floors get balcony windows ~40%
+                # of the time on floors above ground. This adds a protruding
+                # concrete slab + railing for massive depth.
+                num_floors = len(floor_levels) - 1
+                is_upper = not is_ground
+                use_balcony = (
+                    is_upper 
+                    and num_floors >= 3 
+                    and program.finish_profile == "premium"
+                    and rng.random() < 0.4
+                )
+                
+                win_kind = "balcony_window" if use_balcony else "window"
+                balcony_d = float(rng.uniform(0.6, 1.0)) if use_balcony else 0.75
+                
+                openings.append(Opening(
+                    kind=win_kind, u_m=u, v_m=v,
+                    width_m=win_w, height_m=win_h,
+                    frame_width_m=0.08 if wall_residential_prefab == "legacy" else 0.04, 
+                    recess_m=0.12 if wall_residential_prefab == "legacy" else 0.06,
+                    mullion_columns=2, mullion_rows=1 if program.finish_profile == "premium" else 2,
+                    style="sliding" if rng.random() < 0.5 else "casement", 
+                    prefab=wall_residential_prefab,
+                    curtain=curtain_frac, grille=has_grille,
+                    balcony_depth_m=balcony_d,
+                ))
+
+    return tuple(openings)
+
+
+# ── main entry point ─────────────────────────────────────────────────────────
+
+def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
+    r, g, b = spec.program.primary_color
+    rgb_255 = (int(r * 255), int(g * 255), int(b * 255))
+    appearance = appearance_for_style(
+        spec.program.architectural_language, rgb_255, spec.seed
+    )
+
+    parcel = Polygon(spec.context.polygon)
+    builder = MeshBuilder(parcel, appearance)
+    rng = np.random.default_rng(spec.seed)
+
+    exposures = calculate_mass_exposures(spec.site_plan)
+
+    for mass in spec.site_plan.masses:
+        mass_exposure = exposures[mass.id]
+        mass_poly = Polygon(mass.footprint)
+
+        # ── 1. Walls by Z-bands, delegating to legacy facade() ──────────
+        for wall_band in mass_exposure["walls"]:
+            z_bottom = wall_band["z_bottom"]
+            z_top = wall_band["z_top"]
+            band_height = z_top - z_bottom
+            segments = wall_band["exposed_segments"]
+
+            lines = [segments] if segments.geom_type == 'LineString' else list(segments.geoms)
+            for line in lines:
+                coords = list(line.coords)
+                for i in range(len(coords) - 1):
+                    p1, p2 = coords[i], coords[i + 1]
+                    t_vec, n_vec, length = _outward_normal(p1, p2, mass_poly)
+                    if t_vec is None:
+                        continue
+
+                    is_front = _is_front_edge(n_vec, spec)
+                    floor_levels = _floor_levels_for_band(mass, z_bottom, z_top)
+
+                    # Choose wall material
+                    if is_front:
+                        wall_mat = "plaster"
+                    else:
+                        wall_mat = (
+                            "concrete"
+                            if spec.program.side_wall_finish == "plastered"
+                            else "brick"
+                        )
+
+                    # Generate openings (only on front walls)
+                    ops = _generate_openings_for_wall(
+                        length, floor_levels, is_front, spec.program, rng
+                    )
+
+                    # Make floor levels relative to the band's local Z coordinates
+                    local_floor_levels = tuple(z - z_bottom for z in floor_levels)
+
+                    # To match legacy grammar.py, we MUST pass CCW vertices (so n points inwards)
+                    # AND we must shift them inwards by 0.20m because facade() draws the wall 
+                    # 20cm outwards from the line provided.
+                    t_grammar = np.array([n_vec[1], -n_vec[0]])
+                    # We want t_vec to be CCW. A CCW edge has t x n_out > 0.
+                    # Since t_grammar = (n_out_y, -n_out_x), t_grammar is CW.
+                    # So we want the edge that goes OPPOSITE to t_grammar.
+                    if np.dot(t_grammar, t_vec) > 0:
+                        # t_vec is CW, so swap to make it CCW
+                        v_a, v_b = p2, p1
+                    else:
+                        v_a, v_b = p1, p2
+                        
+                    # Now v_a -> v_b is CCW. The inward normal is -n_vec.
+                    inward_n = -n_vec
+                    # Shift the line inwards by 0.20m
+                    v_a = v_a + inward_n * 0.20
+                    v_b = v_b + inward_n * 0.20
+
+                    # Build a legacy FacadeSpecification
+                    facade_spec = FacadeSpecification(
+                        edge_id=f"{mass.id}_band{z_bottom:.1f}_{i}",
+                        vertex_a=tuple(np.asarray(v_a, float)),
+                        vertex_b=tuple(np.asarray(v_b, float)),
+                        width_m=length,
+                        normal_xy=tuple(n_vec),
+                        wall_material=wall_mat,
+                        floor_levels_m=local_floor_levels,
+                        openings=ops,
+                        is_front=is_front,
+                        material_regions=(),
+                        style=spec.program.finish_profile,
+                        ornamented=is_front,
+                        services=(is_front and rng.random() < 0.3),
+                        cladding="horizontal" if (is_front and rng.random() < 0.2) else "stucco",
+                    )
+
+                    # Delegate to the rich legacy function!
+                    local_mb = ZOffsetMeshBuilder(builder, z_bottom)
+                    facade(local_mb, facade_spec, band_height)
+
+        # ── 2. Roofs via legacy roof_details() ───────────────────────────
+        roof_data = mass_exposure.get("roof")
+        if roof_data and roof_data["exposed_area"]:
+            roof_z = roof_data["z"]
+            exposed_area = roof_data["exposed_area"]
+
+            polys = (
+                [exposed_area]
+                if exposed_area.geom_type == 'Polygon'
+                else list(exposed_area.geoms)
+            )
+            for poly in polys:
+                if poly.is_empty or poly.area < 0.5:
+                    continue
+                roof_spec = RoofSpecification(
+                    kind="flat",
+                    parapet_height_m=0.5 if mass.role != "podium" else 0.3,
+                    terrace_room=(mass.role == "tower" and poly.area > 8),
+                    canopy=(mass.role == "tower"),
+                    water_tank=(mass.role == "tower" and poly.area > 6),
+                )
+                roof_details(builder, poly, roof_z, roof_spec, rng)
+
+    # ── 3. Boundaries (fences, gates) ────────────────────────────────────
+    from procedural_modeling.boundaries import generate_boundaries
+    boundaries = generate_boundaries(spec.context, spec.program, spec.site_plan)
+
+    for bnd in boundaries:
+        bnd_coords = list(bnd.line.coords)
+        a = np.array(bnd_coords[0])
+        b_pt = np.array(bnd_coords[-1])
+        t_vec, n_vec, length = _outward_normal(
+            bnd_coords[0], bnd_coords[-1], parcel
+        )
+        if t_vec is None:
+            continue
+        # n_vec from _outward_normal already points outward
+
+        if bnd.kind == "fence":
+            _draw_fence(builder, a, t_vec, n_vec, length, bnd, rng)
+        else:
+            # Solid perimeter wall (muro ciego)
+            builder.box(a, t_vec, n_vec, 0.0, length, 0.0, bnd.height,
+                        -0.15, 0.0, "brick", "wall")
+
+    return builder.finish()
+
+
+def _draw_fence(builder, a, t, n, length, bnd, rng):
+    """Draw a typical Peruvian front fence: brick base + metal bars + gates."""
+    h = bnd.height
+
+    def is_gate(u):
+        if bnd.gate_u is not None and bnd.gate_u <= u <= bnd.gate_u + bnd.gate_width:
+            return True
+        if bnd.garage_u is not None and bnd.garage_u <= u <= bnd.garage_u + bnd.garage_width:
+            return True
+        return False
+        
+    # Get segments that are NOT gates
+    solid_segments = []
+    points = [0.0]
+    if bnd.gate_u is not None:
+        points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
+    if bnd.garage_u is not None:
+        points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
+    points.append(length)
+    points.sort()
+    
+    for i in range(0, len(points)-1):
+        u1, u2 = points[i], points[i+1]
+        if u2 - u1 < 0.05: continue
+        mid_u = (u1 + u2) / 2.0
+        if not is_gate(mid_u):
+            solid_segments.append((u1, u2))
+
+    for (u1, u2) in solid_segments:
+        # Low brick base
+        builder.box(a, t, n, u1, u2, 0.0, 0.8, -0.15, 0.0, "brick", "wall")
+        # Cap on brick base
+        builder.box(a, t, n, u1, u2, 0.8, 0.85, -0.18, 0.03, "stone", "parapet_cap")
+        
+        # Top & mid horizontal rails
+        builder.box(a, t, n, u1, u2, h - 0.04, h, -0.08, -0.02, "metal", "fence")
+        builder.box(a, t, n, u1, u2, 0.85 + (h - 0.85) * 0.5 - 0.012,
+                    0.85 + (h - 0.85) * 0.5 + 0.012, -0.07, -0.03, "metal", "security_crossbar")
+
+    # Vertical metal bars (every 12cm)
+    for u_bar in np.arange(0.05, length - 0.05, 0.12):
+        if not is_gate(u_bar):
+            builder.box(a, t, n, u_bar - 0.012, u_bar + 0.012, 0.85, h, -0.06, -0.04, "metal", "security_bar")
+
+    # Garage door (Portón)
+    if bnd.garage_u is not None:
+        gu, gw = bnd.garage_u, bnd.garage_width
+        # Columns
+        builder.box(a, t, n, gu - 0.12, gu, 0.0, h, -0.22, 0.06, "concrete", "column")
+        builder.box(a, t, n, gu + gw, gu + gw + 0.12, 0.0, h, -0.22, 0.06, "concrete", "column")
+        # Header beam
+        builder.box(a, t, n, gu - 0.12, gu + gw + 0.12, h - 0.18, h, -0.25, 0.10, "concrete", "header")
+        # Horizontal metal panels
+        for pz in np.arange(0.02, h - 0.2, 0.35):
+            builder.box(a, t, n, gu, gu + gw, pz, pz + 0.33, -0.12, 0.0, "metal", "gate")
+        # Door handle
+        builder.box(a, t, n, gu + gw - 0.18, gu + gw - 0.13,
+                    0.85, 1.02, -0.025, 0.05, "metal", "door_handle")
+
+    # Pedestrian gate
+    if bnd.gate_u is not None:
+        pu, pw = bnd.gate_u, bnd.gate_width
+        # Frame
+        builder.box(a, t, n, pu - 0.04, pu, 0.0, h, -0.12, 0.04, "metal", "frame")
+        builder.box(a, t, n, pu + pw, pu + pw + 0.04, 0.0, h, -0.12, 0.04, "metal", "frame")
+        # Gate panel (vertical bars)
+        for u_bar in np.arange(pu + 0.05, pu + pw - 0.03, 0.10):
+            builder.box(a, t, n, u_bar, u_bar + 0.016, 0.0, h,
+                        -0.06, -0.04, "metal", "security_bar")
+        # Threshold
+        builder.box(a, t, n, pu - 0.04, pu + pw + 0.04, 0.0, 0.035,
+                    -0.15, 0.12, "stone", "threshold")
