@@ -456,26 +456,30 @@ def facade(mb, f, total_height):
             
             depth_outer = 0
             if not f.is_front:
-                is_concrete = False
-                # Losas horizontales (vigas)
-                for fl in f.floor_levels_m[1:]:
-                    if fl - 0.201 < midpoint.y < fl + 0.001:
-                        is_concrete = True
-                        break
-                # Columnas verticales
-                if midpoint.x < 0.25 or midpoint.x > length - 0.25:
-                    is_concrete = True
-                else:
-                    for inter_u in np.arange(4.0, length - 0.5, 4.0):
-                        if inter_u - 0.126 < midpoint.x < inter_u + 0.126:
+                if f.wall_material == "brick":
+                    is_concrete = False
+                    # Losas horizontales (vigas)
+                    for fl in f.floor_levels_m[1:]:
+                        if fl - 0.201 < midpoint.y < fl + 0.001:
                             is_concrete = True
                             break
-                            
-                if is_concrete:
-                    wall_material = "concrete"
-                    depth_outer = 0.0  # Flush with lot boundary
+                    # Columnas verticales
+                    if midpoint.x < 0.25 or midpoint.x > length - 0.25:
+                        is_concrete = True
+                    else:
+                        for inter_u in np.arange(4.0, length - 0.5, 4.0):
+                            if inter_u - 0.126 < midpoint.x < inter_u + 0.126:
+                                is_concrete = True
+                                break
+                                
+                    if is_concrete:
+                        wall_material = "concrete"
+                        depth_outer = 0.0  # Flush with lot boundary
+                    else:
+                        depth_outer = -0.015  # Brick inset slightly to show concrete frame
                 else:
-                    depth_outer = -0.015  # Brick inset slightly to show concrete frame
+                    # Muro premium tarrajeado: completamente plano y continuo
+                    depth_outer = 0.0
                     
             mb.box(a, t, n, u1, u2, z1, z2, -0.20, depth_outer, wall_material, "wall")
             if f.is_front and f.cladding == "horizontal":
@@ -499,24 +503,26 @@ def facade(mb, f, total_height):
         projection(mb, a, t, n, feature)
     for stair in stairs:
         exterior_stair(mb, a, t, n, stair, length)
-    mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
+    if f.style != "premium":
+        mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
+        if f.is_front and f.ornamented:
+            for z in f.floor_levels_m[1:]:
+                mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
+            for u in [0.04, length - 0.16]:
+                mb.box(
+                    a,
+                    t,
+                    n,
+                    u,
+                    u + 0.12,
+                    0,
+                    total_height,
+                    -0.02,
+                    0.05,
+                    "stone",
+                    "corner_pilaster",
+                )
     if f.is_front and f.ornamented:
-        for z in f.floor_levels_m[1:]:
-            mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
-        for u in [0.04, length - 0.16]:
-            mb.box(
-                a,
-                t,
-                n,
-                u,
-                u + 0.12,
-                0,
-                total_height,
-                -0.02,
-                0.05,
-                "stone",
-                "corner_pilaster",
-            )
         if f.services and length > 3.5:
             # Air conditioning condenser, louvers, brackets and a drainpipe.
             first_floor = f.floor_levels_m[1] if len(f.floor_levels_m) > 2 else 0

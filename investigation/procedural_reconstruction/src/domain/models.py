@@ -173,6 +173,7 @@ class FacadeSpecification:
     balcony_pattern: str = "vertical"  # vertical | diamond
     services: bool = False
     wall_material: str = "plaster"
+    style: str = "standard"
     ground_floor_material: str | None = None
     material_regions: tuple[FacadeMaterialRegion, ...] = ()
     projections: tuple[FacadeProjection, ...] = ()
