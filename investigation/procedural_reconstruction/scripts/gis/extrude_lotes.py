@@ -12,7 +12,7 @@ import cv2
 
 print("\033[96m[INFO]\033[0m Iniciando Debugger V4 (Alineación en Vivo + Malla)...")
 
-DIR_BASE = os.path.dirname(os.path.abspath(__file__))
+DIR_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Lotes"))
 PATH_NUBE = os.path.join(DIR_BASE, "nube_sparse", "sparse_1fps_aligned.ply")
 PATH_SHP = os.path.join(DIR_BASE, "shp_files", "BARRANCO_LM_geogpsperu_SuyoPomalia.shp")
 PATH_COLMAP = os.path.join(DIR_BASE, "nube_sparse", "0_aligned")

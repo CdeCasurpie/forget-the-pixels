@@ -58,7 +58,7 @@ def render_obj(obj_path, out_png):
     plt.close()
 
 if __name__ == "__main__":
-    out_dir = Path("steps/step10_procedural_generation_test/outputs")
+    out_dir = Path(__file__).resolve().parent.parent / "steps" / "step10_procedural_generation_test" / "outputs"
     for obj in out_dir.glob("*.obj"):
         png_path = obj.with_suffix('.png')
         print(f"Rendering {obj} to {png_path}...")

@@ -5,7 +5,7 @@ import urllib.error
 from pathlib import Path
 import hashlib
 
-ASSETS_DIR = Path("assets/pbr")
+ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets" / "pbr"
 ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 
 ASSETS = {

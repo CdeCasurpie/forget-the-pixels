@@ -7,7 +7,7 @@ import cv2
 
 print("\033[96m[INFO]\033[0m Iniciando Visualizador de Puntos por Cámara...")
 
-DIR_BASE = os.path.dirname(os.path.abspath(__file__))
+DIR_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Lotes"))
 PATH_COLMAP = os.path.join(DIR_BASE, "nube_sparse", "0_aligned")
 PATH_IMG = os.path.join(DIR_BASE, "images")
 

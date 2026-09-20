@@ -10,7 +10,7 @@ import os
 
 print("\033[96m[INFO]\033[0m Iniciando Alineador 2D Satelital...")
 
-DIR_BASE = os.path.dirname(os.path.abspath(__file__))
+DIR_BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Lotes"))
 PATH_NUBE = os.path.join(DIR_BASE, "nube_sparse", "sparse_1fps_aligned.ply")
 PATH_SHP = os.path.join(DIR_BASE, "shp_files", "BARRANCO_LM_geogpsperu_SuyoPomalia.shp")
 PATH_OFFSET = os.path.join(DIR_BASE, "offset_config.json")
