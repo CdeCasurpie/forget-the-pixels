@@ -15,6 +15,9 @@ class BoundarySpec:
     garage_width: float = 0.0
 
 def generate_boundaries(context: ParcelContext, program: BuildingProgram, site_plan: SitePlan) -> List[BoundarySpec]:
+    if not getattr(program, 'has_fence', True):
+        return []
+        
     boundaries = []
     
     # Calculate union of all mass footprints
