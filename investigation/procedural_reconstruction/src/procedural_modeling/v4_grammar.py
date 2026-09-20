@@ -48,6 +48,24 @@ def _is_front_edge(n_vec, spec):
     return n_vec[1] < -0.3
 
 
+class ZOffsetMeshBuilder:
+    """Wraps MeshBuilder to translate Z coordinates for band-local facade logic."""
+    def __init__(self, builder, z_offset):
+        self._builder = builder
+        self._z_offset = z_offset
+
+    def box(self, a, t, n, u1, u2, z1, z2, w1, w2, *args, **kwargs):
+        return self._builder.box(a, t, n, u1, u2, z1 + self._z_offset, z2 + self._z_offset, w1, w2, *args, **kwargs)
+        
+    def beam(self, a, b, *args, **kwargs):
+        a_shifted = (a[0], a[1], a[2] + self._z_offset)
+        b_shifted = (b[0], b[1], b[2] + self._z_offset)
+        return self._builder.beam(a_shifted, b_shifted, *args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self._builder, name)
+
+
 def _floor_levels_for_band(mass, z_bottom, z_top):
     """Extract floor levels that fall within [z_bottom, z_top]."""
     levels = [z for z in mass.floor_levels if z_bottom <= z <= z_top]
@@ -179,6 +197,9 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         length, floor_levels, is_front, spec.program, rng
                     )
 
+                    # Make floor levels relative to the band's local Z coordinates
+                    local_floor_levels = tuple(z - z_bottom for z in floor_levels)
+
                     # To match legacy grammar.py, we MUST pass CCW vertices (so n points inwards)
                     # AND we must shift them inwards by 0.20m because facade() draws the wall 
                     # 20cm outwards from the line provided.
@@ -205,17 +226,20 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         vertex_b=tuple(np.asarray(v_b, float)),
                         width_m=length,
                         normal_xy=tuple(n_vec),
-                        floor_levels_m=floor_levels,
+                        wall_material=wall_mat,
+                        floor_levels_m=local_floor_levels,
                         openings=ops,
                         is_front=is_front,
-                        wall_material=wall_mat,
+                        material_regions=(),
+                        style=spec.program.finish_profile,
                         ornamented=is_front,
                         services=(is_front and rng.random() < 0.3),
                         cladding="horizontal" if (is_front and rng.random() < 0.2) else "stucco",
                     )
 
                     # Delegate to the rich legacy function!
-                    facade(builder, facade_spec, band_height)
+                    local_mb = ZOffsetMeshBuilder(builder, z_bottom)
+                    facade(local_mb, facade_spec, band_height)
 
         # ── 2. Roofs via legacy roof_details() ───────────────────────────
         roof_data = mass_exposure.get("roof")
