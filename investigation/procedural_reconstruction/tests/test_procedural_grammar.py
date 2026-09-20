@@ -22,15 +22,15 @@ from domain.models import (
     MaterialSpecification,
     RoofSpecification,
 )
-from procedural_modeling.grammar import generate_mesh, triangulate_polygon
-from procedural_modeling.layout import propose_building
-from procedural_modeling.validation import validate_mesh
-from procedural_modeling.mesh_builder import MeshBuilder
-from procedural_modeling.io import read_specification
-from exporters.obj_exporter import export_obj
-from exporters.glb_exporter import export_glb
-from cadastral_geometry.street_fronts import street_facing_edges
-from procedural_modeling.block import build_block_specifications, load_height_fits
+from modeling.grammar import generate_mesh, triangulate_polygon
+from modeling.layout import propose_building
+from modeling.validation import validate_mesh
+from modeling.mesh_builder import MeshBuilder
+from modeling.io import read_specification
+from modeling.exporters.obj_exporter import export_obj
+from modeling.exporters.glb_exporter import export_glb
+from spatial.street_fronts import street_facing_edges
+from modeling.block import build_block_specifications, load_height_fits
 
 
 class GrammarTests(unittest.TestCase):

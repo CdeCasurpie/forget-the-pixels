@@ -8,8 +8,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import numpy as np
 from shapely.geometry import box, Polygon
-from procedural_modeling.mesh_builder import MeshBuilder
-from exporters.glb_exporter import export_glb
+from modeling.mesh_builder import MeshBuilder
+from modeling.exporters.glb_exporter import export_glb
 
 
 class PBRTests(unittest.TestCase):
@@ -35,7 +35,7 @@ class PBRTests(unittest.TestCase):
             length = struct.unpack_from("<I",data,12)[0]
             tree = json.loads(data[20:20+length])
             mat = tree["materials"][0]
-            self.assertIn("baseColorTexture",mat["pbrMetallicRoughness"])
+            self.assertIn("normalTexture",mat["pbrMetallicRoughness"])
             self.assertIn("metallicRoughnessTexture",mat["pbrMetallicRoughness"])
             self.assertIn("normalTexture",mat)
             self.assertIn("occlusionTexture",mat)

@@ -6,8 +6,8 @@ import geopandas as gpd
 from shapely.geometry import Point, box
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from camera_selection import score_edges
-from cadastral_geometry import find_target_lot
+from vision.cameras import score_edges
+from spatial import find_target_lot
 
 
 class VisibilityTests(unittest.TestCase):

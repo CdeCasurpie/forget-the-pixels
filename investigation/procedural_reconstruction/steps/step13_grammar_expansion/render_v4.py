@@ -4,8 +4,8 @@ import numpy as np
 
 sys.path.insert(0, str(Path("src").resolve()))
 from domain.architecture import SitePlan, MassSpec, BuildingSpecificationV4, BuildingProgram, ParcelContext, FacadeSpecV4
-from procedural_modeling.v4_grammar import generate_v4_mesh
-from exporters.glb_exporter import MaterialLibrary, export_glb
+from modeling.v4_grammar import generate_v4_mesh
+from modeling.exporters.glb_exporter import MaterialLibrary, export_glb
 
 def main():
     out_dir = Path("steps/step13_grammar_expansion/outputs")

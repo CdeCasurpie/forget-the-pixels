@@ -7,12 +7,12 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"src"))
 import cv2
 import numpy as np
 from shapely.geometry import Polygon
-from procedural_modeling.families import FAMILIES
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from procedural_modeling.validation import validate_mesh
-from exporters.glb_exporter import export_glb
-from texturing.library import MaterialLibrary
+from modeling.families import FAMILIES
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.validation import validate_mesh
+from modeling.exporters.glb_exporter import export_glb
+from modeling.texturing.library import MaterialLibrary
 from render import render
 
 def main():

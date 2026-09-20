@@ -13,7 +13,7 @@ from pyproj import Geod, Transformer
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'src'))
-from geometry_projection.spherical import PanoramaCamera, prism_edges, strip_pixels
+from vision.projection.spherical import PanoramaCamera, prism_edges, strip_pixels
 
 
 class AlignmentViewer:

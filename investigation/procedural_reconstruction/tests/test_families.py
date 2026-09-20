@@ -8,11 +8,11 @@ import json
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"src"))
 import numpy as np
 from shapely.geometry import Polygon
-from procedural_modeling.families import FAMILIES
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from procedural_modeling.validation import validate_mesh
-from procedural_modeling.io import read_specification
+from modeling.families import FAMILIES
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.validation import validate_mesh
+from modeling.io import read_specification
 
 class FamilyTests(unittest.TestCase):
     def test_families_containment_and_roundtrip(self):

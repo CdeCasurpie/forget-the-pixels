@@ -7,9 +7,9 @@ from collections import namedtuple
 import traceback
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from exporters.glb_exporter import MaterialLibrary, export_glb
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.exporters.glb_exporter import MaterialLibrary, export_glb
 from render import render
 from domain.models import MeshData
 

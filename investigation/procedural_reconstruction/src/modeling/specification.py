@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from domain import BuildingSpecification, HeightEstimate, ReconstructionInput
-from structural_estimation import regularize_height_to_floors
+from vision.estimation import regularize_height_to_floors
 
 
 def build_building_specification(

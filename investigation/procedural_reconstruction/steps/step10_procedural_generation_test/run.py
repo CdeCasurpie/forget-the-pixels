@@ -12,12 +12,12 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 from shapely.affinity import translate
 from shapely.geometry.polygon import orient
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from procedural_modeling.validation import validate_mesh
-from procedural_modeling.io import read_specification
-from exporters.obj_exporter import export_obj
-from exporters.glb_exporter import export_glb
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.validation import validate_mesh
+from modeling.io import read_specification
+from modeling.exporters.obj_exporter import export_obj
+from modeling.exporters.glb_exporter import export_glb
 from render import render
 
 

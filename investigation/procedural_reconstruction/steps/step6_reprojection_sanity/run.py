@@ -13,8 +13,8 @@ from shapely.geometry import Point
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
-from camera_selection import score_edges
-from geometry_projection.spherical import PanoramaCamera, prism_edges, strip_pixels, draw_edges
+from vision.cameras import score_edges
+from vision.projection.spherical import PanoramaCamera, prism_edges, strip_pixels, draw_edges
 
 CRS = 'EPSG:32718'
 COLORS = [(255, 0, 255), (0, 170, 85), (0, 140, 255), (255, 130, 20), (180, 50, 200), (40, 200, 220), (220, 80, 40), (80, 180, 80)]

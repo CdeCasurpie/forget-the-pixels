@@ -21,9 +21,9 @@ PROY_GEOM = THIS_DIR.parents[1]
 REPO_ROOT = THIS_DIR.parents[3]
 sys.path.insert(0, str(PROY_GEOM / "src"))
 
-from geometry_projection import extract_full_vertical_strip  # noqa: E402
-from cadastral_geometry import find_target_lot
-from camera_selection import select_cameras
+from vision.projection import extract_full_vertical_strip  # noqa: E402
+from spatial import find_target_lot
+from vision.cameras import select_cameras
 
 
 TARGET_CRS = "EPSG:32718"

@@ -10,7 +10,7 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parents[2] / "src"
 sys.path.insert(0, str(SRC))
 
-from gsv_acquisition.acquisition import main  # noqa: E402
+from vision.acquisition.acquisition import main  # noqa: E402
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from shapely.geometry import box
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from geometry_projection.spherical import PanoramaCamera, strip_pixels, prism_edges, draw_edges
+from vision.projection.spherical import PanoramaCamera, strip_pixels, prism_edges, draw_edges
 
 
 class SphericalTests(unittest.TestCase):

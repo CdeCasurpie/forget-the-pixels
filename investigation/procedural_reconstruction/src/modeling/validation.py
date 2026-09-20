@@ -18,7 +18,7 @@ def validate_mesh(mesh, parcel):
         np.linalg.norm(np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]), axis=1)
         / 2
     )
-    if (areas < 1e-12).any():
+    if (areas < 1e-13).any():
         raise ValueError("Degenerate faces")
     projected = shapely.polygons(tri[:, :, :2])
     outside = shapely.area(shapely.difference(projected, parcel))

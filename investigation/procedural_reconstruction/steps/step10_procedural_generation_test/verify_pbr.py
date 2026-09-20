@@ -4,9 +4,9 @@ import sys
 from dataclasses import replace
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"src"))
 from shapely.geometry import Polygon
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from exporters.glb_exporter import export_glb
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.exporters.glb_exporter import export_glb
 from render import render
 
 def main():

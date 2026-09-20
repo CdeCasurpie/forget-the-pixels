@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 sys.path.insert(0, '.')
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan, MassSpec, BuildingSpecificationV4
-from procedural_modeling.grammar import generate_v4_mesh
+from modeling.grammar import generate_v4_mesh
 from steps.step12_city_generation.render import render
 
 def main():

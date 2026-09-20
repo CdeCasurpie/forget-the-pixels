@@ -4,8 +4,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path("src").resolve()))
 
-from procedural_modeling.randomness import resolve_seed
-from procedural_modeling.migration import migrate_to_v4
+from modeling.randomness import resolve_seed
+from modeling.migration import migrate_to_v4
 from domain.models import BuildingSpecification, HeightEstimate, FacadeSpecification
 from domain.architecture import BuildingSpecificationV4, EvidenceValue
 

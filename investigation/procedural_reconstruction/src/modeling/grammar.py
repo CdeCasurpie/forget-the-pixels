@@ -11,9 +11,9 @@ from domain import BuildingSpecification
 from .mesh_builder import MeshBuilder, triangles, polygons
 from domain.architecture import BuildingSpecificationV4
 from domain.models import FacadeSpecification, Opening, RoofSpecification
-from procedural_modeling.exposure import calculate_mass_exposures
-from procedural_modeling.materials import appearance_for_style
-from procedural_modeling.mesh_builder import MeshData
+from modeling.exposure import calculate_mass_exposures
+from modeling.materials import appearance_for_style
+from modeling.mesh_builder import MeshData
 
 
 def triangulate_polygon(polygon, z_height):
@@ -1304,7 +1304,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                 roof_details(builder, poly, roof_z, roof_spec, rng)
 
     # ── 3. Boundaries (fences, gates) ────────────────────────────────────
-    from procedural_modeling.boundaries import generate_boundaries
+    from modeling.boundaries import generate_boundaries
     boundaries = generate_boundaries(spec.context, spec.program, spec.site_plan)
 
     for bnd in boundaries:

@@ -3,7 +3,7 @@ import math
 import geopandas as gpd
 from pyproj import Transformer
 from shapely.geometry import Point, Polygon, LineString
-from cadastral_geometry import TARGET_CRS, edge_midpoints, bearing_from_north, signed_angle
+from spatial import TARGET_CRS, edge_midpoints, bearing_from_north, signed_angle
 
 def intersection_distance(line: LineString, polygon, camera: Point) -> float | None:
     intersection = line.intersection(polygon)

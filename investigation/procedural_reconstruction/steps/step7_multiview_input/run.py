@@ -5,7 +5,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
-from datasets import build_reconstruction_input, write_reconstruction_input
+from vision.acquisition import build_reconstruction_input, write_reconstruction_input
 
 
 def main() -> None:

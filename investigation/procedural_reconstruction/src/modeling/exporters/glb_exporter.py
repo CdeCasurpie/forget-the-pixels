@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import trimesh
 from PIL import Image
-from texturing.library import MaterialLibrary
+from modeling.texturing.library import MaterialLibrary
 
 
 def export_glb(mesh, path, *, library=None):

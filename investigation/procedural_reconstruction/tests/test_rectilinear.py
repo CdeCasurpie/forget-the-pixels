@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from geometry_projection import PinholeCamera, angles_from_direction, extract_rectilinear
+from vision.projection import PinholeCamera, angles_from_direction, extract_rectilinear
 
 
 class ProjectionTests(unittest.TestCase):

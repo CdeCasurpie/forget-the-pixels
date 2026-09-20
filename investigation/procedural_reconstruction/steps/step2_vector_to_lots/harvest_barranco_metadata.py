@@ -21,7 +21,7 @@ from pyproj import Transformer
 from shapely.geometry import Point
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from gsv_acquisition.acquisition import get_attr, pano_date_year  # noqa: E402
+from vision.acquisition.acquisition import get_attr, pano_date_year  # noqa: E402
 from select_candidates import TimeoutSession, metadata_entry  # noqa: E402
 
 

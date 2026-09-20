@@ -6,11 +6,11 @@ import geopandas as gpd
 from shapely.geometry import Point, LineString, Polygon
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from procedural_modeling.families import apply_family
-from procedural_modeling.mesh_builder import MeshBuilder
-from exporters.glb_exporter import MaterialLibrary, export_glb
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.families import apply_family
+from modeling.mesh_builder import MeshBuilder
+from modeling.exporters.glb_exporter import MaterialLibrary, export_glb
 
 def merge_builders(merged, mesh_data):
     mat_map = {}

@@ -22,8 +22,8 @@ from shapely.geometry import LineString, Point, Polygon
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from cadastral_geometry import bearing_from_north, signed_angle, point_at_bearing, edge_midpoints
-from camera_selection import score_edges, find_blockers, intersection_distance
+from spatial import bearing_from_north, signed_angle, point_at_bearing, edge_midpoints
+from vision.cameras import score_edges, find_blockers, intersection_distance
 
 
 LOT_SHP_NAME = "BARRANCO_LM_geogpsperu_SuyoPomalia.shp"

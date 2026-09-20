@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 from pyproj import Geod, Transformer
 
-from geometry_projection.spherical import PanoramaCamera, prism_edges
+from vision.projection.spherical import PanoramaCamera, prism_edges
 
 
 def project_prism_to_panorama(footprint, height_m: float, *, crs: str, latitude: float, longitude: float,

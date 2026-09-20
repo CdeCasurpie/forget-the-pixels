@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path("src").resolve()))
 from domain.architecture import SitePlan, MassSpec
-from procedural_modeling.exposure import calculate_mass_exposures
+from modeling.exposure import calculate_mass_exposures
 from shapely.geometry import Polygon
 
 def test_multimass_exposure():

@@ -19,7 +19,7 @@ from shapely.geometry import Point
 # Permite ejecutar este experimento directamente desde el Makefile sin
 # instalar todavía el paquete reusable del pipeline.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-from gsv_acquisition.acquisition import angle_to_degrees, get_attr
+from vision.acquisition.acquisition import angle_to_degrees, get_attr
 
 
 LOT_SHP_NAME = "BARRANCO_LM_geogpsperu_SuyoPomalia.shp"

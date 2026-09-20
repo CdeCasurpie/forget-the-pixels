@@ -15,8 +15,8 @@ from shapely.affinity import translate
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'src'))
-from camera_selection import score_edges
-from geometry_projection.spherical import PanoramaCamera, prism_edges, strip_pixels
+from vision.cameras import score_edges
+from vision.projection.spherical import PanoramaCamera, prism_edges, strip_pixels
 
 CRS = 'EPSG:32718'
 COLORS = ['#ff00ff', '#00aa55', '#ff8c00', '#1683ff', '#9b35c9']

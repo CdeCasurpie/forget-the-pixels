@@ -14,9 +14,9 @@ sys.path.insert(0, str(ROOT / "src"))
 import geopandas as gpd
 import matplotlib.pyplot as plt
 
-from exporters.glb_exporter import export_glb
-from exporters.obj_exporter import export_obj
-from procedural_modeling import (
+from modeling.exporters.glb_exporter import export_glb
+from modeling.exporters.obj_exporter import export_obj
+from modeling import (
     build_block_specifications,
     generate_mesh,
     load_height_fits,

@@ -15,7 +15,7 @@ import numpy as np
 from shapely.affinity import translate
 from shapely.geometry.polygon import orient
 
-from cadastral_geometry.street_fronts import street_facing_edges
+from spatial.street_fronts import street_facing_edges
 from domain.models import HeightEstimate
 from .layout import propose_building
 

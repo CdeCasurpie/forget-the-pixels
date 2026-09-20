@@ -70,7 +70,7 @@ def propose_building(
         footprint = orient(footprint, sign=1)
     else:
         # Phase 2: Flush placement without artificial separation for sidewalks or party walls.
-        from procedural_modeling.geometry_constraints import apply_edge_setbacks
+        from modeling.geometry_constraints import apply_edge_setbacks
         front_linestrings = [LineString([a, b]) for a, b in fronts]
         footprint = parcel
         if setback_m:

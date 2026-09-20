@@ -6,10 +6,10 @@ from shapely.geometry import Polygon
 # Añadir el directorio src al path para que funcionen las importaciones
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-from procedural_modeling.layout import propose_building
-from procedural_modeling.grammar import generate_mesh
-from procedural_modeling.families import apply_family
-from exporters.glb_exporter import MaterialLibrary, export_glb
+from modeling.layout import propose_building
+from modeling.grammar import generate_mesh
+from modeling.families import apply_family
+from modeling.exporters.glb_exporter import MaterialLibrary, export_glb
 
 def main():
     root = Path(__file__).resolve().parents[2]

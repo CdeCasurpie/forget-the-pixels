@@ -6,9 +6,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 sys.path.insert(0, '.')
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan, MassSpec, BuildingSpecificationV4
-from procedural_modeling.v4_grammar import generate_v4_mesh
+from modeling.v4_grammar import generate_v4_mesh
 from steps.step12_city_generation.render import render
-from exporters.glb_exporter import export_glb
+from modeling.exporters.glb_exporter import export_glb
 
 def create_case(i, seed, width, depth, use, placement, finish_profile, side_wall_finish, color, masses_desc):
     ctx = ParcelContext(polygon=((0,0), (width,0), (width,depth), (0,depth)))

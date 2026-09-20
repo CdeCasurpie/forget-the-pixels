@@ -7,9 +7,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 sys.path.insert(0, '.')
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan, MassSpec, BuildingSpecificationV4
-from procedural_modeling.grammar import generate_v4_mesh
+from modeling.grammar import generate_v4_mesh
 from steps.step12_city_generation.render import render
-from exporters.glb_exporter import export_glb
+from modeling.exporters.glb_exporter import export_glb
 
 def generate_random_parcel(rng, base_width=10, base_depth=20):
     shape_type = rng.choice(["rectangle", "trapezoid", "l_shape"])

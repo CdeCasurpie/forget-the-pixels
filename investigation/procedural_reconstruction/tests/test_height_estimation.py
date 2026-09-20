@@ -1,8 +1,9 @@
 import unittest
 import numpy as np
-from height_estimation import split_strip, fit_height
-from structural_estimation import regularize_height_to_floors
-from geometry_projection.spherical import PanoramaCamera
+from vision.estimation.height import fit_height
+from vision.segmentation.roof_boundary import split_strip
+from vision.estimation import regularize_height_to_floors
+from vision.projection.spherical import PanoramaCamera
 
 
 class HeightTests(unittest.TestCase):
