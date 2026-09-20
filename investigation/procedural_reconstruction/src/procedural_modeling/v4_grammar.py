@@ -169,7 +169,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         wall_mat = "plaster"
                     else:
                         wall_mat = (
-                            "plaster"
+                            "concrete"
                             if spec.program.side_wall_finish == "plastered"
                             else "brick"
                         )
@@ -179,11 +179,30 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         length, floor_levels, is_front, spec.program, rng
                     )
 
+                    # To match legacy grammar.py, we MUST pass CCW vertices (so n points inwards)
+                    # AND we must shift them inwards by 0.20m because facade() draws the wall 
+                    # 20cm outwards from the line provided.
+                    t_grammar = np.array([n_vec[1], -n_vec[0]])
+                    # We want t_vec to be CCW. A CCW edge has t x n_out > 0.
+                    # Since t_grammar = (n_out_y, -n_out_x), t_grammar is CW.
+                    # So we want the edge that goes OPPOSITE to t_grammar.
+                    if np.dot(t_grammar, t_vec) > 0:
+                        # t_vec is CW, so swap to make it CCW
+                        v_a, v_b = p2, p1
+                    else:
+                        v_a, v_b = p1, p2
+                        
+                    # Now v_a -> v_b is CCW. The inward normal is -n_vec.
+                    inward_n = -n_vec
+                    # Shift the line inwards by 0.20m
+                    v_a = v_a + inward_n * 0.20
+                    v_b = v_b + inward_n * 0.20
+
                     # Build a legacy FacadeSpecification
                     facade_spec = FacadeSpecification(
                         edge_id=f"{mass.id}_band{z_bottom:.1f}_{i}",
-                        vertex_a=tuple(np.asarray(p1, float)),
-                        vertex_b=tuple(np.asarray(p2, float)),
+                        vertex_a=tuple(np.asarray(v_a, float)),
+                        vertex_b=tuple(np.asarray(v_b, float)),
                         width_m=length,
                         normal_xy=tuple(n_vec),
                         floor_levels_m=floor_levels,
@@ -256,22 +275,39 @@ def _draw_fence(builder, a, t, n, length, bnd, rng):
         if bnd.garage_u is not None and bnd.garage_u <= u <= bnd.garage_u + bnd.garage_width:
             return True
         return False
+        
+    # Get segments that are NOT gates
+    solid_segments = []
+    points = [0.0]
+    if bnd.gate_u is not None:
+        points.extend([bnd.gate_u, bnd.gate_u + bnd.gate_width])
+    if bnd.garage_u is not None:
+        points.extend([bnd.garage_u, bnd.garage_u + bnd.garage_width])
+    points.append(length)
+    points.sort()
+    
+    for i in range(0, len(points)-1):
+        u1, u2 = points[i], points[i+1]
+        if u2 - u1 < 0.05: continue
+        mid_u = (u1 + u2) / 2.0
+        if not is_gate(mid_u):
+            solid_segments.append((u1, u2))
 
-    # Low brick base
-    builder.box(a, t, n, 0.0, length, 0.0, 0.8, -0.15, 0.0, "brick", "wall")
-    # Cap on brick base
-    builder.box(a, t, n, 0.0, length, 0.8, 0.85, -0.18, 0.03, "stone", "parapet_cap")
+    for (u1, u2) in solid_segments:
+        # Low brick base
+        builder.box(a, t, n, u1, u2, 0.0, 0.8, -0.15, 0.0, "brick", "wall")
+        # Cap on brick base
+        builder.box(a, t, n, u1, u2, 0.8, 0.85, -0.18, 0.03, "stone", "parapet_cap")
+        
+        # Top & mid horizontal rails
+        builder.box(a, t, n, u1, u2, h - 0.04, h, -0.08, -0.02, "metal", "fence")
+        builder.box(a, t, n, u1, u2, 0.85 + (h - 0.85) * 0.5 - 0.012,
+                    0.85 + (h - 0.85) * 0.5 + 0.012, -0.07, -0.03, "metal", "security_crossbar")
 
     # Vertical metal bars (every 12cm)
     for u_bar in np.arange(0.05, length - 0.05, 0.12):
         if not is_gate(u_bar):
-            builder.box(a, t, n, u_bar, u_bar + 0.016, 0.85, h,
-                        -0.06, -0.04, "metal", "security_bar")
-
-    # Top & mid horizontal rails
-    builder.box(a, t, n, 0.0, length, h - 0.04, h, -0.08, -0.02, "metal", "fence")
-    builder.box(a, t, n, 0.0, length, 0.85 + (h - 0.85) * 0.5 - 0.012,
-                0.85 + (h - 0.85) * 0.5 + 0.012, -0.07, -0.03, "metal", "security_crossbar")
+            builder.box(a, t, n, u_bar - 0.012, u_bar + 0.012, 0.85, h, -0.06, -0.04, "metal", "security_bar")
 
     # Garage door (Portón)
     if bnd.garage_u is not None:
