@@ -22,6 +22,8 @@ DEFAULT_MATERIALS = (
     MaterialSpecification("soil", "soil", (0.29, 0.27, 0.23), 0.96, texture_set="dry_soil", real_scale_m=1.0),
     MaterialSpecification("concrete", "concrete", (0.64, 0.65, 0.62), 0.86, texture_set="concrete_clean", real_scale_m=1.0),
     MaterialSpecification("pavement", "paving", (0.58, 0.59, 0.56), 0.90, texture_set="concrete_pavers", real_scale_m=1.2),
+    MaterialSpecification("decal_moisture", "decal", (1.0, 1.0, 1.0), 1.0, texture_set="decal_moisture", opacity=0.99, real_scale_m=2.0),
+    MaterialSpecification("decal_drip", "decal", (1.0, 1.0, 1.0), 1.0, texture_set="decal_drip", opacity=0.99, real_scale_m=2.0),
 )
 
 

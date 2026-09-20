@@ -52,13 +52,17 @@ def raster(vertices, faces, size, direction):
 def render(mesh, path, direction=(1, -1.7, 1.1), size=900, clay=True, checker=False):
     light = np.array([-1.0, -1.4, 2.5])
     light /= np.linalg.norm(light)
-    depth, ids, basis, mid, scale = raster(mesh.vertices, mesh.faces, size, direction)
-    shadow, _, lb, lmid, ls = raster(mesh.vertices, mesh.faces, 900, light)
-    tri = mesh.vertices[mesh.faces]
+    # Filter out decals from isometric preview
+    opacities = np.array([m.get("opacity", 1.0) for m in mesh.materials])[mesh.face_materials]
+    solid = opacities > 0.99
+    solid_faces = mesh.faces[solid]
+    depth, ids, basis, mid, scale = raster(mesh.vertices, solid_faces, size, direction)
+    shadow, _, lb, lmid, ls = raster(mesh.vertices, solid_faces, 900, light)
+    tri = mesh.vertices[solid_faces]
     normals = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
     normals /= np.linalg.norm(normals, axis=1)[:, None]
     diffuse = np.maximum(0, normals @ light)
-    colors = np.array([m["color"] for m in mesh.materials])[mesh.face_materials]
+    colors = np.array([m["color"] for m in mesh.materials])[mesh.face_materials][solid]
     if clay:
         colors = np.repeat((0.62 + 0.28 * np.mean(colors, axis=1))[:, None], 3, axis=1)
     rgb = np.full((size, size, 3), 0.93)

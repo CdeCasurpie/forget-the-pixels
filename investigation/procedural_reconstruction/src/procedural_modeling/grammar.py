@@ -1254,6 +1254,32 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                     local_mb = ZOffsetMeshBuilder(builder, z_bottom)
                     facade(local_mb, facade_spec, band_height)
 
+                    # ── DECAL INJECTION ──
+                    if is_front:
+                        a_local = np.asarray(facade_spec.vertex_a)
+                        end_local = np.asarray(facade_spec.vertex_b)
+                        t_local = end_local - a_local
+                        length_local = np.linalg.norm(t_local)
+                        t_local /= length_local
+                        n_local = np.array([t_local[1], -t_local[0]])
+                        
+                        # Ground moisture
+                        if z_bottom < 0.1:
+                            local_mb.box(a_local, t_local, n_local, 
+                                         0.0, length_local, 
+                                         0.0, 1.2,
+                                         0.0, 0.005,
+                                         "decal_moisture", "decal")
+                                         
+                        # Window drips
+                        for op in ops:
+                            if op.kind == "window" or op.kind == "balcony_window":
+                                local_mb.box(a_local, t_local, n_local,
+                                             op.u_m, op.u_m + op.width_m,
+                                             max(0.0, op.v_m - 1.2), op.v_m,
+                                             0.0, 0.005,
+                                             "decal_drip", "decal")
+
         # ── 2. Roofs via legacy roof_details() ───────────────────────────
         roof_data = mass_exposure.get("roof")
         if roof_data and roof_data["exposed_area"]:

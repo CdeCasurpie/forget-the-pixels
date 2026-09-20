@@ -7,7 +7,6 @@
     "scale_is_estimated": true,
     "normal_convention": "opengl",
     "maps": {
-      "base_color": "stucco_smooth/stucco_smooth_base_color.jpg",
       "normal": "stucco_smooth/stucco_smooth_normal.jpg",
       "orm": "stucco_smooth/stucco_smooth_orm.jpg",
       "roughness": "stucco_smooth/stucco_smooth_roughness.jpg",
@@ -530,7 +529,6 @@
     "scale_is_estimated": true,
     "normal_convention": "opengl",
     "maps": {
-      "base_color": "concrete_clean/concrete_clean_base_color.jpg",
       "normal": "concrete_clean/concrete_clean_normal.jpg",
       "orm": "concrete_clean/concrete_clean_orm.jpg",
       "roughness": "concrete_clean/concrete_clean_roughness.jpg",
@@ -582,6 +580,16 @@
         ],
         "channels": "L"
       }
+    }
+  },
+  "decal_moisture": {
+    "maps": {
+      "base_color": "decals/moisture_decal.png"
+    }
+  },
+  "decal_drip": {
+    "maps": {
+      "base_color": "decals/drip_decal.png"
     }
   }
 }
