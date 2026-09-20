@@ -554,14 +554,6 @@ def facade(mb, f, total_height):
                     "stone",
                     "corner_pilaster",
                 )
-    # ── PHASE D: Intermediate pilasters (columnas intermedias) ───────
-    # Structural columns that protrude 4-6cm from the wall surface,
-    # spaced every ~3.5m. Common in all Lima construction styles.
-    if f.is_front and length > 5.0:
-        for inter_u in np.arange(3.5, length - 1.0, 3.5):
-            mb.box(a, t, n, inter_u - 0.06, inter_u + 0.06,
-                   0, total_height, -0.02, 0.05,
-                   "concrete", "intermediate_pilaster")
 
     if f.is_front and f.ornamented:
         if f.services and length > 3.5:
