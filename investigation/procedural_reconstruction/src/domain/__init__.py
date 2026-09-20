@@ -1,28 +1,33 @@
-"""Stable data contracts shared by the urban reconstruction pipeline."""
-
 from .models import (
-    Alignment2D,
-    BuildingAppearance,
-    BuildingSpecification,
-    CameraPose,
-    ExteriorStairSpecification,
-    FacadeMaterialRegion,
-    FacadeProjection,
-    FacadeSpecification,
-    HeightEstimate,
     LotGeometry,
-    MeshData,
-    MaterialSpecification,
-    Opening,
+    CameraPose,
     PanoramaView,
+    Alignment2D,
     ReconstructionInput,
     RoofObservation,
+    HeightEstimate,
+    Opening,
+    FacadeMaterialRegion,
+    FacadeProjection,
+    ExteriorStairSpecification,
+    FacadeSpecification,
+    SetbackSpecification,
+    RoofSpecification,
     TextureSet,
+    MaterialSpecification,
+    BuildingAppearance,
+    BuildingSpecification,
+    MeshData,
 )
 
-__all__ = [
-    "Alignment2D", "BuildingAppearance", "BuildingSpecification", "CameraPose",
-    "ExteriorStairSpecification", "FacadeMaterialRegion", "FacadeProjection",
-    "FacadeSpecification", "HeightEstimate", "LotGeometry", "MaterialSpecification",
-    "MeshData", "Opening", "PanoramaView", "ReconstructionInput", "RoofObservation", "TextureSet",
-]
+from .architecture import (
+    EvidenceValue,
+    BuildingProgram,
+    ParcelContext,
+    EdgeRef,
+    MassSpec,
+    FacadeSpecV4,
+    ComponentRecord,
+    SitePlan,
+    BuildingSpecificationV4
+)

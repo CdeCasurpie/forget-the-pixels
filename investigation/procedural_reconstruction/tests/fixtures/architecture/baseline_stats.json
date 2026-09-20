@@ -1,0 +1,58 @@
+{
+  "01_rectangle_standard": {
+    "time_ms": 965,
+    "vertices": 47160,
+    "faces": 15720,
+    "materials": 18,
+    "status": "success"
+  },
+  "02_narrow_flush": {
+    "time_ms": 218,
+    "vertices": 7332,
+    "faces": 2444,
+    "materials": 18,
+    "status": "success"
+  },
+  "03_corner_mixed": {
+    "time_ms": 2215,
+    "vertices": 83448,
+    "faces": 27816,
+    "materials": 18,
+    "status": "success"
+  },
+  "04_l_shape": {
+    "time_ms": 1584,
+    "vertices": 48588,
+    "faces": 16196,
+    "materials": 18,
+    "status": "success"
+  },
+  "05_acute_angle": {
+    "time_ms": 1619,
+    "vertices": 56112,
+    "faces": 18704,
+    "materials": 18,
+    "status": "success"
+  },
+  "06_segmented_front": {
+    "time_ms": 799,
+    "vertices": 29940,
+    "faces": 9980,
+    "materials": 18,
+    "status": "success"
+  },
+  "07_no_front": {
+    "time_ms": 771,
+    "vertices": 16380,
+    "faces": 5460,
+    "materials": 18,
+    "status": "success"
+  },
+  "08_tower_baseline": {
+    "time_ms": 33623,
+    "vertices": 1032036,
+    "faces": 344012,
+    "materials": 18,
+    "status": "success"
+  }
+}

@@ -69,12 +69,12 @@ def propose_building(
             raise ValueError("Explicit footprint must be fully inside the parcel")
         footprint = orient(footprint, sign=1)
     else:
-        footprint = parcel.buffer(-0.20, join_style=2)
-        for a, b in fronts:
-            if setback_m:
-                footprint = footprint.difference(
-                    LineString([a, b]).buffer(setback_m, cap_style=2)
-                )
+        # Phase 2: Flush placement without artificial separation for sidewalks or party walls.
+        from procedural_modeling.geometry_constraints import apply_edge_setbacks
+        front_linestrings = [LineString([a, b]) for a, b in fronts]
+        footprint = parcel
+        if setback_m:
+            footprint = apply_edge_setbacks(parcel, front_linestrings, setback_m)
     if footprint.geom_type != "Polygon" or footprint.is_empty or footprint.area < 1:
         raise ValueError(
             "Requested setbacks split/collapse footprint; supply a smaller setback or explicit volumes"

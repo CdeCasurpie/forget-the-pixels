@@ -1,17 +1,23 @@
-"""Public API types. The reconstruct_building implementation comes after grammar design."""
 from dataclasses import dataclass
-
-from domain import BuildingSpecification, MeshData, ReconstructionInput
-
-
-@dataclass(frozen=True)
-class ReconstructionConfig:
-    floor_height_m: float = 2.8
-    use_satellite_footprint: bool = False
-
+from typing import Any
+from domain.architecture import SitePlan, BuildingSpecificationV4
 
 @dataclass(frozen=True)
-class ReconstructionResult:
-    input: ReconstructionInput
-    specification: BuildingSpecification
-    mesh: MeshData | None = None
+class BuildingRequest:
+    lot: Any
+    context: Any
+    evidence: Any
+    preferences: dict
+    seed: int
+
+@dataclass(frozen=True)
+class GenerationReport:
+    accepted_features: list[str]
+    rejected_features: list[str]
+    fallback_reasons: dict[str, str]
+
+def propose_site(request: BuildingRequest, config: Any) -> SitePlan:
+    raise NotImplementedError("Phase 2")
+    
+def resolve_building(plan: SitePlan, evidence: Any) -> BuildingSpecificationV4:
+    raise NotImplementedError("Phase 3")

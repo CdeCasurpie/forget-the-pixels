@@ -853,7 +853,7 @@ def generate_mesh(spec: BuildingSpecification):
     parcel = Polygon(spec.parcel_xy or spec.footprint_xy, spec.parcel_holes)
     if not poly.is_valid or not parcel.is_valid or poly.is_empty or parcel.is_empty:
         raise ValueError("Valid nonempty footprint and parcel required")
-    if not parcel.covers(poly):
+    if not parcel.buffer(1e-4).covers(poly):
         raise ValueError("Building footprint leaves parcel")
     poly = orient(poly, sign=1)
     parcel = orient(parcel, sign=1)
