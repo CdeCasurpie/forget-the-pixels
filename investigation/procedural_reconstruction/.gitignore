@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 steps/*/outputs/
 steps/*/data/
+# API auto-generated assets
+steps/step16_inverse_procedural_ui/static/assets/height_plot_*.png
+steps/step16_inverse_procedural_ui/static/assets/lot_*.glb
+Lotes/streetview_cache/
