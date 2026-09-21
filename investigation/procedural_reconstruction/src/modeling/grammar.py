@@ -1008,14 +1008,26 @@ def _outward_normal(p1, p2, footprint_poly):
     return t, n, length
 
 
-def _is_front_edge(n_vec, spec):
+def _is_front_edge(n_vec, spec, p1, p2):
     """
-    Determine whether a wall edge faces the street.
-    In the multi-mass V4, we check:
-      1. If spec has explicit_fronts — use those.
-      2. Fallback: the edge whose outward normal has the largest -Y component.
-    For now we keep the simple heuristic (normal pointing roughly towards -Y).
+    Determine whether a wall edge faces the street by checking if its midpoint
+    lies on any of the explicit fronts of the parcel context.
     """
+    if spec.context and spec.context.explicit_fronts:
+        from shapely.geometry import Point, LineString
+        mid = Point((p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0)
+        ctx_coords = spec.context.polygon
+        
+        # Check explicit front edges
+        for front_idx in spec.context.explicit_fronts:
+            if front_idx < len(ctx_coords):
+                idx2 = (front_idx + 1) % len(ctx_coords)
+                edge = LineString([ctx_coords[front_idx], ctx_coords[idx2]])
+                if edge.distance(mid) < 0.1:
+                    return True
+        return False
+        
+    # Fallback if explicit fronts are not provided
     return n_vec[1] < -0.3
 
 
@@ -1192,7 +1204,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                     if t_vec is None:
                         continue
 
-                    is_front = _is_front_edge(n_vec, spec)
+                    is_front = _is_front_edge(n_vec, spec, p1, p2)
                     floor_levels = _floor_levels_for_band(mass, z_bottom, z_top)
 
                     # Choose wall material

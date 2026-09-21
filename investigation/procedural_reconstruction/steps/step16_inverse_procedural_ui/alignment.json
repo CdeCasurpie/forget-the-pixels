@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "target_objectid": 1134979,
+  "crs": "EPSG:32718",
+  "east_m": 5.459999999999928,
+  "north_m": -0.13999999999999999,
+  "height_m": 41.0,
+  "camera_height_m": 2.5,
+  "scope": "this_lot_shared_across_cameras",
+  "manifest": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/investigation/proy_geom/steps/step5_cylindrical_facade/outputs/lot_-12.135895_-77.019184/projection_metadata.json"
+}

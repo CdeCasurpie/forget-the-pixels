@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Procedural Barranco</title>
     <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
         #map-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
         #ui-panel {
             position: absolute;
@@ -18,11 +18,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             z-index: 10;
         }
-        h2 { margin-top: 0; font-size: 22px; }
-        .info-text { color: #bdc3c7; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        h2 { margin-top: 0; font-size: 20px; }
+        .info-text { color: #bdc3c7; font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
         button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background-color: #3498db;
             color: white;
             border: none;
@@ -31,66 +31,146 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s;
+            margin-bottom: 10px;
         }
         button:hover { background-color: #2980b9; }
         button:disabled { background-color: #7f8c8d; cursor: not-allowed; }
-        #status-msg { margin-top: 15px; font-size: 14px; color: #f1c40f; text-align: center; }
+        #status-msg { margin-top: 10px; font-size: 13px; color: #f1c40f; text-align: center; }
+        
+        /* Offset Panel */
+        .offset-panel { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .offset-panel label { font-size: 12px; display: inline-block; width: 40px; }
+        .offset-panel input { width: 60px; padding: 3px; margin-bottom: 5px; background: #34495e; color: white; border: 1px solid #7f8c8d; }
+        
+        /* Pannellum Popup */
+        #pano-popup {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            height: 300px;
+            background: #1a1a1a;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: 100;
+            overflow: hidden;
+        }
+        #pano-header {
+            background: #3498db; color: white; padding: 5px 10px; font-size: 12px; font-weight: bold;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        #pano-close { cursor: pointer; font-size: 16px; }
+        #pano-viewer { width: 100%; height: calc(100% - 28px); }
     </style>
     <!-- Mapbox & Deck.gl -->
     <script src="https://unpkg.com/deck.gl@^8.9.0/dist.min.js"></script>
     <script src="https://unpkg.com/@loaders.gl/gltf@^3.4.0/dist/dist.min.js"></script>
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.css" rel="stylesheet" />
+    
+    <!-- Pannellum -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 </head>
 <body oncontextmenu="return false;">
     <div id="map-container"></div>
     
     <div id="ui-panel">
         <h2>Generador Procedural</h2>
+        
+        <div class="offset-panel">
+            <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">Desfase del Mapa (m)</div>
+            <label>East X:</label> <input type="number" step="0.1" id="offset-x" value="0.0">
+            <label>North Y:</label> <input type="number" step="0.1" id="offset-y" value="0.0">
+            <button id="btn-offset" style="padding: 5px; font-size: 12px; margin-top: 5px;">Aplicar Desfase</button>
+        </div>
+
         <div id="lot-info" class="info-text">
-            Cargando lotes de Barranco...<br>Por favor espera.
+            Cargando datos...<br>Por favor espera.
         </div>
         <div id="params-info" class="info-text"></div>
         <button id="btn-generate" disabled>GENERAR MODELO 3D</button>
         <div id="status-msg"></div>
     </div>
+    
+    <!-- Pannellum Viewer -->
+    <div id="pano-popup">
+        <div id="pano-header">
+            <span id="pano-title">Visor 360</span>
+            <span id="pano-close">&times;</span>
+        </div>
+        <div id="pano-viewer"></div>
+    </div>
 
     <script>
-        const MAPBOX_TOKEN = 'REMOVED_TOKEN';
-        
         let deckgl;
         let lotsData = null;
-        let selectedLotId = null;
         let camerasData = [];
+        let previewEdgesData = null;
+        let selectedLotId = null;
         let generatedModels = [];
+        let panoViewer = null;
+
+        // Using CartoDB Dark Matter to avoid Mapbox 401 Unauthorized errors
+        const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
         // Initialize DeckGL
         deckgl = new deck.DeckGL({
             container: 'map-container',
-            mapStyle: 'mapbox://styles/mapbox/dark-v10',
-            mapboxApiAccessToken: MAPBOX_TOKEN,
-            initialViewState: {
-                longitude: -77.021,
-                latitude: -12.148,
-                zoom: 15,
-                pitch: 45,
-                bearing: 0
-            },
+            mapStyle: MAP_STYLE,
+            initialViewState: { longitude: -77.021, latitude: -12.148, zoom: 15, pitch: 45, bearing: 0 },
             controller: true,
             layers: []
         });
 
-        // Load Lots Data
-        fetch('/api/lots')
-            .then(res => res.json())
-            .then(data => {
-                lotsData = data;
-                document.getElementById('lot-info').innerHTML = 'Mapa cargado.<br>Haz clic en un lote para seleccionarlo.';
-                renderLayers();
-            })
-            .catch(err => {
-                document.getElementById('lot-info').innerHTML = 'Error cargando lotes: ' + err;
+        // Load Initial Data
+        function loadData() {
+            document.getElementById('lot-info').innerHTML = 'Cargando lotes...';
+            
+            // 1. Load Offset
+            fetch('/api/offset').then(r=>r.json()).then(data => {
+                document.getElementById('offset-x').value = data.x;
+                document.getElementById('offset-y').value = data.y;
             });
+            
+            // 2. Load Cameras (Global)
+            fetch('/api/cameras').then(r=>r.json()).then(data => {
+                camerasData = data.cameras;
+                renderLayers();
+            });
+
+            // 3. Load Lots
+            fetch('/api/lots')
+                .then(res => res.json())
+                .then(data => {
+                    lotsData = data;
+                    document.getElementById('lot-info').innerHTML = 'Mapa cargado.<br>Haz clic en un lote para seleccionarlo.';
+                    renderLayers();
+                });
+        }
+        loadData();
+
+        // Offset Updater
+        document.getElementById('btn-offset').addEventListener('click', () => {
+            const ox = parseFloat(document.getElementById('offset-x').value);
+            const oy = parseFloat(document.getElementById('offset-y').value);
+            document.getElementById('status-msg').innerText = "Aplicando desfase...";
+            fetch('/api/offset', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({x: ox, y: oy})
+            }).then(r => r.json()).then(() => {
+                document.getElementById('status-msg').innerText = "Desfase aplicado. Recargando mapa...";
+                // Reload lots to get updated geometry
+                fetch('/api/lots').then(r => r.json()).then(data => {
+                    lotsData = data;
+                    document.getElementById('status-msg').innerText = "";
+                    renderLayers();
+                });
+            });
+        });
 
         function renderLayers() {
             const layers = [];
@@ -109,24 +189,44 @@
                     onClick: (info) => {
                         if (info.object) {
                             selectedLotId = info.object.properties.id;
-                            document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Buscando cámaras...`;
+                            document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Listo para generar.`;
+                            
                             document.getElementById('params-info').innerHTML = '';
                             document.getElementById('btn-generate').disabled = true;
-                            document.getElementById('status-msg').innerText = '';
+                            document.getElementById('status-msg').innerText = 'Analizando frentes...';
                             
-                            // Fetch cameras for this lot
-                            fetch(`/api/cameras/${selectedLotId}`)
+                            // Fetch explicit fronts preview
+                            fetch(`/api/preview_fronts/${selectedLotId}`)
                                 .then(r => r.json())
-                                .then(camData => {
-                                    camerasData = camData.cameras || [];
-                                    document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Cámaras cercanas: ${camerasData.length}`;
+                                .then(data => {
+                                    previewEdgesData = data;
                                     document.getElementById('btn-generate').disabled = false;
+                                    document.getElementById('status-msg').innerText = '';
                                     renderLayers();
                                 });
                             
                             renderLayers();
+
                         }
                     }
+                }));
+            }
+
+            
+            // 1.5 Preview Edges Layer
+            if (previewEdgesData) {
+                layers.push(new deck.GeoJsonLayer({
+                    id: 'preview-layer',
+                    data: previewEdgesData,
+                    pickable: false,
+                    stroked: true,
+                    filled: true,
+                    pointRadiusUnits: 'meters',
+                    getPointRadius: 0.5,
+                    getLineWidth: d => d.properties.is_front ? 4 : 2,
+                    lineWidthUnits: 'pixels',
+                    getLineColor: d => d.properties.is_front ? [46, 204, 113, 255] : [231, 76, 60, 255], // Green if front, Red if party wall
+                    getFillColor: d => d.properties.is_front ? [46, 204, 113, 255] : [231, 76, 60, 255]
                 }));
             }
 
@@ -140,12 +240,17 @@
                     stroked: true,
                     filled: true,
                     radiusScale: 1,
-                    radiusMinPixels: 3,
+                    radiusMinPixels: 4,
                     radiusMaxPixels: 10,
                     lineWidthMinPixels: 1,
                     getPosition: d => [d.lon, d.lat],
-                    getFillColor: d => d.downloaded ? [46, 204, 113, 255] : [231, 76, 60, 255], // Green if downloaded, Red if not
-                    getLineColor: d => [0, 0, 0, 255]
+                    getFillColor: d => d.downloaded ? [46, 204, 113, 255] : [241, 196, 15, 255], // Green if downloaded, Yellow if not
+                    getLineColor: [0, 0, 0, 255],
+                    onClick: (info) => {
+                        if (info.object) {
+                            handleCameraClick(info.object);
+                        }
+                    }
                 }));
             }
 
@@ -156,7 +261,7 @@
                     data: [model],
                     scenegraph: model.url,
                     getPosition: d => [d.lon, d.lat],
-                    getOrientation: [0, 0, 90], // Adjust if needed
+                    getOrientation: [0, 0, 90],
                     sizeScale: 1,
                     _lighting: 'pbr'
                 }));
@@ -164,6 +269,54 @@
 
             deckgl.setProps({ layers });
         }
+        
+        function handleCameraClick(cam) {
+            document.getElementById('status-msg').innerText = "Cargando cámara...";
+            if (!cam.downloaded) {
+                fetch(`/api/download_camera/${cam.pano_id}`, {method: 'POST'})
+                    .then(r => r.json())
+                    .then(data => {
+                        
+                        if (data.status === 'success') {
+                            let newCamerasData = [...camerasData];
+                            let idx = newCamerasData.findIndex(c => c.pano_id === cam.pano_id);
+                            if (idx !== -1) {
+                                newCamerasData[idx] = { ...newCamerasData[idx], downloaded: true };
+                            }
+                            camerasData = newCamerasData;
+                            renderLayers();
+                            openPano(data.url, cam.pano_id);
+                            document.getElementById('status-msg').innerText = "";
+                        }
+
+                    }).catch(e => {
+                        document.getElementById('status-msg').innerText = "Error descargando cámara";
+                    });
+            } else {
+                openPano(`/cache/${cam.pano_id}.jpg`, cam.pano_id);
+                document.getElementById('status-msg').innerText = "";
+            }
+        }
+        
+        function openPano(imageUrl, title) {
+            document.getElementById('pano-popup').style.display = 'block';
+            document.getElementById('pano-title').innerText = title;
+            
+            if (panoViewer) {
+                panoViewer.destroy();
+            }
+            
+            panoViewer = pannellum.viewer('pano-viewer', {
+                "type": "equirectangular",
+                "panorama": imageUrl,
+                "autoLoad": true,
+                "showControls": false
+            });
+        }
+        
+        document.getElementById('pano-close').addEventListener('click', () => {
+            document.getElementById('pano-popup').style.display = 'none';
+        });
 
         // Generate Button Handler
         document.getElementById('btn-generate').addEventListener('click', () => {
@@ -183,7 +336,6 @@
                     if (data.status === 'success') {
                         status.innerText = "¡Casa generada con éxito!";
                         
-                        // Show mock params
                         const p = data.params;
                         paramsDiv.innerHTML = `
                             <b>Parámetros extraídos:</b><br>
@@ -193,8 +345,7 @@
                             Altura techo: ${p.roof_z}m
                         `;
                         
-                        // Add to our models list
-                        generatedModels = generatedModels.filter(m => m.id !== selectedLotId); // Replace if regenerating
+                        generatedModels = generatedModels.filter(m => m.id !== selectedLotId);
                         generatedModels.push({
                             id: selectedLotId,
                             url: data.url,
@@ -202,7 +353,6 @@
                             lat: data.lat
                         });
                         
-                        // Fly to the new model
                         deckgl.setProps({
                             initialViewState: {
                                 longitude: data.lon,

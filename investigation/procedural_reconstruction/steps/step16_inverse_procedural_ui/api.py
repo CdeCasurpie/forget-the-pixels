@@ -14,7 +14,6 @@ import uvicorn
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT / "src"))
 
-from spatial.street_fronts import street_facing_edges
 from domain.architecture import ParcelContext, BuildingProgram, MassSpec, SitePlan, BuildingSpecificationV4
 from modeling.grammar import generate_v4_mesh
 from modeling.exporters.glb_exporter import export_glb
@@ -29,9 +28,26 @@ GEOJSON_PATH = ROOT / "Lotes" / "shp_files" / "BARRANCO_LM_geogpsperu.geojson"
 METADATA_PATH = ROOT / "steps" / "step2_vector_to_lots" / "data" / "barranco_metadata" / "metadata.json"
 CACHE_DIR = ROOT / "Lotes" / "streetview_cache"
 
-print("Cargando datos espaciales...")
+
+ALIGNMENT_PATH = ROOT / "steps" / "step16_inverse_procedural_ui" / "alignment.json"
+
+print("Cargando datos espaciales y aplicando desfase...")
+try:
+    with open(ALIGNMENT_PATH, "r") as f:
+        align_data = json.load(f)
+        offset_x = align_data.get("east_m", 0.0)
+        offset_y = align_data.get("north_m", 0.0)
+except Exception:
+    offset_x, offset_y = 0.0, 0.0
+
 gdf_lots = gpd.read_file(GEOJSON_PATH)
-gdf_utm = gdf_lots.to_crs(epsg=32718)
+gdf_utm_raw = gdf_lots.to_crs(epsg=32718)
+
+# Aplicar desfase a todo
+gdf_utm = gdf_utm_raw.copy()
+gdf_utm.geometry = gdf_utm.geometry.translate(xoff=offset_x, yoff=offset_y)
+gdf_lots = gdf_utm.to_crs(epsg=4326)
+
 
 print("Cargando metadatos de cámaras...")
 with open(METADATA_PATH, "r") as f:
@@ -41,6 +57,7 @@ gdf_cams = gpd.GeoDataFrame(df_cams, geometry=gpd.points_from_xy(df_cams.lon, df
 gdf_cams_utm = gdf_cams.to_crs(epsg=32718)
 
 app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
+app.mount("/cache", StaticFiles(directory=str(CACHE_DIR)), name="cache")
 
 @app.get("/")
 def read_root():
@@ -54,17 +71,42 @@ def get_lots():
         gdf_minimal = gdf_minimal.to_crs(epsg=4326)
     return JSONResponse(content=json.loads(gdf_minimal.to_json()))
 
-@app.get("/api/cameras/{lot_idx}")
-def get_cameras(lot_idx: int):
-    if lot_idx not in gdf_utm.index:
-        raise HTTPException(status_code=404, detail="Lot not found")
-        
-    lot_geom = gdf_utm.loc[lot_idx].geometry
-    buffer = lot_geom.buffer(15.0) # 15 meters radius
-    nearby_cams = gdf_cams_utm[gdf_cams_utm.geometry.intersects(buffer)]
+
+from pydantic import BaseModel
+class OffsetModel(BaseModel):
+    x: float
+    y: float
+
+@app.post("/api/offset")
+def update_offset(offset: OffsetModel):
+    global gdf_utm, gdf_lots, offset_x, offset_y
+    offset_x = offset.x
+    offset_y = offset.y
+    gdf_utm = gdf_utm_raw.copy()
+    gdf_utm.geometry = gdf_utm.geometry.translate(xoff=offset_x, yoff=offset_y)
+    gdf_lots = gdf_utm.to_crs(epsg=4326)
     
+    # Save to file
+    try:
+        with open(ALIGNMENT_PATH, "r") as f:
+            align_data = json.load(f)
+    except:
+        align_data = {}
+    align_data["east_m"] = offset_x
+    align_data["north_m"] = offset_y
+    with open(ALIGNMENT_PATH, "w") as f:
+        json.dump(align_data, f, indent=2)
+        
+    return {"status": "success", "x": offset_x, "y": offset_y}
+
+@app.get("/api/offset")
+def get_offset():
+    return {"x": offset_x, "y": offset_y}
+
+@app.get("/api/cameras")
+def get_all_cameras():
     cameras = []
-    for pano_id, row in nearby_cams.iterrows():
+    for pano_id, row in gdf_cams_utm.iterrows():
         is_downloaded = (CACHE_DIR / f"{pano_id}.jpg").exists()
         cameras.append({
             "pano_id": pano_id,
@@ -73,6 +115,7 @@ def get_cameras(lot_idx: int):
             "downloaded": is_downloaded
         })
     return {"cameras": cameras}
+
 
 def estimate_parameters(lot_idx: int, cameras: list):
     """
@@ -102,23 +145,137 @@ def estimate_parameters(lot_idx: int, cameras: list):
         "floor_levels": floor_levels
     }
 
+
+def get_explicit_fronts(lot_idx: int, target_poly, gdf_utm):
+    import numpy as np
+    from shapely.geometry import Point, LineString
+    
+    coords = list(target_poly.exterior.coords)
+    front_indices = []
+    
+    minx, miny, maxx, maxy = target_poly.bounds
+    possible_matches_index = list(gdf_utm.sindex.intersection((minx-5, miny-5, maxx+5, maxy+5)))
+    other_lots = gdf_utm.iloc[possible_matches_index]
+    other_lots = other_lots[other_lots.index != lot_idx]
+    
+    for i in range(len(coords) - 1):
+        p1 = np.array(coords[i])
+        p2 = np.array(coords[i+1])
+        
+        mid = (p1 + p2) / 2.0
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        length = np.hypot(dx, dy)
+        if length == 0: continue
+        
+        # Normals
+        nx = dx / length
+        ny = dy / length
+        
+        # Mover 0.5 metros exactos afuera
+        is_ccw = target_poly.exterior.is_ccw
+        if is_ccw:
+            outward_vec = np.array([ny, -nx])
+        else:
+            outward_vec = np.array([-ny, nx])
+            
+        outward_pt = Point(mid[0] + outward_vec[0] * 0.5, mid[1] + outward_vec[1] * 0.5)
+        
+        # Preguntamos si ese punto cae DENTRO de un lote vecino
+        is_party_wall = False
+        for _, other_row in other_lots.iterrows():
+            if other_row.geometry.intersects(outward_pt):
+                is_party_wall = True
+                break
+                
+        if not is_party_wall:
+            front_indices.append(i)
+            
+    return tuple(front_indices)
+
+@app.get("/api/preview_fronts/{lot_idx}")
+def preview_fronts(lot_idx: int):
+    import geopandas as gpd
+    import numpy as np
+    from shapely.geometry import LineString, Point
+    import json
+    
+    if lot_idx not in gdf_utm.index:
+        raise HTTPException(status_code=404, detail="Lot not found")
+        
+    target_poly = gdf_utm.loc[lot_idx].geometry
+    
+    # We will recalculate here just to get the points for the UI
+    coords = list(target_poly.exterior.coords)
+    features = []
+    
+    minx, miny, maxx, maxy = target_poly.bounds
+    possible_matches = list(gdf_utm.sindex.intersection((minx-5, miny-5, maxx+5, maxy+5)))
+    other_lots = gdf_utm.iloc[possible_matches]
+    other_lots = other_lots[other_lots.index != lot_idx]
+    
+    for i in range(len(coords) - 1):
+        p1 = np.array(coords[i])
+        p2 = np.array(coords[i+1])
+        
+        mid = (p1 + p2) / 2.0
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        length = np.hypot(dx, dy)
+        if length == 0: continue
+        
+        nx = dx / length
+        ny = dy / length
+        
+        is_ccw = target_poly.exterior.is_ccw
+        if is_ccw:
+            outward_vec = np.array([ny, -nx])
+        else:
+            outward_vec = np.array([-ny, nx])
+            
+        outward_pt = Point(mid[0] + outward_vec[0] * 0.5, mid[1] + outward_vec[1] * 0.5)
+        
+        is_party_wall = False
+        for _, other_row in other_lots.iterrows():
+            if other_row.geometry.intersects(outward_pt):
+                is_party_wall = True
+                break
+                
+        is_front = not is_party_wall
+        
+        line = LineString([coords[i], coords[i+1]])
+        features.append({
+            "type": "Feature",
+            "geometry": line.__geo_interface__,
+            "properties": {
+                "type": "edge",
+                "is_front": is_front
+            }
+        })
+        
+        features.append({
+            "type": "Feature",
+            "geometry": outward_pt.__geo_interface__,
+            "properties": {
+                "type": "point",
+                "is_front": is_front
+            }
+        })
+        
+    gdf_feats = gpd.GeoDataFrame.from_features(features, crs="EPSG:32718")
+    gdf_feats_4326 = gdf_feats.to_crs(epsg=4326)
+    
+    return {"type": "FeatureCollection", "features": json.loads(gdf_feats_4326.to_json())["features"]}
+
 @app.post("/api/generate/{lot_idx}")
+
 def generate_model(lot_idx: int):
     try:
         if lot_idx not in gdf_utm.index:
             raise HTTPException(status_code=404, detail="Lot not found")
             
         target_poly = gdf_utm.loc[lot_idx].geometry
-        edges = street_facing_edges(gdf_utm, lot_idx)
-        
-        def find_edge_idx(poly, coord):
-            coords = list(poly.exterior.coords)
-            for i, c in enumerate(coords):
-                if (abs(c[0]-coord[0]) < 1e-4) and (abs(c[1]-coord[1]) < 1e-4):
-                    return i
-            return 0
-            
-        front_indices = tuple([find_edge_idx(target_poly, e.start_xy) for e in edges] if edges else [])
+        front_indices = get_explicit_fronts(lot_idx, target_poly, gdf_utm)
         
         # Get cameras to pass to estimation
         lot_geom = gdf_utm.loc[lot_idx].geometry
@@ -166,6 +323,25 @@ def generate_model(lot_idx: int):
             "lon": geo_centroid.x,
             "params": params
         }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/download_camera/{pano_id}")
+def download_camera(pano_id: str):
+    from streetlevel import streetview
+    
+    cache_path = CACHE_DIR / f"{pano_id}.jpg"
+    if cache_path.exists():
+        return {"status": "success", "url": f"/cache/{pano_id}.jpg"}
+        
+    try:
+        pano = streetview.find_panorama_by_id(pano_id, download_depth=False)
+        if not pano:
+            raise HTTPException(status_code=404, detail="Pano no encontrado en Google APIs")
+        streetview.download_panorama(pano, str(cache_path))
+        return {"status": "success", "url": f"/cache/{pano_id}.jpg"}
     except Exception as e:
         import traceback
         traceback.print_exc()
