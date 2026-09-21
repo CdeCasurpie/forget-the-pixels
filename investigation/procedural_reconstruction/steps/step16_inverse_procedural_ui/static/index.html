@@ -91,8 +91,16 @@
             Cargando datos...<br>Por favor espera.
         </div>
         <div id="params-info" class="info-text"></div>
-        <button id="btn-generate" disabled>GENERAR MODELO 3D</button>
-        <div id="status-msg"></div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="btn-download" disabled style="background-color: #f1c40f; color: #2c3e50; font-weight: bold; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">DESCARGAR FOTOS NECESARIAS</button>
+            <button id="btn-calculate" disabled style="background-color: #9b59b6; color: white; font-weight: bold; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">CALCULAR ALTURA</button>
+            <button id="btn-generate" disabled style="background-color: #3498db; color: white; font-weight: bold; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">GENERAR MODELO 3D</button>
+        </div>
+        <div id="status-msg" style="margin-top: 10px; font-weight: bold;"></div>
+        <div id="plot-container" style="display: none; margin-top: 10px; border-top: 1px solid #444; padding-top: 10px;">
+            <p style="font-size: 12px; margin: 0 0 5px 0; color: white;">Ajuste de Altura:</p>
+            <img id="plot-img" src="" style="width: 100%; border-radius: 4px; max-height: 400px; object-fit: contain; cursor: pointer;" onclick="window.open(this.src)" />
+        </div>
     </div>
     
     <!-- Pannellum Viewer -->
@@ -200,8 +208,40 @@
                                 .then(r => r.json())
                                 .then(data => {
                                     previewEdgesData = data;
-                                    document.getElementById('btn-generate').disabled = false;
-                                    document.getElementById('status-msg').innerText = '';
+                                    document.getElementById('status-msg').innerText = 'Lote seleccionado. Requiere descargar fotos.';
+                                    document.getElementById('btn-download').disabled = true;
+                                    document.getElementById('btn-calculate').disabled = true;
+                                    document.getElementById('btn-generate').disabled = true;
+                                    document.getElementById('plot-container').style.display = 'none';
+                                    
+                                    // Select Top K cameras with yellow ring
+                                    if (data.top_cameras && data.top_cameras.length > 0) {
+                                        let newCamerasData = [...camerasData];
+                                        // Reset old selections
+                                        newCamerasData = newCamerasData.map(c => ({...c, selected: false}));
+                                        
+                                        let needsDownload = false;
+                                        data.top_cameras.forEach(pano_id => {
+                                            let idx = newCamerasData.findIndex(c => c.pano_id === pano_id);
+                                            if (idx !== -1) {
+                                                newCamerasData[idx] = { ...newCamerasData[idx], selected: true };
+                                                if (!newCamerasData[idx].downloaded) {
+                                                    needsDownload = true;
+                                                }
+                                            }
+                                        });
+                                        camerasData = newCamerasData;
+                                        
+                                        window.currentTopCameras = data.top_cameras; // Save for download button
+                                        
+                                        if (needsDownload) {
+                                            document.getElementById('btn-download').disabled = false;
+                                        } else {
+                                            // Already downloaded
+                                            document.getElementById('status-msg').innerText = 'Fotos ya disponibles en caché.';
+                                            document.getElementById('btn-calculate').disabled = false;
+                                        }
+                                    }
                                     renderLayers();
                                 });
                             
@@ -230,28 +270,64 @@
                 }));
             }
 
-            // 2. Cameras Layer
+            // 2. Cameras Layer (3D Spheres)
             if (camerasData.length > 0) {
-                layers.push(new deck.ScatterplotLayer({
+                // Main 3D Sphere for cameras
+                layers.push(new deck.ScenegraphLayer({
                     id: 'cameras-layer',
                     data: camerasData,
+                    scenegraph: '/assets/sphere.glb',
                     pickable: true,
-                    opacity: 0.8,
-                    stroked: true,
-                    filled: true,
-                    radiusScale: 1,
-                    radiusMinPixels: 4,
-                    radiusMaxPixels: 10,
-                    lineWidthMinPixels: 1,
-                    getPosition: d => [d.lon, d.lat],
-                    getFillColor: d => d.downloaded ? [46, 204, 113, 255] : [241, 196, 15, 255], // Green if downloaded, Yellow if not
-                    getLineColor: [0, 0, 0, 255],
+                    sizeScale: 1.5,
+                    getPosition: d => [d.lon, d.lat, 2.5], // Float 2.5m above ground
+                    getOrientation: [0, 0, 0],
+                    getColor: d => {
+                        if (d.loading) return [52, 152, 219, 255]; // Blue while loading
+                        return d.downloaded ? [46, 204, 113, 255] : [241, 196, 15, 255];
+                    },
                     onClick: (info) => {
                         if (info.object) {
                             handleCameraClick(info.object);
                         }
                     }
                 }));
+                
+                // Loading rings (animated) for loading cameras
+                // Yellow rings for selected Top K cameras
+                let selectedCams = camerasData.filter(c => c.selected);
+                if (selectedCams.length > 0) {
+                    layers.push(new deck.ScatterplotLayer({
+                        id: 'cameras-selected-ring',
+                        data: selectedCams,
+                        pickable: false,
+                        stroked: true,
+                        filled: false,
+                        lineWidthUnits: 'pixels',
+                        getLineWidth: 4,
+                        getRadius: 6,
+                        radiusUnits: 'meters',
+                        getPosition: d => [d.lon, d.lat, 0],
+                        getLineColor: [241, 196, 15, 255]
+                    }));
+                }
+                
+                // Loading rings (animated) for loading cameras
+                let loadingCams = camerasData.filter(c => c.loading);
+                if (loadingCams.length > 0) {
+                    layers.push(new deck.ScatterplotLayer({
+                        id: 'cameras-loading-ring',
+                        data: loadingCams,
+                        pickable: false,
+                        stroked: true,
+                        filled: false,
+                        lineWidthUnits: 'pixels',
+                        getLineWidth: 3,
+                        getRadius: d => (Date.now() % 1000) / 1000 * 5,
+                        radiusUnits: 'meters',
+                        getPosition: d => [d.lon, d.lat, 0],
+                        getLineColor: [52, 152, 219, 255]
+                    }));
+                }
             }
 
             // 3. Generated GLB models
@@ -319,6 +395,67 @@
         });
 
         // Generate Button Handler
+        
+        document.getElementById('btn-download').addEventListener('click', () => {
+            if (!window.currentTopCameras) return;
+            document.getElementById('btn-download').disabled = true;
+            document.getElementById('status-msg').innerText = "Descargando cámaras top K...";
+            
+            let downloadPromises = [];
+            let newCamerasData = [...camerasData];
+            
+            window.currentTopCameras.forEach(pano_id => {
+                let idx = newCamerasData.findIndex(c => c.pano_id === pano_id);
+                if (idx !== -1 && !newCamerasData[idx].downloaded) {
+                    newCamerasData[idx] = { ...newCamerasData[idx], loading: true };
+                    let downloadPromise = fetch(`/api/download_camera/${pano_id}`, {method: 'POST'})
+                        .then(r => r.json())
+                        .then(resData => {
+                            if (resData.status === 'success') {
+                                let latestCamData = [...camerasData];
+                                let cIdx = latestCamData.findIndex(c => c.pano_id === pano_id);
+                                if (cIdx !== -1) {
+                                    latestCamData[cIdx] = { ...latestCamData[cIdx], downloaded: true, loading: false };
+                                }
+                                camerasData = latestCamData;
+                                renderLayers();
+                            }
+                        });
+                    downloadPromises.push(downloadPromise);
+                }
+            });
+            camerasData = newCamerasData;
+            renderLayers();
+            
+            Promise.all(downloadPromises).then(() => {
+                document.getElementById('status-msg').innerText = "Fotos descargadas. Listo para calcular altura.";
+                document.getElementById('btn-calculate').disabled = false;
+            });
+        });
+
+        document.getElementById('btn-calculate').addEventListener('click', () => {
+            if (!selectedLotId || !window.currentTopCameras) return;
+            document.getElementById('btn-calculate').disabled = true;
+            document.getElementById('status-msg').innerText = "Calculando altura con Visión Computacional (Esto puede tomar un momento)...";
+            
+            fetch(`/api/estimate_height/${selectedLotId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pano_ids: window.currentTopCameras })
+            })
+            .then(r => r.json())
+            .then(hData => {
+                document.getElementById('status-msg').innerText = `¡Altura calculada! ${hData.height_m}m (${hData.floors} pisos)`;
+                document.getElementById('btn-generate').disabled = false;
+                
+                // If there's a plot, show it
+                if (hData.plot_url) {
+                    document.getElementById('plot-img').src = hData.plot_url;
+                    document.getElementById('plot-container').style.display = 'block';
+                }
+            });
+        });
+
         document.getElementById('btn-generate').addEventListener('click', () => {
             if (selectedLotId === null) return;
             

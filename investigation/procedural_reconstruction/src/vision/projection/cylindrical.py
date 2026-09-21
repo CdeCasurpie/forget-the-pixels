@@ -46,6 +46,8 @@ def extract_full_vertical_strip(
     # la inferior. El muestreo completo conserva exactamente ese intervalo.
     source_y = np.linspace(0.0, pano_h - 1.0, height, dtype=np.float32)
     map_x, map_y = np.meshgrid(source_x, source_y)
+    map_x = map_x.astype(np.float32)
+    map_y = map_y.astype(np.float32)
     return cv2.remap(
         panorama,
         map_x,

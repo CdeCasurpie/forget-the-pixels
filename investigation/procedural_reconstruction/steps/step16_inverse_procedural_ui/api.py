@@ -7,6 +7,19 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 import geopandas as gpd
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from shapely.geometry import Point
+from shapely.ops import nearest_points
+from pyproj import Transformer, Geod
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'src'))
+from vision.projection.cylindrical import extract_full_vertical_strip
+from vision.segmentation.roof_boundary import detect_roof_boundary
+from vision.estimation.height import fit_height, predicted_row
+
 import pandas as pd
 from shapely.geometry import Point
 import uvicorn
@@ -19,6 +32,119 @@ from modeling.grammar import generate_v4_mesh
 from modeling.exporters.glb_exporter import export_glb
 
 app = FastAPI(title="Procedural Barranco API")
+
+from pydantic import BaseModel
+class HeightRequest(BaseModel):
+    pano_ids: list[str]
+
+calculated_heights = {}
+
+@app.post("/api/estimate_height/{lot_idx}")
+def estimate_height(lot_idx: int, req: HeightRequest):
+    if not req.pano_ids:
+        return {"height_m": 6.0, "floors": 2}
+        
+    global calculated_heights, gdf_utm
+    
+    polygon = gdf_utm.loc[lot_idx].geometry
+    to_geo = Transformer.from_crs('EPSG:32718', 'EPSG:4326', always_xy=True)
+    geod = Geod(ellps='WGS84')
+    
+    observations = []
+    fig, axes = plt.subplots(len(req.pano_ids), 2, figsize=(10, 4*len(req.pano_ids)), squeeze=False)
+    
+    for i, pano_id in enumerate(req.pano_ids):
+        # 1. Load image
+        img_path = str(CACHE_DIR / f"{pano_id}.jpg")
+        bgr = cv2.imread(img_path)
+        if bgr is None:
+            continue
+        rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+        h, w = rgb.shape[:2]
+        
+        # 2. Get camera data
+        cam_rows = gdf_cams_utm[gdf_cams_utm['pano_id'] == pano_id]
+        if cam_rows.empty:
+            continue
+        cam_row = cam_rows.iloc[0]
+        cam_x, cam_y = cam_row.geometry.x, cam_row.geometry.y
+        cam_lon, cam_lat = cam_row['lon'], cam_row['lat']
+        heading_deg = cam_row.get('heading_deg', 0.0) # Or however heading is stored
+        if 'heading_deg' not in cam_row:
+            # Fallback if heading is not found
+            heading_deg = 0.0
+            
+        camera_point = Point(cam_x, cam_y)
+        if polygon.covers(camera_point):
+            continue
+            
+        # 3. Geometric math
+        target = nearest_points(camera_point, polygon.boundary)[1]
+        lon, lat = to_geo.transform(target.x, target.y)
+        bearing, _, distance = geod.inv(cam_lon, cam_lat, lon, lat)
+        yaw = (bearing - heading_deg + 180) % 360 - 180
+        x_col = (.5 + yaw / 360) * w % w
+        
+        # 4. Extract strip and detect roof
+        strip_width = 9
+        cols = (int(round(x_col)) + np.arange(-(strip_width//2), strip_width//2+1)) % w
+        base_y = h - 1 # rough bottom
+        strip = rgb[:base_y+1, cols]
+        
+        roof = detect_roof_boundary(strip)
+        cut, separation = roof['cut_y'], roof['separation']
+        
+        camera_height_m = 2.5
+        height = camera_height_m + distance * np.tan((.5 - cut / h) * np.pi)
+        usable = bool(separation >= 0.1 and 0 < cut < h/2 and 1 <= height <= 150)
+        
+        if usable:
+            observations.append({
+                'distance_m': distance,
+                'image_height': h,
+                'cut_y': cut,
+                'separation': separation,
+                'individual_height_m': float(height)
+            })
+        
+        # 5. Plotting
+        crop = extract_full_vertical_strip(rgb, yaw, 90, 600, h)
+        axes[i, 0].imshow(crop)
+        axes[i, 0].axvline(300, color='yellow', lw=1)
+        axes[i, 0].plot(300, cut, 'rx', ms=12)
+        axes[i, 0].axhline(cut, color='red', lw=.8)
+        axes[i, 0].set_title(f'Pano {pano_id[:6]}... cut={cut}px; H={height:.1f}m; usable={usable}')
+        
+        axes[i, 1].imshow(strip, aspect='auto')
+        axes[i, 1].axhline(cut, color='red')
+        axes[i, 1].set_title(f'Strip {len(cols)}px | sep={separation:.3f}')
+        
+    fig.tight_layout()
+    plot_path = f"steps/step16_inverse_procedural_ui/static/assets/height_plot_{lot_idx}.png"
+    fig.savefig(plot_path, dpi=100)
+    plt.close(fig)
+    
+    # 6. Fit height
+    if len(observations) >= 2:
+        try:
+            fit = fit_height(observations, 2.5)
+            final_h = fit['height_m']
+        except Exception as e:
+            final_h = sum(o['individual_height_m'] for o in observations) / len(observations)
+    elif len(observations) == 1:
+        final_h = observations[0]['individual_height_m']
+    else:
+        final_h = 6.0
+        
+    floors = max(1, int(final_h / 3.0))
+    calculated_heights[lot_idx] = {"height_m": final_h, "floors": floors}
+    
+    return {
+        "height_m": round(final_h, 2), 
+        "floors": floors, 
+        "plot_url": f"/assets/height_plot_{lot_idx}.png"
+    }
+
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 ASSETS_DIR = STATIC_DIR / "assets"
@@ -125,11 +251,16 @@ def estimate_parameters(lot_idx: int, cameras: list):
     random.seed(lot_idx) # Stable random for the same lot
     
     # Simulate height extraction from cameras (e.g. 1 floor = 3m, up to 5 floors)
-    floors = random.randint(1, 4)
-    if len(cameras) > 5: floors = random.randint(3, 5) # Dense areas have taller buildings
-    
-    roof_z = floors * 3.0
-    floor_levels = tuple(float(i * 3.0) for i in range(floors + 1))
+    if lot_idx in calculated_heights:
+        floors = calculated_heights[lot_idx]["floors"]
+        roof_z = calculated_heights[lot_idx]["height_m"]
+        # Distribute floors evenly
+        floor_h = roof_z / floors
+        floor_levels = tuple(float(i * floor_h) for i in range(floors + 1))
+    else:
+        floors = random.randint(1, 4)
+        roof_z = floors * 3.0
+        floor_levels = tuple(float(i * 3.0) for i in range(floors + 1))
     
     uses = ["residential", "commercial", "mixed"]
     finishes = ["plastered", "bare_brick", "painted"]
@@ -196,6 +327,7 @@ def get_explicit_fronts(lot_idx: int, target_poly, gdf_utm):
 @app.get("/api/preview_fronts/{lot_idx}")
 def preview_fronts(lot_idx: int):
     import geopandas as gpd
+
     import numpy as np
     from shapely.geometry import LineString, Point
     import json
@@ -265,7 +397,29 @@ def preview_fronts(lot_idx: int):
     gdf_feats = gpd.GeoDataFrame.from_features(features, crs="EPSG:32718")
     gdf_feats_4326 = gdf_feats.to_crs(epsg=4326)
     
-    return {"type": "FeatureCollection", "features": json.loads(gdf_feats_4326.to_json())["features"]}
+    # Calculate Top K=4 cameras closest to the front edges
+    front_lines = [feat["geometry"] for feat in features if feat["properties"].get("type") == "edge" and feat["properties"].get("is_front")]
+    top_k_pano_ids = []
+    
+    if front_lines and not gdf_cams_utm.empty:
+        from shapely.geometry import shape
+        from shapely.ops import unary_union
+        
+        # Create a single geometry of all front edges
+        front_geom = unary_union([shape(geom) for geom in front_lines])
+        
+        # Calculate distance from each camera to the front geometry
+        distances = gdf_cams_utm.geometry.distance(front_geom)
+        
+        # Get the top 4 closest cameras
+        closest_cams = gdf_cams_utm.loc[distances.nsmallest(4).index]
+        top_k_pano_ids = closest_cams['pano_id'].tolist()
+    
+    return {
+        "type": "FeatureCollection", 
+        "features": json.loads(gdf_feats_4326.to_json())["features"],
+        "top_cameras": top_k_pano_ids
+    }
 
 @app.post("/api/generate/{lot_idx}")
 
