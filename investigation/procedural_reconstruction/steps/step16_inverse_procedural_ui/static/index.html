@@ -42,7 +42,7 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.css" rel="stylesheet" />
 </head>
-<body>
+<body oncontextmenu="return false;">
     <div id="map-container"></div>
     
     <div id="ui-panel">
@@ -50,17 +50,19 @@
         <div id="lot-info" class="info-text">
             Cargando lotes de Barranco...<br>Por favor espera.
         </div>
+        <div id="params-info" class="info-text"></div>
         <button id="btn-generate" disabled>GENERAR MODELO 3D</button>
         <div id="status-msg"></div>
     </div>
 
     <script>
-        const MAPBOX_TOKEN = 'REMOVED_TOKEN'; // Use your real token if needed, or omit for generic map style
+        const MAPBOX_TOKEN = 'REMOVED_TOKEN';
         
         let deckgl;
         let lotsData = null;
         let selectedLotId = null;
-        let generatedModels = []; // Array of ScenegraphLayers
+        let camerasData = [];
+        let generatedModels = [];
 
         // Initialize DeckGL
         deckgl = new deck.DeckGL({
@@ -107,16 +109,47 @@
                     onClick: (info) => {
                         if (info.object) {
                             selectedLotId = info.object.properties.id;
-                            document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Listo para generar.`;
-                            document.getElementById('btn-generate').disabled = false;
+                            document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Buscando cámaras...`;
+                            document.getElementById('params-info').innerHTML = '';
+                            document.getElementById('btn-generate').disabled = true;
                             document.getElementById('status-msg').innerText = '';
+                            
+                            // Fetch cameras for this lot
+                            fetch(`/api/cameras/${selectedLotId}`)
+                                .then(r => r.json())
+                                .then(camData => {
+                                    camerasData = camData.cameras || [];
+                                    document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Cámaras cercanas: ${camerasData.length}`;
+                                    document.getElementById('btn-generate').disabled = false;
+                                    renderLayers();
+                                });
+                            
                             renderLayers();
                         }
                     }
                 }));
             }
 
-            // 2. Add all generated GLB models
+            // 2. Cameras Layer
+            if (camerasData.length > 0) {
+                layers.push(new deck.ScatterplotLayer({
+                    id: 'cameras-layer',
+                    data: camerasData,
+                    pickable: true,
+                    opacity: 0.8,
+                    stroked: true,
+                    filled: true,
+                    radiusScale: 1,
+                    radiusMinPixels: 3,
+                    radiusMaxPixels: 10,
+                    lineWidthMinPixels: 1,
+                    getPosition: d => [d.lon, d.lat],
+                    getFillColor: d => d.downloaded ? [46, 204, 113, 255] : [231, 76, 60, 255], // Green if downloaded, Red if not
+                    getLineColor: d => [0, 0, 0, 255]
+                }));
+            }
+
+            // 3. Generated GLB models
             generatedModels.forEach(model => {
                 layers.push(new deck.ScenegraphLayer({
                     id: `glb-${model.id}`,
@@ -138,9 +171,11 @@
             
             const btn = document.getElementById('btn-generate');
             const status = document.getElementById('status-msg');
+            const paramsDiv = document.getElementById('params-info');
             
             btn.disabled = true;
             status.innerText = "Calculando geometría procedural...";
+            paramsDiv.innerHTML = "Extrayendo parámetros de las cámaras...";
             
             fetch(`/api/generate/${selectedLotId}`, { method: 'POST' })
                 .then(res => res.json())
@@ -148,7 +183,18 @@
                     if (data.status === 'success') {
                         status.innerText = "¡Casa generada con éxito!";
                         
+                        // Show mock params
+                        const p = data.params;
+                        paramsDiv.innerHTML = `
+                            <b>Parámetros extraídos:</b><br>
+                            Uso: ${p.use}<br>
+                            Acabado: ${p.finish_profile}<br>
+                            Retiro frontal: ${p.placement}<br>
+                            Altura techo: ${p.roof_z}m
+                        `;
+                        
                         // Add to our models list
+                        generatedModels = generatedModels.filter(m => m.id !== selectedLotId); // Replace if regenerating
                         generatedModels.push({
                             id: selectedLotId,
                             url: data.url,

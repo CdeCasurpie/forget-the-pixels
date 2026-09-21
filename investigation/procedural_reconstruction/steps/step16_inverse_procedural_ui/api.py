@@ -1,11 +1,13 @@
 import sys
 import os
 import json
+import random
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 import geopandas as gpd
+import pandas as pd
 from shapely.geometry import Point
 import uvicorn
 
@@ -24,12 +26,20 @@ ASSETS_DIR = STATIC_DIR / "assets"
 ASSETS_DIR.mkdir(exist_ok=True, parents=True)
 
 GEOJSON_PATH = ROOT / "Lotes" / "shp_files" / "BARRANCO_LM_geogpsperu.geojson"
+METADATA_PATH = ROOT / "steps" / "step2_vector_to_lots" / "data" / "barranco_metadata" / "metadata.json"
+CACHE_DIR = ROOT / "Lotes" / "streetview_cache"
 
 print("Cargando datos espaciales...")
 gdf_lots = gpd.read_file(GEOJSON_PATH)
 gdf_utm = gdf_lots.to_crs(epsg=32718)
 
-# Mount static files for assets
+print("Cargando metadatos de cámaras...")
+with open(METADATA_PATH, "r") as f:
+    meta = json.load(f)
+df_cams = pd.DataFrame.from_dict(meta["panoramas"], orient='index')
+gdf_cams = gpd.GeoDataFrame(df_cams, geometry=gpd.points_from_xy(df_cams.lon, df_cams.lat), crs="EPSG:4326")
+gdf_cams_utm = gdf_cams.to_crs(epsg=32718)
+
 app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
 
 @app.get("/")
@@ -38,14 +48,59 @@ def read_root():
 
 @app.get("/api/lots")
 def get_lots():
-    # Return a simplified geojson for the frontend map to render quickly
-    # We only need a subset or we can send the whole thing (it's around 14k polygons)
-    # Let's send the whole thing but only the geometry and id
     gdf_minimal = gdf_lots[['geometry']].copy()
     gdf_minimal['id'] = gdf_minimal.index
     if gdf_minimal.crs and gdf_minimal.crs.to_epsg() != 4326:
         gdf_minimal = gdf_minimal.to_crs(epsg=4326)
     return JSONResponse(content=json.loads(gdf_minimal.to_json()))
+
+@app.get("/api/cameras/{lot_idx}")
+def get_cameras(lot_idx: int):
+    if lot_idx not in gdf_utm.index:
+        raise HTTPException(status_code=404, detail="Lot not found")
+        
+    lot_geom = gdf_utm.loc[lot_idx].geometry
+    buffer = lot_geom.buffer(15.0) # 15 meters radius
+    nearby_cams = gdf_cams_utm[gdf_cams_utm.geometry.intersects(buffer)]
+    
+    cameras = []
+    for pano_id, row in nearby_cams.iterrows():
+        is_downloaded = (CACHE_DIR / f"{pano_id}.jpg").exists()
+        cameras.append({
+            "pano_id": pano_id,
+            "lat": row.lat,
+            "lon": row.lon,
+            "downloaded": is_downloaded
+        })
+    return {"cameras": cameras}
+
+def estimate_parameters(lot_idx: int, cameras: list):
+    """
+    Mock function to simulate parameter extraction from StreetView images.
+    Returns the contract (dictionary) needed for BuildingProgram and MassSpec.
+    """
+    random.seed(lot_idx) # Stable random for the same lot
+    
+    # Simulate height extraction from cameras (e.g. 1 floor = 3m, up to 5 floors)
+    floors = random.randint(1, 4)
+    if len(cameras) > 5: floors = random.randint(3, 5) # Dense areas have taller buildings
+    
+    roof_z = floors * 3.0
+    floor_levels = tuple(float(i * 3.0) for i in range(floors + 1))
+    
+    uses = ["residential", "commercial", "mixed"]
+    finishes = ["plastered", "bare_brick", "painted"]
+    placements = ["flush", "front_setback"]
+    colors = [(0.9, 0.9, 0.9), (0.8, 0.7, 0.6), (0.6, 0.8, 0.7), (0.9, 0.6, 0.6)]
+    
+    return {
+        "use": random.choice(uses),
+        "finish_profile": random.choice(finishes),
+        "placement": random.choice(placements),
+        "primary_color": random.choice(colors),
+        "roof_z": roof_z,
+        "floor_levels": floor_levels
+    }
 
 @app.post("/api/generate/{lot_idx}")
 def generate_model(lot_idx: int):
@@ -65,22 +120,34 @@ def generate_model(lot_idx: int):
             
         front_indices = tuple([find_edge_idx(target_poly, e.start_xy) for e in edges] if edges else [])
         
+        # Get cameras to pass to estimation
+        lot_geom = gdf_utm.loc[lot_idx].geometry
+        nearby_cams = gdf_cams_utm[gdf_cams_utm.geometry.intersects(lot_geom.buffer(15.0))]
+        cams_list = nearby_cams.index.tolist()
+        
+        # 1. Run parameter extraction (Mock)
+        params = estimate_parameters(lot_idx, cams_list)
+        
         # Translate to origin
         cx, cy = target_poly.centroid.x, target_poly.centroid.y
         local_coords = tuple((c[0] - cx, c[1] - cy) for c in target_poly.exterior.coords)
         
         ctx = ParcelContext(polygon=local_coords, explicit_fronts=front_indices)
         program = BuildingProgram(
-            use="residential", occupancy="medium", placement="flush",
-            architectural_language="informal", finish_profile="plastered",
+            use=params["use"], occupancy="medium", placement=params["placement"],
+            architectural_language="informal", finish_profile=params["finish_profile"],
             maintenance="average", construction_state="completed",
             front_setback=0.0, side_setback=0.0,
-            primary_color=(0.8, 0.8, 0.8), seed=42,
+            primary_color=params["primary_color"], seed=lot_idx,
             is_corner=(len(front_indices) > 1), has_fence=False, fence_type="none"
         )
-        mass = MassSpec(id="main", footprint=local_coords, base_z=0.0, roof_z=6.0, floor_levels=(0.0, 3.0, 6.0), role="tower", roof_spec=None)
+        mass = MassSpec(
+            id="main", footprint=local_coords, base_z=0.0, 
+            roof_z=params["roof_z"], floor_levels=params["floor_levels"], 
+            role="tower", roof_spec=None
+        )
         site = SitePlan(masses=(mass,), free_space=(), access_nodes=(), boundaries=(), exclusion_zones=())
-        spec = BuildingSpecificationV4(context=ctx, program=program, site_plan=site, facades=(), components=(), seed=42)
+        spec = BuildingSpecificationV4(context=ctx, program=program, site_plan=site, facades=(), components=(), seed=lot_idx)
         
         mesh = generate_v4_mesh(spec)
         
@@ -96,7 +163,8 @@ def generate_model(lot_idx: int):
             "status": "success",
             "url": f"/assets/{glb_filename}",
             "lat": geo_centroid.y,
-            "lon": geo_centroid.x
+            "lon": geo_centroid.x,
+            "params": params
         }
     except Exception as e:
         import traceback
