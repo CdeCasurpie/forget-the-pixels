@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Procedural Barranco</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
+        #ui-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        h2 { margin-top: 0; font-size: 22px; }
+        .info-text { color: #bdc3c7; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #2980b9; }
+        button:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+        #status-msg { margin-top: 15px; font-size: 14px; color: #f1c40f; text-align: center; }
+    </style>
+    <!-- Mapbox & Deck.gl -->
+    <script src="https://unpkg.com/deck.gl@^8.9.0/dist.min.js"></script>
+    <script src="https://unpkg.com/@loaders.gl/gltf@^3.4.0/dist/dist.min.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="map-container"></div>
+    
+    <div id="ui-panel">
+        <h2>Generador Procedural</h2>
+        <div id="lot-info" class="info-text">
+            Cargando lotes de Barranco...<br>Por favor espera.
+        </div>
+        <button id="btn-generate" disabled>GENERAR MODELO 3D</button>
+        <div id="status-msg"></div>
+    </div>
+
+    <script>
+        const MAPBOX_TOKEN = 'REMOVED_TOKEN'; // Use your real token if needed, or omit for generic map style
+        
+        let deckgl;
+        let lotsData = null;
+        let selectedLotId = null;
+        let generatedModels = []; // Array of ScenegraphLayers
+
+        // Initialize DeckGL
+        deckgl = new deck.DeckGL({
+            container: 'map-container',
+            mapStyle: 'mapbox://styles/mapbox/dark-v10',
+            mapboxApiAccessToken: MAPBOX_TOKEN,
+            initialViewState: {
+                longitude: -77.021,
+                latitude: -12.148,
+                zoom: 15,
+                pitch: 45,
+                bearing: 0
+            },
+            controller: true,
+            layers: []
+        });
+
+        // Load Lots Data
+        fetch('/api/lots')
+            .then(res => res.json())
+            .then(data => {
+                lotsData = data;
+                document.getElementById('lot-info').innerHTML = 'Mapa cargado.<br>Haz clic en un lote para seleccionarlo.';
+                renderLayers();
+            })
+            .catch(err => {
+                document.getElementById('lot-info').innerHTML = 'Error cargando lotes: ' + err;
+            });
+
+        function renderLayers() {
+            const layers = [];
+
+            // 1. Lots Layer
+            if (lotsData) {
+                layers.push(new deck.GeoJsonLayer({
+                    id: 'lots-layer',
+                    data: lotsData,
+                    pickable: true,
+                    stroked: true,
+                    filled: true,
+                    lineWidthMinPixels: 1,
+                    getFillColor: d => d.properties.id === selectedLotId ? [255, 255, 0, 150] : [50, 50, 50, 50],
+                    getLineColor: d => d.properties.id === selectedLotId ? [255, 255, 0, 255] : [100, 100, 100, 255],
+                    onClick: (info) => {
+                        if (info.object) {
+                            selectedLotId = info.object.properties.id;
+                            document.getElementById('lot-info').innerHTML = `<b>Lote Seleccionado:</b> ${selectedLotId}<br>Listo para generar.`;
+                            document.getElementById('btn-generate').disabled = false;
+                            document.getElementById('status-msg').innerText = '';
+                            renderLayers();
+                        }
+                    }
+                }));
+            }
+
+            // 2. Add all generated GLB models
+            generatedModels.forEach(model => {
+                layers.push(new deck.ScenegraphLayer({
+                    id: `glb-${model.id}`,
+                    data: [model],
+                    scenegraph: model.url,
+                    getPosition: d => [d.lon, d.lat],
+                    getOrientation: [0, 0, 90], // Adjust if needed
+                    sizeScale: 1,
+                    _lighting: 'pbr'
+                }));
+            });
+
+            deckgl.setProps({ layers });
+        }
+
+        // Generate Button Handler
+        document.getElementById('btn-generate').addEventListener('click', () => {
+            if (selectedLotId === null) return;
+            
+            const btn = document.getElementById('btn-generate');
+            const status = document.getElementById('status-msg');
+            
+            btn.disabled = true;
+            status.innerText = "Calculando geometría procedural...";
+            
+            fetch(`/api/generate/${selectedLotId}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        status.innerText = "¡Casa generada con éxito!";
+                        
+                        // Add to our models list
+                        generatedModels.push({
+                            id: selectedLotId,
+                            url: data.url,
+                            lon: data.lon,
+                            lat: data.lat
+                        });
+                        
+                        // Fly to the new model
+                        deckgl.setProps({
+                            initialViewState: {
+                                longitude: data.lon,
+                                latitude: data.lat,
+                                zoom: 19,
+                                pitch: 60,
+                                bearing: 0,
+                                transitionDuration: 1000
+                            }
+                        });
+                        
+                        renderLayers();
+                    } else {
+                        status.innerText = "Error: " + data.detail;
+                    }
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    status.innerText = "Error de conexión.";
+                    btn.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>
