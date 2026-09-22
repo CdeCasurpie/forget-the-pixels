@@ -279,14 +279,26 @@ class MeshBuilder:
 
     def box(self, a, t, n, u1, u2, z1, z2, w1, w2,
             material="plaster", semantic="wall",
-            *, uv_origin_u=None, clip="auto"):
+            *, uv_origin_u=None, clip="auto", chamfer=0.0):
         """Axis-aligned box in facade-local coordinates.
 
         uv_origin_u: if set, UV u-coordinate is measured from this
         facade-absolute value rather than from u1, giving continuity
         across neighbouring boxes that share the same facade.
+
+        chamfer: breaks the top arris by that many metres. A cornice or a coping
+        with a mathematically sharp edge catches no highlight and reads as a
+        printed line under flat lighting, which is how a city block is viewed.
         """
         if min(u2 - u1, z2 - z1, w2 - w1) <= 1e-7:
+            return
+        if chamfer > 0 and z2 - z1 > 3 * chamfer and \
+                min(u2 - u1, w2 - w1) > 3 * chamfer:
+            self.box(a, t, n, u1, u2, z1, z2 - chamfer, w1, w2, material, semantic,
+                     uv_origin_u=uv_origin_u, clip=clip)
+            self.box(a, t, n, u1 + chamfer, u2 - chamfer, z2 - chamfer, z2,
+                     w1 + chamfer, w2 - chamfer, material, semantic,
+                     uv_origin_u=uv_origin_u, clip=clip)
             return
 
         a = np.asarray(a, float)

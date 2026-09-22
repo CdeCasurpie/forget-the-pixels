@@ -57,7 +57,7 @@ def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="re
             mb.box(a, t, n, u1, u2, height - 0.05, height, -0.10, -0.06, "metal",
                    "fence_rail")
             mb.box(a, t, n, u1, u2, base_h, base_h + 0.05, -0.17, -0.03, "stone",
-                   "boundary_cap")
+                   "boundary_cap", chamfer=0.012)
         elif style == "low":
             mb.box(a, t, n, u1, u2, 0.0, base_h, -0.20, 0.0, "plaster",
                    "boundary_base")
@@ -70,7 +70,8 @@ def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="re
                 mb.box(a, t, n, max(u1, centre - 0.15), min(u2, centre + 0.15),
                        0.0, height, -0.22, 0.02, "plaster", "boundary_post")
                 mb.box(a, t, n, max(u1, centre - 0.17), min(u2, centre + 0.17),
-                       height, height + 0.10, -0.25, 0.05, "stone", "boundary_cap")
+                       height, height + 0.10, -0.25, 0.05, "stone", "boundary_cap",
+                       chamfer=0.015)
             for index in range(pillars - 1):
                 left = u1 + index * pitch + 0.15
                 right = u1 + (index + 1) * pitch - 0.15
@@ -86,7 +87,7 @@ def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="re
             mb.box(a, t, n, u1, u2, 0.0, height, -0.15, 0.0, base_mat, "wall")
             if style == "solid":
                 mb.box(a, t, n, u1, u2, height - 0.10, height, -0.20, 0.05,
-                       "stone", "boundary_cap")
+                       "stone", "boundary_cap", chamfer=0.015)
 
     if boundary.gate_u is not None:
         gate_h = height * (0.8 if style != "low" else 1.0)

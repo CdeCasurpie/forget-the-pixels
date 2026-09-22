@@ -13,9 +13,15 @@ from .prefabs import sign_letters
 LEGACY_KINDS = ("panel", "frame", "ledge", "canopy", "curved_canopy")
 
 
-def _add(mb, a, t, n, feature, u1, u2, z1, z2, w1, w2, semantic, material=None):
+# Arris break on mouldings that crown something. Small enough to stay a
+# highlight, large enough to survive at block-viewing distance.
+CHAMFER_M = 0.02
+
+
+def _add(mb, a, t, n, feature, u1, u2, z1, z2, w1, w2, semantic, material=None,
+         chamfer=0.0):
     mb.box(a, t, n, u1, u2, z1, z2, w1, w2,
-           material or feature.material_slot, semantic)
+           material or feature.material_slot, semantic, chamfer=chamfer)
 
 
 def _footprint(a, t, n, u1, u2, w1, w2):
@@ -42,7 +48,7 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
             mb.box(a, t, n, u_start, u_end, z, top - 0.08, w_start, w_end,
                    "plaster", "balustrade")
         mb.box(a, t, n, u1 - 0.03, u2 + 0.03, top - 0.08, top, -0.01, depth + 0.03,
-               "stone", "balustrade_cap")
+               "stone", "balustrade_cap", chamfer=0.015)
         return
     if style == "balusters":
         mb.box(a, t, n, u1, u2, z, z + 0.10, depth - 0.10, depth, "stone",
@@ -51,7 +57,7 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
             mb.box(a, t, n, u, u + 0.09, z + 0.10, top - 0.09,
                    depth - 0.09, depth - 0.01, "stone", "baluster")
         mb.box(a, t, n, u1, u2, top - 0.09, top, depth - 0.12, depth + 0.02,
-               "stone", "balustrade_cap")
+               "stone", "balustrade_cap", chamfer=0.015)
         for u in (u1, u2 - 0.09):
             mb.box(a, t, n, u, u + 0.09, z, top, 0.0, depth, "stone", "baluster")
         return
@@ -133,7 +139,8 @@ def cornice(mb, a, t, n, feature):
     # Drip edge: the underside lip that throws water clear of the wall.
     _add(mb, a, t, n, feature, u1 - 0.04, u2 + 0.04,
          feature.v_m + feature.height_m, feature.v_m + feature.height_m + 0.05,
-         -0.02, feature.depth_m + 0.03, "cornice_drip", "stone")
+         -0.02, feature.depth_m + 0.03, "cornice_drip", "stone",
+         chamfer=CHAMFER_M)
 
 
 def sill_band(mb, a, t, n, feature):
@@ -143,7 +150,7 @@ def sill_band(mb, a, t, n, feature):
          "sill_band")
     _add(mb, a, t, n, feature, feature.u_m, feature.u_m + feature.width_m,
          feature.v_m - 0.03, feature.v_m, feature.depth_m - 0.04,
-         feature.depth_m - 0.01, "cornice_drip", "stone")
+         feature.depth_m - 0.01, "cornice_drip", "stone", chamfer=0.01)
 
 
 def pilaster(mb, a, t, n, feature):
@@ -157,7 +164,7 @@ def pilaster(mb, a, t, n, feature):
     _add(mb, a, t, n, feature, u1, u2, feature.v_m + base_h, top - cap_h,
          -0.02, feature.depth_m, "pilaster")
     _add(mb, a, t, n, feature, u1 - 0.05, u2 + 0.05, top - cap_h, top,
-         -0.02, feature.depth_m + 0.045, "pilaster_cap")
+         -0.02, feature.depth_m + 0.045, "pilaster_cap", chamfer=CHAMFER_M)
 
 
 def balcony(mb, a, t, n, feature):
@@ -247,7 +254,7 @@ def bay_window(mb, a, t, n, feature):
     _add(mb, a, t, n, feature, u1 + 0.14, u2 - 0.14, feature.v_m + 0.42, top - 0.22,
          depth - 0.17, depth - 0.13, "glazing", "glass")
     _add(mb, a, t, n, feature, u1 - 0.05, u2 + 0.05, top, top + 0.10,
-         -0.02, depth + 0.06, "bay_window_roof", "stone")
+         -0.02, depth + 0.06, "bay_window_roof", "stone", chamfer=CHAMFER_M)
 
 
 def eave(mb, a, t, n, feature):

@@ -107,6 +107,38 @@ class EnvelopeTests(unittest.TestCase):
         self.assertIs(builder.limit_for("balcony_slab"), parcel)
 
 
+class ChamferTests(unittest.TestCase):
+    def setUp(self):
+        self.parcel = box(-5, -5, 5, 5)
+        self.a = np.array([0.0, 0.0])
+        self.t = np.array([1.0, 0.0])
+        self.n = np.array([0.0, -1.0])
+
+    def build(self, chamfer):
+        builder = MeshBuilder(self.parcel)
+        builder.box(self.a, self.t, self.n, 0, 2.0, 0.0, 0.4, 0.0, 0.3,
+                    "stone", "boundary_cap", chamfer=chamfer)
+        return builder.finish()
+
+    def test_a_chamfer_breaks_the_top_arris_without_moving_the_top(self):
+        plain, broken = self.build(0.0), self.build(0.02)
+        self.assertGreater(len(broken.faces), len(plain.faces))
+        self.assertAlmostEqual(plain.vertices[:, 2].max(),
+                               broken.vertices[:, 2].max())
+        # The topmost course is inset by the chamfer on both axes.
+        top = broken.vertices[np.isclose(broken.vertices[:, 2], 0.4)]
+        self.assertAlmostEqual(top[:, 0].min(), 0.02)
+        self.assertAlmostEqual(top[:, 0].max(), 1.98)
+
+    def test_a_chamfer_too_large_for_the_box_is_ignored(self):
+        builder = MeshBuilder(self.parcel)
+        builder.box(self.a, self.t, self.n, 0, 2.0, 0.0, 0.02, 0.0, 0.3,
+                    "stone", "boundary_cap", chamfer=0.05)
+        thin = builder.finish()
+        self.assertAlmostEqual(thin.vertices[:, 2].max(), 0.02)
+        self.assertGreater(len(thin.faces), 0)
+
+
 class ZOffsetTests(unittest.TestCase):
     def setUp(self):
         self.builder = MeshBuilder(box(-20, -20, 20, 20))

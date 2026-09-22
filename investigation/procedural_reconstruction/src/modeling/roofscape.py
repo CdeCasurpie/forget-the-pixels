@@ -353,14 +353,15 @@ def build_roof(mb, plan, rng):
                 cap = field.difference(field.buffer(-0.19, join_style=2))
                 for polygon, _ in tiles:
                     cap = cap.difference(polygon.buffer(0.06, join_style=2))
+                # Two courses rather than one slab: the break in the arris is
+                # what keeps the coping from reading as a drawn line.
+                head = plan.roof_z + plan.parapet_height_m
                 for piece in polygons(cap):
-                    mb.solid(
-                        piece,
-                        plan.roof_z + plan.parapet_height_m,
-                        plan.roof_z + plan.parapet_height_m + 0.07,
-                        "stone",
-                        "parapet_cap",
-                    )
+                    mb.solid(piece, head, head + 0.05, "stone", "parapet_cap")
+                    weathered = piece.buffer(-0.015, join_style=2)
+                    for inner in polygons(weathered):
+                        mb.solid(inner, head + 0.05, head + 0.07, "stone",
+                                 "parapet_cap")
 
     for prop in plan.props:
         builder = BUILDERS.get(prop.kind)
