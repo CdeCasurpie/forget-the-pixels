@@ -8,6 +8,7 @@ a secondary mass hung on a wall: mouldings, balconies, galleries, awnings, bays.
 import numpy as np
 from shapely.geometry import Polygon
 
+from .detail import DEFAULT_BUDGET
 from .prefabs import sign_letters
 
 LEGACY_KINDS = ("panel", "frame", "ledge", "canopy", "curved_canopy")
@@ -34,6 +35,8 @@ def _footprint(a, t, n, u1, u2, w1, w2):
 
 def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
     """Railing around a projecting slab: bars, turned balusters or solid."""
+    spacing = getattr(mb, "budget", DEFAULT_BUDGET).balustrade_spacing_m
+
     def point(u, height, out):
         xy = np.asarray(a, float) + t * u + n * out
         return (*xy, height)
@@ -53,7 +56,7 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
     if style == "balusters":
         mb.box(a, t, n, u1, u2, z, z + 0.10, depth - 0.10, depth, "stone",
                "balustrade")
-        for u in np.arange(u1 + 0.10, u2 - 0.05, 0.18):
+        for u in np.arange(u1 + 0.10, u2 - 0.05, max(0.18, spacing * 1.4)):
             mb.box(a, t, n, u, u + 0.09, z + 0.10, top - 0.09,
                    depth - 0.09, depth - 0.01, "stone", "baluster")
         mb.box(a, t, n, u1, u2, top - 0.09, top, depth - 0.12, depth + 0.02,
@@ -61,19 +64,22 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
         for u in (u1, u2 - 0.09):
             mb.box(a, t, n, u, u + 0.09, z, top, 0.0, depth, "stone", "baluster")
         return
+    # Square section rather than round: it is what Lima ironwork is actually
+    # made of, and a box costs 12 triangles against a cylinder's 32 — which
+    # matters when a five-storey corner carries several hundred bars.
     for height in (z + 0.18, top):
-        mb.beam(point(u1, height, depth - 0.03), point(u2, height, depth - 0.03),
-                0.024, material=material, semantic="balcony_handrail")
-        for u in (u1, u2):
-            mb.beam(point(u, height, 0.02), point(u, height, depth - 0.03), 0.024,
-                    material=material, semantic="balcony_return")
-    for u in np.arange(u1, u2 + 1e-6, 0.13):
-        mb.beam(point(u, z + 0.18, depth - 0.03), point(u, top, depth - 0.03),
-                0.012, material=material, semantic="balcony_bar")
-    for u in (u1, u2):
-        for out in np.arange(0.06, depth - 0.02, 0.13):
-            mb.beam(point(u, z + 0.18, out), point(u, top, out), 0.012,
-                    material=material, semantic="balcony_bar")
+        mb.box(a, t, n, u1 - 0.02, u2 + 0.02, height - 0.024, height + 0.024,
+               depth - 0.055, depth - 0.007, material, "balcony_handrail")
+        for u in (u1, u2 - 0.048):
+            mb.box(a, t, n, u, u + 0.048, height - 0.024, height + 0.024,
+                   0.02, depth - 0.007, material, "balcony_return")
+    for u in np.arange(u1, u2 - 0.01, spacing):
+        mb.box(a, t, n, u, u + 0.024, z + 0.18, top,
+               depth - 0.042, depth - 0.018, material, "balcony_bar")
+    for u in (u1, u2 - 0.024):
+        for out in np.arange(0.06, depth - 0.03, spacing):
+            mb.box(a, t, n, u, u + 0.024, z + 0.18, top, out, out + 0.024,
+                   material, "balcony_bar")
 
 
 # ── legacy kinds, kept byte-compatible in their part names ──────────────────

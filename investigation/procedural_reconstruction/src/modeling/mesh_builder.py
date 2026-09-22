@@ -14,17 +14,18 @@ from shapely import constrained_delaunay_triangles
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
 from domain import BuildingAppearance, MeshData
+from .detail import DEFAULT_BUDGET
 from .materials import material_to_dict, resolve_materials
 
 
-# Attachments allowed to reach past the cadastral line into the street overhang
-# envelope. Structural mass (walls, slabs, parapets, roofs, boundaries) is never
-# in this set and stays clipped to the parcel.
 # Triangles below this are numerical debris, not geometry: clipping a solid
 # against a rotated cadastral boundary routinely produces slivers of ~1e-20 m².
 # Emitting them corrupts normals and fails mesh validation downstream.
 MIN_TRIANGLE_AREA_M2 = 1e-12
 
+# Attachments allowed to reach past the cadastral line into the street overhang
+# envelope. Structural mass (walls, slabs, parapets, roofs, boundaries) is never
+# in this set and stays clipped to the parcel.
 PROJECTING_SEMANTICS = frozenset({
     # balconies and galleries
     "balcony_slab", "balcony_handrail", "balcony_bar", "balcony_return",
@@ -85,8 +86,11 @@ def triangles(polygon):
 
 
 class MeshBuilder:
-    def __init__(self, parcel, appearance=BuildingAppearance(), *, envelope=None):
+    def __init__(self, parcel, appearance=BuildingAppearance(), *, envelope=None,
+                 budget=DEFAULT_BUDGET):
         self.parcel = parcel
+        # How many repeats the caller is willing to pay for at this distance.
+        self.budget = budget
         # Attachments are clipped to this instead of the parcel. Defaults to the
         # parcel, so a caller that does not opt in keeps the old behaviour.
         self.envelope = parcel if envelope is None else envelope

@@ -15,6 +15,7 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
 from domain.architecture import RoofPlan, RoofProp, RoofSurface
+from modeling.detail import DEFAULT_BUDGET
 from modeling.geometry_constraints import (
     apply_edge_setbacks,
     largest_polygon,
@@ -207,7 +208,8 @@ def scatter_props(area, weights, rng, *, density=0.10, limit=14):
     return tuple(placed)
 
 
-def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot"):
+def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot",
+              budget=DEFAULT_BUDGET):
     """Decide the surfaces, parapet and objects of one mass's roof."""
     rng = np.random.default_rng(resolve_seed(seed, lot_id, mass.id, "roof", "plan"))
     roof_z = float(mass.roof_z)
@@ -240,16 +242,27 @@ def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot"
             )
             flat_parts.append(remainder)
 
+    # Drawn before anything the budget can influence: how many objects stand on
+    # a roof is a rendering decision, how tall its parapet is is not, and a
+    # shared random stream would let the first silently change the second.
+    parapet = 0.0 if mass.role == "azotea" else float(rng.uniform(0.35, 0.75))
+
     props = ()
     if flat_parts:
         field = largest_polygon(unary_union(flat_parts))
         if field is not None and field.area > 4.0:
-            density = 0.16 if program.maintenance != "premium" else 0.09
+            density = budget.roof_prop_density
+            if program.maintenance == "premium":
+                density *= 0.6
             props = scatter_props(
-                field, _weights_for(mass, program), rng, density=density
+                field,
+                _weights_for(mass, program),
+                np.random.default_rng(
+                    resolve_seed(seed, lot_id, mass.id, "roof", "props")
+                ),
+                density=density,
+                limit=budget.roof_prop_limit,
             )
-
-    parapet = 0.0 if mass.role == "azotea" else float(rng.uniform(0.35, 0.75))
     return RoofPlan(
         mass_id=mass.id,
         surfaces=tuple(surfaces),

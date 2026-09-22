@@ -12,11 +12,12 @@ them, and the relief that belongs to a rhythm is emitted together with it.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import numpy as np
 
 from domain.models import FacadeMaterialRegion, FacadeProjection, Opening
+from modeling.detail import DEFAULT_BUDGET
 
 # Bay rhythm, opening programme and relief per architectural family. Read as
 # data: no family may reach into the geometry, and the grammar may not infer a
@@ -192,10 +193,17 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
             dropped.append(f"ground_bay_{index}_outside_wall")
             continue
         if kind == "window":
-            sill = min(rules["sill"], z1 - z0 - height - 0.2)
+            # One sill value, used for both the position and the remaining
+            # height. Clamping only the position let the height overrun the
+            # storey on a low band.
+            sill = max(0.4, min(rules["sill"], z1 - z0 - height - 0.2))
+            available = z1 - z0 - sill - 0.3
+            if available < 0.5:
+                dropped.append(f"ground_bay_{index}_window_does_not_fit")
+                continue
             openings.append(
-                _opening(kind, u, z0 + max(0.4, sill),
-                         width, min(rules["window_h"], z1 - z0 - sill - 0.3),
+                _opening(kind, u, z0 + sill, width,
+                         min(rules["window_h"], available),
                          rules, prefab=prefab, grille=grille,
                          columns=max(2, int(width / 0.8)))
             )
@@ -258,7 +266,7 @@ def _upper_openings(axes, pitch, z0, z1, length, floor_index, rules, rng, droppe
 
 def compose_wall(length, floor_levels, *, is_front, family, program, rng,
                  band_height, is_ground_band=True, is_top_band=True,
-                 mass_role="main"):
+                 mass_role="main", budget=DEFAULT_BUDGET):
     """Openings, relief and finish zones for one exposed wall band."""
     if not is_front:
         return WallComposition()
@@ -284,12 +292,39 @@ def compose_wall(length, floor_levels, *, is_front, family, program, rng,
         )
         openings.extend(made)
 
+    # Nothing may leave this function that the wall builder would reject: one
+    # bad opening used to abort the whole lot with an exception. Filtered before
+    # the relief pass, so a dropped window cannot leave a balcony hanging on a
+    # blank wall.
+    fitted = []
+    for opening in openings:
+        if opening.u_m < 0.12 or opening.u_m + opening.width_m > length - 0.12:
+            dropped.append(f"opening_at_{opening.u_m:.2f}_outside_wall")
+            continue
+        if opening.v_m < 0 or opening.v_m + opening.height_m > band_height - 0.12:
+            dropped.append(f"opening_at_{opening.v_m:.2f}_above_band")
+            continue
+        if opening.width_m <= 0 or opening.height_m <= 0.4:
+            dropped.append(f"opening_at_{opening.u_m:.2f}_degenerate")
+            continue
+        fitted.append(opening)
+    openings = fitted
+
     projections, regions = _relief(
         length, levels, axes, pitch, openings, rules, band_height,
-        is_ground_band, is_top_band, rng, dropped
+        is_ground_band, is_top_band, rng, dropped, budget
+    )
+
+    # The balcony projection carries the slab and its railing. Leaving the
+    # opening marked as a balcony window would make the opening builder draw a
+    # second slab and a second railing on top of it — the single largest source
+    # of duplicate geometry in the model.
+    resolved = tuple(
+        replace(opening, kind="window") if opening.kind == "balcony_window" else opening
+        for opening in openings
     )
     return WallComposition(
-        openings=tuple(openings),
+        openings=resolved,
         projections=tuple(projections),
         material_regions=tuple(regions),
         dropped=tuple(dropped),
@@ -297,7 +332,7 @@ def compose_wall(length, floor_levels, *, is_front, family, program, rng,
 
 
 def _relief(length, levels, axes, pitch, openings, rules, band_height,
-            is_ground_band, is_top_band, rng, dropped):
+            is_ground_band, is_top_band, rng, dropped, budget):
     """Applied mouldings, cantilevers and finish zones implied by the rhythm."""
     projections, regions = [], []
 
@@ -313,7 +348,7 @@ def _relief(length, levels, axes, pitch, openings, rules, band_height,
                              source="family_rule", label=label)
         )
 
-    if rules["sill_band"]:
+    if rules["sill_band"] and budget.wants_sill_bands:
         for level in levels[1:-1] if len(levels) > 2 else []:
             add("sill_band", 0.06, level + 0.02, length - 0.12, 0.10, 0.13)
 
@@ -349,9 +384,10 @@ def _relief(length, levels, axes, pitch, openings, rules, band_height,
         width = min(length - 0.9, 3.6)
         if head > 2.1 and width > 1.6:
             add("sign_box", (length - width) / 2.0, head, width, 0.46, 0.10,
-                material="sign", label=rules["sign"])
+                material="sign",
+                label=rules["sign"] if budget.wants_lettering else "")
 
-    if rules["shutters"]:
+    if rules["shutters"] and budget.wants_shutters:
         for opening in openings:
             if opening.kind != "window" or opening.v_m < levels[0] + 1.0:
                 continue

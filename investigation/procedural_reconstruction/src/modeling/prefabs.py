@@ -1,6 +1,8 @@
 """Small architectural assemblies in facade metres. No random choices here."""
 import numpy as np
 
+from .detail import DEFAULT_BUDGET
+
 
 def sign_letters(mb,a,t,n,feature):
     """Small vector-style sign alphabet; unsupported characters are rejected."""
@@ -38,6 +40,7 @@ def build_opening(mb, a, t, n, op):
         raise ValueError("Invalid opening prefab/curtain")
     if op.grille_pattern not in ("vertical", "grid", "diamond"):
         raise ValueError("Invalid grille pattern")
+    budget = getattr(mb, "budget", DEFAULT_BUDGET)
     u,v,w,h = op.u_m,op.v_m,op.width_m,op.height_m
     f,r = min(op.frame_width_m,w/6,h/6),op.recess_m
     def b(x1,x2,z1,z2,d1,d2,mat,part):
@@ -53,12 +56,13 @@ def build_opening(mb, a, t, n, op):
         b(u+f,u+w-f,v+f,v+h-f,-r-.018,-r,"glass","glazing")
         # Backing and curtains provide depth behind glass, without a full interior.
         b(u+f,u+w-f,v+f,v+h-f,-r-.40,-r-.38,"interior","interior_backing")
-        if op.curtain:
+        if op.curtain and budget.wants_curtains:
             span=(w-2*f)*op.curtain/2
+            fold=budget.curtain_fold_m
             for left in (u+f,u+w-f-span):
-                for x in np.arange(left,left+span,.055):
+                for x in np.arange(left,left+span,fold):
                     d=-r-.14+.012*np.cos((x-left)*2*np.pi/.11)
-                    b(x,min(x+.055,left+span),v+f,v+h-f,d-.014,d,"curtain","curtain_fold")
+                    b(x,min(x+fold,left+span),v+f,v+h-f,d-.014,d,"curtain","curtain_fold")
         for j in range(1,max(1,op.mullion_columns)):
             x=u+w*j/op.mullion_columns
             b(x-.012,x+.012,v+f,v+h-f,-r-.008,-r+.035,"frame","slim_mullion")
@@ -84,7 +88,7 @@ def build_opening(mb, a, t, n, op):
         def p(x,z):
             xy=a+t*x+n*.045
             return (*xy,z)
-        for x in np.arange(u+.07,u+w-.03,.14):
+        for x in np.arange(u+.07,u+w-.03,budget.grille_spacing_m):
             mb.beam(p(x,v+.03),p(x,v+h-.03),.007,semantic="security_bar")
         for z in np.arange(v+.15,v+h-.03,.35 if op.grille_pattern=="grid" else .8):
             mb.beam(p(u+.03,z),p(u+w-.03,z),.009,semantic="security_crossbar")

@@ -11,6 +11,7 @@ from domain import BuildingSpecification
 from .mesh_builder import MeshBuilder, triangles, polygons
 from domain.architecture import BuildingSpecificationV4
 from domain.models import FacadeSpecification, Opening, RoofSpecification
+from modeling.detail import DEFAULT_BUDGET, DetailBudget
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import compose_wall, resolve_family
 from modeling.geometry_constraints import (
@@ -216,7 +217,8 @@ def opening(mb, a, t, n, op, pattern):
             "window_sill",
         )
     if op.grille:
-        for x in np.arange(u + 0.08, u + w - 0.04, 0.13):
+        grille_pitch = getattr(mb, "budget", DEFAULT_BUDGET).grille_spacing_m
+        for x in np.arange(u + 0.08, u + w - 0.04, grille_pitch):
             b(
                 x,
                 x + 0.016,
@@ -481,7 +483,8 @@ def facade(mb, f, total_height):
                     
             mb.box(a, t, n, u1, u2, z1, z2, -0.20, depth_outer, wall_material, "wall")
             if f.is_front and f.cladding == "horizontal":
-                for y in np.arange(np.ceil(z1 / 0.24) * 0.24, z2 - 0.018, 0.24):
+                pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
+                for y in np.arange(np.ceil(z1 / pitch) * pitch, z2 - 0.018, pitch):
                     mb.box(
                         a,
                         t,
@@ -1080,7 +1083,11 @@ def _floor_levels_for_band(mass, z_bottom, z_top):
 
 # ── main entry point ─────────────────────────────────────────────────────────
 
-def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
+def generate_v4_mesh(spec: BuildingSpecificationV4, *, detail=None) -> MeshData:
+    """Assemble one lot. `detail` trades repeat geometry against distance."""
+    budget = detail if isinstance(detail, DetailBudget) else (
+        DetailBudget(detail) if detail is not None else DEFAULT_BUDGET
+    )
     r, g, b = spec.program.primary_color
     rgb_255 = (int(r * 255), int(g * 255), int(b * 255))
     appearance = appearance_for_style(
@@ -1089,7 +1096,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
 
     parcel = parcel_polygon(spec.context)
     builder = MeshBuilder(
-        parcel, appearance, envelope=street_envelope(spec.context)
+        parcel, appearance, envelope=street_envelope(spec.context), budget=budget
     )
     rng = np.random.default_rng(spec.seed)
     streets = front_lines(spec.context)
@@ -1141,9 +1148,13 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         program=spec.program,
                         rng=rng,
                         band_height=band_height,
-                        is_ground_band=z_bottom <= mass.base_z + 0.01,
+                        # The street storey, not merely the bottom of this
+                        # volume: a rooftop addition sits at its own base and
+                        # must not be given shopfronts and entrance doors.
+                        is_ground_band=z_bottom <= 0.01,
                         is_top_band=abs(z_top - mass.roof_z) < 0.01,
                         mass_role=mass.role,
+                        budget=budget,
                     )
 
                     # To match legacy grammar.py, we MUST pass CCW vertices (so n points inwards)
@@ -1243,6 +1254,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                     parcel,
                     spec.seed,
                     lot_id=str(spec.program.seed),
+                    budget=budget,
                 ),
                 rng,
             )

@@ -129,12 +129,23 @@ class ProgrammeTests(unittest.TestCase):
             any(o.kind == "gate" and o.prefab == "roller" for o in composition.openings)
         )
 
-    def test_a_balcony_family_emits_matching_balcony_projections(self):
+    def test_a_balcony_family_puts_a_balcony_under_a_window(self):
         composition = compose(family="balcony_apartments", length=11.0)
-        balcony_windows = [o for o in composition.openings if o.kind == "balcony_window"]
         balconies = [p for p in composition.projections if p.kind == "balcony"]
-        self.assertTrue(balcony_windows)
-        self.assertEqual(len(balconies), len(balcony_windows))
+        self.assertTrue(balconies)
+        # The projection owns the slab and railing, so the opening it belongs to
+        # must be a plain window; otherwise both would draw a balcony.
+        self.assertNotIn("balcony_window", {o.kind for o in composition.openings})
+        for balcony in balconies:
+            self.assertTrue(
+                any(
+                    abs(o.v_m - balcony.v_m) < 1e-6
+                    and o.u_m >= balcony.u_m - 1e-6
+                    and o.u_m + o.width_m <= balcony.u_m + balcony.width_m + 1e-6
+                    for o in composition.openings
+                ),
+                "balcony has no window behind it",
+            )
 
     def test_a_republican_facade_carries_its_order(self):
         composition = compose(family="republicano", length=11.0)

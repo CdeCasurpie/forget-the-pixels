@@ -48,11 +48,21 @@ def validate_mesh(mesh, parcel, *, envelope=None, tolerance_m=CONTAINMENT_TOLERA
         mesh.materials
     ):
         raise ValueError("Invalid material indices")
+    faces_by_semantic = {}
+    for part in mesh.parts:
+        faces_by_semantic[part["name"]] = (
+            faces_by_semantic.get(part["name"], 0) + part["face_count"]
+        )
     return {
         "vertices": len(mesh.vertices),
         "triangles": len(mesh.faces),
         "parts": len(mesh.parts),
         "semantic_types": sorted({p["name"] for p in mesh.parts}),
+        # Face counts per element, so a regression run can compare what changed
+        # rather than only whether the total moved.
+        "faces_by_semantic": dict(
+            sorted(faces_by_semantic.items(), key=lambda item: -item[1])
+        ),
         "max_outside_triangle_area_m2": float(outside.max()),
         "min_triangle_area_m2": float(areas.min()),
         "envelope_test": "passed",

@@ -12,6 +12,7 @@ from shapely.geometry import LineString, Point, Polygon
 from shapely.ops import unary_union
 
 from modeling.boundaries import generate_boundaries
+from modeling.detail import DEFAULT_BUDGET
 from modeling.geometry_constraints import largest_polygon, outward_normal
 from modeling.mesh_builder import polygons
 
@@ -22,6 +23,8 @@ MIN_GARDEN_AREA_M2 = 0.8
 
 def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="reja"):
     """One run of perimeter fence, interrupted by its gates."""
+    budget = getattr(mb, "budget", DEFAULT_BUDGET)
+    bar_pitch = budget.fence_bar_spacing_m
     height = boundary.height if style != "low" else 1.2
     base_h = 0.6
 
@@ -47,10 +50,11 @@ def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="re
             continue
         if style == "reja":
             mb.box(a, t, n, u1, u2, 0.0, base_h, -0.15, 0.0, "brick", "boundary_base")
-            for row, level in enumerate(np.arange(0.08, base_h - 0.02, 0.13)):
-                mb.box(a, t, n, u1 + 0.02, u2 - 0.02, level, level + 0.012,
-                       -0.155, -0.145, "stone", "mortar")
-            step = (u2 - u1) / max(1, int((u2 - u1) / 0.15))
+            if budget.wants_mortar_courses:
+                for level in np.arange(0.08, base_h - 0.02, 0.13):
+                    mb.box(a, t, n, u1 + 0.02, u2 - 0.02, level, level + 0.012,
+                           -0.155, -0.145, "stone", "mortar")
+            step = (u2 - u1) / max(1, int((u2 - u1) / bar_pitch))
             for bar_u in np.arange(u1, u2 - 0.01, step):
                 mb.box(a, t, n, bar_u, bar_u + 0.02, base_h, height, -0.09, -0.07,
                        "metal", "fence_bar")
@@ -77,7 +81,7 @@ def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="re
                 right = u1 + (index + 1) * pitch - 0.15
                 if right <= left:
                     continue
-                step = (right - left) / max(1, int((right - left) / 0.15))
+                step = (right - left) / max(1, int((right - left) / bar_pitch))
                 for bar_u in np.arange(left, right - 0.01, step):
                     mb.box(a, t, n, bar_u, bar_u + 0.02, base_h, height, -0.11,
                            -0.09, "metal", "fence_bar")
