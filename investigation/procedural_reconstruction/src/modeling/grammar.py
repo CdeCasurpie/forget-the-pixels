@@ -20,6 +20,7 @@ from modeling.geometry_constraints import (
 )
 from modeling.materials import appearance_for_style
 from modeling.mesh_builder import MeshData
+from modeling.roofscape import build_roof, plan_roof
 
 # How far an attachment may overhang the cadastral line over the sidewalk.
 # 1.35 m clears a 1.0 m balcony slab plus its railing return.
@@ -1232,6 +1233,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
         parcel, appearance, envelope=street_envelope(spec.context)
     )
     rng = np.random.default_rng(spec.seed)
+    streets = front_lines(spec.context)
 
     exposures = calculate_mass_exposures(spec.site_plan)
 
@@ -1343,28 +1345,23 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                                              0.0, 0.005,
                                              "decal_drip", "decal")
 
-        # ── 2. Roofs via legacy roof_details() ───────────────────────────
+        # ── 2. Roofs: surfaces, parapet and scattered rooftop objects ────
         roof_data = mass_exposure.get("roof")
-        if roof_data and roof_data["exposed_area"]:
-            roof_z = roof_data["z"]
-            exposed_area = roof_data["exposed_area"]
-
-            polys = (
-                [exposed_area]
-                if exposed_area.geom_type == 'Polygon'
-                else list(exposed_area.geoms)
+        exposed_roof = roof_data["exposed_area"] if roof_data else None
+        if exposed_roof is not None and not exposed_roof.is_empty:
+            build_roof(
+                builder,
+                plan_roof(
+                    mass,
+                    spec.program,
+                    exposed_roof,
+                    streets,
+                    parcel,
+                    spec.seed,
+                    lot_id=str(spec.program.seed),
+                ),
+                rng,
             )
-            for poly in polys:
-                if poly.is_empty or poly.area < 0.5:
-                    continue
-                roof_spec = RoofSpecification(
-                    kind="flat",
-                    parapet_height_m=0.5 if mass.role != "podium" else 0.3,
-                    terrace_room=(mass.role == "tower" and poly.area > 8),
-                    canopy=(mass.role == "tower"),
-                    water_tank=(mass.role == "tower" and poly.area > 6),
-                )
-                roof_details(builder, poly, roof_z, roof_spec, rng)
 
     # ── 3. Boundaries (fences, gates) ────────────────────────────────────
     from modeling.boundaries import generate_boundaries

@@ -78,6 +78,43 @@ class ComponentRecord:
     mesh_slice: tuple[int, int]
 
 @dataclass(frozen=True)
+class RoofSurface:
+    """One continuous roof plane over part of a mass.
+
+    A sloped surface rises from `eave_point` along `inward_normal`, so a tile
+    apron can hang below the wall head over the pavement while the same plane
+    climbs to a ridge inside the lot.
+    """
+    polygon: tuple[tuple[float, float], ...]
+    kind: str  # flat | tile_shed | corrugated
+    base_z: float
+    slope_deg: float = 0.0
+    eave_point: tuple[float, float] = (0.0, 0.0)
+    inward_normal: tuple[float, float] = (0.0, 1.0)
+    thickness_m: float = 0.14
+
+
+@dataclass(frozen=True)
+class RoofProp:
+    """One object standing on a roof, placed in world XY."""
+    kind: str
+    position: tuple[float, float]
+    rotation_deg: float = 0.0
+    scale: float = 1.0
+    seed: int = 0
+
+
+@dataclass(frozen=True)
+class RoofPlan:
+    mass_id: str
+    surfaces: tuple[RoofSurface, ...]
+    props: tuple[RoofProp, ...] = ()
+    parapet_height_m: float = 0.5
+    parapet_profile: str = "cap"  # none | cap
+    roof_z: float = 0.0
+
+
+@dataclass(frozen=True)
 class SitePlan:
     masses: tuple[MassSpec, ...]
     free_space: tuple[tuple[float, float], ...]

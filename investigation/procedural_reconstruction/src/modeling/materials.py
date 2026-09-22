@@ -17,6 +17,7 @@ DEFAULT_MATERIALS = (
     MaterialSpecification("wood", "wood", (0.38, 0.28, 0.19), 0.55, texture_set="wood_vertical", real_scale_m=1.2),
     MaterialSpecification("brick", "brick", (0.60, 0.43, 0.31), 0.88, texture_set="brick_running_bond", real_scale_m=200.0, normal_strength=4.0),
     MaterialSpecification("roof", "corrugated_metal", (0.49, 0.53, 0.54), 0.42, metallic=0.72, texture_set="galvanized_corrugated", real_scale_m=1.0),
+    MaterialSpecification("roof_tile", "clay_tile", (0.58, 0.29, 0.19), 0.80, texture_set=None, real_scale_m=0.35),
     # Shrub foliage: parameter-only (leaf_cluster is ground grass, not bush texture)
     MaterialSpecification("leaf", "foliage", (0.30, 0.40, 0.27), 0.88, texture_set=None, real_scale_m=0.7),
     MaterialSpecification("soil", "soil", (0.29, 0.27, 0.23), 0.96, texture_set="dry_soil", real_scale_m=1.0),

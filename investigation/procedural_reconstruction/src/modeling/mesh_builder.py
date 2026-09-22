@@ -46,7 +46,7 @@ PROJECTING_SEMANTICS = frozenset({
     "shutter_leaf", "shutter_slat",
     # eaves and awnings
     "eave", "eave_fascia", "rafter_tail", "awning", "awning_arm",
-    "awning_valance", "tile_eave_course",
+    "awning_valance", "tile_eave_course", "tile_roof", "tile_ridge",
     # bay windows
     "bay_window_wall", "bay_window_slab", "bay_window_roof",
     # services
