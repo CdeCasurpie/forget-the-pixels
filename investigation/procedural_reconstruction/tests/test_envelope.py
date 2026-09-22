@@ -28,7 +28,9 @@ from modeling.validation import validate_mesh
 LOT = ((-5.0, -10.0), (5.0, -10.0), (5.0, 10.0), (-5.0, 10.0), (-5.0, -10.0))
 
 
-def build_spec(footprint=None, floors=4, finish="premium", fronts=(0,)):
+def build_spec(footprint=None, floors=4, finish="premium", fronts=(0,),
+               language="balcony_apartments"):
+    """A lot whose family guarantees balconies, so envelope reach is testable."""
     levels = tuple(float(i * 2.8) for i in range(floors + 1))
     mass = MassSpec(
         id="main",
@@ -45,7 +47,7 @@ def build_spec(footprint=None, floors=4, finish="premium", fronts=(0,)):
             use="residential",
             occupancy="medium",
             placement="flush",
-            architectural_language="informal",
+            architectural_language=language,
             finish_profile=finish,
             maintenance="average",
             construction_state="completed",

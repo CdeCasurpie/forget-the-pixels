@@ -24,8 +24,12 @@ from modeling.mesh_builder import polygons
 from modeling.prefabs_roof import BUILDERS, FOOTPRINTS, frame
 from modeling.randomness import resolve_seed
 
-TILE_SLOPE_DEG = 22.0
-TILE_EAVE_OVERHANG_M = 0.45
+TILE_SLOPE_DEG = 20.0
+TILE_EAVE_OVERHANG_M = 0.38
+# A tiled band is a band, not a roof: past roughly half the depth it stops
+# reading as a street-facing eave and starts looking like a barn dropped on top.
+TILE_MAX_DEPTH_FRACTION = 0.5
+TILE_MAX_DEPTH_M = 3.6
 PROP_EDGE_CLEARANCE_M = 0.55
 PROP_SPACING_M = 0.28
 
@@ -82,6 +86,13 @@ def _sweep(polygon, direction, distance, steps=4):
     return largest_polygon(unary_union(parts)) or polygon
 
 
+def _depth_span(polygon, outward):
+    """How far the polygon reaches back from its most street-ward point."""
+    coords = np.asarray(polygon.exterior.coords)[:, :2]
+    projected = coords @ np.asarray(outward, float)
+    return float(projected.max() - projected.min())
+
+
 def _eave_reference(strip, outward):
     """Point on the strip furthest towards the street, used as the eave datum."""
     coords = np.asarray(strip.exterior.coords)[:, :2]
@@ -95,7 +106,15 @@ def _tile_surface(polygon, fronts, parcel, base_z, rng):
     line = min(fronts, key=lambda front: front.distance(polygon))
     if line.distance(polygon) > 0.6:
         return None, polygon
-    depth = float(rng.uniform(2.6, 4.4))
+    _, probe_outward, _ = outward_normal(parcel, line.coords[0], line.coords[-1])
+    if probe_outward is None:
+        return None, polygon
+    span = _depth_span(polygon, probe_outward)
+    depth = float(
+        min(rng.uniform(2.4, 3.6), span * TILE_MAX_DEPTH_FRACTION, TILE_MAX_DEPTH_M)
+    )
+    if depth < 1.8:
+        return None, polygon
     rear = largest_polygon(apply_edge_setbacks(polygon, [line], depth))
     if rear is None:
         return None, polygon
@@ -291,14 +310,20 @@ def build_roof(mb, plan, rng):
         inward = np.asarray(surface.inward_normal, float)
         base = surface.base_z
 
-        ridge = polygon.difference(
-            translate(polygon, xoff=-inward[0] * 0.12, yoff=-inward[1] * 0.12)
+        # Close the whole perimeter except the eave: the ridge at the back and
+        # the two gable triangles at the sides, which otherwise leave the roof
+        # open and show its underside from every oblique view.
+        eave_band = polygon.difference(
+            translate(polygon, xoff=inward[0] * 0.35, yoff=inward[1] * 0.35)
         )
-        for piece in polygons(ridge):
+        skirt = polygon.difference(
+            polygon.buffer(-0.13, join_style=2)
+        ).difference(eave_band.buffer(0.02, join_style=2))
+        for piece in polygons(skirt):
             mb.solid(
                 piece,
                 base,
-                lambda x, y, f=top, b=base: max(f(x, y), b + 0.02),
+                lambda x, y, f=bottom, b=base: max(f(x, y), b + 0.02),
                 "roof_tile",
                 "tile_ridge",
             )

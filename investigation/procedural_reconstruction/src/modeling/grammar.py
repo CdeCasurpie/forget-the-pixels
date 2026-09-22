@@ -12,6 +12,7 @@ from .mesh_builder import MeshBuilder, triangles, polygons
 from domain.architecture import BuildingSpecificationV4
 from domain.models import FacadeSpecification, Opening, RoofSpecification
 from modeling.exposure import calculate_mass_exposures
+from modeling.facade_program import compose_wall, resolve_family
 from modeling.geometry_constraints import (
     front_lines,
     outward_normal,
@@ -537,7 +538,7 @@ def facade(mb, f, total_height):
                     "corner_pilaster",
                 )
 
-    if f.is_front and f.ornamented:
+    if f.is_front:
         if f.services and length > 3.5:
             # Air conditioning condenser, louvers, brackets and a drainpipe.
             first_floor = f.floor_levels_m[1] if len(f.floor_levels_m) > 2 else 0
@@ -1076,116 +1077,6 @@ def _floor_levels_for_band(mass, z_bottom, z_top):
     return tuple(levels)
 
 
-def _generate_openings_for_wall(length, floor_levels, is_front, program, rng):
-    """
-    Create highly varied legacy Opening objects for a wall segment.
-    Uses program.use to pick commercial vs residential, and randomizes frames heavily.
-    """
-    openings = []
-    if not is_front:
-        return tuple(openings)
-
-    # Decide a unified style for this wall to keep some consistency
-    wall_residential_prefab = "legacy" if rng.random() < 0.8 else "slim_window"
-    
-    for fi in range(len(floor_levels) - 1):
-        z_floor = floor_levels[fi]
-        z_ceil = floor_levels[fi + 1]
-        fh = z_ceil - z_floor
-        is_ground = (z_floor < 0.5)
-        # v_m is relative to the BAND bottom
-        v_base = z_floor - floor_levels[0]
-
-        if program.use in ("commercial", "mixed") and is_ground:
-            # Large shopfront openings or huge gates
-            margin = 0.6
-            bay_w = min(3.0, length - margin * 2)
-            num_bays = max(1, int((length - margin * 2) / bay_w))
-            start = (length - num_bays * bay_w) / 2.0
-            for b in range(num_bays):
-                u = start + b * bay_w + 0.1
-                w = bay_w - 0.2
-                if w < 1.0 or u + w > length - 0.12:
-                    continue
-                # 30% legacy thick gate, 35% roller, 35% storefront
-                r = rng.random()
-                prefab_type = "legacy" if r < 0.3 else ("roller" if r < 0.65 else "storefront")
-                openings.append(Opening(
-                    kind="gate" if prefab_type != "storefront" else "window", 
-                    u_m=u, v_m=v_base + 0.0,
-                    width_m=w, height_m=min(fh - 0.3, 3.0),
-                    frame_width_m=0.08, recess_m=0.12 if prefab_type == "legacy" else 0.06,
-                    mullion_columns=max(1, int(w / 1.5)),
-                    mullion_rows=1, style="paneled",
-                    prefab=prefab_type, curtain=0.0, grille=False,
-                ))
-        else:
-            # Residential windows
-            win_w = 1.6 if program.finish_profile == "premium" else float(rng.uniform(1.0, 1.4))
-            win_h = 1.6 if program.finish_profile == "premium" else float(rng.uniform(1.2, 1.5))
-            sill_v = 0.5 if program.finish_profile == "premium" else float(rng.uniform(0.7, 1.0))
-            spacing = win_w + float(rng.uniform(0.8, 1.5))
-
-            num_wins = int((length - 0.5) / spacing)
-            if num_wins < 1:
-                continue
-            start_u = (length - num_wins * spacing) / 2.0 + (spacing - win_w) / 2.0
-
-            for wi in range(num_wins):
-                u = start_u + wi * spacing
-                v = v_base + sill_v
-                if u < 0.12 or u + win_w > length - 0.12:
-                    continue
-                if v + win_h > (z_ceil - floor_levels[0]) - 0.10:
-                    continue
-                
-                # Ground floor door
-                if is_ground and wi == 0 and program.use == "residential":
-                    door_w = min(1.2, win_w)
-                    openings.append(Opening(
-                        kind="door", u_m=u, v_m=v_base + 0.0,
-                        width_m=door_w, height_m=min(fh - 0.3, 2.4),
-                        frame_width_m=0.08, recess_m=0.12,
-                        mullion_columns=1, mullion_rows=3,
-                        style="paneled", prefab="legacy" if rng.random() < 0.7 else "wood_panel",
-                        curtain=0.0, grille=False,
-                    ))
-                    continue
-
-                has_grille = (rng.random() < 0.6) if program.finish_profile != "premium" else False
-                curtain_frac = float(rng.uniform(0.15, 0.6)) if rng.random() < 0.7 else 0.0
-                
-                # ── PHASE C: Modern balconies on upper floors ────────────
-                # Premium buildings with 3+ floors get balcony windows ~40%
-                # of the time on floors above ground. This adds a protruding
-                # concrete slab + railing for massive depth.
-                num_floors = len(floor_levels) - 1
-                is_upper = not is_ground
-                use_balcony = (
-                    is_upper 
-                    and num_floors >= 3 
-                    and program.finish_profile == "premium"
-                    and rng.random() < 0.4
-                )
-                
-                win_kind = "balcony_window" if use_balcony else "window"
-                balcony_d = float(rng.uniform(0.6, 1.0)) if use_balcony else 0.75
-                
-                openings.append(Opening(
-                    kind=win_kind, u_m=u, v_m=v,
-                    width_m=win_w, height_m=win_h,
-                    frame_width_m=0.08 if wall_residential_prefab == "legacy" else 0.04, 
-                    recess_m=0.12 if wall_residential_prefab == "legacy" else 0.06,
-                    mullion_columns=2, mullion_rows=1 if program.finish_profile == "premium" else 2,
-                    style="sliding" if rng.random() < 0.5 else "casement", 
-                    prefab=wall_residential_prefab,
-                    curtain=curtain_frac, grille=has_grille,
-                    balcony_depth_m=balcony_d,
-                ))
-
-    return tuple(openings)
-
-
 # ── main entry point ─────────────────────────────────────────────────────────
 
 def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
@@ -1201,6 +1092,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
     )
     rng = np.random.default_rng(spec.seed)
     streets = front_lines(spec.context)
+    family = resolve_family(spec.program, rng)
 
     exposures = calculate_mass_exposures(spec.site_plan)
 
@@ -1237,13 +1129,20 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                             else "brick"
                         )
 
-                    # Generate openings (only on front walls)
-                    ops = _generate_openings_for_wall(
-                        length, floor_levels, is_front, spec.program, rng
-                    )
-
                     # Make floor levels relative to the band's local Z coordinates
                     local_floor_levels = tuple(z - z_bottom for z in floor_levels)
+                    composition = compose_wall(
+                        length,
+                        local_floor_levels,
+                        is_front=is_front,
+                        family=family,
+                        program=spec.program,
+                        rng=rng,
+                        band_height=band_height,
+                        is_ground_band=z_bottom <= mass.base_z + 0.01,
+                        is_top_band=abs(z_top - mass.roof_z) < 0.01,
+                        mass_role=mass.role,
+                    )
 
                     # To match legacy grammar.py, we MUST pass CCW vertices (so n points inwards)
                     # AND we must shift them inwards by 0.20m because facade() draws the wall 
@@ -1273,11 +1172,14 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                         normal_xy=tuple(n_vec),
                         wall_material=wall_mat,
                         floor_levels_m=local_floor_levels,
-                        openings=ops,
+                        openings=composition.openings,
                         is_front=is_front,
-                        material_regions=(),
+                        projections=composition.projections,
+                        material_regions=composition.material_regions,
                         style=spec.program.finish_profile,
-                        ornamented=is_front,
+                        # The composition owns the applied relief; the legacy
+                        # ornament pass would draw a second set on top of it.
+                        ornamented=False,
                         services=(is_front and rng.random() < 0.3),
                         cladding="horizontal" if (is_front and rng.random() < 0.2) else "stucco",
                     )
@@ -1304,7 +1206,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
                                          "decal_moisture", "decal")
                                          
                         # Window drips
-                        for op in ops:
+                        for op in composition.openings:
                             if op.kind == "window" or op.kind == "balcony_window":
                                 local_mb.box(a_local, t_local, n_local,
                                              op.u_m, op.u_m + op.width_m,
