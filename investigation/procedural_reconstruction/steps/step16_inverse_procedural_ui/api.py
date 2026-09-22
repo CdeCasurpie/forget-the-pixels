@@ -271,11 +271,19 @@ def estimate_parameters(lot_idx: int, cameras: list):
     placements = ["flush", "front_setback"]
     colors = [(0.9, 0.9, 0.9), (0.8, 0.7, 0.6), (0.6, 0.8, 0.7), (0.9, 0.6, 0.6)]
 
+    # A lot set back from the line has a front garden, and a front garden is
+    # what a fence encloses; flush lots build straight onto the pavement.
+    placement = random.choice(placements)
+    front_setback = round(random.uniform(1.8, 3.2), 2) if placement == "front_setback" else 0.0
+
     return {
         "use": random.choice(uses),
         "finish_profile": random.choice(finish_profiles),
         "side_wall_finish": random.choice(side_wall_finishes),
-        "placement": random.choice(placements),
+        "placement": placement,
+        "front_setback": front_setback,
+        "has_fence": placement == "front_setback",
+        "fence_type": random.choice(["reja", "concreto_bajo", "ladrillos"]),
         "primary_color": random.choice(colors),
         "roof_z": roof_z,
         "floor_levels": floor_levels
@@ -453,10 +461,11 @@ def generate_model(lot_idx: int):
             use=params["use"], occupancy="medium", placement=params["placement"],
             architectural_language="informal", finish_profile=params["finish_profile"],
             maintenance="average", construction_state="completed",
-            front_setback=0.0, side_setback=0.0,
+            front_setback=params["front_setback"], side_setback=0.0,
             primary_color=params["primary_color"], seed=lot_idx,
             side_wall_finish=params["side_wall_finish"],
-            is_corner=(len(front_indices) > 1), has_fence=False, fence_type="none"
+            is_corner=(len(front_indices) > 1),
+            has_fence=params["has_fence"], fence_type=params["fence_type"]
         )
         levels = params["floor_levels"]
         floor_h = (levels[1] - levels[0]) if len(levels) > 1 else params["roof_z"]
