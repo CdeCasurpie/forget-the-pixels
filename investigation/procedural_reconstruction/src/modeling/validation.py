@@ -4,7 +4,13 @@ import numpy as np
 import shapely
 
 
-def validate_mesh(mesh, parcel):
+def validate_mesh(mesh, parcel, *, envelope=None):
+    """Check a mesh against its cadastral limit.
+
+    `envelope` is the widened limit used when attachments are allowed to
+    overhang the sidewalk; it defaults to the parcel itself.
+    """
+    limit = parcel if envelope is None else envelope
     if not np.isfinite(mesh.vertices).all():
         raise ValueError("Nonfinite vertices")
     if (
@@ -21,10 +27,10 @@ def validate_mesh(mesh, parcel):
     if (areas < 1e-13).any():
         raise ValueError("Degenerate faces")
     projected = shapely.polygons(tri[:, :, :2])
-    outside = shapely.area(shapely.difference(projected, parcel))
+    outside = shapely.area(shapely.difference(projected, limit))
     # Vertical triangles have zero projected area: separately check their edges.
     lines = shapely.linestrings(np.concatenate([tri[:, :, :2], tri[:, :1, :2]], axis=1))
-    violations = shapely.length(shapely.difference(lines, parcel.buffer(1e-7)))
+    violations = shapely.length(shapely.difference(lines, limit.buffer(1e-7)))
     if outside.max() > 1e-7 or violations.max() > 1e-6:
         raise ValueError("Geometry outside cadastral envelope")
     if mesh.face_materials is None or len(mesh.face_materials) != len(mesh.faces):

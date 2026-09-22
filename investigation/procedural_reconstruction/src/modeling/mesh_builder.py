@@ -16,6 +16,39 @@ from domain import BuildingAppearance, MeshData
 from .materials import material_to_dict, resolve_materials
 
 
+# Attachments allowed to reach past the cadastral line into the street overhang
+# envelope. Structural mass (walls, slabs, parapets, roofs, boundaries) is never
+# in this set and stays clipped to the parcel.
+PROJECTING_SEMANTICS = frozenset({
+    # balconies and galleries
+    "balcony_slab", "balcony_handrail", "balcony_bar", "balcony_return",
+    "balcony_ornament", "balustrade", "baluster", "balustrade_cap",
+    "gallery_slab", "gallery_post", "gallery_rail", "gallery_roof",
+    "gallery_beam", "gallery_bracket",
+    # facade projections
+    "facade_projection_panel", "facade_projection_frame",
+    "facade_projection_ledge", "facade_projection_canopy",
+    "facade_projection_curved_canopy", "sign_letter", "sign_box",
+    "sign_bracket",
+    # horizontal mouldings and slab edges
+    "floor_slab", "top_cornice", "floor_band", "plinth", "corner_pilaster",
+    "cladding_joint", "cornice", "cornice_step", "cornice_drip", "sill_band",
+    "pilaster", "pilaster_base", "pilaster_cap",
+    # opening trim
+    "window_sill", "opening_surround", "opening_lintel", "threshold",
+    "door_handle", "security_bar", "security_crossbar", "grille_diamond",
+    "shutter_leaf", "shutter_slat",
+    # eaves and awnings
+    "eave", "eave_fascia", "rafter_tail", "awning", "awning_arm",
+    "awning_valance", "tile_eave_course",
+    # bay windows
+    "bay_window_wall", "bay_window_slab", "bay_window_roof",
+    # services
+    "air_conditioner", "condenser_louver", "service_bracket", "drainpipe",
+    "downpipe", "downpipe_clamp", "gutter", "meter_box", "cable",
+})
+
+
 def polygons(geometry):
     if geometry.is_empty:
         return
@@ -34,8 +67,11 @@ def triangles(polygon):
 
 
 class MeshBuilder:
-    def __init__(self, parcel, appearance=BuildingAppearance()):
+    def __init__(self, parcel, appearance=BuildingAppearance(), *, envelope=None):
         self.parcel = parcel
+        # Attachments are clipped to this instead of the parcel. Defaults to the
+        # parcel, so a caller that does not opt in keeps the old behaviour.
+        self.envelope = parcel if envelope is None else envelope
         # Per-face-vertex storage: every face gets its own 3 vertex slots.
         # This gives clean UV seams and hard normals at every edge.
         self.vertices = []   # list of (x, y, z)
@@ -45,6 +81,22 @@ class MeshBuilder:
         self.parts = []
         self.materials = [material_to_dict(m) for m in resolve_materials(appearance)]
         self.material_index = {m["name"]: i for i, m in enumerate(self.materials)}
+
+    # ── Clipping envelope ────────────────────────────────────────────
+
+    def limit_for(self, semantic, clip="auto"):
+        """Polygon this piece of geometry must stay inside."""
+        if clip == "parcel":
+            return self.parcel
+        if clip == "envelope":
+            return self.envelope
+        if clip != "auto":
+            raise ValueError(f"Unknown clip mode: {clip}")
+        return self.envelope if semantic in PROJECTING_SEMANTICS else self.parcel
+
+    def can_attach(self, shape):
+        """Whether an attachment footprint fits inside the projection envelope."""
+        return self.envelope.covers(shape)
 
     # ── UV helpers ───────────────────────────────────────────────────
 
@@ -93,7 +145,8 @@ class MeshBuilder:
     # ── solid() with metric UV ──────────────────────────────────────
 
     def solid(self, shape, bottom, top, material="plaster", semantic="wall",
-              *, facade_origin=None, facade_tangent=None, facade_normal=None, uv_scale=None):
+              *, facade_origin=None, facade_tangent=None, facade_normal=None,
+              uv_scale=None, clip="auto"):
         """Extrude polygon between scalar or affine height fields.
 
         If facade_origin and facade_tangent are given, wall UVs are
@@ -114,7 +167,7 @@ class MeshBuilder:
         def height(value, xy):
             return value(*xy) if callable(value) else value
 
-        clipped = shape.intersection(self.parcel)
+        clipped = shape.intersection(self.limit_for(semantic, clip))
         for poly in polygons(clipped):
             coords = np.array(poly.exterior.coords)[:, :2]
             if any(height(top, p) <= height(bottom, p) for p in coords):
@@ -203,7 +256,7 @@ class MeshBuilder:
 
     def box(self, a, t, n, u1, u2, z1, z2, w1, w2,
             material="plaster", semantic="wall",
-            *, uv_origin_u=None):
+            *, uv_origin_u=None, clip="auto"):
         """Axis-aligned box in facade-local coordinates.
 
         uv_origin_u: if set, UV u-coordinate is measured from this
@@ -239,9 +292,10 @@ class MeshBuilder:
             facade_tangent=facade_tangent,
             facade_normal=n[:2] / np.linalg.norm(n[:2]) if np.linalg.norm(n[:2]) > 1e-8 else n[:2],
             uv_scale=uv_scale,
+            clip=clip,
         )
 
-    def beam(self, a, b, radius=0.018, material="metal", semantic="rail"):
+    def beam(self, a, b, radius=0.018, material="metal", semantic="rail", *, clip="auto"):
         """Round beam; reject rather than leave any triangle outside the parcel."""
         if material not in self.material_index:
             raise ValueError(f"Unknown material slot: {material}")
@@ -260,7 +314,7 @@ class MeshBuilder:
         verts = np.vstack((a + ring, b + ring, a[None], b[None]))
         from shapely.geometry import MultiPoint
 
-        if not self.parcel.covers(MultiPoint(verts[:, :2]).convex_hull):
+        if not self.limit_for(semantic, clip).covers(MultiPoint(verts[:, :2]).convex_hull):
             return
 
         mat_idx = self.material_index[material]
@@ -308,7 +362,8 @@ class MeshBuilder:
             "face_count": len(self.faces) - start,
         })
 
-    def foliage(self, center, radii, rng, segments=10, rings=5):
+    def foliage(self, center, radii, rng, segments=10, rings=5, *, semantic="shrub",
+                clip="auto"):
         """Closed low-poly ellipsoid with seeded, gently irregular leaf clusters."""
         from shapely.geometry import MultiPoint
 
@@ -331,7 +386,7 @@ class MeshBuilder:
                 )
         points.append((0.0, 0.0, -1.0))
         verts = np.asarray(points) * radii + center
-        if not self.parcel.covers(MultiPoint(verts[:, :2]).convex_hull):
+        if not self.limit_for(semantic, clip).covers(MultiPoint(verts[:, :2]).convex_hull):
             return
 
         mat_idx = self.material_index["leaf"]
@@ -378,7 +433,7 @@ class MeshBuilder:
             )
 
         self.parts.append(
-            {"name": "shrub", "face_start": start,
+            {"name": semantic, "face_start": start,
              "face_count": len(self.faces) - start}
         )
 

@@ -1,6 +1,58 @@
 import numpy as np
 from shapely.geometry import Polygon, LineString, MultiLineString, Point
-from shapely.ops import linemerge
+from shapely.ops import linemerge, unary_union
+
+
+def outward_normal(polygon: Polygon, p1, p2, probe: float = 1e-3):
+    """Unit normal of segment p1->p2 pointing away from the polygon interior."""
+    a = np.asarray(p1, float)[:2]
+    b = np.asarray(p2, float)[:2]
+    tangent = b - a
+    length = float(np.linalg.norm(tangent))
+    if length < 1e-9:
+        return None, None, 0.0
+    tangent = tangent / length
+    normal = np.array([tangent[1], -tangent[0]])
+    if polygon.contains(Point(a + tangent * (length / 2.0) + normal * probe)):
+        normal = -normal
+    return tangent, normal, length
+
+
+def projection_envelope(parcel: Polygon, front_lines, overhang_m: float = 1.35) -> Polygon:
+    """Parcel plus a bounded apron over the street in front of its front edges.
+
+    Balconies, cornices, eaves and awnings legitimately overhang the sidewalk, so
+    attachments are clipped to this instead of the cadastral line. Party-wall and
+    rear edges get no apron: nothing may grow over a neighbour.
+    """
+    if parcel.is_empty or not np.isfinite(overhang_m) or overhang_m <= 0:
+        return parcel
+    lines = [line for line in (front_lines or []) if line is not None and not line.is_empty]
+    if not lines:
+        return parcel
+    # Mitred dilation keeps corners square instead of rounding them off.
+    dilated = parcel.buffer(overhang_m, join_style=2)
+    aprons = []
+    for line in lines:
+        coords = list(line.coords)
+        if len(coords) < 2:
+            continue
+        for p1, p2 in zip(coords[:-1], coords[1:]):
+            tangent, normal, length = outward_normal(parcel, p1, p2)
+            if tangent is None:
+                continue
+            a = np.asarray(p1, float)[:2] - tangent * overhang_m
+            b = np.asarray(p2, float)[:2] + tangent * overhang_m
+            reach = normal * (overhang_m * 1.5)
+            aprons.append(Polygon([a, b, b + reach, a + reach]))
+    if not aprons:
+        return parcel
+    envelope = unary_union([parcel, dilated.intersection(unary_union(aprons))])
+    if not envelope.is_valid:
+        envelope = envelope.buffer(0)
+    if envelope.geom_type == "MultiPolygon":
+        envelope = max(envelope.geoms, key=lambda part: part.area)
+    return envelope
 
 def extend_line_start(coords, dist):
     p0, p1 = np.array(coords[0]), np.array(coords[1])

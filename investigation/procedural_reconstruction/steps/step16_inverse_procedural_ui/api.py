@@ -263,13 +263,17 @@ def estimate_parameters(lot_idx: int, cameras: list):
         floor_levels = tuple(float(i * 3.0) for i in range(floors + 1))
     
     uses = ["residential", "commercial", "mixed"]
-    finishes = ["plastered", "bare_brick", "painted"]
+    # The grammar branches on exactly these two profiles; anything else silently
+    # disabled balconies, plinths and premium window proportions.
+    finish_profiles = ["standard", "premium"]
+    side_wall_finishes = ["raw", "plastered"]
     placements = ["flush", "front_setback"]
     colors = [(0.9, 0.9, 0.9), (0.8, 0.7, 0.6), (0.6, 0.8, 0.7), (0.9, 0.6, 0.6)]
-    
+
     return {
         "use": random.choice(uses),
-        "finish_profile": random.choice(finishes),
+        "finish_profile": random.choice(finish_profiles),
+        "side_wall_finish": random.choice(side_wall_finishes),
         "placement": random.choice(placements),
         "primary_color": random.choice(colors),
         "roof_z": roof_z,
@@ -450,6 +454,7 @@ def generate_model(lot_idx: int):
             maintenance="average", construction_state="completed",
             front_setback=0.0, side_setback=0.0,
             primary_color=params["primary_color"], seed=lot_idx,
+            side_wall_finish=params["side_wall_finish"],
             is_corner=(len(front_indices) > 1), has_fence=False, fence_type="none"
         )
         mass = MassSpec(

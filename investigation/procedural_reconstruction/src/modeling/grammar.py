@@ -12,8 +12,17 @@ from .mesh_builder import MeshBuilder, triangles, polygons
 from domain.architecture import BuildingSpecificationV4
 from domain.models import FacadeSpecification, Opening, RoofSpecification
 from modeling.exposure import calculate_mass_exposures
+from modeling.geometry_constraints import outward_normal, projection_envelope
 from modeling.materials import appearance_for_style
 from modeling.mesh_builder import MeshData
+
+# How far an attachment may overhang the cadastral line over the sidewalk.
+# 1.35 m clears a 1.0 m balcony slab plus its railing return.
+STREET_OVERHANG_M = 1.35
+# A wall counts as a front when its outward normal is within ~32 deg of a
+# declared front edge; cadastral fronts are often segmented, not straight.
+FRONT_NORMAL_COS_TOL = 0.85
+FRONT_MAX_DISTANCE_M = 30.0
 
 
 def triangulate_polygon(polygon, z_height):
@@ -70,7 +79,7 @@ def opening(mb, a, t, n, op, pattern):
         if op.kind == "balcony_window":
             left, right, depth = op.u_m-.12, op.u_m+op.width_m+.12, op.balcony_depth_m
             shape = Polygon([a+t*x+n*d for x,d in [(left,0),(right,0),(right,depth),(left,depth)]])
-            if mb.parcel.covers(shape.buffer(.04, join_style=2)):
+            if mb.can_attach(shape.buffer(.04, join_style=2)):
                 mb.box(a,t,n,left,right,op.v_m-.12,op.v_m,-.02,depth,"concrete","balcony_slab")
                 railing(mb,a,t,n,left,right,op.v_m,depth-.04,pattern)
         return
@@ -222,7 +231,7 @@ def opening(mb, a, t, n, op, pattern):
             ]
         )
         # Do not emit a cut-off balcony with missing rails on a concave corner.
-        if mb.parcel.covers(footprint.buffer(0.04, join_style=2)):
+        if mb.can_attach(footprint.buffer(0.04, join_style=2)):
             b(left, right, v - 0.13, v + 0.02, -0.04, depth, "stone", "balcony_slab")
             railing(mb, a, t, n, left, right, v, depth - 0.04, pattern)
 
@@ -1008,45 +1017,92 @@ def _outward_normal(p1, p2, footprint_poly):
     return t, n, length
 
 
-def _is_front_edge(n_vec, spec, p1, p2):
+def _is_front_edge(n_vec, spec, p1, p2, *, cos_tol=FRONT_NORMAL_COS_TOL,
+                   max_dist=FRONT_MAX_DISTANCE_M):
+    """Whether a wall faces the street.
+
+    Orientation decides, not coincidence with the cadastral line: a wall belongs
+    to a front when its outward normal agrees with that of an explicit front edge
+    and it is not unreasonably deep in the lot. Matching by proximity alone would
+    disqualify every wall of a mass that is set back from the property line.
     """
-    Determine whether a wall edge faces the street by checking if its midpoint
-    lies on any of the explicit fronts of the parcel context.
-    """
-    if spec.context and spec.context.explicit_fronts:
-        from shapely.geometry import Point, LineString
-        mid = Point((p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0)
-        ctx_coords = spec.context.polygon
-        
-        # Check explicit front edges
-        for front_idx in spec.context.explicit_fronts:
-            if front_idx < len(ctx_coords):
-                idx2 = (front_idx + 1) % len(ctx_coords)
-                edge = LineString([ctx_coords[front_idx], ctx_coords[idx2]])
-                if edge.distance(mid) < 0.1:
-                    return True
+    context = getattr(spec, "context", None)
+    if not (context and context.explicit_fronts):
+        # No cadastral fronts declared: fall back to the legacy south-facing rule.
+        return n_vec[1] < -0.3
+    coords = context.polygon
+    if len(coords) < 3:
         return False
-        
-    # Fallback if explicit fronts are not provided
-    return n_vec[1] < -0.3
+    parcel = Polygon(coords)
+    mid = Point((p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0)
+    for front_idx in context.explicit_fronts:
+        if front_idx >= len(coords):
+            continue
+        a = coords[front_idx]
+        b = coords[(front_idx + 1) % len(coords)]
+        _, front_normal, length = outward_normal(parcel, a, b)
+        if front_normal is None or length < 1e-6:
+            continue
+        if float(np.dot(n_vec, front_normal)) < cos_tol:
+            continue
+        if LineString([a, b]).distance(mid) <= max_dist:
+            return True
+    return False
 
 
 class ZOffsetMeshBuilder:
-    """Wraps MeshBuilder to translate Z coordinates for band-local facade logic."""
+    """Wraps MeshBuilder to translate Z coordinates for band-local facade logic.
+
+    Every Z-carrying primitive must be wrapped here. Anything reached through
+    __getattr__ writes in absolute Z and would land at the wrong height.
+    """
     def __init__(self, builder, z_offset):
         self._builder = builder
         self._z_offset = z_offset
 
     def box(self, a, t, n, u1, u2, z1, z2, w1, w2, *args, **kwargs):
         return self._builder.box(a, t, n, u1, u2, z1 + self._z_offset, z2 + self._z_offset, w1, w2, *args, **kwargs)
-        
+
     def beam(self, a, b, *args, **kwargs):
         a_shifted = (a[0], a[1], a[2] + self._z_offset)
         b_shifted = (b[0], b[1], b[2] + self._z_offset)
         return self._builder.beam(a_shifted, b_shifted, *args, **kwargs)
 
+    def solid(self, shape, bottom, top, *args, **kwargs):
+        offset = self._z_offset
+
+        def lift(value):
+            if callable(value):
+                return lambda x, y, _f=value: _f(x, y) + offset
+            return value + offset
+
+        return self._builder.solid(shape, lift(bottom), lift(top), *args, **kwargs)
+
+    def foliage(self, center, *args, **kwargs):
+        lifted = (center[0], center[1], center[2] + self._z_offset)
+        return self._builder.foliage(lifted, *args, **kwargs)
+
     def __getattr__(self, name):
         return getattr(self._builder, name)
+
+
+def front_lines(context):
+    """LineStrings of the parcel edges declared as street fronts."""
+    coords = context.polygon
+    lines = []
+    for index in context.explicit_fronts:
+        if index < len(coords):
+            lines.append(
+                LineString([coords[index], coords[(index + 1) % len(coords)]])
+            )
+    return lines
+
+
+def street_envelope(context, overhang_m=STREET_OVERHANG_M):
+    """Parcel widened over the sidewalk in front of its declared street edges."""
+    return projection_envelope(
+        Polygon(context.polygon), front_lines(context), overhang_m
+    )
 
 
 def _floor_levels_for_band(mass, z_bottom, z_top):
@@ -1179,7 +1235,9 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
     )
 
     parcel = Polygon(spec.context.polygon)
-    builder = MeshBuilder(parcel, appearance)
+    builder = MeshBuilder(
+        parcel, appearance, envelope=street_envelope(spec.context)
+    )
     rng = np.random.default_rng(spec.seed)
 
     exposures = calculate_mass_exposures(spec.site_plan)
