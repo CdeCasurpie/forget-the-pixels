@@ -244,51 +244,18 @@ def opening(mb, a, t, n, op, pattern):
 
 def projection(mb, a, t, n, feature):
     """Build a facade-attached design mass in facade-local coordinates."""
-    if feature.kind not in ("panel", "frame", "ledge", "canopy", "curved_canopy"):
+    from .prefabs import sign_letters
+    from .prefabs_facade import FACADE_PROJECTIONS
+
+    build = FACADE_PROJECTIONS.get(feature.kind)
+    if build is None:
         raise ValueError(f"Unknown facade projection kind: {feature.kind}")
     if min(feature.width_m, feature.height_m, feature.depth_m) <= 0:
         raise ValueError("Facade projections require positive dimensions")
-    u, v = feature.u_m, feature.v_m
-    w, h, d = feature.width_m, feature.height_m, feature.depth_m
-
-    def add(u1, u2, z1, z2, part):
-        mb.box(a, t, n, u1, u2, z1, z2, -0.015, d, feature.material_slot, part)
-
-    if feature.kind == "curved_canopy":
-        samples = np.linspace(0.0, 1.0, 13)
-        outer = [
-            np.asarray(a) + t * (u + w * x) + n * (d * np.sin(np.pi * x))
-            for x in samples
-        ]
-        footprint = Polygon(
-            [np.asarray(a) + t * u, np.asarray(a) + t * (u + w), *outer[::-1]]
-        )
-        mb.solid(
-            footprint,
-            v,
-            v + h,
-            feature.material_slot,
-            "facade_projection_curved_canopy",
-        )
-    elif feature.kind == "frame":
-        border = min(feature.border_width_m, w / 2, h / 2)
-        if border <= 0:
-            raise ValueError("Facade frame requires a positive border")
-        add(u, u + border, v, v + h, "facade_projection_frame")
-        add(u + w - border, u + w, v, v + h, "facade_projection_frame")
-        add(u + border, u + w - border, v, v + border, "facade_projection_frame")
-        add(
-            u + border,
-            u + w - border,
-            v + h - border,
-            v + h,
-            "facade_projection_frame",
-        )
-    else:
-        add(u, u + w, v, v + h, f"facade_projection_{feature.kind}")
-    if feature.label:
-        from .prefabs import sign_letters
-        sign_letters(mb,a,t,n,feature)
+    build(mb, a, t, n, feature)
+    # A sign panel carries its own lettering; sign_box already drew its own.
+    if feature.label and feature.kind not in ("sign_box", "balcony"):
+        sign_letters(mb, a, t, n, feature)
 
 
 def exterior_stair(mb, a, t, n, stair, facade_length):

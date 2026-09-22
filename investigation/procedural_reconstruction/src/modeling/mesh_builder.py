@@ -48,7 +48,7 @@ PROJECTING_SEMANTICS = frozenset({
     "eave", "eave_fascia", "rafter_tail", "awning", "awning_arm",
     "awning_valance", "tile_eave_course", "tile_roof", "tile_ridge",
     # bay windows
-    "bay_window_wall", "bay_window_slab", "bay_window_roof",
+    "bay_window_wall", "bay_window_slab", "bay_window_roof", "glazing",
     # services
     "air_conditioner", "condenser_louver", "service_bracket", "drainpipe",
     "downpipe", "downpipe_clamp", "gutter", "meter_box", "cable",
