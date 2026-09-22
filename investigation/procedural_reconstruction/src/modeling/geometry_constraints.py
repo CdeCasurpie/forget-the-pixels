@@ -1,6 +1,54 @@
 import numpy as np
+import shapely
 from shapely.geometry import Polygon, LineString, MultiLineString, Point
 from shapely.ops import linemerge, unary_union
+
+# Cadastral coordinates are snapped to this grid before anything is derived from
+# them. `modeling.exposure` already snaps footprints to survive coincident-edge
+# differences; unless every consumer agrees on the same grid, the half-grid drift
+# leaks out as vertices microns outside the lot, which long thin triangles then
+# smear into metres of apparent violation.
+CADASTRAL_GRID_M = 1e-4
+
+
+def snap(geometry, grid: float = CADASTRAL_GRID_M):
+    """Geometry on the shared cadastral grid, repaired if snapping broke it."""
+    snapped = shapely.set_precision(geometry, grid)
+    if not snapped.is_valid:
+        snapped = snapped.buffer(0)
+    return snapped
+
+
+def parcel_polygon(context, grid: float = CADASTRAL_GRID_M) -> Polygon:
+    """The lot polygon every stage of one building must agree on."""
+    polygon = Polygon(context.polygon)
+    if not polygon.is_valid:
+        polygon = polygon.buffer(0)
+    return snap(polygon, grid)
+
+
+def front_lines(context) -> list[LineString]:
+    """LineStrings of the parcel edges a ParcelContext declares as street fronts."""
+    coords = context.polygon
+    lines = []
+    for index in context.explicit_fronts:
+        if 0 <= index < len(coords):
+            lines.append(LineString([coords[index], coords[(index + 1) % len(coords)]]))
+    return lines
+
+
+def largest_polygon(geometry):
+    """Single Polygon from any geometry, or None when nothing usable remains."""
+    if geometry is None or geometry.is_empty:
+        return None
+    if geometry.geom_type == "Polygon":
+        return geometry
+    parts = [
+        part
+        for part in getattr(geometry, "geoms", [])
+        if part.geom_type == "Polygon" and not part.is_empty
+    ]
+    return max(parts, key=lambda part: part.area) if parts else None
 
 
 def outward_normal(polygon: Polygon, p1, p2, probe: float = 1e-3):

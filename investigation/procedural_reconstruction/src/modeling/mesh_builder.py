@@ -9,6 +9,7 @@ are independent per face-corner.
 """
 
 import numpy as np
+import shapely
 from shapely import constrained_delaunay_triangles
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
@@ -19,6 +20,11 @@ from .materials import material_to_dict, resolve_materials
 # Attachments allowed to reach past the cadastral line into the street overhang
 # envelope. Structural mass (walls, slabs, parapets, roofs, boundaries) is never
 # in this set and stays clipped to the parcel.
+# Triangles below this are numerical debris, not geometry: clipping a solid
+# against a rotated cadastral boundary routinely produces slivers of ~1e-20 m².
+# Emitting them corrupts normals and fails mesh validation downstream.
+MIN_TRIANGLE_AREA_M2 = 1e-12
+
 PROJECTING_SEMANTICS = frozenset({
     # balconies and galleries
     "balcony_slab", "balcony_handrail", "balcony_bar", "balcony_return",
@@ -61,8 +67,20 @@ def polygons(geometry):
 
 
 def triangles(polygon):
-    """Return CCW constrained triangles, including polygons with holes."""
-    for triangle in constrained_delaunay_triangles(polygon).geoms:
+    """Return CCW constrained triangles, including polygons with holes.
+
+    GEOS can return a triangle lying outside a thin or concave input — a plinth
+    strip clipped against a rotated L-shaped lot reproduces it — so every
+    triangle is checked against its own domain instead of being trusted.
+    """
+    parts = list(constrained_delaunay_triangles(polygon).geoms)
+    if not parts:
+        return
+    domain = polygon.buffer(1e-9)
+    inside = shapely.covered_by(np.asarray(parts, dtype=object), domain)
+    for triangle, is_inside in zip(parts, np.atleast_1d(inside)):
+        if not is_inside:
+            continue
         yield np.array(orient(triangle, sign=1).exterior.coords)[:3, :2]
 
 
@@ -135,6 +153,11 @@ class MeshBuilder:
 
     def _emit_face(self, points_xyz, uvs, material_idx):
         """Append one triangle.  Each call duplicates vertices for hard edges."""
+        p0, p1, p2 = (np.asarray(point, float) for point in points_xyz)
+        if not (np.isfinite(p0).all() and np.isfinite(p1).all() and np.isfinite(p2).all()):
+            return
+        if np.linalg.norm(np.cross(p1 - p0, p2 - p0)) / 2.0 < MIN_TRIANGLE_AREA_M2:
+            return
         base = len(self.vertices)
         for (x, y, z), (u, v) in zip(points_xyz, uvs):
             self.vertices.append((float(x), float(y), float(z)))

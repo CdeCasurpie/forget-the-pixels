@@ -29,6 +29,7 @@ sys.path.append(str(ROOT / "src"))
 
 from domain.architecture import ParcelContext, BuildingProgram, MassSpec, SitePlan, BuildingSpecificationV4
 from modeling.grammar import generate_v4_mesh
+from modeling.massing import generate_masses
 from modeling.exporters.glb_exporter import export_glb
 
 app = FastAPI(title="Procedural Barranco API")
@@ -457,12 +458,10 @@ def generate_model(lot_idx: int):
             side_wall_finish=params["side_wall_finish"],
             is_corner=(len(front_indices) > 1), has_fence=False, fence_type="none"
         )
-        mass = MassSpec(
-            id="main", footprint=local_coords, base_z=0.0, 
-            roof_z=params["roof_z"], floor_levels=params["floor_levels"], 
-            role="tower", roof_spec=None
-        )
-        site = SitePlan(masses=(mass,), free_space=(), access_nodes=(), boundaries=(), exclusion_zones=())
+        levels = params["floor_levels"]
+        floor_h = (levels[1] - levels[0]) if len(levels) > 1 else params["roof_z"]
+        masses = generate_masses(ctx, program, params["roof_z"], floor_h)
+        site = SitePlan(masses=masses, free_space=(), access_nodes=(), boundaries=(), exclusion_zones=())
         spec = BuildingSpecificationV4(context=ctx, program=program, site_plan=site, facades=(), components=(), seed=lot_idx)
         
         mesh = generate_v4_mesh(spec)

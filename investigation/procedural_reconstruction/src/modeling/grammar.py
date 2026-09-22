@@ -12,7 +12,12 @@ from .mesh_builder import MeshBuilder, triangles, polygons
 from domain.architecture import BuildingSpecificationV4
 from domain.models import FacadeSpecification, Opening, RoofSpecification
 from modeling.exposure import calculate_mass_exposures
-from modeling.geometry_constraints import outward_normal, projection_envelope
+from modeling.geometry_constraints import (
+    front_lines,
+    outward_normal,
+    parcel_polygon,
+    projection_envelope,
+)
 from modeling.materials import appearance_for_style
 from modeling.mesh_builder import MeshData
 
@@ -1086,22 +1091,10 @@ class ZOffsetMeshBuilder:
         return getattr(self._builder, name)
 
 
-def front_lines(context):
-    """LineStrings of the parcel edges declared as street fronts."""
-    coords = context.polygon
-    lines = []
-    for index in context.explicit_fronts:
-        if index < len(coords):
-            lines.append(
-                LineString([coords[index], coords[(index + 1) % len(coords)]])
-            )
-    return lines
-
-
 def street_envelope(context, overhang_m=STREET_OVERHANG_M):
     """Parcel widened over the sidewalk in front of its declared street edges."""
     return projection_envelope(
-        Polygon(context.polygon), front_lines(context), overhang_m
+        parcel_polygon(context), front_lines(context), overhang_m
     )
 
 
@@ -1234,7 +1227,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4) -> MeshData:
         spec.program.architectural_language, rgb_255, spec.seed
     )
 
-    parcel = Polygon(spec.context.polygon)
+    parcel = parcel_polygon(spec.context)
     builder = MeshBuilder(
         parcel, appearance, envelope=street_envelope(spec.context)
     )
