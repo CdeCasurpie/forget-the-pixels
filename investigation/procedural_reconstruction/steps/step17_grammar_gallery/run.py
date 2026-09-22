@@ -22,6 +22,7 @@ from shapely.affinity import rotate
 from shapely.geometry import Polygon
 
 from domain.architecture import BuildingProgram, BuildingSpecificationV4, ParcelContext, SitePlan
+from modeling.exporters.glb_exporter import export_glb
 from modeling.facade_program import FAMILY_RULES
 from modeling.grammar import generate_v4_mesh, street_envelope
 from modeling.massing import generate_masses
@@ -29,6 +30,39 @@ from modeling.validation import validate_mesh
 from render import render
 
 OUTPUTS = Path(__file__).resolve().parent / "outputs"
+
+# True isometric: equal weight on all three axes, which is the projection the
+# reference block illustrations are drawn in.
+ISOMETRIC = (1.0, -1.0, 1.0)
+
+
+def contact_sheet(labels, suffix, columns=6):
+    """Tile every render of one view into a single sheet for side-by-side reading."""
+    import cv2
+
+    tiles = []
+    for label in labels:
+        path = OUTPUTS / f"{label}{suffix}.png"
+        if not path.exists():
+            continue
+        image = cv2.imread(str(path))
+        if image is None:
+            continue
+        cv2.putText(image, label, (14, image.shape[0] - 16),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.52, (40, 40, 40), 1, cv2.LINE_AA)
+        tiles.append(image)
+    if not tiles:
+        return None
+    height, width = tiles[0].shape[:2]
+    rows = []
+    for start in range(0, len(tiles), columns):
+        row = tiles[start:start + columns]
+        while len(row) < columns:
+            row.append(np.full((height, width, 3), 245, np.uint8))
+        rows.append(np.hstack(row))
+    sheet = OUTPUTS / f"contact_sheet{suffix}.png"
+    cv2.imwrite(str(sheet), np.vstack(rows))
+    return sheet
 
 
 def rectangle(width, depth):
@@ -95,6 +129,8 @@ def main():
     parser.add_argument("--detail", type=int, default=2, choices=(1, 2, 3))
     parser.add_argument("--size", type=int, default=720)
     parser.add_argument("--no-render", action="store_true")
+    parser.add_argument("--no-glb", action="store_true",
+                        help="skip the GLB export (renders only)")
     args = parser.parse_args()
 
     OUTPUTS.mkdir(parents=True, exist_ok=True)
@@ -122,7 +158,11 @@ def main():
             print(f"{label:46s} {report['triangles']:7d} tris  "
                   f"{len(report['semantic_types']):3d} semantics  "
                   f"{[m.role for m in spec.site_plan.masses]}")
+            if not args.no_glb:
+                export_glb(mesh, OUTPUTS / f"{label}.glb")
             if not args.no_render:
+                render(mesh, OUTPUTS / f"{label}_iso.png",
+                       direction=ISOMETRIC, size=args.size, clay=True)
                 render(mesh, OUTPUTS / f"{label}_aerial.png",
                        direction=(1, -1.7, 1.1), size=args.size, clay=True)
                 render(mesh, OUTPUTS / f"{label}_street.png",
@@ -133,6 +173,10 @@ def main():
     total = sum(item["triangles"] for item in fingerprint.values())
     print(f"\n{len(fingerprint)} buildings, {total} triangles total")
     print(f"fingerprint written to {path}")
+    if not args.no_render:
+        sheet = contact_sheet(sorted(fingerprint), "_iso")
+        if sheet is not None:
+            print(f"contact sheet written to {sheet}")
 
 
 if __name__ == "__main__":
