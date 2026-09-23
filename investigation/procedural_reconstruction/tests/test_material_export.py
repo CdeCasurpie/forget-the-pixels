@@ -155,12 +155,13 @@ class GrammarSlotTests(unittest.TestCase):
             tree = glb_tree(path)
         nodes = [x["name"] for x in tree["nodes"]]
         wall_nodes = [x for x in nodes if x.startswith("wall/wall/00")]
-        self.assertEqual(len(wall_nodes), 2, nodes)
-        node_meshes = {x["name"]: x["mesh"] for x in tree["nodes"]}
-        used = set()
-        for node in wall_nodes:
-            for prim in tree["meshes"][node_meshes[node]]["primitives"]:
-                used.add(tree["materials"][prim["material"]]["name"])
+        # One logical object per component, even with several materials.
+        self.assertEqual(len(wall_nodes), 1, nodes)
+        mesh_idx = next(x["mesh"] for x in tree["nodes"]
+                        if x["name"] == wall_nodes[0])
+        prims = tree["meshes"][mesh_idx]["primitives"]
+        self.assertEqual(len(prims), 2, "one primitive per material")
+        used = {tree["materials"][p["material"]]["name"] for p in prims}
         self.assertEqual(used, {"brick", "plaster"})
 
 
