@@ -117,6 +117,9 @@ def component_topology(vertices, faces, face_start=0, face_count=None):
         if key in seen:
             duplicates += 1
         seen.add(key)
+    referenced = set()
+    for a, b, c in local:
+        referenced.update((a, b, c))
     areas = (np.linalg.norm(np.cross(verts[tris[:, 1]] - verts[tris[:, 0]],
                                      verts[tris[:, 2]] - verts[tris[:, 0]]),
                             axis=1) / 2.0)
@@ -129,17 +132,23 @@ def component_topology(vertices, faces, face_start=0, face_count=None):
         "incoherent_edges": int(incoherent),
         "duplicate_faces": int(duplicates),
         "degenerate_faces": int((areas < 1e-13).sum()),
+        "unused_vertices": int(len(used) - len(referenced)),
         "min_area_m2": float(areas.min()) if len(areas) else 0.0,
     }
 
 
-def analyze_topology(mesh):
+def analyze_topology(mesh, open_semantics=()):
     """Per-component topology over the face ranges in ``mesh.parts``.
 
-    A physically volumetric component is expected to report
-    ``connected == 1``, ``boundary_edges == 0``, ``non_manifold_edges == 0``
-    and ``incoherent_edges == 0``. Cosmetic or intentionally open pieces are
-    reported as-is; callers decide which semantics must be closed.
+    A physically volumetric component (``closed_solid``) is expected to
+    report ``connected == 1``, ``boundary_edges == 0``,
+    ``non_manifold_edges == 0`` and ``incoherent_edges == 0``. Semantics
+    listed in ``open_semantics`` (e.g. an intentionally infinitely thin
+    glazing sheet, if the grammar ever emits one) are classified as
+    ``open_surface`` instead: connected, no non-manifold edges, boundary
+    allowed and reported. Anything else failing closed criteria lands in
+    ``violations``. Today every emitted piece is a closed solid; the glass
+    panes are thin boxes with real thickness.
     """
     parts = list(mesh.parts)
     components = []
@@ -149,14 +158,26 @@ def analyze_topology(mesh):
         stats["semantic"] = part.get("name", "")
         stats["component_id"] = part.get("component_id", "")
         stats["assembly_id"] = part.get("assembly_id", "")
+        closed = (stats["connected"] == 1 and not stats["boundary_edges"]
+                  and not stats["non_manifold_edges"]
+                  and not stats["incoherent_edges"])
+        if closed:
+            stats["expectation"] = "closed_solid"
+        elif (stats["semantic"] in open_semantics and stats["connected"] == 1
+              and not stats["non_manifold_edges"]):
+            stats["expectation"] = "open_surface"
+        else:
+            stats["expectation"] = "violation"
         components.append(stats)
-    closed = sum(1 for c in components
-                 if c["connected"] == 1 and not c["boundary_edges"]
-                 and not c["non_manifold_edges"])
+    closed = sum(1 for c in components if c["expectation"] == "closed_solid")
     return {
         "components": components,
         "component_count": len(components),
         "closed_components": closed,
+        "open_components": [c for c in components
+                            if c["expectation"] == "open_surface"],
+        "violations": [c for c in components
+                       if c["expectation"] == "violation"],
         "total_boundary_edges": sum(c["boundary_edges"] for c in components),
         "total_non_manifold_edges": sum(c["non_manifold_edges"] for c in components),
     }

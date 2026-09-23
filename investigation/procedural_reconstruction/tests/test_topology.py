@@ -244,9 +244,163 @@ class AssemblyTopologyTests(unittest.TestCase):
         self.assertEqual(report["total_non_manifold_edges"], 0)
         for comp in report["components"]:
             self.assertEqual(comp["connected"], 1, comp["component_id"])
+            self.assertEqual(comp["unused_vertices"], 0, comp["component_id"])
         windows = [c["assembly_id"] for c in report["components"]
                    if "/opening_" in c["assembly_id"]]
         self.assertTrue(windows, "window assemblies are traceable")
+
+    def test_open_surface_classification(self):
+        """A deliberately thin sheet is an open_surface only when declared;
+        undeclared, it is a violation. Grammar glass panes are thin boxes,
+        hence closed solids, not surfaces."""
+        from domain.architecture import (BuildingProgram, BuildingSpecificationV4,
+                                         ParcelContext, SitePlan)
+        from modeling.grammar import generate_v4_mesh
+        from modeling.massing import generate_masses
+
+        parcel = box(-4, -6, 4, 6)
+        coords = tuple((float(x), float(y)) for x, y in parcel.exterior.coords)
+        ctx = ParcelContext(polygon=coords, explicit_fronts=(0,))
+        program = BuildingProgram(
+            use="residential", occupancy="medium", placement="flush",
+            architectural_language="quiet_house", finish_profile="standard",
+            maintenance="average", construction_state="completed",
+            primary_color=(0.85, 0.84, 0.80), seed=7)
+        masses = generate_masses(ctx, program, 5.6, 2.8)
+        spec = BuildingSpecificationV4(
+            context=ctx, program=program,
+            site_plan=SitePlan(masses=masses, free_space=(), access_nodes=(),
+                               boundaries=(), exclusion_zones=()),
+            facades=(), components=(), seed=7)
+        mesh = generate_v4_mesh(spec)
+        report = analyze_topology(mesh)
+        self.assertEqual(report["violations"], [])
+        glazing = [c for c in report["components"] if c["semantic"] == "glazing"]
+        self.assertTrue(glazing)
+        self.assertTrue(all(c["expectation"] == "closed_solid" for c in glazing))
+
+    def test_declared_open_sheet_classifies_as_surface(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.begin_component("test_sheet", component_id="sheet/00")
+        a = mb.vert((0.0, 0.0, 1.0))
+        b = mb.vert((1.0, 0.0, 1.0))
+        c = mb.vert((1.0, 0.0, 2.0))
+        d = mb.vert((0.0, 0.0, 2.0))
+        mi = mb.mat_index("glass")
+        mb.tri(a, b, c, ((0, 0), (1, 0), (1, 1)), mi)
+        mb.tri(a, c, d, ((0, 0), (1, 1), (0, 1)), mi)
+        mb.end_component()
+        mesh = mb.finish()
+        strict = analyze_topology(mesh)
+        self.assertEqual(len(strict["violations"]), 1)
+        declared = analyze_topology(mesh, open_semantics=("test_sheet",))
+        self.assertEqual(declared["violations"], [])
+        self.assertEqual(len(declared["open_components"]), 1)
+        self.assertEqual(declared["open_components"][0]["expectation"],
+                         "open_surface")
+
+
+class ExportIdentityTests(unittest.TestCase):
+    def test_multi_material_component_exports_one_node(self):
+        import json
+        import struct
+        import tempfile
+        from pathlib import Path
+        from shapely.geometry import Polygon as _Poly
+        from modeling.exporters.glb_exporter import export_glb
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        a = np.array([0.0, 0.0])
+        t = np.array([1.0, 0.0])
+        n = np.array([0.0, -1.0])
+        with mb.assembly("wall"):
+            mb.panel(a, t, n, [_Poly([(0, 0), (4, 0), (4, 2), (0, 2)])],
+                     -0.2, 0.0,
+                     lambda kind, u, v, w: "brick" if v < 1.0 else "plaster",
+                     "wall", component_id="wall/00")
+        mesh = mb.finish()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "multi.glb"
+            export_glb(mesh, path)
+            data = Path(path).read_bytes()
+        length = struct.unpack_from("<I", data, 12)[0]
+        tree = json.loads(data[20:20 + length])
+        nodes = [x["name"] for x in tree["nodes"]]
+        self.assertEqual(nodes, ["wall/wall/00"], nodes)
+        prims = tree["meshes"][tree["nodes"][0]["mesh"]]["primitives"]
+        self.assertEqual(len(prims), 2, "one primitive per material")
+        used = {tree["materials"][p["material"]]["name"] for p in prims}
+        self.assertEqual(used, {"brick", "plaster"})
+
+    def test_beam_split_statistics(self):
+        """Source shares 18 ring positions; GLB splits only at genuine UV
+        seams: 16 side-vs-cap splits, 2 cylinder wrap splits (u=0 and
+        u=circumference share a position), 2 shared cap centers."""
+        import json
+        import struct
+        import tempfile
+        from pathlib import Path
+        from modeling.exporters.glb_exporter import export_glb
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.beam((0, 0, 0), (0, 0, 1.0), 0.05, material="metal", semantic="rail")
+        mesh = mb.finish()
+        self.assertEqual((len(mesh.vertices), len(mesh.faces)), (18, 32))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "beam.glb"
+            export_glb(mesh, path)
+            data = Path(path).read_bytes()
+        length = struct.unpack_from("<I", data, 12)[0]
+        tree = json.loads(data[20:20 + length])
+        render_verts = sum(
+            tree["accessors"][p["attributes"]["POSITION"]]["count"]
+            for m in tree["meshes"] for p in m["primitives"])
+        self.assertEqual(render_verts, 36)
+        self.assertAlmostEqual(render_verts / len(mesh.vertices), 36 / 18)
+
+    def test_obj_preserves_geometric_connectivity(self):
+        """OBJ carries separate v/vt indices: the file's v records and face
+        indices match the source component exactly (positions shared, UVs
+        per corner). Parsed directly: trimesh's own loader would expand
+        (v, vt) pairs, which is loader behavior, not file content."""
+        import tempfile
+        from pathlib import Path
+        from modeling.exporters.obj_exporter import export_obj
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.beam((0, 0, 0), (0, 0, 1.0), 0.05, material="metal", semantic="rail")
+        mesh = mb.finish()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "beam.obj"
+            export_obj(mesh, path)
+            lines = Path(path).read_text().splitlines()
+        verts = [tuple(map(float, ln.split()[1:4])) for ln in lines
+                 if ln.startswith("v ")]
+        uvs = [tuple(map(float, ln.split()[1:3])) for ln in lines
+               if ln.startswith("vt ")]
+        faces = [[tuple(map(int, c.split("/"))) for c in ln.split()[1:]]
+                 for ln in lines if ln.startswith("f ")]
+        self.assertEqual(len(verts), len(mesh.vertices),
+                         "one v record per shared position")
+        self.assertEqual(len(uvs), 3 * len(mesh.faces),
+                         "one vt record per corner")
+        self.assertEqual(len(faces), len(mesh.faces))
+        for (vi, _), src in zip(faces[0], mesh.faces[0]):
+            self.assertEqual(vi - 1, src)
+        src_edges = set()
+        for a, b, c in np.asarray(mesh.faces):
+            for u, v in ((a, b), (b, c), (c, a)):
+                pa, pb = tuple(np.asarray(mesh.vertices[u])), tuple(
+                    np.asarray(mesh.vertices[v]))
+                src_edges.add((min(pa, pb), max(pa, pb)))
+        got_edges = set()
+        for (a, _), (b, _), (c, _) in faces:
+            for u, v in ((a - 1, b - 1), (b - 1, c - 1), (c - 1, a - 1)):
+                pa, pb = verts[u], verts[v]
+                got_edges.add((min(pa, pb), max(pa, pb)))
+        rnd = lambda e: tuple(tuple(round(x, 4) for x in p) for p in e)
+        self.assertEqual({rnd(e) for e in src_edges},
+                         {rnd(e) for e in got_edges})
 
 
     def test_component_ids_are_globally_unique(self):
