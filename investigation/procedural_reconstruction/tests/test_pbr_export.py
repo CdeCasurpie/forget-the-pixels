@@ -19,7 +19,7 @@ class PBRTests(unittest.TestCase):
                     0,3,0,2,0,3, "stone")
         mesh = builder.finish()
         xyz = mesh.vertices[mesh.faces]
-        uv = mesh.uv[mesh.faces]
+        uv = np.asarray(mesh.corner_uv)
         world = np.linalg.norm(np.cross(xyz[:,1]-xyz[:,0],xyz[:,2]-xyz[:,0]),axis=1)/2
         a,b = uv[:,1]-uv[:,0],uv[:,2]-uv[:,0]
         area = np.abs(a[:,0]*b[:,1]-a[:,1]*b[:,0])/2

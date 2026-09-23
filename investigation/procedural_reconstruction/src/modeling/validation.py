@@ -68,3 +68,95 @@ def validate_mesh(mesh, parcel, *, envelope=None, tolerance_m=CONTAINMENT_TOLERA
         "envelope_test": "passed",
         "topology": "assembly of intersecting closed components; not Boolean-unioned",
     }
+
+
+def component_topology(vertices, faces, face_start=0, face_count=None):
+    """Topology metrics for one closed-component candidate.
+
+    A geometric edge must have incidence exactly 2 on a closed orientable
+    shell; incidence 1 marks a boundary (open shell) and >2 a non-manifold
+    junction. Orientation coherence additionally requires the two incident
+    faces to traverse every shared edge in opposite directions. Duplicate
+    faces (same corners, any order) and degenerate triangles are reported
+    separately. Pure analysis: never modifies the mesh.
+    """
+    verts = np.asarray(vertices, float).reshape(-1, 3)
+    all_tris = np.asarray(faces, int).reshape(-1, 3)
+    tris = (all_tris if face_count is None
+            else all_tris[face_start:face_start + face_count])
+    used = np.unique(tris)
+    remap = np.full(len(verts), -1, int)
+    remap[used] = np.arange(len(used))
+    local = remap[tris]
+    parent = list(range(len(used)))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    incidence = {}
+    oriented = {}
+    for a, b, c in local:
+        parent[find(a)] = find(b)
+        parent[find(b)] = find(c)
+        for u, v in ((a, b), (b, c), (c, a)):
+            key = (min(u, v), max(u, v))
+            incidence[key] = incidence.get(key, 0) + 1
+            oriented.setdefault(key, []).append((u, v))
+    boundary = sum(1 for n in incidence.values() if n == 1)
+    non_manifold = sum(1 for n in incidence.values() if n > 2)
+    incoherent = sum(
+        1 for key, count in incidence.items() if count == 2
+        and oriented[key][0] == oriented[key][1]
+    )
+    seen, duplicates = set(), 0
+    for a, b, c in local:
+        key = tuple(sorted((a, b, c)))
+        if key in seen:
+            duplicates += 1
+        seen.add(key)
+    areas = (np.linalg.norm(np.cross(verts[tris[:, 1]] - verts[tris[:, 0]],
+                                     verts[tris[:, 2]] - verts[tris[:, 0]]),
+                            axis=1) / 2.0)
+    return {
+        "vertices": int(len(used)),
+        "faces": int(len(local)),
+        "connected": int(len({find(i) for i in range(len(used))})),
+        "boundary_edges": int(boundary),
+        "non_manifold_edges": int(non_manifold),
+        "incoherent_edges": int(incoherent),
+        "duplicate_faces": int(duplicates),
+        "degenerate_faces": int((areas < 1e-13).sum()),
+        "min_area_m2": float(areas.min()) if len(areas) else 0.0,
+    }
+
+
+def analyze_topology(mesh):
+    """Per-component topology over the face ranges in ``mesh.parts``.
+
+    A physically volumetric component is expected to report
+    ``connected == 1``, ``boundary_edges == 0``, ``non_manifold_edges == 0``
+    and ``incoherent_edges == 0``. Cosmetic or intentionally open pieces are
+    reported as-is; callers decide which semantics must be closed.
+    """
+    parts = list(mesh.parts)
+    components = []
+    for part in parts:
+        stats = component_topology(mesh.vertices, mesh.faces,
+                                   part["face_start"], part["face_count"])
+        stats["semantic"] = part.get("name", "")
+        stats["component_id"] = part.get("component_id", "")
+        stats["assembly_id"] = part.get("assembly_id", "")
+        components.append(stats)
+    closed = sum(1 for c in components
+                 if c["connected"] == 1 and not c["boundary_edges"]
+                 and not c["non_manifold_edges"])
+    return {
+        "components": components,
+        "component_count": len(components),
+        "closed_components": closed,
+        "total_boundary_edges": sum(c["boundary_edges"] for c in components),
+        "total_non_manifold_edges": sum(c["non_manifold_edges"] for c in components),
+    }

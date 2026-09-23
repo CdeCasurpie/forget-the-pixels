@@ -323,8 +323,7 @@ class GrammarTests(unittest.TestCase):
         self.assertIsNotNone(mesh.uv)
         
         degenerate_count = 0
-        for face in mesh.faces:
-            uvs = mesh.uv[face]
+        for uvs in np.asarray(mesh.corner_uv):
             area = abs(0.5 * ((uvs[1,0] - uvs[0,0]) * (uvs[2,1] - uvs[0,1]) - 
                               (uvs[2,0] - uvs[0,0]) * (uvs[1,1] - uvs[0,1])))
             if area < 1e-7:

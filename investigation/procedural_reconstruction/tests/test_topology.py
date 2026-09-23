@@ -1,15 +1,12 @@
-"""Component topology baseline: documents the triangle-soup regime.
+"""Component topology invariants: shared indices from construction.
 
-These tests PASS on the pre-manifold MeshBuilder and exist to pin the starting
-point. As primitives migrate to shared topology by construction, the
-soup-specific assertions (vertices == 3 * faces, one connected component per
-triangle) must be replaced by manifold invariants. See validation.py for the
-canonical analyzer once it lands.
+Every primitive must emit closed, connected, 2-manifold components with
+coherently oriented faces. No post-hoc welding is allowed to achieve this;
+these tests run on the construction output directly.
 """
 
 import sys
 import unittest
-from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -18,99 +15,98 @@ import numpy as np
 from shapely.geometry import box
 
 from modeling.mesh_builder import MeshBuilder
+from modeling.validation import analyze_topology, component_topology
 
 
-def soup_stats(vertices, faces):
-    """Topology metrics over an indexed mesh. Test-local until validation.py
-    grows the canonical analyzer."""
-    verts = np.asarray(vertices, float).reshape(-1, 3)
-    tris = np.asarray(faces, int).reshape(-1, 3)
-    parent = list(range(len(verts)))
-
-    def find(a):
-        while parent[a] != a:
-            parent[a] = parent[parent[a]]
-            a = parent[a]
-        return a
-
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[ra] = rb
-
-    edge_count = Counter()
-    for a, b, c in tris:
-        union(a, b)
-        union(b, c)
-        for u, v in ((a, b), (b, c), (c, a)):
-            edge_count[(min(u, v), max(u, v))] += 1
-    roots = {find(i) for i in range(len(verts))}
-    areas = (
-        np.linalg.norm(np.cross(verts[tris[:, 1]] - verts[tris[:, 0]],
-                                verts[tris[:, 2]] - verts[tris[:, 0]]), axis=1) / 2.0
-    )
-    return {
-        "vertices": len(verts),
-        "faces": len(tris),
-        "connected": len({find(i) for i in range(len(verts)) if any(
-            i in tri for tri in tris)}),
-        "boundary_edges": sum(1 for n in edge_count.values() if n == 1),
-        "non_manifold_edges": sum(1 for n in edge_count.values() if n > 2),
-        "min_area": float(areas.min()) if len(areas) else 0.0,
-    }
+def only(mesh):
+    report = analyze_topology(mesh)
+    assert len(report["components"]) == 1, report["components"]
+    return report["components"][0]
 
 
-class SoupBaselineTests(unittest.TestCase):
-    """Pre-manifold behavior, pinned so the migration is measurable."""
+def assert_closed(test, stats, label=""):
+    test.assertEqual(stats["connected"], 1, label)
+    test.assertEqual(stats["boundary_edges"], 0, label)
+    test.assertEqual(stats["non_manifold_edges"], 0, label)
+    test.assertEqual(stats["incoherent_edges"], 0, label)
+    test.assertEqual(stats["duplicate_faces"], 0, label)
+    test.assertEqual(stats["degenerate_faces"], 0, label)
 
-    def test_plain_box_is_triangle_soup_today(self):
+
+class PrimitiveTopologyTests(unittest.TestCase):
+    def test_plain_box_shares_eight_positions(self):
         mb = MeshBuilder(box(-5, -5, 5, 5))
         mb.box(np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]),
                0, 2.0, 0.0, 0.4, 0.0, 0.3, "stone", "boundary_cap")
         mesh = mb.finish()
-        stats = soup_stats(mesh.vertices, mesh.faces)
-        self.assertEqual(stats["faces"], 12)
-        # Every triangle owns its 3 vertices: no index is ever shared.
-        self.assertEqual(stats["vertices"], 3 * stats["faces"])
-        self.assertEqual(stats["connected"], stats["faces"])
-        self.assertGreater(stats["boundary_edges"], 0)
+        stats = only(mesh)
+        self.assertEqual((stats["vertices"], stats["faces"]), (8, 12))
+        assert_closed(self, stats, "box")
+        self.assertEqual(mesh.corner_uv.shape, (12, 3, 2))
+        self.assertIsNotNone(mesh.uv)
 
-    def test_beam_is_triangle_soup_today(self):
+    def test_box_is_not_triangle_soup(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.box(np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]),
+               0, 2.0, 0.0, 0.4, 0.0, 0.3, "stone", "boundary_cap")
+        mesh = mb.finish()
+        self.assertLess(len(mesh.vertices), len(mesh.faces),
+                        "a closed box reuses positions; soup would need 3 per face")
+
+    def test_beam_is_a_closed_indexed_cylinder(self):
         mb = MeshBuilder(box(-5, -5, 5, 5))
         mb.beam((0, 0, 0), (0, 0, 1.0), 0.05, material="metal", semantic="rail")
         mesh = mb.finish()
-        stats = soup_stats(mesh.vertices, mesh.faces)
-        self.assertEqual(stats["vertices"], 3 * stats["faces"])
+        stats = only(mesh)
+        self.assertEqual((stats["vertices"], stats["faces"]), (18, 32))
+        assert_closed(self, stats, "beam")
 
-    def test_solid_extrusion_is_triangle_soup_today(self):
+    def test_solid_extrusion_is_closed(self):
         mb = MeshBuilder(box(-5, -5, 5, 5))
         mb.solid(box(0, 0, 2, 1), 0.0, 0.5, "plaster", "wall")
         mesh = mb.finish()
-        self.assertEqual(len(mesh.vertices), 3 * len(mesh.faces))
+        assert_closed(self, only(mesh), "solid")
 
-    def test_v4_building_vertex_to_face_ratio_is_three_today(self):
-        from domain.architecture import BuildingProgram, ParcelContext, SitePlan
-        from modeling.grammar import generate_v4_mesh
-        from modeling.massing import generate_masses
+    def test_solid_with_hole_keeps_the_hole_and_closes(self):
+        ring = box(0, 0, 3, 3).difference(box(1, 1, 2, 2))
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.solid(ring, 0.0, 0.5, "plaster", "wall")
+        mesh = mb.finish()
+        stats = only(mesh)
+        assert_closed(self, stats, "solid-with-hole")
+        # 4 exterior + 4 hole corners, two levels, shared caps and walls.
+        self.assertEqual(stats["vertices"], 16)
 
-        parcel = box(-4, -6, 4, 6)
-        coords = tuple((float(x), float(y)) for x, y in parcel.exterior.coords)
-        ctx = ParcelContext(polygon=coords, explicit_fronts=(0,))
-        program = BuildingProgram(
-            use="residential", occupancy="medium", placement="flush",
-            architectural_language="quiet_house", finish_profile="standard",
-            maintenance="average", construction_state="completed",
-            primary_color=(0.85, 0.84, 0.80), seed=7)
-        masses = generate_masses(ctx, program, 5.6, 2.8)
-        spec_props = dict(context=ctx, program=program,
-                          site_plan=SitePlan(masses=masses, free_space=(),
-                                             access_nodes=(), boundaries=(),
-                                             exclusion_zones=()),
-                          facades=(), components=(), seed=7)
-        from domain.architecture import BuildingSpecificationV4
-        mesh = generate_v4_mesh(BuildingSpecificationV4(**spec_props))
-        ratio = len(mesh.vertices) / len(mesh.faces)
-        self.assertAlmostEqual(ratio, 3.0, places=6)
+    def test_chamfered_box_is_one_closed_shell(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.box(np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]),
+               0, 2.0, 0.0, 0.4, 0.0, 0.3, "stone", "boundary_cap", chamfer=0.02)
+        mesh = mb.finish()
+        stats = only(mesh)
+        self.assertEqual((stats["vertices"], stats["faces"]), (12, 20))
+        assert_closed(self, stats, "chamfer")
+
+    def test_foliage_is_a_closed_indexed_ellipsoid(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.foliage((0.0, 0.0, 1.0), (0.4, 0.4, 0.4), np.random.default_rng(1))
+        mesh = mb.finish()
+        stats = only(mesh)
+        # 2 poles + 5 rings of 10 shared positions, not 3 per triangle.
+        self.assertEqual(stats["vertices"], 52)
+        self.assertLess(stats["vertices"], stats["faces"])
+        assert_closed(self, stats, "foliage")
+
+    def test_component_identity_survives_finish(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        with mb.assembly("window_front_03"):
+            with mb.component("window_frame", component_id="window_front_03/frame"):
+                mb.beam((0, 0, 0), (0, 0, 1.0), 0.05)
+        mesh = mb.finish()
+        self.assertEqual(len(mesh.parts), 1)
+        part = mesh.parts[0]
+        self.assertEqual(part["component_id"], "window_front_03/frame")
+        self.assertEqual(part["assembly_id"], "window_front_03")
+        self.assertEqual(mesh.components[0]["component_id"], "window_front_03/frame")
 
 
 if __name__ == "__main__":

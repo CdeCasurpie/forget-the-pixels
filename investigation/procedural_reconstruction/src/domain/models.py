@@ -267,11 +267,23 @@ class BuildingSpecification:
 
 @dataclass(frozen=True)
 class MeshData:
-    """Renderer-independent mesh representation for future OBJ/GLB exporters."""
+    """Renderer-independent mesh representation for future OBJ/GLB exporters.
+
+    Topology (``vertices``/``faces``) uses shared position indices *within*
+    each component: two faces of one component meeting at the same point reuse
+    one vertex id. Render attributes live per face corner in ``corner_uv``
+    (one (u, v) per triangle corner, aligned with ``faces``), so a UV seam
+    never forces a topological split. ``uv`` is a legacy per-position view
+    (first corner wins) kept for readers that predate corner attributes.
+    ``parts`` index face ranges; ``components`` adds logical instance identity
+    (semantic + component_id + assembly_id) over the same ranges.
+    """
 
     vertices: np.ndarray
     faces: np.ndarray
     uv: np.ndarray | None = None
+    corner_uv: np.ndarray | None = None
     face_materials: np.ndarray | None = None
     materials: tuple[dict[str, Any], ...] = ()
     parts: tuple[dict[str, Any], ...] = ()
+    components: tuple[dict[str, Any], ...] = ()

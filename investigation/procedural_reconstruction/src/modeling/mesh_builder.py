@@ -3,13 +3,22 @@
 Components form an architectural assembly, not a Boolean-unioned manifold.
 Constrained triangulation preserves concavities and courtyard holes.
 
-UV coordinates are metric: UV = (world_distance / texture_scale).
-Vertices are duplicated at UV seams and hard edges so normals and UVs
-are independent per face-corner.
+Topology model: every primitive emits into a *component* whose geometric
+positions are shared by index from construction time. Two faces of the same
+component that meet at the same (x, y, z) reuse one vertex id; nothing is
+merged afterwards. UV coordinates stay metric (UV = world_distance /
+texture_scale) but live *per face corner*, decoupled from the topology, so a
+UV seam never forces a topological split. The export adapters (GLB/OBJ)
+duplicate render vertices only where an attribute seam requires it.
+
+Identity model: each component carries ``semantic`` (what it is),
+``component_id`` (which instance) and ``assembly_id`` (which logical group,
+e.g. one window). Parts index faces; components index instances.
 """
 
 import numpy as np
 import shapely
+from contextlib import contextmanager
 from shapely import constrained_delaunay_triangles
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
@@ -22,6 +31,11 @@ from .materials import material_to_dict, resolve_materials
 # against a rotated cadastral boundary routinely produces slivers of ~1e-20 m².
 # Emitting them corrupts normals and fails mesh validation downstream.
 MIN_TRIANGLE_AREA_M2 = 1e-12
+
+# Position identity quantum inside one component. Two corners computed for the
+# same geometric point share one vertex id from birth; points closer than this
+# without being the same construction point do not occur in our generators.
+VERTEX_QUANTUM_M = 1e-9
 
 # Attachments allowed to reach past the cadastral line into the street overhang
 # envelope. Structural mass (walls, slabs, parapets, roofs, boundaries) is never
@@ -56,6 +70,12 @@ PROJECTING_SEMANTICS = frozenset({
 })
 
 
+def _pos_key(point):
+    x, y, z = (float(point[0]), float(point[1]), float(point[2]))
+    q = VERTEX_QUANTUM_M
+    return (round(x / q), round(y / q), round(z / q))
+
+
 def polygons(geometry):
     if geometry.is_empty:
         return
@@ -85,6 +105,27 @@ def triangles(polygon):
         yield np.array(orient(triangle, sign=1).exterior.coords)[:3, :2]
 
 
+class _Component:
+    """One topological island under construction: shared positions, an index
+    buffer, per-corner UVs and per-face materials."""
+
+    __slots__ = ("semantic", "component_id", "assembly_id", "positions",
+                 "pos_index", "first_uv", "faces", "corner_uvs",
+                 "face_materials", "face_start")
+
+    def __init__(self, semantic, component_id, assembly_id):
+        self.semantic = semantic
+        self.component_id = component_id
+        self.assembly_id = assembly_id
+        self.positions = []      # list of (x, y, z)
+        self.pos_index = {}      # _pos_key -> position id
+        self.first_uv = []       # legacy per-position UV view (first corner wins)
+        self.faces = []          # list of (i, j, k) into positions
+        self.corner_uvs = []     # list of ((u,v), (u,v), (u,v)) per face
+        self.face_materials = []
+        self.face_start = 0
+
+
 class MeshBuilder:
     def __init__(self, parcel, appearance=BuildingAppearance(), *, envelope=None,
                  budget=DEFAULT_BUDGET):
@@ -94,15 +135,21 @@ class MeshBuilder:
         # Attachments are clipped to this instead of the parcel. Defaults to the
         # parcel, so a caller that does not opt in keeps the old behaviour.
         self.envelope = parcel if envelope is None else envelope
-        # Per-face-vertex storage: every face gets its own 3 vertex slots.
-        # This gives clean UV seams and hard normals at every edge.
-        self.vertices = []   # list of (x, y, z)
-        self.uvs = []        # list of (u, v) — one per vertex
-        self.faces = []      # list of (i, j, k) — indices into vertices/uvs
+        # Finished components, in emission order. Faces/positions below are the
+        # concatenation of every component: positions are shared *within* a
+        # component, never across components.
+        self.vertices = []   # list of (x, y, z), topology positions
+        self.uvs = []        # legacy per-position UV view, one per vertex
+        self.faces = []      # list of (i, j, k) — indices into vertices
+        self.corner_uvs = []  # one ((u,v)x3) per face, aligned with faces
         self.face_materials = []
         self.parts = []
+        self.components = []  # logical identity records, aligned with parts
         self.materials = [material_to_dict(m) for m in resolve_materials(appearance)]
         self.material_index = {m["name"]: i for i, m in enumerate(self.materials)}
+        self._open = None
+        self._assembly_stack = []
+        self._counters = {}
 
     # ── Clipping envelope ────────────────────────────────────────────
 
@@ -120,6 +167,146 @@ class MeshBuilder:
         """Whether an attachment footprint fits inside the projection envelope."""
         return self.envelope.covers(shape)
 
+    # ── Component / assembly scope ───────────────────────────────────
+
+    @property
+    def _assembly(self):
+        return self._assembly_stack[-1] if self._assembly_stack else ""
+
+    def _auto_id(self, semantic):
+        key = (self._assembly, semantic)
+        self._counters[key] = self._counters.get(key, 0) + 1
+        return f"{semantic}#{self._counters[key]:04d}"
+
+    def begin_component(self, semantic, component_id=None, assembly_id=None):
+        """Open a component scope. Every vertex created inside is shared by
+        position with the other vertices of this component only."""
+        if self._open is not None:
+            raise RuntimeError("A component is already open; end it first")
+        assembly = self._assembly if assembly_id is None else assembly_id
+        self._open = _Component(semantic, component_id or self._auto_id(semantic),
+                                assembly)
+        return self._open.component_id
+
+    def end_component(self):
+        """Close the component, freezing one part range over its faces."""
+        comp = self._open
+        if comp is None:
+            raise RuntimeError("No component is open")
+        self._open = None
+        if not comp.faces:
+            return None
+        # Prune positions no face references (ring corners whose every face
+        # was rejected as degenerate): topology stays tight.
+        used = np.zeros(len(comp.positions), bool)
+        for a, b, c in comp.faces:
+            used[a] = used[b] = used[c] = True
+        remap = np.full(len(comp.positions), -1, int)
+        remap[used] = np.arange(int(used.sum()))
+        positions = [comp.positions[i] for i in np.nonzero(used)[0]]
+        first_uv = [comp.first_uv[i] for i in np.nonzero(used)[0]]
+        comp.face_start = len(self.faces)
+        base = len(self.vertices)
+        self.vertices.extend(positions)
+        self.uvs.extend(first_uv)
+        self.faces.extend([(remap[a] + base, remap[b] + base, remap[c] + base)
+                           for a, b, c in comp.faces])
+        self.corner_uvs.extend(comp.corner_uvs)
+        self.face_materials.extend(comp.face_materials)
+        record = {
+            "name": comp.semantic,
+            "face_start": comp.face_start,
+            "face_count": len(comp.faces),
+            "component_id": comp.component_id,
+            "assembly_id": comp.assembly_id,
+        }
+        self.parts.append(record)
+        self.components.append(dict(record))
+        return comp.component_id
+
+    @contextmanager
+    def component(self, semantic, component_id=None, assembly_id=None):
+        self.begin_component(semantic, component_id, assembly_id)
+        try:
+            yield self._open.component_id
+        finally:
+            if self._open is not None:
+                self.end_component()
+
+    @contextmanager
+    def assembly(self, assembly_id):
+        """Group the components emitted inside under one logical assembly
+        (e.g. one window: frame + glazing + grille)."""
+        self._assembly_stack.append(assembly_id)
+        try:
+            yield assembly_id
+        finally:
+            self._assembly_stack.pop()
+
+    def _ensure_component(self, semantic):
+        if self._open is None:
+            self.begin_component(semantic)
+            return True
+        return False
+
+    # ── Low-level indexed emission (public for wall/ring builders) ───
+
+    def mat_index(self, material):
+        if material not in self.material_index:
+            raise ValueError(f"Unknown material slot: {material}")
+        return self.material_index[material]
+
+    def uv_scale_for(self, material):
+        scale = self.materials[self.mat_index(material)].get("real_scale_m", 1.0)
+        if not np.isfinite(scale) or scale <= 0:
+            raise ValueError("UV scale must be finite and positive")
+        return scale
+
+    def vert(self, point):
+        """Position id shared by every corner built at this point inside the
+        open component."""
+        comp = self._open
+        if comp is None:
+            raise RuntimeError("vert() needs an open component")
+        key = _pos_key(point)
+        known = comp.pos_index.get(key)
+        if known is not None:
+            return known
+        vid = len(comp.positions)
+        comp.positions.append((float(point[0]), float(point[1]), float(point[2])))
+        comp.first_uv.append((0.0, 0.0))
+        comp.pos_index[key] = vid
+        return vid
+
+    def tri(self, a, b, c, uvs, material_idx):
+        """Emit one triangle over shared position ids with per-corner UVs."""
+        comp = self._open
+        if comp is None:
+            raise RuntimeError("tri() needs an open component")
+        p0 = np.asarray(comp.positions[a], float)
+        p1 = np.asarray(comp.positions[b], float)
+        p2 = np.asarray(comp.positions[c], float)
+        if not (np.isfinite(p0).all() and np.isfinite(p1).all() and np.isfinite(p2).all()):
+            return False
+        if np.linalg.norm(np.cross(p1 - p0, p2 - p0)) / 2.0 < MIN_TRIANGLE_AREA_M2:
+            return False
+        (u0, v0), (u1, v1), (u2, v2) = uvs
+        if not np.isfinite((u0, v0, u1, v1, u2, v2)).all():
+            return False
+        comp.faces.append((a, b, c))
+        comp.corner_uvs.append(((float(u0), float(v0)), (float(u1), float(v1)),
+                                (float(u2), float(v2))))
+        comp.face_materials.append(material_idx)
+        for vid, uv in ((a, (u0, v0)), (b, (u1, v1)), (c, (u2, v2))):
+            if comp.first_uv[vid] == (0.0, 0.0) and uv != (0.0, 0.0):
+                comp.first_uv[vid] = (float(uv[0]), float(uv[1]))
+        return True
+
+    def quad(self, a, b, c, d, uvs, material_idx):
+        """Two triangles over four shared corners; uvs in corner order."""
+        self.tri(a, b, c, (uvs[0], uvs[1], uvs[2]), material_idx)
+        self.tri(a, c, d, (uvs[0], uvs[2], uvs[3]), material_idx)
+
     # ── UV helpers ───────────────────────────────────────────────────
 
     @staticmethod
@@ -132,11 +319,11 @@ class MeshBuilder:
         if norm < 1e-8:
             return [(p[0]/scale, p[1]/scale) for p in points_3d]
         n = n / norm
-        
+
         # If perfectly flat (n is vertical)
         if abs(n[2]) > 0.9999:
             return [(p[0]/scale, p[1]/scale) for p in points_3d]
-            
+
         # Sloped: consistent basis. Strike line is horizontal along the plane.
         strike = np.cross(n, np.array([0.0, 0.0, 1.0]))
         strike_len = np.linalg.norm(strike)
@@ -144,32 +331,26 @@ class MeshBuilder:
             u_axis = np.array([1.0, 0.0, 0.0])
         else:
             u_axis = strike / strike_len
-            
+
         v_axis = np.cross(n, u_axis)
-        
+
         return [(np.dot(p, u_axis)/scale, np.dot(p, v_axis)/scale) for p in points_3d]
 
     @staticmethod
     def _uv_for_wall(u_along, z, scale):
         return (u_along / scale, z / scale)
 
-    # ── Core primitive: emit one triangle with explicit UVs ──────────
+    # ── Indexed extrusion core ───────────────────────────────────────
 
-    def _emit_face(self, points_xyz, uvs, material_idx):
-        """Append one triangle.  Each call duplicates vertices for hard edges."""
-        p0, p1, p2 = (np.asarray(point, float) for point in points_xyz)
-        if not (np.isfinite(p0).all() and np.isfinite(p1).all() and np.isfinite(p2).all()):
-            return
-        if np.linalg.norm(np.cross(p1 - p0, p2 - p0)) / 2.0 < MIN_TRIANGLE_AREA_M2:
-            return
-        base = len(self.vertices)
-        for (x, y, z), (u, v) in zip(points_xyz, uvs):
-            self.vertices.append((float(x), float(y), float(z)))
-            self.uvs.append((float(u), float(v)))
-        self.faces.append((base, base + 1, base + 2))
-        self.face_materials.append(material_idx)
+    def _ring_ids(self, coords, z_bottom, z_top):
+        """Bottom/top position ids for one ring. Shared with caps and walls."""
+        bots, tops = [], []
+        for x, y in coords:
+            bots.append(self.vert((float(x), float(y), float(z_bottom))))
+            tops.append(self.vert((float(x), float(y), float(z_top))))
+        return bots, tops
 
-    # ── solid() with metric UV ──────────────────────────────────────
+    # ── solid() with shared topology ─────────────────────────────────
 
     def solid(self, shape, bottom, top, material="plaster", semantic="wall",
               *, facade_origin=None, facade_tangent=None, facade_normal=None,
@@ -181,128 +362,141 @@ class MeshBuilder:
         wall UVs fall back to edge-local distance.
 
         Cap UVs (top / bottom) are always world XY / uv_scale.
+
+        Positions are shared by index inside one component: a plain box
+        closes with 8 positions and 12 triangles, not 36 positions.
         """
-        if material not in self.material_index:
-            raise ValueError(f"Unknown material slot: {material}")
-        mat_idx = self.material_index[material]
+        mat_idx = self.mat_index(material)
         if uv_scale is None:
             uv_scale = self.materials[mat_idx].get("real_scale_m", 1.0)
         if not np.isfinite(uv_scale) or uv_scale <= 0:
             raise ValueError("UV scale must be finite and positive")
-        start = len(self.faces)
+        auto = self._ensure_component(semantic)
+        try:
+            def height(value, xy):
+                return value(*xy) if callable(value) else value
 
-        def height(value, xy):
-            return value(*xy) if callable(value) else value
+            clipped = shape.intersection(self.limit_for(semantic, clip))
+            for poly in polygons(clipped):
+                coords = np.array(poly.exterior.coords)[:, :2]
+                if any(height(top, p) <= height(bottom, p) for p in coords):
+                    raise ValueError("Solid must have positive thickness everywhere")
 
-        clipped = shape.intersection(self.limit_for(semantic, clip))
-        for poly in polygons(clipped):
-            coords = np.array(poly.exterior.coords)[:, :2]
-            if any(height(top, p) <= height(bottom, p) for p in coords):
-                raise ValueError("Solid must have positive thickness everywhere")
+                exterior = [tuple(p[:2]) for p in poly.exterior.coords[:-1]]
+                hole_rings = [[tuple(p[:2]) for p in ring.coords[:-1]]
+                              for ring in poly.interiors]
 
-            # ── Cap faces (top and bottom) ──
-            for tri in triangles(poly):
-                # Top cap
-                pts_top = [(x, y, height(top, (x, y))) for x, y in tri]
-                self._emit_face(pts_top, self._cap_uvs(pts_top, uv_scale), mat_idx)
+                # One shared id per ring corner per level: caps and swept
+                # walls meet at the same positions.
+                exterior_bot, exterior_top = self._level_ids(
+                    exterior, bottom, top, height)
+                holes_bot_top = [self._level_ids(hole, bottom, top, height)
+                                 for hole in hole_rings]
 
-                # Bottom cap (reversed winding)
-                pts_bot = [(x, y, height(bottom, (x, y))) for x, y in tri[::-1]]
-                self._emit_face(pts_bot, self._cap_uvs(pts_bot, uv_scale), mat_idx)
+                def cap_uv(corners):
+                    return self._cap_uvs(corners, uv_scale)
 
-            # ── Wall faces ──
-            for ring in [poly.exterior, *poly.interiors]:
-                points = list(ring.coords)
-                for a, b in zip(points[:-1], points[1:]):
-                    ax, ay = a[:2]
-                    bx, by = b[:2]
+                # Caps follow the constrained triangulation (holes stay holes).
+                # Corner order matches the legacy emission — top as
+                # triangulated, bottom reversed — so winding is unchanged.
+                for tri in triangles(poly):
+                    top_ids = self._map_tri(tri, "top", bottom, top, height)
+                    pts_top = [self._open.positions[v] for v in top_ids]
+                    self.tri(*top_ids, cap_uv(pts_top), mat_idx)
+                    bot_ids = self._map_tri(tri[::-1], "bottom", bottom, top,
+                                            height)
+                    pts_bot = [self._open.positions[v] for v in bot_ids]
+                    self.tri(*bot_ids, cap_uv(pts_bot), mat_idx)
 
-                    # Compute u_along for this edge
-                    if facade_origin is not None and facade_tangent is not None and facade_normal is not None:
-                        fo = np.asarray(facade_origin, float)
-                        ft = np.asarray(facade_tangent, float)
-                        fn = np.asarray(facade_normal, float)
-                        edge_vec = np.array([bx - ax, by - ay])
-                        
-                        # Project onto either tangent or normal depending on which is dominant
-                        if abs(np.dot(edge_vec, ft)) > abs(np.dot(edge_vec, fn)):
-                            u_a = float(np.dot(np.array([ax, ay]) - fo, ft))
-                            u_b = float(np.dot(np.array([bx, by]) - fo, ft))
-                        else:
-                            u_a = float(np.dot(np.array([ax, ay]) - fo, fn))
-                            u_b = float(np.dot(np.array([bx, by]) - fo, fn))
-                        edge_length = np.linalg.norm(edge_vec)
-                        if not np.isclose(abs(u_b-u_a), edge_length):
-                            axis = edge_vec / edge_length
-                            u_a = float(np.dot(np.array([ax, ay])-fo, axis))
-                            u_b = u_a + edge_length
-                    else:
-                        # Edge-local: a is 0, b is edge length
-                        u_a = 0.0
-                        u_b = float(np.hypot(bx - ax, by - ay))
+                # Swept walls, ring by ring. Order (A1,B1,B2)/(A1,B2,A2) keeps
+                # the legacy winding: outward normals on exterior rings, faces
+                # looking into the void on hole rings.
+                rings = ([(exterior, exterior_bot, exterior_top)] +
+                         [(hole, hb, ht) for hole, (hb, ht) in
+                          zip(hole_rings, holes_bot_top)])
+                for pts, bots, tops in rings:
+                    n = len(pts)
+                    for e in range(n):
+                        f = (e + 1) % n
+                        A1, B1, B2, A2 = bots[e], bots[f], tops[f], tops[e]
+                        (uA, zbA), (uB, zbB), (_, ztB), (_, ztA) = (
+                            self._wall_edge_uv(
+                                self._open.positions[A1], self._open.positions[B1],
+                                self._open.positions[B2], self._open.positions[A2],
+                                facade_origin, facade_tangent, facade_normal,
+                                uv_scale))
+                        self.tri(A1, B1, B2, ((uA, zbA), (uB, zbB), (uB, ztB)),
+                                 mat_idx)
+                        self.tri(A1, B2, A2, ((uA, zbA), (uB, ztB), (uA, ztA)),
+                                 mat_idx)
+        finally:
+            if auto:
+                self.end_component()
 
-                    z_bot_a = height(bottom, (ax, ay))
-                    z_bot_b = height(bottom, (bx, by))
-                    z_top_a = height(top, (ax, ay))
-                    z_top_b = height(top, (bx, by))
+    @staticmethod
+    def _wall_edge_uv(A1, B1, B2, A2, facade_origin, facade_tangent,
+                      facade_normal, uv_scale):
+        """Role-based UVs for one swept wall edge: (u along, z) per quad
+        corner, matching the legacy per-triangle layout exactly."""
+        (x0, y0, z0), (x1, y1, zb1) = tuple(A1)[:3], tuple(B1)[:3]
+        z2 = tuple(B2)[2]
+        z3 = tuple(A2)[2]
+        if facade_origin is None:
+            uA, uB = 0.0, float(np.hypot(x1 - x0, y1 - y0))
+        else:
+            fo = np.asarray(facade_origin, float)
+            ft = np.asarray(facade_tangent, float)
+            fn = np.asarray(facade_normal, float)
+            edge_vec = np.array([x1 - x0, y1 - y0])
+            if abs(np.dot(edge_vec, ft)) > abs(np.dot(edge_vec, fn)):
+                uA = float(np.dot(np.array([x0, y0]) - fo, ft))
+                uB = float(np.dot(np.array([x1, y1]) - fo, ft))
+            else:
+                uA, uB = 0.0, float(np.linalg.norm(edge_vec))
+        uA, uB = uA / uv_scale, uB / uv_scale
+        return ((uA, z0 / uv_scale), (uB, zb1 / uv_scale),
+                (uB, z2 / uv_scale), (uA, z3 / uv_scale))
 
-                    p = (ax, ay, z_bot_a)
-                    q = (bx, by, z_bot_b)
-                    r = (bx, by, z_top_b)
-                    s = (ax, ay, z_top_a)
+    def _level_ids(self, coords, bottom, top, height):
+        bots = [self.vert((x, y, height(bottom, (x, y)))) for x, y in coords]
+        tops = [self.vert((x, y, height(top, (x, y)))) for x, y in coords]
+        return bots, tops
 
-                    # Triangle 1: p, q, r
-                    self._emit_face(
-                        [p, q, r],
-                        [
-                            self._uv_for_wall(u_a, z_bot_a, uv_scale),
-                            self._uv_for_wall(u_b, z_bot_b, uv_scale),
-                            self._uv_for_wall(u_b, z_top_b, uv_scale),
-                        ],
-                        mat_idx,
-                    )
-                    # Triangle 2: p, r, s
-                    self._emit_face(
-                        [p, r, s],
-                        [
-                            self._uv_for_wall(u_a, z_bot_a, uv_scale),
-                            self._uv_for_wall(u_b, z_top_b, uv_scale),
-                            self._uv_for_wall(u_a, z_top_a, uv_scale),
-                        ],
-                        mat_idx,
-                    )
+    def _map_tri(self, tri, level, bottom, top, height):
+        """Ids for triangulation corners, reusing ring positions when the
+        corner is one (the common case: constrained Delaunay only emits input
+        vertices), else creating the corner (legacy behavior per triangle)."""
+        field = bottom if level == "bottom" else top
+        ids = []
+        for x, y in tri:
+            key = _pos_key((x, y, height(field, (x, y))))
+            known = self._open.pos_index.get(key)
+            ids.append(known if known is not None
+                       else self.vert((x, y, height(field, (x, y)))))
+        return ids[0], ids[1], ids[2]
 
-        if len(self.faces) > start:
-            self.parts.append({
-                "name": semantic,
-                "face_start": start,
-                "face_count": len(self.faces) - start,
-            })
-
-    # ── box() with facade-aligned UV ────────────────────────────────
+    # ── box() with a true chamfer ───────────────────────────────
 
     def box(self, a, t, n, u1, u2, z1, z2, w1, w2,
             material="plaster", semantic="wall",
             *, uv_origin_u=None, clip="auto", chamfer=0.0):
         """Axis-aligned box in facade-local coordinates.
 
-        uv_origin_u: if set, UV u-coordinate is measured from this
-        facade-absolute value rather than from u1, giving continuity
-        across neighbouring boxes that share the same facade.
+        uv_origin_u: accepted for backward compatibility (legacy callers never
+        set it to anything the emission path consumed).
 
-        chamfer: breaks the top arris by that many metres. A cornice or a coping
-        with a mathematically sharp edge catches no highlight and reads as a
-        printed line under flat lighting, which is how a city block is viewed.
+        chamfer: breaks the top arris with a real diagonal band. A cornice or
+        a coping with a mathematically sharp edge catches no highlight and
+        reads as a printed line under flat lighting, which is how a city block
+        is viewed. Unlike two stacked boxes, the chamfered shell is closed and
+        has no coincident interior faces.
         """
         if min(u2 - u1, z2 - z1, w2 - w1) <= 1e-7:
             return
         if chamfer > 0 and z2 - z1 > 3 * chamfer and \
                 min(u2 - u1, w2 - w1) > 3 * chamfer:
-            self.box(a, t, n, u1, u2, z1, z2 - chamfer, w1, w2, material, semantic,
-                     uv_origin_u=uv_origin_u, clip=clip)
-            self.box(a, t, n, u1 + chamfer, u2 - chamfer, z2 - chamfer, z2,
-                     w1 + chamfer, w2 - chamfer, material, semantic,
-                     uv_origin_u=uv_origin_u, clip=clip)
+            self._chamfered_box(a, t, n, u1, u2, z1, z2, w1, w2,
+                                material, semantic, chamfer, clip)
             return
 
         a = np.asarray(a, float)
@@ -334,10 +528,66 @@ class MeshBuilder:
             clip=clip,
         )
 
+    def _chamfered_box(self, a, t, n, u1, u2, z1, z2, w1, w2,
+                       material, semantic, chamfer, clip):
+        """One closed 12-position shell: bottom, four sides, a diagonal bevel
+        band and an inset top. No stacked boxes, no interior faces."""
+        mat_idx = self.mat_index(material)
+        uv_scale = self.uv_scale_for(material)
+        auto = self._ensure_component(semantic)
+        try:
+            a = np.asarray(a, float)
+            t = np.asarray(t, float) / np.linalg.norm(t)
+            n = np.asarray(n, float) / np.linalg.norm(n)
+            c = chamfer
+            zt = z2 - c
+
+            def P(u, w, z):
+                xy = a + t * u + n * w
+                return self.vert((float(xy[0]), float(xy[1]), float(z)))
+
+            B = [P(u1, w1, z1), P(u2, w1, z1), P(u2, w2, z1), P(u1, w2, z1)]
+            T = [P(u1, w1, zt), P(u2, w1, zt), P(u2, w2, zt), P(u1, w2, zt)]
+            I = [P(u1 + c, w1 + c, z2), P(u2 - c, w1 + c, z2),
+                 P(u2 - c, w2 - c, z2), P(u1 + c, w2 - c, z2)]
+
+            def wuv(u, z):
+                return self._uv_for_wall(u, z, uv_scale)
+
+            # Bottom (normal -Z).
+            self.quad(B[0], B[3], B[2], B[1],
+                      [wuv(u1, z1), wuv(u1, z1), wuv(u2, z1), wuv(u2, z1)], mat_idx)
+            # Side k spans corner k -> k+1 at (z1..zt). Winding matches the
+            # legacy box walls: (low_a, low_b, high_b) / (low_a, high_b, high_a).
+            for k in range(4):
+                l0, l1, h1, h0 = B[k], B[(k + 1) % 4], T[(k + 1) % 4], T[k]
+                uu = (u1, u2, u2, u1)[k], (u2, u2, u1, u1)[k]
+                self.quad(l0, l1, h1, h0,
+                          [wuv(uu[0], z1), wuv(uu[1], z1),
+                           wuv(uu[1], zt), wuv(uu[0], zt)], mat_idx)
+            # Bevel band: outer top ring -> inset top ring.
+            for k in range(4):
+                o0, o1, i1, i0 = T[k], T[(k + 1) % 4], I[(k + 1) % 4], I[k]
+                uu = (u1, u2, u2, u1)[k], (u2, u2, u1, u1)[k]
+                self.quad(o0, o1, i1, i0,
+                          [wuv(uu[0], zt), wuv(uu[1], zt),
+                           wuv(uu[1], z2), wuv(uu[0], z2)], mat_idx)
+            # Inset top cap.
+            tuvs = self._cap_uvs([self._open.positions[v] for v in (I[0], I[1], I[2])],
+                                 uv_scale)
+            self.tri(I[0], I[1], I[2], tuvs, mat_idx)
+            tuvs = self._cap_uvs([self._open.positions[v] for v in (I[0], I[2], I[3])],
+                                 uv_scale)
+            self.tri(I[0], I[2], I[3], tuvs, mat_idx)
+        finally:
+            if auto:
+                self.end_component()
+
     def beam(self, a, b, radius=0.018, material="metal", semantic="rail", *, clip="auto"):
-        """Round beam; reject rather than leave any triangle outside the parcel."""
-        if material not in self.material_index:
-            raise ValueError(f"Unknown material slot: {material}")
+        """Closed indexed cylinder between two points; ring vertices are shared
+        between the side faces and both end caps. One beam is one component:
+        connected, closed and 2-manifold."""
+        mat_idx = self.mat_index(material)
         a, b = np.array(a, float), np.array(b, float)
         direction = b - a
         length = np.linalg.norm(direction)
@@ -348,142 +598,116 @@ class MeshBuilder:
         u = np.cross(direction, axis)
         u /= np.linalg.norm(u)
         v = np.cross(direction, u)
-        angles = np.arange(8) * np.pi / 4
-        ring = radius * (np.cos(angles)[:, None] * u + np.sin(angles)[:, None] * v)
-        verts = np.vstack((a + ring, b + ring, a[None], b[None]))
         from shapely.geometry import MultiPoint
 
-        if not self.limit_for(semantic, clip).covers(MultiPoint(verts[:, :2]).convex_hull):
+        ring_probe = radius * (np.cos(np.arange(8) * np.pi / 4)[:, None] * u +
+                               np.sin(np.arange(8) * np.pi / 4)[:, None] * v)
+        hull_points = np.vstack((a + ring_probe, b + ring_probe, a[None], b[None]))
+        if not self.limit_for(semantic, clip).covers(
+                MultiPoint(hull_points[:, :2]).convex_hull):
             return
+        auto = self._ensure_component(semantic)
+        try:
+            mat_dict = self.materials[mat_idx]
+            uv_scale = mat_dict.get("real_scale_m", 1.0)
+            angles = np.arange(8) * np.pi / 4
+            ring = radius * (np.cos(angles)[:, None] * u + np.sin(angles)[:, None] * v)
+            ring_a = [self.vert(tuple(a + off)) for off in ring]
+            ring_b = [self.vert(tuple(b + off)) for off in ring]
+            cap_a = self.vert(tuple(a))
+            cap_b = self.vert(tuple(b))
+            circumference = 2 * np.pi * radius
 
-        mat_idx = self.material_index[material]
-        mat_dict = self.materials[mat_idx]
-        uv_scale = mat_dict.get("real_scale_m", 1.0)
-        start = len(self.faces)
-        circumference = 2 * np.pi * radius
-
-        for i in range(8):
-            j = (i + 1) % 8
-            # UV for beam: u = angle fraction * circumference, v = length along beam
-            u_i = (i / 8) * circumference / uv_scale
-            u_j = ((i + 1) / 8) * circumference / uv_scale
-            v0 = 0.0
-            v1 = length / uv_scale
-
-            # Side quad: two triangles
-            self._emit_face(
-                [tuple(verts[i]), tuple(verts[j]), tuple(verts[j + 8])],
-                [(u_i, v0), (u_j, v0), (u_j, v1)],
-                mat_idx,
-            )
-            self._emit_face(
-                [tuple(verts[i]), tuple(verts[j + 8]), tuple(verts[i + 8])],
-                [(u_i, v0), (u_j, v1), (u_i, v1)],
-                mat_idx,
-            )
-            # End caps
-            self._emit_face(
-                [tuple(verts[16]), tuple(verts[j]), tuple(verts[i])],
-                [(0, 0), tuple(radius*np.array([np.cos(angles[j]), np.sin(angles[j])])/uv_scale),
-                 tuple(radius*np.array([np.cos(angles[i]), np.sin(angles[i])])/uv_scale)],
-                mat_idx,
-            )
-            self._emit_face(
-                [tuple(verts[17]), tuple(verts[i + 8]), tuple(verts[j + 8])],
-                [(0, 0), tuple(radius*np.array([np.cos(angles[i]), np.sin(angles[i])])/uv_scale),
-                 tuple(radius*np.array([np.cos(angles[j]), np.sin(angles[j])])/uv_scale)],
-                mat_idx,
-            )
-
-        self.parts.append({
-            "name": semantic,
-            "face_start": start,
-            "face_count": len(self.faces) - start,
-        })
+            for i in range(8):
+                j = (i + 1) % 8
+                u_i = (i / 8) * circumference / uv_scale
+                u_j = ((i + 1) / 8) * circumference / uv_scale
+                v0, v1 = 0.0, length / uv_scale
+                self.quad(ring_a[i], ring_a[j], ring_b[j], ring_b[i],
+                          [(u_i, v0), (u_j, v0), (u_j, v1), (u_i, v1)], mat_idx)
+                cap_uv_a = (radius * np.cos(angles[i]) / uv_scale,
+                            radius * np.sin(angles[i]) / uv_scale)
+                cap_uv_j = (radius * np.cos(angles[j]) / uv_scale,
+                            radius * np.sin(angles[j]) / uv_scale)
+                self.tri(cap_a, ring_a[j], ring_a[i],
+                         [(0, 0), cap_uv_j, cap_uv_a], mat_idx)
+                self.tri(cap_b, ring_b[i], ring_b[j],
+                         [(0, 0), cap_uv_a, cap_uv_j], mat_idx)
+        finally:
+            if auto:
+                self.end_component()
 
     def foliage(self, center, radii, rng, segments=10, rings=5, *, semantic="shrub",
                 clip="auto"):
-        """Closed low-poly ellipsoid with seeded, gently irregular leaf clusters."""
+        """Closed low-poly ellipsoid with seeded, gently irregular leaf clusters.
+        Rings share their vertices; poles are single shared ids."""
         from shapely.geometry import MultiPoint
 
         center, radii = np.asarray(center), np.asarray(radii)
-        points = [(0.0, 0.0, 1.0)]
+        rows = []
+        rows.append([np.array([0.0, 0.0, 1.0])])
         for i in range(1, rings + 1):
             phi = np.pi * i / (rings + 1)
+            row = []
             for j in range(segments):
                 theta = 2 * np.pi * j / segments
                 r = rng.uniform(0.90, 1.10)
-                points.append(
-                    tuple(
-                        r
-                        * np.array([
-                            np.sin(phi) * np.cos(theta),
-                            np.sin(phi) * np.sin(theta),
-                            np.cos(phi),
-                        ])
-                    )
-                )
-        points.append((0.0, 0.0, -1.0))
-        verts = np.asarray(points) * radii + center
+                row.append(r * np.array([np.sin(phi) * np.cos(theta),
+                                         np.sin(phi) * np.sin(theta),
+                                         np.cos(phi)]))
+            rows.append(row)
+        rows.append([np.array([0.0, 0.0, -1.0])])
+        unit = [p for row in rows for p in row]
+        verts = np.asarray(unit) * radii + center
         if not self.limit_for(semantic, clip).covers(MultiPoint(verts[:, :2]).convex_hull):
             return
+        auto = self._ensure_component(semantic)
+        try:
+            mat_idx = self.material_index["leaf"]
+            ids = [self.vert(tuple(v)) for v in verts]
 
-        mat_idx = self.material_index["leaf"]
-        start = len(self.faces)
+            def uv_of(k, total):
+                return (k / segments, 1 - total / (rings + 1))
 
-        # Spherical UV for foliage
-        for j in range(segments):
-            k = (j + 1) % segments
-            # Top fan
-            self._emit_face(
-                [tuple(verts[0]), tuple(verts[1 + j]), tuple(verts[1 + k])],
-                [(0.5, 1.0), (j / segments, 1 - 1 / (rings + 1)),
-                 (k / segments, 1 - 1 / (rings + 1))],
-                mat_idx,
-            )
-            # Middle rings
+            top, bottom = ids[0], ids[-1]
+            # Top fan.
+            for j in range(segments):
+                k = (j + 1) % segments
+                self.tri(top, ids[1 + j], ids[1 + k],
+                         [(0.5, 1.0), uv_of(j, 1), uv_of(k, 1)], mat_idx)
+            # Middle rings.
             for i in range(rings - 1):
                 upper = 1 + i * segments
                 lower = 1 + (i + 1) * segments
-                v_upper = 1 - (i + 1) / (rings + 1)
-                v_lower = 1 - (i + 2) / (rings + 1)
-                self._emit_face(
-                    [tuple(verts[upper + j]), tuple(verts[lower + j]),
-                     tuple(verts[lower + k])],
-                    [(j / segments, v_upper), (j / segments, v_lower),
-                     (k / segments, v_lower)],
-                    mat_idx,
-                )
-                self._emit_face(
-                    [tuple(verts[upper + j]), tuple(verts[lower + k]),
-                     tuple(verts[upper + k])],
-                    [(j / segments, v_upper), (k / segments, v_lower),
-                     (k / segments, v_upper)],
-                    mat_idx,
-                )
-            # Bottom fan
+                for j in range(segments):
+                    k = (j + 1) % segments
+                    self.quad(ids[upper + j], ids[lower + j],
+                              ids[lower + k], ids[upper + k],
+                              [uv_of(j, i + 1), uv_of(j, i + 2),
+                               uv_of(k, i + 2), uv_of(k, i + 1)], mat_idx)
+            # Bottom fan.
             last = 1 + (rings - 1) * segments
-            self._emit_face(
-                [tuple(verts[len(verts) - 1]), tuple(verts[last + k]),
-                 tuple(verts[last + j])],
-                [(0.5, 0.0), (k / segments, 1 / (rings + 1)),
-                 (j / segments, 1 / (rings + 1))],
-                mat_idx,
-            )
-
-        self.parts.append(
-            {"name": semantic, "face_start": start,
-             "face_count": len(self.faces) - start}
-        )
+            for j in range(segments):
+                k = (j + 1) % segments
+                self.tri(bottom, ids[last + k], ids[last + j],
+                         [(0.5, 0.0), uv_of(k, rings), uv_of(j, rings)], mat_idx)
+        finally:
+            if auto:
+                self.end_component()
 
     def finish(self):
         verts = np.asarray(self.vertices, float).reshape(-1, 3)
         uv = np.asarray(self.uvs, float).reshape(-1, 2) if self.uvs else None
+        corner = (np.asarray(
+            [[uv for uv in face] for face in self.corner_uvs],
+            float).reshape(-1, 3, 2) if self.corner_uvs else None)
         return MeshData(
             verts,
             np.asarray(self.faces, int).reshape(-1, 3),
             uv=uv,
+            corner_uv=corner,
             face_materials=np.asarray(self.face_materials, int),
             materials=tuple(self.materials),
             parts=tuple(self.parts),
+            components=tuple(self.components),
         )
