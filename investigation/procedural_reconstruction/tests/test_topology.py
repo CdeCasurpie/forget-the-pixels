@@ -402,7 +402,6 @@ class ExportIdentityTests(unittest.TestCase):
         self.assertEqual({rnd(e) for e in src_edges},
                          {rnd(e) for e in got_edges})
 
-
     def test_component_ids_are_globally_unique(self):
         """Two walls from different lines of one exposure must never share
         ids: a repeated component id collapses two GLB nodes into one and
@@ -461,6 +460,44 @@ class ExportIdentityTests(unittest.TestCase):
                         seen[f"{label}#{mesh.materials[mi]['name']}"] += 1
                 dupes = [k for k, v in seen.items() if v > 1]
                 self.assertEqual(dupes, [], f"repeated GLB nodes: {dupes[:3]}")
+
+    def test_scene_graph_has_no_duplicate_references(self):
+        """After the component merge, scene.nodes lists each node once and
+        every mesh is referenced: no orphan geometry, no doubled nodes from
+        several material primitives."""
+        import json
+        import struct
+        import tempfile
+        from pathlib import Path
+        from shapely.geometry import Polygon as _Poly
+        from modeling.exporters.glb_exporter import export_glb
+
+        mb = MeshBuilder(box(-5, -5, 15, 5))
+        a = np.array([0.0, 0.0])
+        t = np.array([1.0, 0.0])
+        n = np.array([0.0, -1.0])
+        with mb.assembly("wall"):
+            mb.panel(a, t, n, [_Poly([(0, 0), (4, 0), (4, 2), (0, 2)])],
+                     -0.2, 0.0,
+                     lambda kind, u, v, w: "brick" if v < 1.0 else "plaster",
+                     "wall", component_id="wall/00")
+            mb.box(a, t, n, 5, 6, 0, 1, 0, 0.3, "stone", "trim")
+        mesh = mb.finish()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "scene.glb"
+            export_glb(mesh, path)
+            data = Path(path).read_bytes()
+        length = struct.unpack_from("<I", data, 12)[0]
+        tree = json.loads(data[20:20 + length])
+        for scene in tree.get("scenes", []):
+            self.assertEqual(len(scene["nodes"]), len(set(scene["nodes"])),
+                             "scene references a node twice")
+        used = {n["mesh"] for n in tree["nodes"]
+                if isinstance(n.get("mesh"), int)}
+        self.assertEqual(used, set(range(len(tree["meshes"]))),
+                         "every mesh referenced exactly once")
+        names = [n.get("name", "") for n in tree["nodes"]]
+        self.assertEqual(len(names), len(set(names)))
 
 
 if __name__ == "__main__":

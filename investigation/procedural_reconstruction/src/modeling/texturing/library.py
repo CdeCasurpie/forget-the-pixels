@@ -16,6 +16,33 @@ from PIL import Image
 from domain.models import TextureSet
 
 
+def find_project_root(start: str | Path | None = None,
+                      max_up: int = 6) -> Path | None:
+    """Nearest ancestor containing ``assets/pbr/catalog.json``.
+
+    Deterministic and bounded: walks up at most ``max_up`` levels from
+    ``start`` (default: this file, i.e. ``src/modeling/texturing/``) and
+    returns the first directory holding the catalog, else None. No silent
+    filesystem-wide search.
+    """
+    here = Path(start).resolve() if start else Path(__file__).resolve().parent
+    for _ in range(max_up + 1):
+        if (here / "assets" / "pbr" / "catalog.json").is_file():
+            return here
+        if here.parent == here:
+            break
+        here = here.parent
+    return None
+
+
+def default_catalog_path() -> Path | None:
+    """The shipped PBR catalog, or None when the checkout lacks assets."""
+    root = find_project_root()
+    if root is None:
+        return None
+    return root / "assets" / "pbr" / "catalog.json"
+
+
 class ValidationError(Exception):
     """Raised when a texture set fails integrity checks."""
 

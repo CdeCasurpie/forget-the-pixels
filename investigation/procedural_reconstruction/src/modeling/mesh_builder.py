@@ -107,13 +107,17 @@ def _refine(axis, max_step):
     out = [axis[0]]
     for lo, hi in zip(axis, axis[1:]):
         n = max(1, int(np.ceil((hi - lo) / max_step)))
-        out.extend(lo + (hi - lo) * k / n for k in range(1, n + 1))
+        # Interior splits only: endpoints appended exactly, so exact cut
+        # values (material edges, hole edges) survive bit-identically.
+        out.extend(lo + (hi - lo) * k / n for k in range(1, n))
+        out.append(hi)
     return out
 
 
-def _rectilinear_cells(poly, max_step=0.5):
-    """Grid tiling that is exact: grid lines contain every hole edge, so kept
-    cells (by center) union to the domain with no slivers and no gaps.
+def _rectilinear_cells(poly, cuts_u=(), cuts_z=(), max_step=0.5):
+    """Grid tiling that is exact: grid lines contain every hole edge plus
+    every caller-supplied cut (material edges, depth steps), so kept cells
+    (by center) union to the domain with no slivers and no gaps.
     Intervals above max_step split uniformly, so neighbor cells always share
     identical edges and every quad stays aspect-bounded."""
     xs = {poly.bounds[0], poly.bounds[2]}
@@ -124,6 +128,13 @@ def _rectilinear_cells(poly, max_step=0.5):
         xs.update((hx0, hx1))
         zs.update((hz0, hz1))
         holes.append(Polygon(ring))
+    xs.update(cuts_u)
+    zs.update(cuts_z)
+    # Snap to nanometres: interval subdivision (x0 + w*k/n) lands a few ulps
+    # off exact cuts, which would read as sliver cells and split shared
+    # edges. Geometry moves < 1nm; validation tolerates 0.2mm.
+    xs = sorted({round(float(x), 9) for x in xs})
+    zs = sorted({round(float(z), 9) for z in zs})
     xs = _refine(sorted(xs), max_step)
     zs = _refine(sorted(zs), max_step)
     cells = []
@@ -823,7 +834,7 @@ class MeshBuilder:
 
     def panel(self, a, t, n, polys_uz, w1, w2, mat_fn, semantic,
               component_id=None, assembly_id=None, *, clip="auto",
-              max_segment_m=0.0):
+              max_segment_m=0.0, cuts_u=(), cuts_z=(), depth_fn=None):
         """Extrude (u, z) polygons along the facade normal into a closed shell.
 
         ``polys_uz`` are shapely Polygons in facade-local metres (u along the
@@ -832,6 +843,11 @@ class MeshBuilder:
         their material from ``mat_fn(kind, u, v, w)`` with kind in
         {"front", "back", "side"} over face midpoints, so one shell can carry
         several finish zones without splitting.
+
+        ``cuts_u``/``cuts_z`` are required grid lines (material edges, depth
+        steps): no triangle ever crosses them, so classification by region is
+        exact. ``depth_fn(u, v)`` gives the front depth per cell (default
+        w2); neighbors at different depths join through step connectors.
 
         Clipping runs along the facade axis: the wall line at mid-depth is
         intersected with the cadastral limit and the (u, z) domain is cut to
@@ -896,11 +912,13 @@ class MeshBuilder:
                                         max_segment_m),
                         [_subdivide_ring(list(ring.coords), max_segment_m)
                          for ring in poly.interiors])
-                self._panel_poly(a, t, n, poly, w1, w2, mat_fn)
+                self._panel_poly(a, t, n, poly, w1, w2, mat_fn, cuts_u,
+                                 cuts_z, depth_fn)
         finally:
             return self.end_component()
 
-    def _panel_poly(self, a, t, n, poly, w1, w2, mat_fn):
+    def _panel_poly(self, a, t, n, poly, w1, w2, mat_fn, cuts_u=(),
+                    cuts_z=(), depth_fn=None):
         comp = self._open
 
         def W(u, w, z):
@@ -912,7 +930,7 @@ class MeshBuilder:
 
         if _is_rectilinear(poly):
             self._panel_rectilinear(a, t, n, poly, w1, w2, mat_fn, W,
-                                    scale_of)
+                                    scale_of, cuts_u, cuts_z, depth_fn)
             return
 
         rings = _clean_ring([tuple(p[:2]) for p in poly.exterior.coords])
@@ -973,33 +991,33 @@ class MeshBuilder:
                          mi)
 
     def _panel_rectilinear(self, a, t, n, poly, w1, w2, mat_fn, W,
-                               scale_of):
-        """Caps as aspect-bounded quad pairs over an exact grid tiling.
+                               scale_of, cuts_u, cuts_z, depth_fn):
+        """One stepped shell over an exact grid tiling.
 
-        Grid lines contain every hole edge, so kept cells tile the domain
-        with no slivers; each cell splits until no triangle is thinner than
-        ~1:3.5. All corners share ids through W(): one connected shell.
+        Grid lines contain hole edges plus caller cuts (material edges, depth
+        steps), so no triangle ever crosses a region boundary: material and
+        depth are constant per cell. Each cell extrudes from the common back
+        plane w1 to its own front depth; neighbors at different depths join
+        through a step connector quad, oriented like the shallow side so both
+        neighboring caps stay coherent. Shared
+        corners resolve through W(): one connected manifold shell carrying
+        several materials, with 15 mm steps instead of coincident internal
+        walls.
         """
-        depth = w2 - w1
-        # Cells already aspect-bounded by the refined grid: use them directly
-        # so neighbor cells share bit-identical edges.
-        subrects = _rectilinear_cells(poly)
-        # Sides only where no kept subrect continues: outer boundary and
-        # hole reveals. Internal interfaces stay open inside one volume.
-        edge_count = {}
-        directed = {}
-        for xa, xb, za, zb in subrects:
+        subs = []
+        for x0, x1, z0, z1 in _rectilinear_cells(poly, cuts_u, cuts_z):
+            d = depth_fn((x0 + x1) / 2.0, (z0 + z1) / 2.0) if depth_fn else w2
+            subs.append((x0, x1, z0, z1, d))
+        depths = tuple(sorted({d for _, _, _, _, d in subs}))
+        edge_cells = {}
+        for i, (xa, xb, za, zb, d) in enumerate(subs):
             for key in (((xa, za), (xb, za)), ((xb, za), (xb, zb)),
                         ((xb, zb), (xa, zb)), ((xa, zb), (xa, za))):
                 undirected = key if key[0] <= key[1] else (key[1], key[0])
-                edge_count[undirected] = edge_count.get(undirected, 0) + 1
-                # Subrects wind CCW (interior left): swept quads built in
-                # first-seen direction face away from kept cells — outward
-                # on the exterior boundary, into the void on hole rims.
-                directed.setdefault(undirected, key)
-        for xa, xb, za, zb in subrects:
+                edge_cells.setdefault(undirected, []).append((i, key))
+        for xa, xb, za, zb, d in subs:
             A, B, C, D = ((xa, za), (xb, za), (xb, zb), (xa, zb))
-            for w, flip, kind in ((w2, False, "front"), (w1, True, "back")):
+            for w, flip, kind in ((d, False, "front"), (w1, True, "back")):
                 order = (A, B, C) if not flip else (A, C, B)
                 order2 = (A, C, D) if not flip else (A, D, C)
                 for tri in (order, order2):
@@ -1011,33 +1029,72 @@ class MeshBuilder:
                     self.tri(*ids, ((ua / s, va / s), (ub / s, vb / s),
                                     (uc / s, vc / s)),
                              self.mat_index(slot))
-        for (pa, pb), count in edge_count.items():
-            if count != 1:
-                continue
-            (ua, za), (ub, zb) = directed[(pa, pb)]
-            # Stations: endpoints plus every subrect corner lying on this
-            # edge, so swept quads share all cap corners (no dangling).
-            stations = {pa, pb}
-            for xa, xb, zc, zd in subrects:
-                for cx, cz in ((xa, zc), (xb, zc), (xb, zd), (xa, zd)):
-                    if abs((ub - ua) * (cz - za) - (zb - za) * (cx - ua)) > 1e-9:
-                        continue
-                    s = ((cx - ua) * (ub - ua) + (cz - za) * (zb - za))
-                    e = (ub - ua) ** 2 + (zb - za) ** 2
-                    if -1e-9 <= s <= e + 1e-9:
-                        stations.add((cx, cz))
-            horizontal = abs(zb - za) <= abs(ub - ua)
-            ordered = sorted(stations,
-                             key=lambda p: p[0] if horizontal else p[1])
-            # Winding must follow the recorded subrect-CCW direction
-            # (interior left): reversed when it runs high-to-low.
-            if (ua, za) != ordered[0]:
-                ordered = ordered[::-1]
-            for sa, sb in zip(ordered, ordered[1:]):
-                A1, B1 = W(sa[0], w1, sa[1]), W(sb[0], w1, sb[1])
-                B2, A2 = W(sb[0], w2, sb[1]), W(sa[0], w2, sa[1])
+        for edge, members in edge_cells.items():
+            if len(members) == 1:
+                (i, key) = members[0]
+                self._side_strip(W, mat_fn, scale_of, subs, key[0], key[1],
+                                 w1, subs[i][4], depths)
+            elif len(members) == 2:
+                (i, ki), (j, kj) = members
+                di, dj = subs[i][4], subs[j][4]
+                if abs(di - dj) <= 1e-12:
+                    continue
+                # Shallow cell's side direction: the connector traverses
+                # E@shallow with it (opposing the shallow cap) and E@deep
+                # reversed (opposing the deep cap). Deep direction would
+                # agree with both caps instead.
+                shallow = j if dj > di else i
+                (ua, za), (ub, zb) = self._side_dir(subs[shallow], edge)
+                self._side_strip(W, mat_fn, scale_of, subs,
+                                 (ua, za), (ub, zb),
+                                 max(di, dj), min(di, dj), depths)
+
+    @staticmethod
+    def _side_dir(subrect, edge):
+        """The subrect's own traversal direction of one of its sides."""
+        xa, xb, za, zb, _ = subrect
+        sides = [((xa, za), (xb, za)), ((xb, za), (xb, zb)),
+                 ((xb, zb), (xa, zb)), ((xa, zb), (xa, za))]
+        undirected = edge if edge[0] <= edge[1] else (edge[1], edge[0])
+        for side in sides:
+            if (side[0] <= side[1] and (side[0], side[1]) == undirected) or \
+               (side[1] <= side[0] and (side[1], side[0]) == undirected):
+                return side
+        return (edge[0], edge[1])
+
+    def _side_strip(self, W, mat_fn, scale_of, subs, pa, pb, w_lo, w_hi,
+                      depths=()):
+        """Swept strip between two w levels along directed edge pa->pb.
+
+        Stations include every subrect corner on the path, so swept quads
+        share all cap corners (no dangling); winding follows pa->pb. Side
+        edges additionally split at every intermediate wall depth, so a
+        strip abutting a step pairs exactly with the step connector
+        instead of dangling over it.
+        """
+        (ua, za), (ub, zb) = pa, pb
+        stations = {pa, pb}
+        for xa, xb, zc, zd, _ in subs:
+            for cx, cz in ((xa, zc), (xb, zc), (xb, zd), (xa, zd)):
+                if abs((ub - ua) * (cz - za) - (zb - za) * (cx - ua)) > 1e-9:
+                    continue
+                s = ((cx - ua) * (ub - ua) + (cz - za) * (zb - za))
+                e = (ub - ua) ** 2 + (zb - za) ** 2
+                if -1e-9 <= s <= e + 1e-9:
+                    stations.add((cx, cz))
+        levels = sorted({w_lo, w_hi} | {w for w in depths
+                                        if min(w_lo, w_hi) < w < max(w_lo, w_hi)})
+        horizontal = abs(zb - za) <= abs(ub - ua)
+        ordered = sorted(stations,
+                         key=lambda p: p[0] if horizontal else p[1])
+        if (ua, za) != ordered[0]:
+            ordered = ordered[::-1]
+        for sa, sb in zip(ordered, ordered[1:]):
+            for wa, wb in zip(levels, levels[1:]):
+                A1, B1 = W(sa[0], wa, sa[1]), W(sb[0], wa, sb[1])
+                B2, A2 = W(sb[0], wb, sb[1]), W(sa[0], wb, sa[1])
                 slot = mat_fn("side", (sa[0] + sb[0]) / 2.0,
-                              (sa[1] + sb[1]) / 2.0, 0.5 * (w1 + w2))
+                              (sa[1] + sb[1]) / 2.0, 0.5 * (wa + wb))
                 mi = self.mat_index(slot)
                 s = scale_of(slot)
                 # Metric along the edge from its directed start.
@@ -1046,12 +1103,11 @@ class MeshBuilder:
                 else:
                     la, lb = sa[1] - za, sb[1] - za
                 self.tri(A1, B1, B2,
-                         ((la / s, w1 / s), (lb / s, w1 / s), (lb / s, w2 / s)),
-                         mi)
+                         ((la / s, wa / s), (lb / s, wa / s),
+                          (lb / s, wb / s)), mi)
                 self.tri(A1, B2, A2,
-                         ((la / s, w1 / s), (lb / s, w2 / s), (la / s, w2 / s)),
-                         mi)
-
+                         ((la / s, wa / s), (lb / s, wb / s),
+                          (la / s, wb / s)), mi)
     def finish(self):
         verts = np.asarray(self.vertices, float).reshape(-1, 3)
         uv = np.asarray(self.uvs, float).reshape(-1, 2) if self.uvs else None

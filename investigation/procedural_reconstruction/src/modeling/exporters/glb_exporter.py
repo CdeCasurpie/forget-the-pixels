@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import trimesh
 from PIL import Image
-from modeling.texturing.library import MaterialLibrary
+from modeling.texturing.library import MaterialLibrary, default_catalog_path
 
 
 def _merge_component_nodes(tree):
@@ -60,8 +60,11 @@ def _merge_component_nodes(tree):
             merged["matrix"] = transform
         new_nodes.append(merged)
     for scene in tree.get("scenes", []):
-        scene["nodes"] = [old_to_new[ni] for ni in scene.get("nodes", [])
-                          if ni in old_to_new]
+        merged = [old_to_new[ni] for ni in scene.get("nodes", [])
+                  if ni in old_to_new]
+        # Merged nodes collapse: deduplicate preserving order so no node
+        # index is referenced twice.
+        scene["nodes"] = list(dict.fromkeys(merged))
     tree["nodes"] = new_nodes
     tree["meshes"] = new_meshes
 
@@ -77,8 +80,10 @@ def _corner_uvs(mesh):
 
 
 def export_glb(mesh, path, *, library=None):
-    catalog = Path(__file__).resolve().parents[2] / "assets/pbr/catalog.json"
-    lib = library or (MaterialLibrary(catalog) if catalog.exists() else None)
+    if library is None:
+        catalog = default_catalog_path()
+        library = MaterialLibrary(catalog) if catalog is not None else None
+    lib = library
     material_cache = {}
     scene = trimesh.Scene()
     transform = np.array(

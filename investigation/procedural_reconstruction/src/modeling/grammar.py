@@ -352,6 +352,16 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
 
 
+def _frame_intervals(length, levels):
+    """Column/slab intervals of the concrete frame, shared by the finish
+    predicate and the grid cuts so both agree bit-exactly."""
+    columns = [(0.0, 0.25), (length - 0.25, length)]
+    for inter_u in np.arange(4.0, length - 0.5, 4.0):
+        columns.append((inter_u - 0.125, inter_u + 0.125))
+    slabs = [(fl - 0.20, fl) for fl in levels[1:]]
+    return columns, slabs
+
+
 def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
     """Legacy per-cell finish, verbatim: material slot and outer depth."""
     first_floor_top = (
@@ -376,21 +386,13 @@ def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
     depth_outer = 0
     if not f.is_front:
         if f.wall_material == "brick":
-            is_concrete = False
-            # Losas horizontales (vigas)
-            for fl in f.floor_levels_m[1:]:
-                if fl - 0.201 < z_mid < fl + 0.001:
-                    is_concrete = True
-                    break
-            # Columnas verticales
-            if u_mid < 0.25 or u_mid > length - 0.25:
-                is_concrete = True
-            else:
-                for inter_u in np.arange(4.0, length - 0.5, 4.0):
-                    if inter_u - 0.126 < u_mid < inter_u + 0.126:
-                        is_concrete = True
-                        break
-
+            columns, slabs = _frame_intervals(length, f.floor_levels_m)
+            # Exact strip tests (no halo): grid cuts run on the same edges,
+            # so no face centroid ever lands in a 1 mm no-man's-land.
+            is_concrete = (
+                any(c0 - 1e-9 <= u_mid <= c1 + 1e-9 for c0, c1 in columns)
+                or any(s0 - 1e-9 <= z_mid <= s1 + 1e-9 for s0, s1 in slabs)
+            )
             if is_concrete:
                 wall_material = "concrete"
                 depth_outer = 0.0  # Flush with lot boundary
@@ -412,13 +414,11 @@ def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
 
 
 def _brick_frame_polys(length, total_height, levels):
-    """Exact concrete-frame strips for a brick side wall (columns + slabs)."""
-    strips = [box(0, 0, 0.25, total_height),
-              box(length - 0.25, 0, length, total_height)]
-    for inter_u in np.arange(4.0, length - 0.5, 4.0):
-        strips.append(box(inter_u - 0.125, 0, inter_u + 0.125, total_height))
-    for fl in levels[1:]:
-        strips.append(box(0, fl - 0.20, length, fl))
+    """Exact concrete-frame strips for a brick side wall (columns + slabs).
+    Single source of the frame geometry: cuts, finish and tests agree."""
+    columns, slabs = _frame_intervals(length, levels)
+    strips = ([box(c0, 0, c1, total_height) for c0, c1 in columns]
+              + [box(0, s0, length, s1) for s0, s1 in slabs])
     frame = unary_union(strips)
     if frame.is_empty:
         return None
@@ -426,73 +426,57 @@ def _brick_frame_polys(length, total_height, levels):
 
 
 def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
-    """One closed shell per real depth discontinuity.
+    """One stepped shell per wall.
 
-    Front walls split only at the ground-floor recess; brick side walls split
-    into the concrete frame and the brick infill rows. Each piece is the exact
-    wall rectangle minus the exact opening rectangles — never a union of grid
-    cells — triangulated constrained, so holes stay rectangular and no sliver
-    grid notches exist to triangulate.
+    Region boundaries (openings, material zones, recess steps, frame strips)
+    become grid cuts before triangulation, so no triangle ever crosses a
+    material or depth discontinuity: the finish predicate is exact, never a
+    centroid guess across a boundary. Concrete/brick side walls are a single
+    manifold shell with a 15 mm step instead of two coincident solids.
     """
-    from shapely.ops import unary_union as _union
-
     wall_rect = box(0, 0, length, total_height)
     hole_rects = [box(op.u_m, op.v_m, op.u_m + op.width_m, op.v_m + op.height_m)
                   for op in ops]
-
-    def subtract(rect, holes):
-        shape = rect
-        for hole in holes:
-            if shape.is_empty:
-                break
+    shape = wall_rect
+    for hole in hole_rects:
+        if not shape.is_empty:
             shape = shape.difference(hole)
-        return shape
 
-    def finish_of(u, v):
+    cuts_u, cuts_z = set(), set()
+    levels = f.floor_levels_m
+    first = levels[1] if len(levels) > 1 else total_height
+    if f.is_front and len(levels) >= 4:
+        cuts_z.add(first)
+    if not f.is_front and f.wall_material == "brick":
+        columns, slabs = _frame_intervals(length, levels)
+        for c0, c1 in columns:
+            cuts_u.update((c0, c1))
+        for s0, s1 in slabs:
+            cuts_z.update((s0, s1))
+    for region in regions:
+        cuts_u.update((region.u_m, region.u_m + region.width_m))
+        cuts_z.update((region.v_m, region.v_m + region.height_m))
+
+    def mat_fn(kind, u, v, w):
         mat, _ = _cell_finish(f, u, v, length, total_height, regions)
         return mat
 
-    jobs = []  # (shape_uz, depth, semantic_note)
-    if f.is_front:
-        levels = f.floor_levels_m
-        first = levels[1] if len(levels) > 1 else total_height
-        if len(levels) >= 4:
-            jobs.append((box(0, 0, length, first), -0.12))
-            jobs.append((box(0, first, length, total_height), 0.0))
-        else:
-            jobs.append((wall_rect, 0.0))
-    elif f.wall_material == "brick" and length > 0.5:
-        frame = _brick_frame_polys(length, total_height, f.floor_levels_m)
-        if frame is not None:
-            jobs.append((frame, 0.0))
-        infill = wall_rect.difference(frame) if frame is not None else wall_rect
-        pieces = ([infill] if infill.geom_type == "Polygon"
-                  else list(infill.geoms))
-        for piece in pieces:
-            if piece.area > 1e-10:
-                jobs.append((piece, -0.015))
-    else:
-        jobs.append((wall_rect, 0.0))
+    def depth_fn(u, v):
+        _, depth = _cell_finish(f, u, v, length, total_height, regions)
+        return depth
 
-    counters: dict[float, int] = {}
-    for band, depth in jobs:
-        shape = subtract(band, hole_rects)
-        polys = []
-        if not shape.is_empty:
-            polys = ([shape] if shape.geom_type == "Polygon"
-                     else [g for g in shape.geoms if g.geom_type == "Polygon"])
-        for poly in polys:
-            if poly.area <= 1e-10:
-                continue
-            k = counters.get(depth, 0)
-            counters[depth] = k + 1
-
-            def mat_fn(kind, u, v, w, _f=f):
-                return finish_of(u, v)
-
-            mb.panel(a, t, n, [poly], -0.20, depth, mat_fn, "wall",
-                     component_id=f"{f.edge_id}/wall_d{depth:+.3f}_{k}",
-                     assembly_id=f.edge_id, max_segment_m=0.5)
+    polys = []
+    if not shape.is_empty:
+        polys = ([shape] if shape.geom_type == "Polygon"
+                 else [g for g in shape.geoms if g.geom_type == "Polygon"])
+    for k, poly in enumerate(polys):
+        if poly.area <= 1e-10:
+            continue
+        mb.panel(a, t, n, [poly], -0.20, 0.0, mat_fn, "wall",
+                 component_id=f"{f.edge_id}/wall_{k}",
+                 assembly_id=f.edge_id,
+                 cuts_u=tuple(sorted(cuts_u)), cuts_z=tuple(sorted(cuts_z)),
+                 depth_fn=depth_fn)
 
 
 def facade(mb, f, total_height):
