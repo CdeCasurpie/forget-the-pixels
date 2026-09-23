@@ -244,6 +244,7 @@ class AssemblyTopologyTests(unittest.TestCase):
         self.assertEqual(report["total_non_manifold_edges"], 0)
         for comp in report["components"]:
             self.assertEqual(comp["connected"], 1, comp["component_id"])
+            self.assertEqual(comp["unused_vertices"], 0, comp["component_id"])
         windows = [c["assembly_id"] for c in report["components"]
                    if "/opening_" in c["assembly_id"]]
         self.assertTrue(windows, "window assemblies are traceable")

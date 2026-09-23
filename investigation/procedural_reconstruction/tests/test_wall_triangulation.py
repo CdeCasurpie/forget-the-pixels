@@ -143,6 +143,22 @@ class WallTriangulationTests(unittest.TestCase):
                     area2d += abs(a[0] * b[1] - a[1] * b[0]) / 2.0
         # Two caps (front + back) over the exact rect-minus-holes domain.
         self.assertAlmostEqual(area2d / 2.0, expected.area, delta=1e-6)
+        # The caps union to a valid polygon equal to the domain: no overlaps,
+        # no self-intersections, no missing coverage.
+        from shapely.ops import unary_union as _union
+        from shapely.geometry import Polygon as _Poly
+        cap_tris = []
+        for part in wall_shells_of(mesh):
+            faces = mesh.faces[part["face_start"]:
+                               part["face_start"] + part["face_count"]]
+            for tri in V[faces]:
+                ys = tri[:, 1]
+                if max(ys) - min(ys) < 1e-9:
+                    cap_tris.append(_Poly([(p[0], p[2]) for p in tri]))
+        union = _union(cap_tris)
+        self.assertTrue(union.is_valid, "cap union self-intersects")
+        self.assertAlmostEqual(union.symmetric_difference(
+            _union([expected, expected])).area, 0.0, delta=1e-6)
 
 
 def _bary_inside(point, tri):
