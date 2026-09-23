@@ -183,16 +183,19 @@ def build_site(mb, context, program, site_plan, entrances, rng):
         "concreto": ("plaster", "solid"),
         "concreto_bajo": ("plaster", "low"),
     }
-    for boundary in boundaries:
+    for index, boundary in enumerate(boundaries):
         coords = list(boundary.line.coords)
         tangent, normal, length = outward_normal(parcel, coords[0], coords[-1])
         if tangent is None:
             continue
         origin = np.asarray(coords[0], float)
         material, style = styles.get(boundary.kind, ("brick", "wall"))
-        draw_fence(mb, origin, tangent, normal, length, boundary, rng, material, style)
+        with mb.assembly(f"site/fence_{index:02d}"):
+            draw_fence(mb, origin, tangent, normal, length, boundary, rng, material, style)
 
-    for entrance in entrances:
-        entrance_step(mb, entrance, rng)
+    for index, entrance in enumerate(entrances):
+        with mb.assembly(f"site/entrance_{index:02d}"):
+            entrance_step(mb, entrance, rng)
 
-    return plant_garden(mb, parcel, built, boundaries, entrances, rng)
+    with mb.assembly("site/garden"):
+        return plant_garden(mb, parcel, built, boundaries, entrances, rng)

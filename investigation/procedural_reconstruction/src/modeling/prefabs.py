@@ -45,13 +45,14 @@ def build_opening(mb, a, t, n, op):
     f,r = min(op.frame_width_m,w/6,h/6),op.recess_m
     def b(x1,x2,z1,z2,d1,d2,mat,part):
         mb.box(a,t,n,x1,x2,z1,z2,d1,d2,mat,part)
-    # Plaster reveals, then thin aluminium or wood frame; no exterior stone surround.
+    # Plaster reveals, then one continuous slim ring; no exterior stone surround.
     for x in (u-f,u+w):
         b(x,x+f,v,v+h,-r,0,"plaster","opening_reveal")
-    for x in (u,u+w-f):
-        b(x,x+f,v,v+h,-r,-r+.035,"frame","slim_jamb")
-    for z in (v,v+h-f):
-        b(u+f,u+w-f,z,z+f,-r,-r+.035,"frame","slim_frame")
+    from shapely.geometry import box as _rect
+    _ring = _rect(u, v, u + w, v + h).difference(
+        _rect(u + f, v + f, u + w - f, v + h - f))
+    mb.panel(a, t, n, [_ring], -r, -r + .035,
+             lambda kind, uu, vv, ww: "frame", "slim_frame")
     if op.prefab in ("slim_window","storefront"):
         b(u+f,u+w-f,v+f,v+h-f,-r-.018,-r,"glass","glazing")
         # Backing and curtains provide depth behind glass, without a full interior.

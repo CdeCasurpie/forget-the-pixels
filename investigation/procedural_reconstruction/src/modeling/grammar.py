@@ -98,11 +98,13 @@ def opening(mb, a, t, n, op, pattern):
     def b(u1, u2, z1, z2, d1, d2, mat, part):
         mb.box(a, t, n, u1, u2, z1, z2, d1, d2, mat, part)
 
-    # Deep reveal, jambs, and projecting stone surround.
-    for x in [u, u + w - f]:
-        b(x, x + f, v, v + h, -recess, 0.045, "frame", "window_jamb")
-    for y in [v, v + h - f]:
-        b(u + f, u + w - f, y, y + f, -recess, 0.045, "frame", "window_frame")
+    # The jambs + head + sill form one continuous ring: a single closed
+    # component instead of four separate boxes.
+    from shapely.geometry import box as _rect
+    _ring = _rect(u, v, u + w, v + h).difference(
+        _rect(u + f, v + f, u + w - f, v + h - f))
+    mb.panel(a, t, n, [_ring], -recess, 0.045,
+             lambda kind, uu, vv, ww: "frame", "window_frame")
     for x in [u - 0.075, u + w]:
         b(
             x,
@@ -349,7 +351,113 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
 
 
+def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
+    """Legacy per-cell finish, verbatim: material slot and outer depth."""
+    first_floor_top = (
+        f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
+    )
+    wall_material = (
+        f.ground_floor_material
+        if f.ground_floor_material and z_mid < first_floor_top
+        else f.wall_material
+    )
+    midpoint = Point(u_mid, z_mid)
+    for region in regions:
+        area = box(
+            region.u_m,
+            region.v_m,
+            region.u_m + region.width_m,
+            region.v_m + region.height_m,
+        )
+        if area.covers(midpoint):
+            wall_material = region.material_slot
+
+    depth_outer = 0
+    if not f.is_front:
+        if f.wall_material == "brick":
+            is_concrete = False
+            # Losas horizontales (vigas)
+            for fl in f.floor_levels_m[1:]:
+                if fl - 0.201 < z_mid < fl + 0.001:
+                    is_concrete = True
+                    break
+            # Columnas verticales
+            if u_mid < 0.25 or u_mid > length - 0.25:
+                is_concrete = True
+            else:
+                for inter_u in np.arange(4.0, length - 0.5, 4.0):
+                    if inter_u - 0.126 < u_mid < inter_u + 0.126:
+                        is_concrete = True
+                        break
+
+            if is_concrete:
+                wall_material = "concrete"
+                depth_outer = 0.0  # Flush with lot boundary
+            else:
+                depth_outer = -0.015  # Brick inset slightly to show concrete frame
+        else:
+            # Muro premium tarrajeado: completamente plano y continuo
+            depth_outer = 0.0
+    else:
+        # ── PHASE B: Recessed ground floor ───────────────────────
+        # On front walls of 3+ story buildings, the ground floor is
+        # pushed back ~12cm to create a shadow / entrance effect.
+        first_floor_z = f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
+        if len(f.floor_levels_m) >= 4 and z_mid < first_floor_z:
+            depth_outer = -0.12  # Recessed ground floor
+        else:
+            depth_outer = 0.0
+    return wall_material, depth_outer
+
+
+def _emit_wall_shells(mb, a, t, n, f, wall_cells):
+    """One closed shell per depth group instead of one box per grid cell.
+
+    Cells kept by the legacy hole test are unioned by outer depth; each
+    connected piece becomes a single panel with real opening voids. Face
+    materials resolve per triangle centroid to the owning cell, so finish
+    zones survive without splitting the topology.
+    """
+    by_depth: dict[float, list] = {}
+    for u1, u2, z1, z2, mat, depth in wall_cells:
+        by_depth.setdefault(depth, []).append((u1, u2, z1, z2, mat))
+    try:
+        from shapely.ops import unary_union as _union
+    except ImportError:  # pragma: no cover
+        _union = None
+    for depth in sorted(by_depth):
+        cells = by_depth[depth]
+        rects = [box(u1, z1, u2, z2) for u1, u2, z1, z2, _ in cells]
+        merged = _union(rects) if _union is not None else rects[0]
+        polys = []
+        if merged.geom_type == "Polygon":
+            polys = [merged]
+        elif hasattr(merged, "geoms"):
+            polys = [g for g in merged.geoms if g.geom_type == "Polygon"]
+        if not polys:
+            continue
+
+        def mat_fn(kind, u, v, w, _cells=cells, _f=f):
+            for u1, u2, z1, z2, mat in _cells:
+                if u1 - 1e-9 <= u <= u2 + 1e-9 and z1 - 1e-9 <= v <= z2 + 1e-9:
+                    return mat
+            return _f.wall_material
+
+        for k, poly in enumerate(polys):
+            mb.panel(a, t, n, [poly], -0.20, depth, mat_fn, "wall",
+                     component_id=f"{f.edge_id}/wall_d{depth:+.3f}_{k}",
+                     assembly_id=f.edge_id)
+
+
 def facade(mb, f, total_height):
+    """Assemble one facade inside its edge assembly; openings, projections
+    and stairs open nested assemblies so every window/door keeps instance
+    identity (frame + glazing + grille under one assembly)."""
+    with mb.assembly(f.edge_id):
+        _facade_body(mb, f, total_height)
+
+
+def _facade_body(mb, f, total_height):
     a, end = np.asarray(f.vertex_a), np.asarray(f.vertex_b)
     t = end - a
     length = np.linalg.norm(t)
@@ -422,88 +530,46 @@ def facade(mb, f, total_height):
             + ([z for fl in f.floor_levels_m[1:] for z in [fl - 0.20, fl]] if not f.is_front else [])
         )
     )
+    wall_cells = []
     for u1, u2 in zip(us[:-1], us[1:]):
         for z1, z2 in zip(zs[:-1], zs[1:]):
+            if u2 - u1 <= 1e-9 or z2 - z1 <= 1e-9:
+                continue
             if any(r.contains(Point((u1 + u2) / 2, (z1 + z2) / 2)) for r in rectangles):
                 continue
-            first_floor_top = (
-                f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
-            )
-            wall_material = (
-                f.ground_floor_material
-                if f.ground_floor_material and (z1 + z2) / 2 < first_floor_top
-                else f.wall_material
-            )
-            midpoint = Point((u1 + u2) / 2, (z1 + z2) / 2)
-            for region in regions:
-                area = box(
-                    region.u_m,
-                    region.v_m,
-                    region.u_m + region.width_m,
-                    region.v_m + region.height_m,
-                )
-                if area.covers(midpoint):
-                    wall_material = region.material_slot
-            
-            depth_outer = 0
-            if not f.is_front:
-                if f.wall_material == "brick":
-                    is_concrete = False
-                    # Losas horizontales (vigas)
-                    for fl in f.floor_levels_m[1:]:
-                        if fl - 0.201 < midpoint.y < fl + 0.001:
-                            is_concrete = True
-                            break
-                    # Columnas verticales
-                    if midpoint.x < 0.25 or midpoint.x > length - 0.25:
-                        is_concrete = True
-                    else:
-                        for inter_u in np.arange(4.0, length - 0.5, 4.0):
-                            if inter_u - 0.126 < midpoint.x < inter_u + 0.126:
-                                is_concrete = True
-                                break
-                                
-                    if is_concrete:
-                        wall_material = "concrete"
-                        depth_outer = 0.0  # Flush with lot boundary
-                    else:
-                        depth_outer = -0.015  # Brick inset slightly to show concrete frame
-                else:
-                    # Muro premium tarrajeado: completamente plano y continuo
-                    depth_outer = 0.0
-            else:
-                # ── PHASE B: Recessed ground floor ───────────────────────
-                # On front walls of 3+ story buildings, the ground floor is
-                # pushed back ~12cm to create a shadow / entrance effect.
-                first_floor_z = f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
-                if len(f.floor_levels_m) >= 4 and midpoint.y < first_floor_z:
-                    depth_outer = -0.12  # Recessed ground floor
-                else:
-                    depth_outer = 0.0
-                    
-            mb.box(a, t, n, u1, u2, z1, z2, -0.20, depth_outer, wall_material, "wall")
-            if f.is_front and f.cladding == "horizontal":
-                pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
-                for y in np.arange(np.ceil(z1 / pitch) * pitch, z2 - 0.018, pitch):
-                    mb.box(
-                        a,
-                        t,
-                        n,
-                        u1,
-                        u2,
-                        y,
-                        y + 0.015,
-                        0,
-                        0.023,
-                        "stone",
-                        "cladding_joint",
-                    )
+            mat, depth = _cell_finish(f, (u1 + u2) / 2, (z1 + z2) / 2,
+                                      length, total_height, regions)
+            wall_cells.append((u1, u2, z1, z2, mat, depth))
+    _emit_wall_shells(mb, a, t, n, f, wall_cells)
+    if f.is_front and f.cladding == "horizontal":
+        pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
+        for y in np.arange(0.0, total_height - 0.018, pitch):
+            segs = [(0.0, length)]
+            for op in ops:
+                if op.v_m <= y <= op.v_m + op.height_m:
+                    cut = []
+                    for s0, s1 in segs:
+                        if op.u_m + 0.02 >= s1 or op.u_m + op.width_m - 0.02 <= s0:
+                            cut.append((s0, s1))
+                        else:
+                            if s0 < op.u_m + 0.02:
+                                cut.append((s0, op.u_m + 0.02))
+                            if op.u_m + op.width_m - 0.02 < s1:
+                                cut.append((op.u_m + op.width_m - 0.02, s1))
+                    segs = cut
+            for s0, s1 in segs:
+                if s1 - s0 > 0.05:
+                    mb.box(a, t, n, s0, s1, y, y + 0.015, 0, 0.023,
+                           "stone", "cladding_joint")
     for op in ops:
-        opening(mb, a, t, n, op, f.balcony_pattern)
-    for feature in features:
-        projection(mb, a, t, n, feature)
-    for stair in stairs:
-        exterior_stair(mb, a, t, n, stair, length)
+        with mb.assembly(f"{f.edge_id}/opening_u{op.u_m:.2f}_v{op.v_m:.2f}"):
+            opening(mb, a, t, n, op, f.balcony_pattern)
+    for k, feature in enumerate(features):
+        with mb.assembly(f"{f.edge_id}/proj_{feature.kind}_{k:02d}"):
+            projection(mb, a, t, n, feature)
+    for k, stair in enumerate(stairs):
+        with mb.assembly(f"{f.edge_id}/stair_{k:02d}"):
+            exterior_stair(mb, a, t, n, stair, length)
 
     # ── PHASE A: Floor slab protrusions (losas de entrepiso voladas) ─────
     # These are the exposed concrete floor slabs that protrude from every
@@ -594,6 +660,11 @@ def facade(mb, f, total_height):
 
 
 def roof_details(mb, poly, h, roof, rng):
+    with mb.assembly("roof"):
+        _roof_details_body(mb, poly, h, roof, rng)
+
+
+def _roof_details_body(mb, poly, h, roof, rng):
     mb.solid(poly, h - 0.15, h, "concrete", "roof_slab")
     parapet = poly.difference(poly.buffer(-0.14, join_style=2))
     if roof.parapet_height_m > 0:
@@ -718,6 +789,11 @@ def roof_details(mb, poly, h, roof, rng):
                 mb.beam((cx, cy, h), (cx, cy, rebar_h), 0.008, semantic="rebar")
 
 def boundary_and_garden(mb, spec, poly, rng):
+    with mb.assembly("site"):
+        _boundary_and_garden_body(mb, spec, poly, rng)
+
+
+def _boundary_and_garden_body(mb, spec, poly, rng):
     s = spec.setback
     if s is None or not s.edge_indices:
         return
@@ -1059,6 +1135,14 @@ class ZOffsetMeshBuilder:
     def foliage(self, center, *args, **kwargs):
         lifted = (center[0], center[1], center[2] + self._z_offset)
         return self._builder.foliage(lifted, *args, **kwargs)
+
+    def panel(self, a, t, n, polys_uz, w1, w2, *args, **kwargs):
+        from shapely.affinity import translate as _translate
+        lifted = [_translate(p, yoff=self._z_offset) for p in polys_uz]
+        return self._builder.panel(a, t, n, lifted, w1, w2, *args, **kwargs)
+
+    def assembly(self, assembly_id):
+        return self._builder.assembly(assembly_id)
 
     def __getattr__(self, name):
         return getattr(self._builder, name)

@@ -292,6 +292,11 @@ def _slope_fields(surface):
 
 def build_roof(mb, plan, rng):
     """Emit one mass's roof: surfaces, ridge closures, parapet and objects."""
+    with mb.assembly(f"roof/{plan.mass_id}"):
+        _build_roof_body(mb, plan, rng)
+
+
+def _build_roof_body(mb, plan, rng):
     tiles = []
     flats = []
     for surface in plan.surfaces:
@@ -376,15 +381,16 @@ def build_roof(mb, plan, rng):
                         mb.solid(inner, head + 0.05, head + 0.07, "stone",
                                  "parapet_cap")
 
-    for prop in plan.props:
+    for index, prop in enumerate(plan.props):
         builder = BUILDERS.get(prop.kind)
         if builder is None:
             continue
-        builder(
-            mb,
-            prop.position,
-            plan.roof_z,
-            prop.rotation_deg,
-            prop.scale,
-            np.random.default_rng(prop.seed),
-        )
+        with mb.assembly(f"roof/{plan.mass_id}/prop_{prop.kind}_{index:02d}"):
+            builder(
+                mb,
+                prop.position,
+                plan.roof_z,
+                prop.rotation_deg,
+                prop.scale,
+                np.random.default_rng(prop.seed),
+            )

@@ -20,7 +20,7 @@ import numpy as np
 import shapely
 from contextlib import contextmanager
 from shapely import constrained_delaunay_triangles
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Polygon
 from shapely.geometry.polygon import orient
 from domain import BuildingAppearance, MeshData
 from .detail import DEFAULT_BUDGET
@@ -694,6 +694,135 @@ class MeshBuilder:
         finally:
             if auto:
                 self.end_component()
+
+    def panel(self, a, t, n, polys_uz, w1, w2, mat_fn, semantic,
+              component_id=None, assembly_id=None, *, clip="auto"):
+        """Extrude (u, z) polygons along the facade normal into a closed shell.
+
+        ``polys_uz`` are shapely Polygons in facade-local metres (u along the
+        wall from vertex_a, z up). Holes stay holes: a wall with five openings
+        is one shell with five real voids, not a puzzle of boxes. Faces take
+        their material from ``mat_fn(kind, u, v, w)`` with kind in
+        {"front", "back", "side"} over face midpoints, so one shell can carry
+        several finish zones without splitting.
+
+        Clipping runs along the facade axis: the wall line at mid-depth is
+        intersected with the cadastral limit and the (u, z) domain is cut to
+        the covered u-intervals. Exact for thin extrusions and wall shells,
+        which only ever overrun at their ends.
+        """
+        a = np.asarray(a, float)
+        t = np.asarray(t, float) / np.linalg.norm(t)
+        n = np.asarray(n, float) / np.linalg.norm(n)
+        if w2 - w1 <= 1e-7:
+            return None
+        doms = [p for p in polys_uz
+                if p is not None and not p.is_empty and p.area > 1e-10]
+        if not doms:
+            return None
+        u0 = min(p.bounds[0] for p in doms)
+        u1 = max(p.bounds[2] for p in doms)
+        wmid = 0.5 * (w1 + w2)
+        limit = self.limit_for(semantic, clip)
+        probe = LineString([a + t * (u0 - 1.0) + n * wmid,
+                            a + t * (u1 + 1.0) + n * wmid])
+        hit = probe.intersection(limit)
+        if hit.is_empty:
+            return None
+        origin = a + t * (u0 - 1.0) + n * wmid
+
+        def to_u(point):
+            return (u0 - 1.0) + float(np.dot(np.asarray(point[:2]) - origin[:2], t))
+
+        spans = []
+        geoms = list(hit.geoms) if hit.geom_type == "MultiLineString" else [hit]
+        for g in geoms:
+            if g.geom_type != "LineString" or g.length < 1e-9:
+                continue
+            c = list(g.coords)
+            spans.append((to_u(c[0]), to_u(c[-1])))
+        spans = [(min(s, e), max(s, e)) for s, e in spans]
+        if not spans or max(e for _, e in spans) < u1 - 1e-9 or \
+                min(s for s, _ in spans) > u0 + 1e-9:
+            clipped = []
+            for poly in doms:
+                for s, e in spans:
+                    if e - s > 1e-9:
+                        clipped.append(poly.intersection(
+                            Polygon([(s, -1e6), (e, -1e6), (e, 1e6), (s, 1e6)])))
+            doms = [p for p in clipped
+                    if p is not None and not p.is_empty and p.area > 1e-10]
+            if not doms:
+                return None
+
+        self.begin_component(semantic, component_id, assembly_id)
+        try:
+            for poly in polygons(shapely.unary_union(doms)) if len(doms) > 1 \
+                    else polygons(doms[0]):
+                self._panel_poly(a, t, n, poly, w1, w2, mat_fn)
+        finally:
+            return self.end_component()
+
+    def _panel_poly(self, a, t, n, poly, w1, w2, mat_fn):
+        comp = self._open
+
+        def W(u, w, z):
+            xy = a + t * u + n * w
+            return self.vert((float(xy[0]), float(xy[1]), float(z)))
+
+        def scale_of(slot):
+            return self.uv_scale_for(slot)
+
+        rings = ([tuple(p[:2]) for p in poly.exterior.coords[:-1]], False)
+        holes = [([tuple(p[:2]) for p in ring.coords[:-1]], True)
+                 for ring in poly.interiors]
+        levels = {}
+        for coords, _ in [rings] + holes:
+            for u, z in coords:
+                levels.setdefault((u, z), {})[w1] = W(u, w1, z)
+                levels[(u, z)][w2] = W(u, w2, z)
+
+        def at(u, z, w):
+            # vert() shares by position, so corners computed for caps and
+            # swept sides resolve to the same ids.
+            return W(u, w, z)
+
+        # Front (w2, faces +n) and back (w1) caps over the triangulation.
+        for tri in triangles(poly):
+            for w, flip, kind in ((w2, False, "front"), (w1, True, "back")):
+                ids = [at(u, z, w) for u, z in (tri if not flip else tri[::-1])]
+                corners = [comp.positions[v] for v in ids]
+                mid = np.mean(np.array([(u, z) for u, z in tri]), axis=0)
+                slot = mat_fn(kind, float(mid[0]), float(mid[1]), w)
+                mi = self.mat_index(slot)
+                s = scale_of(slot)
+                uvs = [((u / s), (z / s)) for u, z in
+                       (tri if not flip else tri[::-1])]
+                self.tri(*ids, uvs, mi)
+
+        # Swept sides: outer boundary and hole reveals. Corners carry
+        # (edge distance, w) metric UVs; materials come from the callback
+        # evaluated at the edge midpoint.
+        for coords, _ in [rings] + holes:
+            m = len(coords)
+            edge_len = [0.0]
+            for (u0, z0), (u1, z1) in zip(coords, coords[1:] + coords[:1]):
+                edge_len.append(edge_len[-1] + float(np.hypot(u1 - u0, z1 - z0)))
+            for e in range(m):
+                (ua, za), (ub, zb) = coords[e], coords[(e + 1) % m]
+                sa, sb = edge_len[e], edge_len[e + 1]
+                A1, B1, B2, A2 = (at(ua, za, w1), at(ub, zb, w1),
+                                  at(ub, zb, w2), at(ua, za, w2))
+                slot = mat_fn("side", (ua + ub) / 2.0, (za + zb) / 2.0,
+                              0.5 * (w1 + w2))
+                mi = self.mat_index(slot)
+                s = scale_of(slot)
+                self.tri(A1, B1, B2,
+                         ((sa / s, w1 / s), (sb / s, w1 / s), (sb / s, w2 / s)),
+                         mi)
+                self.tri(A1, B2, A2,
+                         ((sa / s, w1 / s), (sb / s, w2 / s), (sa / s, w2 / s)),
+                         mi)
 
     def finish(self):
         verts = np.asarray(self.vertices, float).reshape(-1, 3)
