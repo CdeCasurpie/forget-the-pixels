@@ -1201,7 +1201,7 @@ def generate_v4_mesh(spec: BuildingSpecificationV4, *, detail=None) -> MeshData:
             segments = wall_band["exposed_segments"]
 
             lines = [segments] if segments.geom_type == 'LineString' else list(segments.geoms)
-            for line in lines:
+            for li, line in enumerate(lines):
                 coords = list(line.coords)
                 for i in range(len(coords) - 1):
                     p1, p2 = coords[i], coords[i + 1]
@@ -1260,9 +1260,12 @@ def generate_v4_mesh(spec: BuildingSpecificationV4, *, detail=None) -> MeshData:
                     v_a = v_a + inward_n * 0.20
                     v_b = v_b + inward_n * 0.20
 
-                    # Build a legacy FacadeSpecification
+                    # Build a legacy FacadeSpecification. The edge id carries the
+                    # line index: segment counters restart on every line of a
+                    # multi-line exposure, so without it two walls (and every
+                    # component and assembly under them) would share ids.
                     facade_spec = FacadeSpecification(
-                        edge_id=f"{mass.id}_band{z_bottom:.1f}_{i}",
+                        edge_id=f"{mass.id}_band{z_bottom:.1f}_{li}_{i}",
                         vertex_a=tuple(np.asarray(v_a, float)),
                         vertex_b=tuple(np.asarray(v_b, float)),
                         width_m=length,

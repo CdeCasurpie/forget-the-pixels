@@ -249,5 +249,65 @@ class AssemblyTopologyTests(unittest.TestCase):
         self.assertTrue(windows, "window assemblies are traceable")
 
 
+    def test_component_ids_are_globally_unique(self):
+        """Two walls from different lines of one exposure must never share
+        ids: a repeated component id collapses two GLB nodes into one and
+        orphans geometry. Rotated lots with setbacks produce multi-line
+        exposures, so cover them explicitly."""
+        from collections import Counter
+        from shapely.affinity import rotate
+        from domain.architecture import (BuildingProgram, BuildingSpecificationV4,
+                                         ParcelContext, SitePlan)
+        from modeling.grammar import generate_v4_mesh
+        from modeling.massing import generate_masses
+
+        cases = [
+            (box(-4, -6, 4, 6), (0,), 0.0, 7, "quiet_house"),
+            (rotate(box(-4.5, -10, 4.5, 10), 37, origin=(0, 0)), (0,), 1.8, 11,
+             "galeria_madera"),
+            (box(-5.5, -10, 5.5, 10), (0,), 2.6, 23, "mixed_use"),
+        ]
+        for parcel, fronts, setback, seed, family in cases:
+            with self.subTest(seed=seed):
+                coords = tuple((float(x), float(y))
+                               for x, y in parcel.exterior.coords)
+                ctx = ParcelContext(polygon=coords, explicit_fronts=fronts)
+                program = BuildingProgram(
+                    use="residential", occupancy="medium",
+                    placement="front_setback" if setback else "flush",
+                    architectural_language=family, finish_profile="standard",
+                    maintenance="average", construction_state="completed",
+                    front_setback=setback, primary_color=(0.85, 0.84, 0.80),
+                    seed=seed, has_fence=bool(setback), fence_type="reja")
+                masses = generate_masses(ctx, program, 8.4, 2.8)
+                spec = BuildingSpecificationV4(
+                    context=ctx, program=program,
+                    site_plan=SitePlan(masses=masses, free_space=(),
+                                       access_nodes=(), boundaries=(),
+                                       exclusion_zones=()),
+                    facades=(), components=(), seed=seed)
+                mesh = generate_v4_mesh(spec)
+                ids = [(p.get("assembly_id", ""), p.get("component_id", ""))
+                       for p in mesh.parts]
+                dupes = [k for k, v in Counter(ids).items() if v > 1]
+                self.assertEqual(dupes, [], f"repeated component ids: {dupes[:3]}")
+                # Node identity the exporter relies on: group faces exactly
+                # like export_glb does — one node per (part, material) — and
+                # require unique node names, else two GLB nodes merge and
+                # geometry goes orphan.
+                fm = np.asarray(mesh.face_materials)
+                seen = Counter()
+                for i, part in enumerate(mesh.parts):
+                    s = part["face_start"]
+                    mats = set(int(m) for m in fm[s:s + part["face_count"]])
+                    a = part.get("assembly_id", "")
+                    cid = part.get("component_id", f"part_{i}")
+                    label = f"{a}/{cid}" if a else cid
+                    for mi in mats:
+                        seen[f"{label}#{mesh.materials[mi]['name']}"] += 1
+                dupes = [k for k, v in seen.items() if v > 1]
+                self.assertEqual(dupes, [], f"repeated GLB nodes: {dupes[:3]}")
+
+
 if __name__ == "__main__":
     unittest.main()
