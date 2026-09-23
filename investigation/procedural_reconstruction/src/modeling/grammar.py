@@ -474,15 +474,18 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     else:
         jobs.append((wall_rect, 0.0))
 
+    counters: dict[float, int] = {}
     for band, depth in jobs:
         shape = subtract(band, hole_rects)
         polys = []
         if not shape.is_empty:
             polys = ([shape] if shape.geom_type == "Polygon"
                      else [g for g in shape.geoms if g.geom_type == "Polygon"])
-        for k, poly in enumerate(polys):
+        for poly in polys:
             if poly.area <= 1e-10:
                 continue
+            k = counters.get(depth, 0)
+            counters[depth] = k + 1
 
             def mat_fn(kind, u, v, w, _f=f):
                 return finish_of(u, v)
