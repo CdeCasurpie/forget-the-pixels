@@ -4,9 +4,37 @@ from domain.architecture import (
 )
 import numpy as np
 
-def migrate_to_v4(legacy: BuildingSpecification) -> BuildingSpecificationV4:
+def _legacy_primary_color(legacy: BuildingSpecification) -> tuple[float, float, float]:
+    """Wall color carried across migration.
+
+    Precedence: legacy appearance plaster slot > first front facade
+    wall_color_rgb > first facade wall_color_rgb > program default.
+    RGB channels arrive 0-255 and leave normalized 0-1.
+    """
+    for material in getattr(legacy.appearance, "materials", ()):
+        if getattr(material, "slot", "") == "plaster":
+            rgb = tuple(float(max(0.0, min(1.0, channel / 255.0)))
+                        if channel > 1.0 else float(channel)
+                        for channel in material.base_color_rgb)
+            if len(rgb) == 3:
+                return rgb
+    facades = list(getattr(legacy, "facade_edges", ()))
+    ordered = [f for f in facades if getattr(f, "is_front", False)] + facades
+    for facade in ordered:
+        rgb = getattr(facade, "wall_color_rgb", None)
+        if rgb and len(rgb) == 3:
+            return tuple(float(max(0.0, min(1.0, channel / 255.0)))
+                         if channel > 1.0 else float(channel)
+                         for channel in rgb)
+    return (0.8, 0.8, 0.8)
+
+
+def migrate_to_v4(legacy: BuildingSpecification,
+                  program_color: tuple[float, float, float] | None = None
+                  ) -> BuildingSpecificationV4:
     """Migrates a legacy V1-V3 BuildingSpecification to V4, keeping geometry locked."""
-    
+    color = program_color if program_color is not None else _legacy_primary_color(legacy)
+
     # 1. Map legacy source/family into a V4 BuildingProgram
     program = BuildingProgram(
         use=getattr(legacy, 'source', 'inferred'),
@@ -16,6 +44,7 @@ def migrate_to_v4(legacy: BuildingSpecification) -> BuildingSpecificationV4:
         finish_profile="standard",
         maintenance="standard",
         construction_state="completed",
+        primary_color=color,
         seed=legacy.seed
     )
     

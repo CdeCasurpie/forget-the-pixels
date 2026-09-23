@@ -52,3 +52,43 @@ def test_migrate_to_v4():
     assert v4.site_plan.masses[0].roof_z == 10.0
     assert len(v4.facades) == 1
     assert v4.facades[0].mass_id == "mass_0"
+
+
+def _legacy_with_color(wall=(200, 100, 50), appearance=None):
+    from domain.models import BuildingAppearance, MaterialSpecification
+    return BuildingSpecification(
+        seed=7,
+        crs="EPSG:32718",
+        parcel_xy=((0, 0), (10, 0), (10, 10), (0, 10)),
+        parcel_holes=(),
+        footprint_xy=((1, 1), (9, 1), (9, 9), (1, 9)),
+        height=HeightEstimate(continuous_height_m=10.0, floor_count=3,
+                              reprojection_rmse_px=0.0, used_pano_ids=()),
+        roof=None,
+        facade_edges=(
+            FacadeSpecification(
+                edge_id="f1", vertex_a=(1, 1), vertex_b=(9, 1), width_m=8.0,
+                normal_xy=(0, -1), floor_levels_m=(0.0, 3.0, 6.0, 10.0),
+                wall_color_rgb=wall, openings=(), is_front=True),
+        ),
+        appearance=(appearance if appearance is not None
+                    else BuildingAppearance()),
+    )
+
+
+def test_migrate_preserves_wall_color():
+    v4 = migrate_to_v4(_legacy_with_color((200, 100, 50)))
+    assert v4.program.primary_color == (200 / 255, 100 / 255, 50 / 255)
+
+
+def test_migrate_prefers_appearance_plaster_over_wall():
+    from domain.models import BuildingAppearance, MaterialSpecification
+    appearance = BuildingAppearance(materials=(
+        MaterialSpecification("plaster", "stucco", (0.1, 0.2, 0.3), 0.8),))
+    v4 = migrate_to_v4(_legacy_with_color((200, 100, 50), appearance))
+    assert v4.program.primary_color == (0.1, 0.2, 0.3)
+
+
+def test_migrate_explicit_color_wins():
+    v4 = migrate_to_v4(_legacy_with_color(), program_color=(1.0, 0.0, 0.0))
+    assert v4.program.primary_color == (1.0, 0.0, 0.0)
