@@ -248,6 +248,56 @@ class AssemblyTopologyTests(unittest.TestCase):
                    if "/opening_" in c["assembly_id"]]
         self.assertTrue(windows, "window assemblies are traceable")
 
+    def test_open_surface_classification(self):
+        """A deliberately thin sheet is an open_surface only when declared;
+        undeclared, it is a violation. Grammar glass panes are thin boxes,
+        hence closed solids, not surfaces."""
+        from domain.architecture import (BuildingProgram, BuildingSpecificationV4,
+                                         ParcelContext, SitePlan)
+        from modeling.grammar import generate_v4_mesh
+        from modeling.massing import generate_masses
+
+        parcel = box(-4, -6, 4, 6)
+        coords = tuple((float(x), float(y)) for x, y in parcel.exterior.coords)
+        ctx = ParcelContext(polygon=coords, explicit_fronts=(0,))
+        program = BuildingProgram(
+            use="residential", occupancy="medium", placement="flush",
+            architectural_language="quiet_house", finish_profile="standard",
+            maintenance="average", construction_state="completed",
+            primary_color=(0.85, 0.84, 0.80), seed=7)
+        masses = generate_masses(ctx, program, 5.6, 2.8)
+        spec = BuildingSpecificationV4(
+            context=ctx, program=program,
+            site_plan=SitePlan(masses=masses, free_space=(), access_nodes=(),
+                               boundaries=(), exclusion_zones=()),
+            facades=(), components=(), seed=7)
+        mesh = generate_v4_mesh(spec)
+        report = analyze_topology(mesh)
+        self.assertEqual(report["violations"], [])
+        glazing = [c for c in report["components"] if c["semantic"] == "glazing"]
+        self.assertTrue(glazing)
+        self.assertTrue(all(c["expectation"] == "closed_solid" for c in glazing))
+
+    def test_declared_open_sheet_classifies_as_surface(self):
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.begin_component("test_sheet", component_id="sheet/00")
+        a = mb.vert((0.0, 0.0, 1.0))
+        b = mb.vert((1.0, 0.0, 1.0))
+        c = mb.vert((1.0, 0.0, 2.0))
+        d = mb.vert((0.0, 0.0, 2.0))
+        mi = mb.mat_index("glass")
+        mb.tri(a, b, c, ((0, 0), (1, 0), (1, 1)), mi)
+        mb.tri(a, c, d, ((0, 0), (1, 1), (0, 1)), mi)
+        mb.end_component()
+        mesh = mb.finish()
+        strict = analyze_topology(mesh)
+        self.assertEqual(len(strict["violations"]), 1)
+        declared = analyze_topology(mesh, open_semantics=("test_sheet",))
+        self.assertEqual(declared["violations"], [])
+        self.assertEqual(len(declared["open_components"]), 1)
+        self.assertEqual(declared["open_components"][0]["expectation"],
+                         "open_surface")
+
 
 class ExportIdentityTests(unittest.TestCase):
     def test_multi_material_component_exports_one_node(self):
