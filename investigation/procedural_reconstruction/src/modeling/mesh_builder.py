@@ -20,7 +20,7 @@ import numpy as np
 import shapely
 from contextlib import contextmanager
 from shapely import constrained_delaunay_triangles
-from shapely.geometry import LineString, Polygon
+from shapely.geometry import LineString, Point, Polygon
 from shapely.geometry.polygon import orient
 from domain import BuildingAppearance, MeshData
 from .detail import DEFAULT_BUDGET
@@ -68,6 +68,141 @@ PROJECTING_SEMANTICS = frozenset({
     "air_conditioner", "condenser_louver", "service_bracket", "drainpipe",
     "downpipe", "downpipe_clamp", "gutter", "meter_box", "cable",
 })
+
+
+def _subdivide_ring(coords, max_len):
+    """Insert collinear Steiner vertices so no straight run exceeds max_len.
+    Points lie exactly on the boundary: geometry unchanged, ears stay local."""
+    pts = list(coords)
+    if len(pts) < 2:
+        return pts
+    out = [pts[0]]
+    for a, b in zip(pts, pts[1:]):
+        a = (float(a[0]), float(a[1]))
+        b = (float(b[0]), float(b[1]))
+        dist = float(np.hypot(b[0] - a[0], b[1] - a[1]))
+        n = max(1, int(np.ceil(dist / max_len))) if max_len > 0 else 1
+        for k in range(1, n):
+            f = k / n
+            out.append((a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f))
+        out.append(b)
+    return out
+
+
+def _is_rectilinear(poly, tol=1e-9):
+    """All edges axis-aligned in (u, z): wall rectangles with rectangular
+    holes always satisfy this."""
+    rings = [poly.exterior] + list(poly.interiors)
+    for ring in rings:
+        coords = list(ring.coords)
+        for (x0, z0), (x1, z1) in zip(coords, coords[1:]):
+            if abs(x1 - x0) > tol and abs(z1 - z0) > tol:
+                return False
+    return True
+
+
+def _refine(axis, max_step):
+    """Split every interval above max_step so shared grid lines stay
+    identical for all neighbor cells on both sides."""
+    out = [axis[0]]
+    for lo, hi in zip(axis, axis[1:]):
+        n = max(1, int(np.ceil((hi - lo) / max_step)))
+        out.extend(lo + (hi - lo) * k / n for k in range(1, n + 1))
+    return out
+
+
+def _rectilinear_cells(poly, max_step=0.5):
+    """Grid tiling that is exact: grid lines contain every hole edge, so kept
+    cells (by center) union to the domain with no slivers and no gaps.
+    Intervals above max_step split uniformly, so neighbor cells always share
+    identical edges and every quad stays aspect-bounded."""
+    xs = {poly.bounds[0], poly.bounds[2]}
+    zs = {poly.bounds[1], poly.bounds[3]}
+    holes = []
+    for ring in poly.interiors:
+        hx0, hz0, hx1, hz1 = Polygon(ring).bounds
+        xs.update((hx0, hx1))
+        zs.update((hz0, hz1))
+        holes.append(Polygon(ring))
+    xs = _refine(sorted(xs), max_step)
+    zs = _refine(sorted(zs), max_step)
+    cells = []
+    for x0, x1 in zip(xs, xs[1:]):
+        if x1 - x0 <= 1e-12:
+            continue
+        for z0, z1 in zip(zs, zs[1:]):
+            if z1 - z0 <= 1e-12:
+                continue
+            cx, cz = (x0 + x1) / 2.0, (z0 + z1) / 2.0
+            if any(hole.covers(Point(cx, cz)) for hole in holes):
+                continue
+            cells.append((x0, x1, z0, z1))
+    return cells
+
+
+def _split_rect(x0, x1, z0, z1, max_aspect=3.5):
+    """Sub-rectangles with bounded aspect, then two triangles each."""
+    w, h = x1 - x0, z1 - z0
+    nx = max(1, int(np.ceil(w / (max_aspect * h)))) if h > 0 else 1
+    nz = max(1, int(np.ceil(h / (max_aspect * w)))) if w > 0 else 1
+    rects = []
+    for i in range(nx):
+        for j in range(nz):
+            rects.append((x0 + w * i / nx, x0 + w * (i + 1) / nx,
+                          z0 + h * j / nz, z0 + h * (j + 1) / nz))
+    return rects
+
+
+def _clean_ring(coords):
+    pts = [(float(x), float(y)) for x, y in coords]
+    if len(pts) > 1 and pts[0] == pts[-1]:
+        pts.pop()
+    out = []
+    for p in pts:
+        if not out or out[-1] != p:
+            out.append(p)
+    return out
+
+
+def triangulate_rings(exterior, holes=()):
+    """Constrained triangulation of a polygon with holes (earcut).
+
+    Returns (vertices, indices): vertices concatenates the cleaned exterior
+    and hole rings, indices are triples into it. Every triangle lies inside
+    the domain, none crosses a hole, none leaves the exterior. Callers orient
+    the output for their cap normal.
+    """
+    import mapbox_earcut as earcut
+
+    rings = []
+    outer = _clean_ring(exterior)
+    if len(outer) < 3:
+        return np.zeros((0, 2)), np.zeros((0, 3), int)
+    rings.append(np.asarray(outer, float))
+    ends = [len(rings[0])]
+    for hole in holes or ():
+        cleaned = _clean_ring(hole)
+        if len(cleaned) < 3:
+            continue
+        rings.append(np.asarray(cleaned, float))
+        ends.append(ends[-1] + len(rings[-1]))
+    verts = np.ascontiguousarray(np.vstack(rings))
+    idx = np.asarray(earcut.triangulate_float64(
+        verts, np.array(ends, dtype=np.uint32))).reshape(-1, 3)
+    return verts, idx
+
+
+def _oriented(tris, verts, ccw=True):
+    """Triangles with guaranteed orientation (signed area sign)."""
+    out = []
+    for a, b, c in tris:
+        area = ((verts[b][0] - verts[a][0]) * (verts[c][1] - verts[a][1])
+                - (verts[c][0] - verts[a][0]) * (verts[b][1] - verts[a][1]))
+        if (area < 0) == ccw:
+            out.append((a, c, b))
+        else:
+            out.append((a, b, c))
+    return out
 
 
 def _pos_key(point):
@@ -382,9 +517,12 @@ class MeshBuilder:
                 if any(height(top, p) <= height(bottom, p) for p in coords):
                     raise ValueError("Solid must have positive thickness everywhere")
 
-                exterior = [tuple(p[:2]) for p in poly.exterior.coords[:-1]]
-                hole_rings = [[tuple(p[:2]) for p in ring.coords[:-1]]
+                exterior = _clean_ring([tuple(p[:2]) for p in poly.exterior.coords])
+                hole_rings = [_clean_ring([tuple(p[:2]) for p in ring.coords])
                               for ring in poly.interiors]
+                hole_rings = [h for h in hole_rings if len(h) >= 3]
+                if len(exterior) < 3:
+                    continue
 
                 # One shared id per ring corner per level: caps and swept
                 # walls meet at the same positions.
@@ -392,21 +530,22 @@ class MeshBuilder:
                     exterior, bottom, top, height)
                 holes_bot_top = [self._level_ids(hole, bottom, top, height)
                                  for hole in hole_rings]
+                flat_bot = list(exterior_bot) + [i for hb, _ in holes_bot_top
+                                                 for i in hb]
+                flat_top = list(exterior_top) + [i for _, ht in holes_bot_top
+                                                 for i in ht]
 
                 def cap_uv(corners):
                     return self._cap_uvs(corners, uv_scale)
 
-                # Caps follow the constrained triangulation (holes stay holes).
-                # Corner order matches the legacy emission — top as
-                # triangulated, bottom reversed — so winding is unchanged.
-                for tri in triangles(poly):
-                    top_ids = self._map_tri(tri, "top", bottom, top, height)
-                    pts_top = [self._open.positions[v] for v in top_ids]
-                    self.tri(*top_ids, cap_uv(pts_top), mat_idx)
-                    bot_ids = self._map_tri(tri[::-1], "bottom", bottom, top,
-                                            height)
-                    pts_bot = [self._open.positions[v] for v in bot_ids]
-                    self.tri(*bot_ids, cap_uv(pts_bot), mat_idx)
+                # Constrained caps (earcut): top CCW viewed from +Z (normal
+                # +Z, same winding as the legacy emission), bottom reversed.
+                verts2d, cap_tris = triangulate_rings(exterior, hole_rings)
+                for flat, want_ccw in ((flat_top, True), (flat_bot, False)):
+                    for a, b, c in _oriented(cap_tris, verts2d, want_ccw):
+                        ids = [flat[a], flat[b], flat[c]]
+                        corners = [self._open.positions[v] for v in ids]
+                        self.tri(*ids, cap_uv(corners), mat_idx)
 
                 # Swept walls, ring by ring. Order (A1,B1,B2)/(A1,B2,A2) keeps
                 # the legacy winding: outward normals on exterior rings, faces
@@ -461,19 +600,6 @@ class MeshBuilder:
         bots = [self.vert((x, y, height(bottom, (x, y)))) for x, y in coords]
         tops = [self.vert((x, y, height(top, (x, y)))) for x, y in coords]
         return bots, tops
-
-    def _map_tri(self, tri, level, bottom, top, height):
-        """Ids for triangulation corners, reusing ring positions when the
-        corner is one (the common case: constrained Delaunay only emits input
-        vertices), else creating the corner (legacy behavior per triangle)."""
-        field = bottom if level == "bottom" else top
-        ids = []
-        for x, y in tri:
-            key = _pos_key((x, y, height(field, (x, y))))
-            known = self._open.pos_index.get(key)
-            ids.append(known if known is not None
-                       else self.vert((x, y, height(field, (x, y)))))
-        return ids[0], ids[1], ids[2]
 
     # ── box() with a true chamfer ───────────────────────────────
 
@@ -696,7 +822,8 @@ class MeshBuilder:
                 self.end_component()
 
     def panel(self, a, t, n, polys_uz, w1, w2, mat_fn, semantic,
-              component_id=None, assembly_id=None, *, clip="auto"):
+              component_id=None, assembly_id=None, *, clip="auto",
+              max_segment_m=0.0):
         """Extrude (u, z) polygons along the facade normal into a closed shell.
 
         ``polys_uz`` are shapely Polygons in facade-local metres (u along the
@@ -710,6 +837,10 @@ class MeshBuilder:
         intersected with the cadastral limit and the (u, z) domain is cut to
         the covered u-intervals. Exact for thin extrusions and wall shells,
         which only ever overrun at their ends.
+
+        max_segment_m subdivides long straight boundary runs with collinear
+        Steiner vertices (wall shells only): triangulation ears stay local
+        instead of spanning the whole facade. Geometry is unchanged.
         """
         a = np.asarray(a, float)
         t = np.asarray(t, float) / np.linalg.norm(t)
@@ -759,6 +890,12 @@ class MeshBuilder:
         try:
             for poly in polygons(shapely.unary_union(doms)) if len(doms) > 1 \
                     else polygons(doms[0]):
+                if max_segment_m > 0:
+                    poly = Polygon(
+                        _subdivide_ring(list(poly.exterior.coords),
+                                        max_segment_m),
+                        [_subdivide_ring(list(ring.coords), max_segment_m)
+                         for ring in poly.interiors])
                 self._panel_poly(a, t, n, poly, w1, w2, mat_fn)
         finally:
             return self.end_component()
@@ -773,32 +910,43 @@ class MeshBuilder:
         def scale_of(slot):
             return self.uv_scale_for(slot)
 
-        rings = ([tuple(p[:2]) for p in poly.exterior.coords[:-1]], False)
-        holes = [([tuple(p[:2]) for p in ring.coords[:-1]], True)
+        if _is_rectilinear(poly):
+            self._panel_rectilinear(a, t, n, poly, w1, w2, mat_fn, W,
+                                    scale_of)
+            return
+
+        rings = _clean_ring([tuple(p[:2]) for p in poly.exterior.coords])
+        holes = [_clean_ring([tuple(p[:2]) for p in ring.coords])
                  for ring in poly.interiors]
-        levels = {}
-        for coords, _ in [rings] + holes:
-            for u, z in coords:
-                levels.setdefault((u, z), {})[w1] = W(u, w1, z)
-                levels[(u, z)][w2] = W(u, w2, z)
+        holes = [h for h in holes if len(h) >= 3]
+        if len(rings) < 3:
+            return
+        ids_w1 = [W(u, w1, z) for u, z in rings]
+        ids_w2 = [W(u, w2, z) for u, z in rings]
+        hole_ids = [([W(u, w1, z) for u, z in h], [W(u, w2, z) for u, z in h])
+                    for h in holes]
+        flat_w1 = list(ids_w1) + [i for h in hole_ids for i in h[0]]
+        flat_w2 = list(ids_w2) + [i for h in hole_ids for i in h[1]]
 
         def at(u, z, w):
             # vert() shares by position, so corners computed for caps and
             # swept sides resolve to the same ids.
             return W(u, w, z)
 
-        # Front (w2, faces +n) and back (w1) caps over the triangulation.
-        for tri in triangles(poly):
-            for w, flip, kind in ((w2, False, "front"), (w1, True, "back")):
-                ids = [at(u, z, w) for u, z in (tri if not flip else tri[::-1])]
-                corners = [comp.positions[v] for v in ids]
-                mid = np.mean(np.array([(u, z) for u, z in tri]), axis=0)
-                slot = mat_fn(kind, float(mid[0]), float(mid[1]), w)
+        # Constrained caps (earcut): every triangle lies inside the domain,
+        # none crosses a hole. Front (w2) CCW in (u, z) faces +n; back
+        # reversed. Orientation is enforced, never filtered.
+        verts2d, cap_tris = triangulate_rings(rings, holes)
+        for w, want_ccw, kind in ((w2, True, "front"), (w1, False, "back")):
+            flat = flat_w2 if w == w2 else flat_w1
+            for a, b, c in _oriented(cap_tris, verts2d, want_ccw):
+                ids = [flat[a], flat[b], flat[c]]
+                (ua, va), (ub, vb), (uc, vc) = verts2d[a], verts2d[b], verts2d[c]
+                slot = mat_fn(kind, (ua + ub + uc) / 3.0, (va + vb + vc) / 3.0, w)
                 mi = self.mat_index(slot)
                 s = scale_of(slot)
-                uvs = [((u / s), (z / s)) for u, z in
-                       (tri if not flip else tri[::-1])]
-                self.tri(*ids, uvs, mi)
+                self.tri(*ids, ((ua / s, va / s), (ub / s, vb / s),
+                                (uc / s, vc / s)), mi)
 
         # Swept sides: outer boundary and hole reveals. Corners carry
         # (edge distance, w) metric UVs; materials come from the callback
@@ -822,6 +970,86 @@ class MeshBuilder:
                          mi)
                 self.tri(A1, B2, A2,
                          ((sa / s, w1 / s), (sb / s, w2 / s), (sa / s, w2 / s)),
+                         mi)
+
+    def _panel_rectilinear(self, a, t, n, poly, w1, w2, mat_fn, W,
+                               scale_of):
+        """Caps as aspect-bounded quad pairs over an exact grid tiling.
+
+        Grid lines contain every hole edge, so kept cells tile the domain
+        with no slivers; each cell splits until no triangle is thinner than
+        ~1:3.5. All corners share ids through W(): one connected shell.
+        """
+        depth = w2 - w1
+        # Cells already aspect-bounded by the refined grid: use them directly
+        # so neighbor cells share bit-identical edges.
+        subrects = _rectilinear_cells(poly)
+        # Sides only where no kept subrect continues: outer boundary and
+        # hole reveals. Internal interfaces stay open inside one volume.
+        edge_count = {}
+        directed = {}
+        for xa, xb, za, zb in subrects:
+            for key in (((xa, za), (xb, za)), ((xb, za), (xb, zb)),
+                        ((xb, zb), (xa, zb)), ((xa, zb), (xa, za))):
+                undirected = key if key[0] <= key[1] else (key[1], key[0])
+                edge_count[undirected] = edge_count.get(undirected, 0) + 1
+                # Subrects wind CCW (interior left): swept quads built in
+                # first-seen direction face away from kept cells — outward
+                # on the exterior boundary, into the void on hole rims.
+                directed.setdefault(undirected, key)
+        for xa, xb, za, zb in subrects:
+            A, B, C, D = ((xa, za), (xb, za), (xb, zb), (xa, zb))
+            for w, flip, kind in ((w2, False, "front"), (w1, True, "back")):
+                order = (A, B, C) if not flip else (A, C, B)
+                order2 = (A, C, D) if not flip else (A, D, C)
+                for tri in (order, order2):
+                    (ua, va), (ub, vb), (uc, vc) = tri
+                    ids = [W(ua, w, va), W(ub, w, vb), W(uc, w, vc)]
+                    slot = mat_fn(kind, (ua + ub + uc) / 3.0,
+                                  (va + vb + vc) / 3.0, w)
+                    s = scale_of(slot)
+                    self.tri(*ids, ((ua / s, va / s), (ub / s, vb / s),
+                                    (uc / s, vc / s)),
+                             self.mat_index(slot))
+        for (pa, pb), count in edge_count.items():
+            if count != 1:
+                continue
+            (ua, za), (ub, zb) = directed[(pa, pb)]
+            # Stations: endpoints plus every subrect corner lying on this
+            # edge, so swept quads share all cap corners (no dangling).
+            stations = {pa, pb}
+            for xa, xb, zc, zd in subrects:
+                for cx, cz in ((xa, zc), (xb, zc), (xb, zd), (xa, zd)):
+                    if abs((ub - ua) * (cz - za) - (zb - za) * (cx - ua)) > 1e-9:
+                        continue
+                    s = ((cx - ua) * (ub - ua) + (cz - za) * (zb - za))
+                    e = (ub - ua) ** 2 + (zb - za) ** 2
+                    if -1e-9 <= s <= e + 1e-9:
+                        stations.add((cx, cz))
+            horizontal = abs(zb - za) <= abs(ub - ua)
+            ordered = sorted(stations,
+                             key=lambda p: p[0] if horizontal else p[1])
+            # Winding must follow the recorded subrect-CCW direction
+            # (interior left): reversed when it runs high-to-low.
+            if (ua, za) != ordered[0]:
+                ordered = ordered[::-1]
+            for sa, sb in zip(ordered, ordered[1:]):
+                A1, B1 = W(sa[0], w1, sa[1]), W(sb[0], w1, sb[1])
+                B2, A2 = W(sb[0], w2, sb[1]), W(sa[0], w2, sa[1])
+                slot = mat_fn("side", (sa[0] + sb[0]) / 2.0,
+                              (sa[1] + sb[1]) / 2.0, 0.5 * (w1 + w2))
+                mi = self.mat_index(slot)
+                s = scale_of(slot)
+                # Metric along the edge from its directed start.
+                if horizontal:
+                    la, lb = sa[0] - ua, sb[0] - ua
+                else:
+                    la, lb = sa[1] - za, sb[1] - za
+                self.tri(A1, B1, B2,
+                         ((la / s, w1 / s), (lb / s, w1 / s), (lb / s, w2 / s)),
+                         mi)
+                self.tri(A1, B2, A2,
+                         ((la / s, w1 / s), (lb / s, w2 / s), (la / s, w2 / s)),
                          mi)
 
     def finish(self):

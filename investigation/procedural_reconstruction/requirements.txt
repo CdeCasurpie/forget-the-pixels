@@ -7,3 +7,4 @@ matplotlib
 pyproj
 shapely>=2.1
 trimesh>=4
+mapbox_earcut>=2.0
