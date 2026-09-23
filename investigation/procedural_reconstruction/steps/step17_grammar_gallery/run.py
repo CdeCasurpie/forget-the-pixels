@@ -124,6 +124,27 @@ def build(lot, family, seed, setback):
                                    facades=(), components=(), seed=seed)
 
 
+def _random_jobs(count, seed):
+    """N fully random (lot, family, seed, setback) combos. The picker seed is
+    printed so any run stays reproducible."""
+    import random as _random
+
+    rng = _random.Random(seed)
+    print(f"random picker seed: {seed if seed is not None else '(entropy)'}")
+    names = sorted(LOTS)
+    families = sorted(FAMILY_RULES)
+    jobs = []
+    for i in range(count):
+        lot_name = rng.choice(names)
+        lot = LOTS[lot_name]
+        family = rng.choice(families)
+        pick = rng.randint(0, 2 ** 31 - 1)
+        setback = round(rng.uniform(1.8, 3.2), 2) if rng.random() < 0.5 else 0.0
+        jobs.append((f"random{i:02d}_{lot_name}_{family}_s{pick}", lot, family,
+                     pick, setback))
+    return jobs
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--detail", type=int, default=2, choices=(1, 2, 3))
@@ -131,41 +152,53 @@ def main():
     parser.add_argument("--no-render", action="store_true")
     parser.add_argument("--no-glb", action="store_true",
                         help="skip the GLB export (renders only)")
+    parser.add_argument("--random", type=int, default=0, metavar="N",
+                        help="generate N fully random examples instead of the "
+                             "fixed regression matrix")
+    parser.add_argument("--random-seed", type=int, default=None,
+                        help="seed for the random picker (default: entropy)")
     args = parser.parse_args()
 
     OUTPUTS.mkdir(parents=True, exist_ok=True)
     families = sorted(FAMILY_RULES)
     fingerprint = {}
 
-    for index, (lot_name, lot) in enumerate(LOTS.items()):
-        for seed in SEEDS:
-            family = families[(index + seed) % len(families)]
-            setback = 2.6 if (seed + index) % 3 == 0 else 0.0
-            label = f"{lot_name}_{family}_s{seed}"
-            spec = build(lot, family, seed, setback)
-            mesh = generate_v4_mesh(spec, detail=args.detail)
-            report = validate_mesh(
-                mesh, Polygon(spec.context.polygon),
-                envelope=street_envelope(spec.context),
-            )
-            fingerprint[label] = {
-                "family": family,
-                "masses": [mass.role for mass in spec.site_plan.masses],
-                "triangles": report["triangles"],
-                "semantics": len(report["semantic_types"]),
-                "faces_by_semantic": report["faces_by_semantic"],
-            }
-            print(f"{label:46s} {report['triangles']:7d} tris  "
-                  f"{len(report['semantic_types']):3d} semantics  "
-                  f"{[m.role for m in spec.site_plan.masses]}")
-            if not args.no_glb:
-                export_glb(mesh, OUTPUTS / f"{label}.glb")
-            if not args.no_render:
-                render(mesh, OUTPUTS / f"{label}_iso.png",
-                       direction=ISOMETRIC, size=args.size, clay=True)
-                render(mesh, OUTPUTS / f"{label}_aerial.png",
-                       direction=(1, -1.7, 1.1), size=args.size, clay=True)
-                render(mesh, OUTPUTS / f"{label}_street.png",
+    if args.random:
+        jobs = _random_jobs(args.random, args.random_seed)
+    else:
+        jobs = []
+        for index, (lot_name, lot) in enumerate(LOTS.items()):
+            for seed in SEEDS:
+                family = families[(index + seed) % len(families)]
+                setback = 2.6 if (seed + index) % 3 == 0 else 0.0
+                jobs.append((f"{lot_name}_{family}_s{seed}", lot, family, seed,
+                             setback))
+
+    for label, lot, family, seed, setback in jobs:
+        spec = build(lot, family, seed, setback)
+        mesh = generate_v4_mesh(spec, detail=args.detail)
+        report = validate_mesh(
+            mesh, Polygon(spec.context.polygon),
+            envelope=street_envelope(spec.context),
+        )
+        fingerprint[label] = {
+            "family": family,
+            "masses": [mass.role for mass in spec.site_plan.masses],
+            "triangles": report["triangles"],
+            "semantics": len(report["semantic_types"]),
+            "faces_by_semantic": report["faces_by_semantic"],
+        }
+        print(f"{label:46s} {report['triangles']:7d} tris  "
+              f"{len(report['semantic_types']):3d} semantics  "
+              f"{[m.role for m in spec.site_plan.masses]}")
+        if not args.no_glb:
+            export_glb(mesh, OUTPUTS / f"{label}.glb")
+        if not args.no_render:
+            render(mesh, OUTPUTS / f"{label}_iso.png",
+                   direction=ISOMETRIC, size=args.size, clay=True)
+            render(mesh, OUTPUTS / f"{label}_aerial.png",
+                   direction=(1, -1.7, 1.1), size=args.size, clay=True)
+            render(mesh, OUTPUTS / f"{label}_street.png",
                        direction=(0.45, -1.0, 0.30), size=args.size, clay=True)
 
     path = OUTPUTS / f"fingerprint_lod{args.detail}.json"
