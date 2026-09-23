@@ -249,9 +249,10 @@ class DecalTests(unittest.TestCase):
             self.assertAlmostEqual(
                 decal["pbrMetallicRoughness"]["baseColorFactor"][3],
                 round(0.99 * 255) / 255)
-            self.assertNotIn("baseColorTexture",
-                             decal["pbrMetallicRoughness"],
-                             "no catalog ships, so no maps may attach")
+            # The shipped catalog defines decal base-color maps, so they
+            # attach; alpha still rides the factor.
+            self.assertIn("baseColorTexture",
+                          decal["pbrMetallicRoughness"])
 
 
 if __name__ == "__main__":
