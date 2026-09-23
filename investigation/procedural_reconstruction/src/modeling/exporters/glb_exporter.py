@@ -12,6 +12,60 @@ from PIL import Image
 from modeling.texturing.library import MaterialLibrary
 
 
+def _merge_component_nodes(tree):
+    """One glTF node per logical component, N primitives per material.
+
+    The scene is built with one geometry per (component, material) so each
+    piece keeps its own UV layout; here geometries that share a component
+    are folded into a single node/mesh whose primitives carry the materials.
+    Pure JSON restructuring: accessors, buffers and materials are untouched,
+    so no vertex is duplicated, welded or moved.
+    """
+    nodes = tree.get("nodes", [])
+    meshes = tree.get("meshes", [])
+    if not nodes or not meshes:
+        return
+    groups = {}
+    for ni, node in enumerate(nodes):
+        name = node.get("name", "")
+        base = name.rsplit("#", 1)[0] if "#" in name else name
+        groups.setdefault(base, []).append(ni)
+    if all(len(members) == 1 for members in groups.values()):
+        for node in nodes:
+            name = node.get("name", "")
+            if "#" in name:
+                node["name"] = name.rsplit("#", 1)[0]
+        return
+    new_meshes = []
+    new_nodes = []
+    old_to_new = {}
+    for base, members in groups.items():
+        primitives = []
+        transform = None
+        for ni in members:
+            node = nodes[ni]
+            mesh_idx = node.get("mesh")
+            if isinstance(mesh_idx, int) and 0 <= mesh_idx < len(meshes):
+                primitives.extend(meshes[mesh_idx].get("primitives", []))
+            if transform is None and "matrix" in node:
+                transform = node["matrix"]
+        if not primitives:
+            continue
+        new_index = len(new_nodes)
+        for ni in members:
+            old_to_new[ni] = new_index
+        new_meshes.append({"name": base, "primitives": primitives})
+        merged = {"name": base, "mesh": len(new_meshes) - 1}
+        if transform is not None:
+            merged["matrix"] = transform
+        new_nodes.append(merged)
+    for scene in tree.get("scenes", []):
+        scene["nodes"] = [old_to_new[ni] for ni in scene.get("nodes", [])
+                          if ni in old_to_new]
+    tree["nodes"] = new_nodes
+    tree["meshes"] = new_meshes
+
+
 def _corner_uvs(mesh):
     """(M, 3, 2) corner attributes, preferring the canonical store."""
     if mesh.corner_uv is not None and len(mesh.corner_uv) == len(mesh.faces):
@@ -140,6 +194,7 @@ def export_glb(mesh, path, *, library=None):
 
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     def postprocess(tree):
+        _merge_component_nodes(tree)
         by_name = {m["name"]: m for m in mesh.materials}
         for m in tree.get("materials", []):
             if "normalTexture" in m:

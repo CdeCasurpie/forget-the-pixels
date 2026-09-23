@@ -249,5 +249,108 @@ class AssemblyTopologyTests(unittest.TestCase):
         self.assertTrue(windows, "window assemblies are traceable")
 
 
+class ExportIdentityTests(unittest.TestCase):
+    def test_multi_material_component_exports_one_node(self):
+        import json
+        import struct
+        import tempfile
+        from pathlib import Path
+        from shapely.geometry import Polygon as _Poly
+        from modeling.exporters.glb_exporter import export_glb
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        a = np.array([0.0, 0.0])
+        t = np.array([1.0, 0.0])
+        n = np.array([0.0, -1.0])
+        with mb.assembly("wall"):
+            mb.panel(a, t, n, [_Poly([(0, 0), (4, 0), (4, 2), (0, 2)])],
+                     -0.2, 0.0,
+                     lambda kind, u, v, w: "brick" if v < 1.0 else "plaster",
+                     "wall", component_id="wall/00")
+        mesh = mb.finish()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "multi.glb"
+            export_glb(mesh, path)
+            data = Path(path).read_bytes()
+        length = struct.unpack_from("<I", data, 12)[0]
+        tree = json.loads(data[20:20 + length])
+        nodes = [x["name"] for x in tree["nodes"]]
+        self.assertEqual(nodes, ["wall/wall/00"], nodes)
+        prims = tree["meshes"][tree["nodes"][0]["mesh"]]["primitives"]
+        self.assertEqual(len(prims), 2, "one primitive per material")
+        used = {tree["materials"][p["material"]]["name"] for p in prims}
+        self.assertEqual(used, {"brick", "plaster"})
+
+    def test_beam_split_statistics(self):
+        """Source shares 18 ring positions; GLB splits only at genuine UV
+        seams: 16 side-vs-cap splits, 2 cylinder wrap splits (u=0 and
+        u=circumference share a position), 2 shared cap centers."""
+        import json
+        import struct
+        import tempfile
+        from pathlib import Path
+        from modeling.exporters.glb_exporter import export_glb
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.beam((0, 0, 0), (0, 0, 1.0), 0.05, material="metal", semantic="rail")
+        mesh = mb.finish()
+        self.assertEqual((len(mesh.vertices), len(mesh.faces)), (18, 32))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "beam.glb"
+            export_glb(mesh, path)
+            data = Path(path).read_bytes()
+        length = struct.unpack_from("<I", data, 12)[0]
+        tree = json.loads(data[20:20 + length])
+        render_verts = sum(
+            tree["accessors"][p["attributes"]["POSITION"]]["count"]
+            for m in tree["meshes"] for p in m["primitives"])
+        self.assertEqual(render_verts, 36)
+        self.assertAlmostEqual(render_verts / len(mesh.vertices), 36 / 18)
+
+    def test_obj_preserves_geometric_connectivity(self):
+        """OBJ carries separate v/vt indices: the file's v records and face
+        indices match the source component exactly (positions shared, UVs
+        per corner). Parsed directly: trimesh's own loader would expand
+        (v, vt) pairs, which is loader behavior, not file content."""
+        import tempfile
+        from pathlib import Path
+        from modeling.exporters.obj_exporter import export_obj
+
+        mb = MeshBuilder(box(-5, -5, 5, 5))
+        mb.beam((0, 0, 0), (0, 0, 1.0), 0.05, material="metal", semantic="rail")
+        mesh = mb.finish()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "beam.obj"
+            export_obj(mesh, path)
+            lines = Path(path).read_text().splitlines()
+        verts = [tuple(map(float, ln.split()[1:4])) for ln in lines
+                 if ln.startswith("v ")]
+        uvs = [tuple(map(float, ln.split()[1:3])) for ln in lines
+               if ln.startswith("vt ")]
+        faces = [[tuple(map(int, c.split("/"))) for c in ln.split()[1:]]
+                 for ln in lines if ln.startswith("f ")]
+        self.assertEqual(len(verts), len(mesh.vertices),
+                         "one v record per shared position")
+        self.assertEqual(len(uvs), 3 * len(mesh.faces),
+                         "one vt record per corner")
+        self.assertEqual(len(faces), len(mesh.faces))
+        for (vi, _), src in zip(faces[0], mesh.faces[0]):
+            self.assertEqual(vi - 1, src)
+        src_edges = set()
+        for a, b, c in np.asarray(mesh.faces):
+            for u, v in ((a, b), (b, c), (c, a)):
+                pa, pb = tuple(np.asarray(mesh.vertices[u])), tuple(
+                    np.asarray(mesh.vertices[v]))
+                src_edges.add((min(pa, pb), max(pa, pb)))
+        got_edges = set()
+        for (a, _), (b, _), (c, _) in faces:
+            for u, v in ((a - 1, b - 1), (b - 1, c - 1), (c - 1, a - 1)):
+                pa, pb = verts[u], verts[v]
+                got_edges.add((min(pa, pb), max(pa, pb)))
+        rnd = lambda e: tuple(tuple(round(x, 4) for x in p) for p in e)
+        self.assertEqual({rnd(e) for e in src_edges},
+                         {rnd(e) for e in got_edges})
+
+
 if __name__ == "__main__":
     unittest.main()
