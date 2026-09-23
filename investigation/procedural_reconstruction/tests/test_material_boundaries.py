@@ -55,12 +55,14 @@ class SerratedBoundaryTests(unittest.TestCase):
         mesh = mb.finish()
         tris = front_cap_tris(mesh)
         self.assertTrue(tris)
-        bounds_u = [0.25, length - 0.25]
+        # Bounds snapped to the grid contract (nanometres): raw fl-0.2
+        # arithmetic sits ~4e-16 off the snapped line.
+        bounds_u = [round(0.25, 9), round(length - 0.25, 9)]
         for c in np.arange(4.0, length - 0.5, 4.0):
-            bounds_u += [c - 0.125, c + 0.125]
+            bounds_u += [round(c - 0.125, 9), round(c + 0.125, 9)]
         bounds_z = []
         for fl in levels[1:]:
-            bounds_z += [fl - 0.20, fl]
+            bounds_z += [round(fl - 0.20, 9), round(fl, 9)]
         cu, cz = crossing(tris, bounds_u, bounds_z)
         self.assertEqual((cu, cz), (0, 0),
                          f"{cu} tris cross columns, {cz} cross slabs")
