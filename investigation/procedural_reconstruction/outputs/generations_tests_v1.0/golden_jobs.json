@@ -1,0 +1,23 @@
+[
+  {
+    "label": "random00_rotated_galeria_madera_s1258205799",
+    "lot_name": "rotated",
+    "family": "galeria_madera",
+    "seed": 1258205799,
+    "setback": 3.15
+  },
+  {
+    "label": "random01_row_narrow_republicano_s874968385",
+    "lot_name": "row_narrow",
+    "family": "republicano",
+    "seed": 874968385,
+    "setback": 2.7
+  },
+  {
+    "label": "random02_row_wide_galeria_madera_s241995058",
+    "lot_name": "row_wide",
+    "family": "galeria_madera",
+    "seed": 241995058,
+    "setback": 3.11
+  }
+]

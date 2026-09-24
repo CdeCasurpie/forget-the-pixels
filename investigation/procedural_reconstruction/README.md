@@ -4,6 +4,39 @@ Este directorio contiene el pipeline experimental para reconstrucción urbana
 top-down a partir de Street View, catastro y posteriormente modelos de
 segmentación/generación.
 
+## Grammar V1 (frozen)
+
+`grammar-v1.0` is the first procedural Barranco building representation used
+as the target of the inverse problem. Do not extend it with new geometry;
+experiment against it, and version any representation change as v1.1+.
+
+Input:
+- parcel geometry
+- street fronts
+- height/floor information
+- architectural program
+- procedural parameters
+- seed
+
+Output:
+- structured architectural assemblies
+- manifold source components
+- openings
+- facade relief
+- roofscape
+- site/fences
+- semantic materials
+- GLB/OBJ
+
+Golden regression set (reproducible, do not touch the seed):
+
+```bash
+python scripts/golden_v1/generate_golden_v1.py --detail 2 --random-seed 20260923
+```
+
+writes `outputs/generations_tests_v1.0/` (3 GLBs, iso/aerial/street renders,
+`golden_jobs.json`, `fingerprint_lod2.json`, contact sheet).
+
 ## Generación procedural detallada
 
 La ampliación por referencias está documentada en
@@ -22,8 +55,7 @@ materiales PBR y expansión de familias está en
 
 La composición automática usa `detail_level="composed"`: acentos por grupos de
 ventanas, marcos entre pisos, marquesinas y aleros. `detail_level="basic"` permite
-comparar la geometría anterior. La guía de implementación de texturas para Gemini
-está en [GEMINI_PBR_GUIDE.md](GEMINI_PBR_GUIDE.md).
+comparar la geometría anterior.
 
 ## Organización
 
