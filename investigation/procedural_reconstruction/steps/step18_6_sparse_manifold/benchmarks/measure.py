@@ -112,11 +112,25 @@ def run(phase,block=0,mode='authoring',detail=None,renders=False):
             semantics.extend(dict(case=name,semantic=k,triangles=v,components=parts[k]) for k,v in counts.most_common())
             if renders:
                 from render import render
+                render_mesh=mesh
+                if phase!='baseline':
+                    import numpy as np
+                    baseline={r['case']:r for r in csv.DictReader((STEP/'reports/baseline.csv').open())}
+                    # Freeze the exact pre-change framing, including the light's
+                    # shadow-map frame. Unreferenced extrema emit no geometry.
+                    render_mesh=replace(mesh,vertices=np.vstack((mesh.vertices,np.asarray(json.loads(baseline[name]['bounds'])))))
                 for view,direction in [('iso',(1,-1,1)),('street',(.15,-1,.18))]:
                     destination=out/f'{name}_{view}.png'
-                    if not destination.exists():
-                        render(mesh,destination,direction=direction,size=384,clay=False)
+                    if not destination.exists() or phase!='baseline':
+                        render(render_mesh,destination,direction=direction,size=384,clay=False)
         else:
+            p=request.context
+            valid=validate_mesh(mesh,Polygon(p.parcel),envelope=street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)))
+            topology=analyze_topology(mesh)
+            row['topology_violations']=len(topology['violations'])
+            if topology['violations']:
+                (out/f'{name}.violations.json').write_text(json.dumps(topology['violations'],indent=2))
+                raise ValueError(f'{name}: non-manifold source components')
             start=time.perf_counter(); cumulative=out/'block.glb'; temporary=out/'block.tmp.glb'
             append_glb(cumulative if i else None,path,temporary,lot_id=name); temporary.replace(cumulative)
             row['append_s']=time.perf_counter()-start
