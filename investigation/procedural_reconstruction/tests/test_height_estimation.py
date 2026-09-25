@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from vision.estimation.height import fit_height
-from vision.segmentation.roof_boundary import split_strip
+from vision.segmentation.roof_boundary import split_vertical_strip as split_strip
 from vision.estimation import regularize_height_to_floors
 from vision.projection.spherical import PanoramaCamera
 
