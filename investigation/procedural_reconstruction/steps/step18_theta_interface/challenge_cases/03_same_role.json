@@ -1,0 +1,15 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "massing": {"pattern": "explicit"},
+    "masses": [
+      {"role": "main", "footprint": [[6,0],[12,0],[12,16],[6,16]], "levels_m": [0,2.8,5.6]},
+      {"role": "main", "footprint": [[0,0],[6,0],[6,16],[0,16]], "levels_m": [0,2.8,5.6]}
+    ],
+    "facade": {"bay_count": 2},
+    "roof": {"kind": "flat", "props": []},
+    "roofs": [{"mass_ref": "main:1", "kind": "corrugated"}]
+  },
+  "nuisance": {"seed": 18},
+  "evidence": {"theta.masses[main:0].levels_m": {"state": "inferred", "confidence": 0.7}}
+}

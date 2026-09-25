@@ -1,0 +1,19 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,18],[0,18]], "fronts": [0]},
+  "theta": {
+    "height_m": 8.4, "floors": 3, "family": "balcony_apartments",
+    "facade": {"bay_count": 4, "balconies": true},
+    "facades": [{
+      "mass_role": "main:0", "edge": 0,
+      "controls": {"bay_count": 4, "balconies": true,
+        "opening_edits": [
+          {"floor": 0, "bay": 2, "action": "replace", "opening": {"kind": "gate", "u_m": 6.4, "v_m": 0.04, "width_m": 2.0, "height_m": 2.2, "prefab": "roller"}},
+          {"floor": 1, "bay": 1, "action": "suppress"},
+          {"floor": 2, "bay": 0, "action": "replace", "opening": {"kind": "window", "u_m": 1.1, "v_m": 6.55, "width_m": 1.3, "height_m": 1.3, "prefab": "slim_window"}}
+        ]
+      }
+    }]
+  },
+  "nuisance": {"seed": 18},
+  "evidence": {"theta.facades[main:0,edge:0].controls.opening_edits[floor:1,bay:1].action": {"state": "observed", "confidence": 0.95}}
+}

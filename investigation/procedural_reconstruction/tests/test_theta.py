@@ -186,3 +186,111 @@ def test_envelope_and_uv():
     uv=mesh.corner_uv
     area=np.abs((uv[:,1,0]-uv[:,0,0])*(uv[:,2,1]-uv[:,0,1])-(uv[:,1,1]-uv[:,0,1])*(uv[:,2,0]-uv[:,0,0]))
     assert np.isfinite(uv).all() and (area>1e-12).all()
+
+
+@pytest.mark.parametrize('locked,observed,floors,expected,source',[
+    (10.5,None,3,10.5,'external'),
+    (None,9.,3,9.,None),
+    (None,9.,None,9.,None),
+    (None,None,4,11.2,'prior/completed'),
+    (None,None,None,8.4,'prior/completed'),
+])
+def test_height_authority_matrix(locked,observed,floors,expected,source):
+    r=resolve_theta(replace(P,locked_height_m=locked),replace(T,height_m=observed,floors=floors))
+    assert r.theta.height_m==pytest.approx(expected)
+    assert r.theta.floors==(floors if floors is not None else round(expected/2.8))
+    assert r.masses[0].floor_levels[1]-r.masses[0].floor_levels[0]==pytest.approx(expected/r.theta.floors)
+    if source:
+        assert r.completed['height_m']==source
+    assert r.completion_details.get('height_m',{}).get('value',expected)==pytest.approx(expected)
+
+
+def test_height_conflict_and_explicit_mass_lock():
+    with pytest.raises(ValueError,match='conflicts'):
+        resolve_theta(replace(P,locked_height_m=10.5),replace(T,height_m=9.,floors=3))
+    t=ThetaCandidate(massing=MassingControls(pattern='explicit'),masses=(ArchitecturalMass('main',P.parcel,(0.,3.,6.)),))
+    with pytest.raises(ValueError,match='conflicts'):
+        resolve_theta(replace(P,locked_height_m=9.),t)
+
+
+def test_unknown_and_observed_absence_remain_distinct():
+    unknown=ThetaCandidate(facade=FacadeControls(balconies=None,services=None,projections=None,stairs=None),
+                           roof=RoofControls(props=None),side_material=None,finish=None)
+    absent=replace(unknown,facade=replace(unknown.facade,balconies=False,services=False,
+                   projections=(),stairs=()),roof=RoofControls(props=()))
+    assert from_json(canonical(ReconstructionRequest(P,unknown))).theta.facade.projections is None
+    assert from_json(canonical(ReconstructionRequest(P,absent))).theta.facade.projections==()
+    a,b=resolve_theta(P,unknown),resolve_theta(P,absent)
+    assert a.completed['facade.services']=='prior/completed'
+    assert a.completed['side_material']=='prior/completed'
+    assert a.completed['finish']=='prior/completed'
+    assert a.completed['roof.props']=='prior/completed'
+    assert 'facade.services' not in b.completed
+    assert 'roof.props' not in b.completed
+    assert a.theta.facade.projections is None and b.theta.facade.projections==()
+    assert all(not w.facade.projections for w in b.walls)
+    assert a.completion_details['side_material']['value']=='brick'
+
+
+def test_roof_override_is_local_and_strict():
+    base=replace(T,massing=MassingControls(pattern='stepped_back',upper_setback_m=2.5))
+    a=resolve_theta(P,base)
+    t=replace(base,roofs=(RoofOverride('setback:0','tile_shed',0.,14.),))
+    b=resolve_theta(P,t)
+    assert a.masses==b.masses and a.walls==b.walls and a.theta.primary_color==b.theta.primary_color
+    main=next(r for r in b.roofs if r.mass_id=='main:0')
+    top=next(r for r in b.roofs if r.mass_id=='setback:0')
+    assert main.surfaces[0].kind=='flat' and top.surfaces[0].kind=='tile_shed'
+    assert top.surfaces[0].slope_deg==14
+    with pytest.raises(ValueError):
+        resolve_theta(P,replace(base,roofs=(RoofOverride('missing:0','flat'),)))
+    assert canonical(decode(ResolvedArchitecture,json.loads(canonical(b))))==canonical(b)
+
+
+def test_repeat_sparse_corrections_and_explicit_mode():
+    base=resolve_theta(P,T)
+    edits=(OpeningEdit(0,2,'replace',Opening('gate',7.3,.04,1.5,2.2,prefab='roller')),
+           OpeningEdit(1,1,'suppress'))
+    t=replace(T,facade=replace(T.facade,opening_edits=edits))
+    r=resolve_theta(P,t)
+    front=lambda plan:next(w for w in plan.walls if w.edge==0 and w.mass_role=='main:0')
+    a,b=front(base).facade.openings,front(r).facade.openings
+    assert len(b)==len(a)-1
+    assert b[2].kind=='gate'
+    assert a[0]==b[0] and a[-1]==b[-1]
+    assert r.masses==base.masses and r.roofs==base.roofs
+    assert canonical(from_json(canonical(ReconstructionRequest(P,t))).theta)==canonical(t)
+    added=Opening('window',7.3,.8,1.1,1.1,prefab='slim_window')
+    r2=resolve_theta(P,replace(T,facade=replace(T.facade,opening_edits=(OpeningEdit(0,2,'suppress'),),added_openings=(added,))))
+    assert added in front(r2).facade.openings
+    with pytest.raises(ValueError,match='overlaps'):
+        resolve_theta(P,replace(T,facade=replace(T.facade,added_openings=(added,))))
+
+
+def test_same_role_refs_canonical_under_json_reordering():
+    left=ArchitecturalMass('main',((0.,0.),(5.,0.),(5.,16.),(0.,16.)),(0.,2.8,5.6))
+    right=ArchitecturalMass('main',((5.,0.),(10.,0.),(10.,16.),(5.,16.)),(0.,2.8,5.6))
+    t=ThetaCandidate(massing=MassingControls(pattern='explicit'),masses=(right,left),
+                     roofs=(RoofOverride('main:1','corrugated'),))
+    a=resolve_theta(P,t)
+    b=resolve_theta(P,replace(t,masses=(left,right)))
+    assert [m.id for m in a.masses]==['main:0','main:1']
+    assert canonical(a)==canonical(b)
+    assert next(r for r in a.roofs if r.mass_id=='main:1').surfaces[0].kind=='corrugated'
+    with pytest.raises(ValueError,match='ambiguous'):
+        resolve_theta(P,replace(t,roofs=(RoofOverride('main','corrugated'),)))
+
+
+def test_stable_evidence_and_xi_completion():
+    from pipeline.theta import reconstruct
+    t=replace(T,massing=MassingControls(pattern='stepped_back',upper_setback_m=None),
+              roofs=(RoofOverride('setback:0',kind=None),))
+    e={'theta.massing.upper_setback_m':Evidence('unknown'),
+       'theta.roofs[setback:0].kind':Evidence('unknown')}
+    a=reconstruct(ReconstructionRequest(P,t,NuisanceParameters(1),evidence=e))
+    b=reconstruct(ReconstructionRequest(P,t,NuisanceParameters(2),evidence=e))
+    assert canonical(a.resolved)==canonical(b.resolved)
+    assert a.requested.evidence==e and a.requested.theta.massing.upper_setback_m is None
+    assert a.resolved.completion_details['massing.upper_setback_m']['source']=='prior/completed'
+    assert a.resolved.completion_details['massing.upper_setback_m']['value']==2.5
+    assert a.resolved.masses==b.resolved.masses and a.resolved.roofs==b.resolved.roofs

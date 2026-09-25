@@ -1,0 +1,18 @@
+{
+  "context": {"parcel": [[0,0],[10,0],[10,18],[0,18]], "fronts": [0]},
+  "theta": {
+    "height_m": 8.4, "floors": 3,
+    "massing": {"pattern": null},
+    "facade": {"bay_count": 3, "balconies": false},
+    "roof": {"kind": null},
+    "site": {"fence": null},
+    "side_material": null
+  },
+  "nuisance": {"seed": 18},
+  "evidence": {
+    "theta.height_m": {"state": "inferred", "confidence": 0.8},
+    "theta.roof.kind": {"state": "unknown"},
+    "theta.site.fence": {"state": "unknown"},
+    "theta.side_material": {"state": "unknown"}
+  }
+}

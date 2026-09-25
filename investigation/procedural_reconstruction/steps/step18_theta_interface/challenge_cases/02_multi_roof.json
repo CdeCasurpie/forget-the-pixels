@@ -1,0 +1,12 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,20],[0,20]], "fronts": [0]},
+  "theta": {
+    "height_m": 11.2, "floors": 4, "family": "quiet_house",
+    "massing": {"pattern": "stepped_back", "upper_setback_m": 3.0},
+    "facade": {"bay_count": 4},
+    "roof": {"kind": "flat", "parapet_m": 0.5, "props": []},
+    "roofs": [{"mass_ref": "setback:0", "kind": "tile_shed", "slope_deg": 12.0, "parapet_m": 0.0}]
+  },
+  "nuisance": {"seed": 18},
+  "evidence": {"theta.roofs[setback:0].kind": {"state": "inferred", "confidence": 0.6}}
+}
