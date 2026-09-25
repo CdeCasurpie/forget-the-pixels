@@ -1,0 +1,114 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -5.2057,
+        49.5246
+      ],
+      [
+        17.8786,
+        76.0956
+      ],
+      [
+        -0.9023,
+        92.3453
+      ],
+      [
+        -24.7919,
+        68.4181
+      ],
+      [
+        -13.7459,
+        57.7833
+      ],
+      [
+        -10.7882,
+        54.9231
+      ],
+      [
+        -5.2057,
+        49.5246
+      ]
+    ],
+    "fronts": [
+      0,
+      1
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 5.598,
+    "floors": 2,
+    "family": "balcony_apartments",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null
+    },
+    "facade": {
+      "mode": "repeat",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": null,
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null
+    },
+    "facades": [],
+    "roof": {
+      "kind": null,
+      "parapet_m": null,
+      "slope_deg": null,
+      "props": null
+    },
+    "roofs": [],
+    "site": {
+      "fence": null,
+      "garden": null,
+      "runs": null
+    },
+    "primary_color": [
+      0.721,
+      0.792,
+      0.849
+    ],
+    "side_material": null,
+    "masses": null,
+    "materials": [],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 683390947,
+    "curtains": true
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [],
+  "evidence": {}
+}

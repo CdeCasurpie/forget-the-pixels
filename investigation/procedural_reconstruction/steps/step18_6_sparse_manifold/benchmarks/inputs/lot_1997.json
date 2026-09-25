@@ -1,0 +1,122 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -16.4854,
+        22.1286
+      ],
+      [
+        -19.7349,
+        18.3427
+      ],
+      [
+        -2.3974,
+        3.3362
+      ],
+      [
+        8.6396,
+        16.1553
+      ],
+      [
+        7.2022,
+        17.4679
+      ],
+      [
+        4.1085,
+        14.0929
+      ],
+      [
+        -2.579,
+        20.0303
+      ],
+      [
+        -7.4226,
+        14.2804
+      ],
+      [
+        -16.4854,
+        22.1286
+      ]
+    ],
+    "fronts": [
+      0,
+      1
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 2.871,
+    "floors": 1,
+    "family": "mixed_use",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null
+    },
+    "facade": {
+      "mode": "repeat",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": null,
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null
+    },
+    "facades": [],
+    "roof": {
+      "kind": null,
+      "parapet_m": null,
+      "slope_deg": null,
+      "props": null
+    },
+    "roofs": [],
+    "site": {
+      "fence": null,
+      "garden": null,
+      "runs": null
+    },
+    "primary_color": [
+      0.605,
+      0.669,
+      0.68
+    ],
+    "side_material": null,
+    "masses": null,
+    "materials": [],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 1613845603,
+    "curtains": true
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [],
+  "evidence": {}
+}

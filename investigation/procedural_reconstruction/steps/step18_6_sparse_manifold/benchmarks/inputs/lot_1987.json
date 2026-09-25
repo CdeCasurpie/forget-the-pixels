@@ -1,0 +1,113 @@
+{
+  "context": {
+    "parcel": [
+      [
+        63.8886,
+        37.6298
+      ],
+      [
+        50.5766,
+        21.718
+      ],
+      [
+        58.9515,
+        14.5305
+      ],
+      [
+        61.7327,
+        12.9055
+      ],
+      [
+        67.0451,
+        18.968
+      ],
+      [
+        74.9927,
+        28.0689
+      ],
+      [
+        63.8886,
+        37.6298
+      ]
+    ],
+    "fronts": [
+      5
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 11.55,
+    "floors": 4,
+    "family": "quiet_house",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null
+    },
+    "facade": {
+      "mode": "repeat",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": null,
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null
+    },
+    "facades": [],
+    "roof": {
+      "kind": null,
+      "parapet_m": null,
+      "slope_deg": null,
+      "props": null
+    },
+    "roofs": [],
+    "site": {
+      "fence": null,
+      "garden": null,
+      "runs": null
+    },
+    "primary_color": [
+      0.638,
+      0.593,
+      0.775
+    ],
+    "side_material": null,
+    "masses": null,
+    "materials": [],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 4080228,
+    "curtains": true
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [],
+  "evidence": {}
+}

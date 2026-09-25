@@ -1,0 +1,9 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,18],[0,18]], "fronts": [0]},
+  "theta": {
+    "height_m": 9.6, "floors": 3, "family": "mixed_use",
+    "facade": {"bay_count": 4, "balconies": true, "balcony_depth_m": 1.0},
+    "primary_color": [0.72,0.78,0.68]
+  },
+  "nuisance": {"seed": 18}
+}

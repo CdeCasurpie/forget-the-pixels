@@ -1,0 +1,131 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -32.9738,
+        2.8683
+      ],
+      [
+        -39.3193,
+        -4.4935
+      ],
+      [
+        -26.3104,
+        -16.2894
+      ],
+      [
+        -13.301,
+        -0.9032
+      ],
+      [
+        -24.5918,
+        8.7729
+      ],
+      [
+        -28.1229,
+        8.5229
+      ],
+      [
+        -32.1799,
+        3.8663
+      ],
+      [
+        -24.2755,
+        -3.2704
+      ],
+      [
+        -24.5106,
+        -4.6802
+      ],
+      [
+        -32.9738,
+        2.8683
+      ]
+    ],
+    "fronts": [
+      0,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 6.221,
+    "floors": 2,
+    "family": "balcony_apartments",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null
+    },
+    "facade": {
+      "mode": "repeat",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": null,
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null
+    },
+    "facades": [],
+    "roof": {
+      "kind": null,
+      "parapet_m": null,
+      "slope_deg": null,
+      "props": null
+    },
+    "roofs": [],
+    "site": {
+      "fence": null,
+      "garden": null,
+      "runs": null
+    },
+    "primary_color": [
+      0.858,
+      0.789,
+      0.716
+    ],
+    "side_material": null,
+    "masses": null,
+    "materials": [],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 201149651,
+    "curtains": true
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [],
+  "evidence": {}
+}

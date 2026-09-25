@@ -1,0 +1,10 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,15],[0,15]], "fronts": [0]},
+  "theta": {
+    "height_m": 7.2, "floors": 2, "family": "republicano",
+    "facade": {"bay_count": 4},
+    "roof": {"kind": "flat", "parapet_m": 0.7},
+    "primary_color": [0.78,0.30,0.17]
+  },
+  "nuisance": {"seed": 18}
+}

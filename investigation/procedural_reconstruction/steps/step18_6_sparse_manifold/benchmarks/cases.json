@@ -1,0 +1,368 @@
+{
+  "individual": [
+    "01_simple",
+    "02_republicano",
+    "03_galeria",
+    "04_mixed",
+    "05_setback",
+    "lot_1850",
+    "lot_1851",
+    "lot_1849",
+    "lot_2451",
+    "lot_1843"
+  ],
+  "block": [
+    "lot_1850",
+    "lot_1977",
+    "lot_1851",
+    "lot_1976",
+    "lot_1975",
+    "lot_1831",
+    "lot_1980",
+    "lot_1973",
+    "lot_1849",
+    "lot_1832",
+    "lot_1983",
+    "lot_1984",
+    "lot_1989",
+    "lot_1987",
+    "lot_2000",
+    "lot_1993",
+    "lot_1997",
+    "lot_2002",
+    "lot_1992",
+    "lot_1999",
+    "lot_1995",
+    "lot_2005",
+    "lot_2008",
+    "lot_2018",
+    "lot_2459",
+    "lot_2941",
+    "lot_2455",
+    "lot_2454",
+    "lot_2453",
+    "lot_2452",
+    "lot_2451",
+    "lot_1826",
+    "lot_2020",
+    "lot_1856",
+    "lot_1833",
+    "lot_2012",
+    "lot_1825",
+    "lot_2015",
+    "lot_2458",
+    "lot_1901",
+    "lot_2457",
+    "lot_1855",
+    "lot_2460",
+    "lot_2456",
+    "lot_2003",
+    "lot_2026",
+    "lot_2602",
+    "lot_1843",
+    "lot_1994",
+    "lot_1828"
+  ],
+  "parcels": [
+    {
+      "name": "lot_1850",
+      "area": 48.41452813499998,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1977",
+      "area": 68.65281252500003,
+      "edges": 5,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1851",
+      "area": 145.33254534500003,
+      "edges": 6,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1976",
+      "area": 110.33674693500001,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1975",
+      "area": 82.72782504000006,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1831",
+      "area": 73.83559441999998,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1980",
+      "area": 101.17883685499996,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1973",
+      "area": 83.150679495,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1849",
+      "area": 1607.0452390950002,
+      "edges": 17,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1832",
+      "area": 196.06734076,
+      "edges": 5,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1983",
+      "area": 205.77989427999998,
+      "edges": 6,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1984",
+      "area": 93.04334322999995,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1989",
+      "area": 236.99547999499995,
+      "edges": 11,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1987",
+      "area": 298.2625172900001,
+      "edges": 6,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2000",
+      "area": 151.74677237499998,
+      "edges": 5,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1993",
+      "area": 90.59612064,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1997",
+      "area": 205.42460073,
+      "edges": 8,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2002",
+      "area": 310.02575052,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1992",
+      "area": 67.327252035,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1999",
+      "area": 670.7523898650003,
+      "edges": 7,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1995",
+      "area": 191.05190346499998,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2005",
+      "area": 307.46958177500005,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2008",
+      "area": 467.680989735,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2018",
+      "area": 149.94437723000001,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2459",
+      "area": 80.51628989000002,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2941",
+      "area": 263.9355685,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2455",
+      "area": 113.24544860500009,
+      "edges": 6,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2454",
+      "area": 50.393736214999976,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2453",
+      "area": 116.76901456500009,
+      "edges": 8,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2452",
+      "area": 160.06149322500002,
+      "edges": 8,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2451",
+      "area": 282.663220895,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1826",
+      "area": 387.9068826200001,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2020",
+      "area": 204.47121274000003,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1856",
+      "area": 63.20199791000007,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1833",
+      "area": 64.52018698999998,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2012",
+      "area": 62.385997259999996,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1825",
+      "area": 91.69656509999997,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2015",
+      "area": 194.86219847499999,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2458",
+      "area": 255.63690805499994,
+      "edges": 6,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1901",
+      "area": 197.309451065,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2457",
+      "area": 83.74648470500001,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_1855",
+      "area": 65.13679871000004,
+      "edges": 5,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2460",
+      "area": 86.76623167,
+      "edges": 4,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2456",
+      "area": 96.12303694000002,
+      "edges": 5,
+      "front_source": "fallback_unverified"
+    },
+    {
+      "name": "lot_2003",
+      "area": 330.99643704500005,
+      "edges": 9,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2026",
+      "area": 274.3793916499999,
+      "edges": 7,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_2602",
+      "area": 132.85579853000002,
+      "edges": 4,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1843",
+      "area": 896.8694838299998,
+      "edges": 6,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1994",
+      "area": 114.029735285,
+      "edges": 7,
+      "front_source": "street_inferred"
+    },
+    {
+      "name": "lot_1828",
+      "area": 62.26505543999999,
+      "edges": 4,
+      "front_source": "street_inferred"
+    }
+  ]
+}
