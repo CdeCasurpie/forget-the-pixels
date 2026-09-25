@@ -10,6 +10,7 @@ import numpy as np
 import trimesh
 from PIL import Image
 from modeling.texturing.library import MaterialLibrary, default_catalog_path
+from modeling.version import MATERIALIZER_VERSION
 
 
 def _merge_component_nodes(tree):
@@ -79,7 +80,15 @@ def _corner_uvs(mesh):
     return None
 
 
-def export_glb(mesh, path, *, library=None):
+def export_glb(mesh, path, *, library=None, mode="authoring"):
+    """Export source component identities or runtime building/semantic batches.
+
+    Runtime mode only regroups faces: source topology, corner UVs and materials
+    are unchanged. Disconnected solids may share a render mesh; manifold checks
+    belong to the original authoring components, not the runtime batch.
+    """
+    if mode not in ('authoring','runtime'):
+        raise ValueError('GLB mode must be authoring or runtime')
     if library is None:
         catalog = default_catalog_path()
         library = MaterialLibrary(catalog) if catalog is not None else None
@@ -105,6 +114,22 @@ def export_glb(mesh, path, *, library=None):
             "component_id": part.get("component_id", f"part_{i}"),
             "name": part.get("name", "building"),
         }
+
+    if mode == 'runtime':
+        batch_ids = {}
+        batch_meta = []
+        mapping = []
+        for meta in comp_meta:
+            root = meta['assembly_id'].split('/')[0]
+            building = root if root.startswith('lot_') else 'building'
+            key = (building, meta['name'])
+            if key not in batch_ids:
+                batch_ids[key] = len(batch_meta)
+                batch_meta.append(dict(assembly_id=building,
+                                       component_id='runtime/'+meta['name'],name=meta['name']))
+            mapping.append(batch_ids[key])
+        comp_of_face = np.asarray(mapping,dtype=int)[comp_of_face]
+        comp_meta = batch_meta
 
     # Single pass over faces: one submesh per (component, material).
     groups = {}
@@ -200,6 +225,8 @@ def export_glb(mesh, path, *, library=None):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     def postprocess(tree):
         _merge_component_nodes(tree)
+        tree.setdefault('asset',{})['generator']=MATERIALIZER_VERSION
+        tree['asset']['extras']={'export_mode':mode,'topology':'closed authoring components; spatial assembly'}
         by_name = {m["name"]: m for m in mesh.materials}
         for m in tree.get("materials", []):
             if "normalTexture" in m:
