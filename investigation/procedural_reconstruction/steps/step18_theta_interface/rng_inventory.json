@@ -1,0 +1,560 @@
+[
+  {
+    "code": "src/modeling/facade_program.py:117",
+    "function": "resolve_family",
+    "expression": "rng.choice(pool)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Family or balcony/gallery/awning depth",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/facade_program.py:374",
+    "function": "_relief",
+    "expression": "rng.uniform(1.0, 1.3)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Family or balcony/gallery/awning depth",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/facade_program.py:380",
+    "function": "_relief",
+    "expression": "rng.uniform(0.9, 1.25)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Family or balcony/gallery/awning depth",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/facade_program.py:261",
+    "function": "_upper_openings",
+    "expression": "rng.uniform(0.75, 1.05)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Family or balcony/gallery/awning depth",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/facade_program.py:262",
+    "function": "_upper_openings",
+    "expression": "rng.random()",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Curtain presence/coverage; architectural opening unchanged",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/facade_program.py:262",
+    "function": "_upper_openings",
+    "expression": "rng.uniform(0.2, 0.55)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Curtain presence/coverage; architectural opening unchanged",
+    "source_sha256": "f28a7bef410276105d30b75c43135de5262d967b689abb22010073715db106f0"
+  },
+  {
+    "code": "src/modeling/families.py:15",
+    "function": "apply_family",
+    "expression": "np.random.default_rng(spec.seed)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:18",
+    "function": "apply_family",
+    "expression": "rng.choice(candidates)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:104",
+    "function": "apply_family",
+    "expression": "rng.integers(len(palette))",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:57",
+    "function": "apply_family",
+    "expression": "rng.choice([\"wood_panel\",\"metal_gate\"])",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:70",
+    "function": "apply_family",
+    "expression": "rng.uniform(-0.15, 0.15)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:75",
+    "function": "apply_family",
+    "expression": "rng.choice([\"vertical\",\"grid\",\"diamond\"])",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/families.py:74",
+    "function": "apply_family",
+    "expression": "rng.choice([.25,.55,.85])",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
+  },
+  {
+    "code": "src/modeling/grammar.py:963",
+    "function": "generate_mesh",
+    "expression": "np.random.default_rng(spec.seed)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:1182",
+    "function": "generate_v4_mesh",
+    "expression": "np.random.default_rng(spec.seed)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Shared architectural stream; facade services and cladding",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:785",
+    "function": "_roof_details_body",
+    "expression": "rng.uniform(0.6, 1.2)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:718",
+    "function": "_roof_details_body",
+    "expression": "rng.integers(len(candidates))",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:940",
+    "function": "_boundary_and_garden_body",
+    "expression": "rng.uniform(-0.035, 0.04)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:943",
+    "function": "_boundary_and_garden_body",
+    "expression": "rng.uniform(-0.09, 0.09)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:944",
+    "function": "_boundary_and_garden_body",
+    "expression": "rng.uniform(-0.09, 0.09)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:1280",
+    "function": "generate_v4_mesh",
+    "expression": "rng.random()",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Shared architectural stream; facade services and cladding",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/grammar.py:1281",
+    "function": "generate_v4_mesh",
+    "expression": "rng.random()",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Shared architectural stream; facade services and cladding",
+    "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
+  },
+  {
+    "code": "src/modeling/layout.py:87",
+    "function": "propose_building",
+    "expression": "np.random.default_rng(seed)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "source_sha256": "600f107fdd56aabd536f070512833e8e2cebf3dcda18ed75602502f4aa45b68d"
+  },
+  {
+    "code": "src/modeling/layout.py:89",
+    "function": "propose_building",
+    "expression": "rng.integers(len(palettes))",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "600f107fdd56aabd536f070512833e8e2cebf3dcda18ed75602502f4aa45b68d"
+  },
+  {
+    "code": "src/modeling/layout.py:109",
+    "function": "propose_building",
+    "expression": "rng.uniform(0.95, 1.05)",
+    "classification": "UNUSED",
+    "pathway": "legacy_only",
+    "reason": "Not reached by V4; preserved for old API",
+    "source_sha256": "600f107fdd56aabd536f070512833e8e2cebf3dcda18ed75602502f4aa45b68d"
+  },
+  {
+    "code": "src/modeling/massing.py:241",
+    "function": "generate_masses",
+    "expression": "np.random.default_rng(program.seed if seed is None else seed)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:128",
+    "function": "_podium_tower",
+    "expression": "rng.uniform(2.0, 4.0)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:139",
+    "function": "_stepped_back",
+    "expression": "rng.uniform(2.2, 3.6)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:150",
+    "function": "_corner_accent",
+    "expression": "rng.uniform(4.0, 7.0)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:194",
+    "function": "choose_pattern",
+    "expression": "rng.choice([name for name, _ in options], p=weights / weights.sum())",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:114",
+    "function": "_front_rear",
+    "expression": "rng.integers(1, 3)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:124",
+    "function": "_podium_tower",
+    "expression": "rng.integers(1, 3)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:258",
+    "function": "generate_masses",
+    "expression": "rng.random()",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:109",
+    "function": "_front_rear",
+    "expression": "rng.uniform(0.38, 0.55)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:207",
+    "function": "_rooftop_addition",
+    "expression": "rng.uniform(0.25, 0.5)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/massing.py:210",
+    "function": "_rooftop_addition",
+    "expression": "rng.uniform(0.80, 0.95)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Mass pattern, split, setback or addition; never nuisance",
+    "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
+  },
+  {
+    "code": "src/modeling/materials.py:71",
+    "function": "appearance_for_style",
+    "expression": "np.random.default_rng(seed)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Foliage, rebar or small color variation; not massing",
+    "source_sha256": "621569f430e84bc8546380314d5f2027251ed98c0b494323cbec0bf5ae40b60e"
+  },
+  {
+    "code": "src/modeling/materials.py:72",
+    "function": "appearance_for_style",
+    "expression": "rng.uniform(-.018, .018)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "621569f430e84bc8546380314d5f2027251ed98c0b494323cbec0bf5ae40b60e"
+  },
+  {
+    "code": "src/modeling/mesh_builder.py:791",
+    "function": "foliage",
+    "expression": "rng.uniform(0.90, 1.10)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "4b294f85ccbc14c9368156ddca35f9ee68c81ee2b7ddb012a52b6fc5ffb536c5"
+  },
+  {
+    "code": "src/modeling/prefabs_roof.py:220",
+    "function": "rebar_cluster",
+    "expression": "rng.uniform(0.55, 1.15)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "98eee95d981c0a6061dc61eb4a4de0ddc7de70825f4637b851e6f6441767c3d3"
+  },
+  {
+    "code": "src/modeling/roofscape.py:179",
+    "function": "scatter_props",
+    "expression": "rng.permutation(len(grid))",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:214",
+    "function": "plan_roof",
+    "expression": "np.random.default_rng(resolve_seed(seed, lot_id, mass.id, \"roof\", \"plan\"))",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:214",
+    "function": "plan_roof",
+    "expression": "resolve_seed(seed, lot_id, mass.id, \"roof\", \"plan\")",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:115",
+    "function": "_tile_surface",
+    "expression": "rng.uniform(2.4, 3.6)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:186",
+    "function": "scatter_props",
+    "expression": "rng.choice(kinds, p=probabilities)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:189",
+    "function": "scatter_props",
+    "expression": "rng.uniform(0, 360)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:190",
+    "function": "scatter_props",
+    "expression": "rng.uniform(0.88, 1.12)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:248",
+    "function": "plan_roof",
+    "expression": "rng.uniform(0.35, 0.75)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:220",
+    "function": "plan_roof",
+    "expression": "rng.random()",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:260",
+    "function": "plan_roof",
+    "expression": "np.random.default_rng(\n                    resolve_seed(seed, lot_id, mass.id, \"roof\", \"props\")\n                )",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:395",
+    "function": "_build_roof_body",
+    "expression": "np.random.default_rng(prop.seed)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Object internal variation, object identity already planned",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:173",
+    "function": "scatter_props",
+    "expression": "rng.uniform(0, step)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:173",
+    "function": "scatter_props",
+    "expression": "rng.uniform(0, step)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:261",
+    "function": "plan_roof",
+    "expression": "resolve_seed(seed, lot_id, mass.id, \"roof\", \"props\")",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/roofscape.py:205",
+    "function": "scatter_props",
+    "expression": "rng.integers(0, 2**31 - 1)",
+    "classification": "THETA",
+    "pathway": "V4",
+    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
+  },
+  {
+    "code": "src/modeling/site.py:155",
+    "function": "plant_garden",
+    "expression": "rng.uniform(0.30, 0.42)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "ba62fdb1fcec8f90706be15f57b30d514ea47549ba7e4690bebf665f0bbdecce"
+  },
+  {
+    "code": "src/modeling/site.py:153",
+    "function": "plant_garden",
+    "expression": "rng.uniform(0, 0.3)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "ba62fdb1fcec8f90706be15f57b30d514ea47549ba7e4690bebf665f0bbdecce"
+  },
+  {
+    "code": "src/modeling/site.py:154",
+    "function": "plant_garden",
+    "expression": "rng.uniform(0, 0.3)",
+    "classification": "XI",
+    "pathway": "V4",
+    "reason": "Foliage, rebar or small color variation; not massing",
+    "source_sha256": "ba62fdb1fcec8f90706be15f57b30d514ea47549ba7e4690bebf665f0bbdecce"
+  },
+  {
+    "code": "src/modeling/theta.py:400",
+    "function": "_rng",
+    "expression": "np.random.default_rng(int.from_bytes(digest[:8],\"little\"))",
+    "classification": "XI",
+    "pathway": "candidate",
+    "reason": "Seed/stream creation. Only curtain/foliage/rebar streams; roof object identity explicit",
+    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+  },
+  {
+    "code": "src/modeling/theta.py:279",
+    "function": "_composition",
+    "expression": "np.random.default_rng(0)",
+    "classification": "CONFIG",
+    "pathway": "candidate",
+    "reason": "Seed/stream creation. Fixed RNG for family relief; sampled depths overwritten by theta",
+    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+  },
+  {
+    "code": "src/modeling/theta.py:432",
+    "function": "generate_resolved",
+    "expression": "_rng(nuisance.seed,f\"roof/{roof.mass_id}/{prop.kind}/{prop.position}\").integers(0,2**31)",
+    "classification": "XI",
+    "pathway": "candidate",
+    "reason": "Only curtain/foliage/rebar streams; roof object identity explicit",
+    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+  },
+  {
+    "code": "src/modeling/theta.py:422",
+    "function": "generate_resolved",
+    "expression": "_rng(nuisance.seed,f\"{f.edge_id}/curtain/{i}\").uniform(.15,.55)",
+    "classification": "XI",
+    "pathway": "candidate",
+    "reason": "Only curtain/foliage/rebar streams; roof object identity explicit",
+    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+  }
+]
