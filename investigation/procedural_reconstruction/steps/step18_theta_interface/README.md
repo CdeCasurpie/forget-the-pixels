@@ -43,14 +43,32 @@ flowchart TD
     M --> GLB[GLB Exporter]
 ```
 
-## Resumen del Schema (ThetaCandidateV0)
+## Resumen del Schema (theta-candidate-v0, schema 0.1)
 
 El schema de θ (versión `0.1`) está estructurado para soportar entradas híbridas y resolverlas jerárquicamente:
 
 - `massing`: Puede ser explícito (lista de masas con footprints poligonales y alturas) o implícito (altura global, pisos).
-- `facade_pattern`: Patrón principal de la fachada (ventanas, galerías, muros ciegos). Soporta *overrides* específicos por arista o masa geométrica, e incluso posiciones explícitas para vanos irregulares.
-- `roofscape`: Presencia y altura de parapetos, y un listado opcional de *props* (tanques, cuartos azotea).
-- `boundaries`: Definición del cerco perimétrico (estilo, altura, portón de garaje, puerta peatonal).
-- `materials`: Asignación de clases de materiales por región semántica (plaster, accent, roof).
+- `facade`: Patrón principal de la fachada (ventanas, galerías, muros ciegos). Soporta *overrides* específicos por arista o masa geométrica, e incluso posiciones explícitas para vanos irregulares.
+- `roof`: Tipo, parapeto y listado opcional de objetos de azotea.
+- `site`: Cerco, jardín y tramos explícitos de perímetro.
+- `materials`: Asignación de clases de materiales por región semántica.
+
+La implementación vive en `src/domain/theta.py`; usa `dataclasses` tipadas,
+decodificación estricta, `canonical()` y JSON. `None` significa desconocido o
+valor que se completará; una tupla vacía significa ausencia explícita.
+
+## Uso
+
+Desde `investigation/procedural_reconstruction`:
+
+```sh
+python steps/step18_theta_interface/run.py \
+  --theta steps/step18_theta_interface/examples/01_simple.json \
+  --output steps/step18_theta_interface/outputs/manual_01
+```
+
+El comando produce `input_theta.json`, `resolved_theta.json`, `manifest.json`,
+un GLB y dos vistas diagnósticas. `gallery.py` genera los cinco ejemplos y la
+rejilla de intervenciones.
 
 Este schema es altamente compactable, serializable en JSON y diseñado explícitamente para soportar "unknown" en cualquier campo.

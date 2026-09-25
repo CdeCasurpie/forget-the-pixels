@@ -1,7 +1,7 @@
 # REPORTE FINAL: Step 18 - Interfaz Theta (θ)
 
 ## 1. Baseline Exacta
-El punto de partida exacto fue el commit de finalización del Step 16/17 (pre-branching), manteniendo el motor procedimental V4 (`grammar.py`, `mesh_builder.py`, `layout.py`) bajo total determinismo para los modelos "golden". Se usó la etiqueta `grammar-v1.0` como referencia congelada inmutable para evitar regresiones geométricas, de mapeo UV y de materiales.
+La rama se creó desde `main` en `357a9bad89fd4d6243dc80ce18f00c4986095c49`, que es también el commit al que apunta `grammar-v1.0`. Antes del Step 18 había 161 tests recolectados y un error de colección por el import obsoleto `split_strip`; se corrigió solo el alias del test hacia `split_vertical_strip`. La suite resultante fue 166 passed y 125 subtests passed en 140.44 s.
 
 ## 2. Branch
 Todo el trabajo se realizó y validó en la rama aislada `step18-theta-interface`, derivando desde `main`.
@@ -25,24 +25,29 @@ El entrelazamiento de decisiones: agregar una ventana extra consumía ciclos de 
 Un contexto inmutable que contiene el `Polygon` de huella disponible, identificadores de lados con frente explícito a calle (`explicit_fronts`), e información catastral sin ninguna variabilidad estocástica.
 
 ## 8. Schema Completo de θ Candidate
-(Versión `theta-candidate-v0`)
+(Versión `theta-candidate-v0`, schema `0.1`, dataclasses reales en `domain.theta`)
 ```python
-class ThetaCandidateV0(BaseModel):
-    massing: MassingSpec | None = None
-    facade_pattern: FacadePatternSpec | None = None
-    roofscape: RoofscapeSpec | None = None
-    boundaries: BoundariesSpec | None = None
-    materials: MaterialSpec | None = None
+class ThetaCandidate:
+    height_m: float | None
+    floors: int | None
+    family: str | None
+    massing: MassingControls
+    facade: FacadeControls
+    facades: tuple[FacadeOverride, ...]
+    roof: RoofControls
+    site: SiteControls
+    primary_color: tuple[float, float, float] | None
+    masses: tuple[ArchitecturalMass, ...] | None
+    materials: tuple[MaterialControl, ...]
 ```
-Completamente modular, admite valores nulos en todos sus sub-niveles y soporta overrides de aristas.
+Los campos condicionales se validan y los overrides de fachadas se identifican
+por `mass_role + edge` canónico, no por un ID aleatorio.
 
 ## 9. Schema de ξ (Nuisance Parameters)
 ```python
-class NuisanceParameters(BaseModel):
-    seed: int
-    foliage_jitter: float = 1.0
-    color_wear_jitter: float = 1.0
-    prop_rotation_seed: int
+class NuisanceParameters:
+    seed: int = 0
+    curtains: bool = True
 ```
 Totalmente aislado del vector θ, para inyectar realismo sin alterar la topología ni distribución programática de la casa.
 
@@ -81,7 +86,16 @@ Se introdujo una separación conceptual de metadatos asociados a las observacion
 - `src/pipeline/__init__.py`
 
 ## 17. Commits
-El trabajo está empaquetado en cambios locales no rastreados. Al realizar un *commit* consolidado al final de esta sesión, contendrá toda la arquitectura e infraestructura θ validada.
+La rama contiene estos commits incrementales:
+
+- `782f22f` baseline y reparación aislada del test de altura;
+- `8979e90` auditoría paramétrica y RNG;
+- `5a49bd4` contratos tipados;
+- `bd99504` adaptador, pruebas, ejemplos, galería y reporte.
+
+El commit final también incluyó archivos binarios que ya estaban presentes como
+untracked en el worktree antes del cierre (panoramas y GLB de batch). No son
+parte conceptual del contrato Theta y deben tratarse como artefactos previos.
 
 ## 18. Ejemplo JSON Completo
 ```json
@@ -102,7 +116,7 @@ El trabajo está empaquetado en cambios locales no rastreados. Al realizar un *c
 
 ## 19. Cómo Correrlo
 Para ejecutar una instancia única y visualizar:
-`python steps/step18_theta_interface/run.py --example steps/step18_theta_interface/examples/01_simple.json`
+`python steps/step18_theta_interface/run.py --theta steps/step18_theta_interface/examples/01_simple.json --output steps/step18_theta_interface/outputs/manual_01`
 
 ## 20. Outputs Generados
 Modelos `GLB` y renders generados bajo variaciones exactas de semillas y parámetros en las ejecuciones locales.
@@ -117,7 +131,7 @@ Implementadas en `tests/test_theta.py`. Comprobaciones afirmativas del pipeline 
 Una inyección iterativa bajo la misma `ThetaCandidateV0` con distintas semillas altera las normales, props del techo y ruido de pared, pero el conteo de *footprints* o volúmenes masivos de la casa siempre devuelve valores de hash (del vector principal) o verificaciones geométricas equivalentes.
 
 ## 24. Resultado de Suite
-`pytest tests/test_theta.py` -> 25 de 25 pruebas completadas exitosamente en 44.48s.
+`pytest tests/test_theta.py` -> 25 de 25 pruebas completadas exitosamente en 39.78s. La suite completa final fue **191 passed, 125 subtests passed en 179.92s**.
 
 ## 25. Estado del Golden Set V1
 `check_golden.py` evaluó los 3 hashes originales de `random00`, `random01`, `random02`, asegurando su persistencia exacta. (Output: `exact_geometry_uv_material_component_match: true`).
