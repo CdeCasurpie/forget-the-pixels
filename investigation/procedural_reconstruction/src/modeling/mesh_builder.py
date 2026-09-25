@@ -114,12 +114,12 @@ def _refine(axis, max_step):
     return out
 
 
-def _rectilinear_cells(poly, cuts_u=(), cuts_z=(), max_step=0.5):
+def _rectilinear_cells(poly, cuts_u=(), cuts_z=(), max_step=float('inf')):
     """Grid tiling that is exact: grid lines contain every hole edge plus
     every caller-supplied cut (material edges, depth steps), so kept cells
     (by center) union to the domain with no slivers and no gaps.
-    Intervals above max_step split uniformly, so neighbor cells always share
-    identical edges and every quad stays aspect-bounded."""
+    Only architectural cuts are used by default. Distance refinement is opt-in
+    for diagnostic callers, never a materialization or LOD policy."""
     xs = {poly.bounds[0], poly.bounds[2]}
     zs = {poly.bounds[1], poly.bounds[3]}
     holes = []
@@ -176,30 +176,33 @@ def _clean_ring(coords):
 
 
 def triangulate_rings(exterior, holes=()):
-    """Constrained triangulation of a polygon with holes (earcut).
+    """Constrained Delaunay triangulation of a polygon with holes (GEOS).
 
     Returns (vertices, indices): vertices concatenates the cleaned exterior
     and hole rings, indices are triples into it. Every triangle lies inside
     the domain, none crosses a hole, none leaves the exterior. Callers orient
     the output for their cap normal.
     """
-    import mapbox_earcut as earcut
-
     rings = []
     outer = _clean_ring(exterior)
     if len(outer) < 3:
         return np.zeros((0, 2)), np.zeros((0, 3), int)
     rings.append(np.asarray(outer, float))
-    ends = [len(rings[0])]
     for hole in holes or ():
         cleaned = _clean_ring(hole)
         if len(cleaned) < 3:
             continue
         rings.append(np.asarray(cleaned, float))
-        ends.append(ends[-1] + len(rings[-1]))
     verts = np.ascontiguousarray(np.vstack(rings))
-    idx = np.asarray(earcut.triangulate_float64(
-        verts, np.array(ends, dtype=np.uint32))).reshape(-1, 3)
+    # Earcut can bridge aligned holes with edges that skip another ring vertex.
+    # Coverage remains correct, but the swept reveals then have T-junctions.
+    # Constrained Delaunay retains the ring constraints without adding a grid.
+    domain = Polygon(outer, [ring.tolist() for ring in rings[1:]])
+    lookup = {tuple(p): i for i, p in enumerate(verts)}
+    idx = np.asarray([
+        [lookup[tuple(p)] for p in tri.exterior.coords[:3]]
+        for tri in constrained_delaunay_triangles(domain).geoms
+    ], dtype=int).reshape(-1, 3)
     return verts, idx
 
 
@@ -914,8 +917,11 @@ class MeshBuilder:
                          for ring in poly.interiors])
                 self._panel_poly(a, t, n, poly, w1, w2, mat_fn, cuts_u,
                                  cuts_z, depth_fn)
-        finally:
-            return self.end_component()
+        except BaseException:
+            # Discard the unfinished component and propagate the real failure.
+            self._open = None
+            raise
+        return self.end_component()
 
     def _panel_poly(self, a, t, n, poly, w1, w2, mat_fn, cuts_u=(),
                     cuts_z=(), depth_fn=None):
@@ -928,7 +934,7 @@ class MeshBuilder:
         def scale_of(slot):
             return self.uv_scale_for(slot)
 
-        if _is_rectilinear(poly):
+        if _is_rectilinear(poly) and (cuts_u or cuts_z or depth_fn is not None):
             self._panel_rectilinear(a, t, n, poly, w1, w2, mat_fn, W,
                                     scale_of, cuts_u, cuts_z, depth_fn)
             return
@@ -957,9 +963,9 @@ class MeshBuilder:
         verts2d, cap_tris = triangulate_rings(rings, holes)
         for w, want_ccw, kind in ((w2, True, "front"), (w1, False, "back")):
             flat = flat_w2 if w == w2 else flat_w1
-            for a, b, c in _oriented(cap_tris, verts2d, want_ccw):
-                ids = [flat[a], flat[b], flat[c]]
-                (ua, va), (ub, vb), (uc, vc) = verts2d[a], verts2d[b], verts2d[c]
+            for ia, ib, ic in _oriented(cap_tris, verts2d, want_ccw):
+                ids = [flat[ia], flat[ib], flat[ic]]
+                (ua, va), (ub, vb), (uc, vc) = verts2d[ia], verts2d[ib], verts2d[ic]
                 slot = mat_fn(kind, (ua + ub + uc) / 3.0, (va + vb + vc) / 3.0, w)
                 mi = self.mat_index(slot)
                 s = scale_of(slot)
@@ -969,7 +975,7 @@ class MeshBuilder:
         # Swept sides: outer boundary and hole reveals. Corners carry
         # (edge distance, w) metric UVs; materials come from the callback
         # evaluated at the edge midpoint.
-        for coords, _ in [rings] + holes:
+        for coords in [rings] + holes:
             m = len(coords)
             edge_len = [0.0]
             for (u0, z0), (u1, z1) in zip(coords, coords[1:] + coords[:1]):
