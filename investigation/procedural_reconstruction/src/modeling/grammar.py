@@ -44,6 +44,7 @@ def triangulate_polygon(polygon, z_height):
 
 
 def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
+    spacing=getattr(mb,'budget',DEFAULT_BUDGET).balustrade_spacing_m
     def p(u, v, w):
         xy = np.asarray(a) + t * u + n * w
         return (*xy, v)
@@ -54,12 +55,12 @@ def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
         )
         for u in [left, right]:
             mb.beam(p(u, v, 0.03), p(u, v, depth), 0.026, semantic="balcony_return")
-    for u in np.linspace(left, right, max(2, int((right - left) / 0.14) + 1)):
+    for u in np.linspace(left, right, max(2, int((right - left) / spacing) + 1)):
         mb.beam(
             p(u, z + 0.18, depth), p(u, z + 1.02, depth), 0.013, semantic="balcony_bar"
         )
     for u in [left, right]:
-        for w in np.arange(0.10, depth, 0.14):
+        for w in np.arange(0.10, depth, spacing):
             mb.beam(
                 p(u, z + 0.18, w), p(u, z + 1.02, w), 0.013, semantic="balcony_return"
             )

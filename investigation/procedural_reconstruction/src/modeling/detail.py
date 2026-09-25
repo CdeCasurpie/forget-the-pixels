@@ -31,11 +31,11 @@ class DetailBudget:
 
     @property
     def balustrade_spacing_m(self) -> float:
-        return self._pick(0.30, 0.13, 0.10)
+        return self._pick(0.65, 0.22, 0.10)
 
     @property
     def fence_bar_spacing_m(self) -> float:
-        return self._pick(0.34, 0.15, 0.12)
+        return self._pick(0.55, 0.22, 0.12)
 
     @property
     def roof_prop_density(self) -> float:
@@ -47,11 +47,25 @@ class DetailBudget:
 
     @property
     def grille_spacing_m(self) -> float:
-        return self._pick(0.30, 0.14, 0.11)
+        return self._pick(0.50, 0.22, 0.11)
 
     @property
     def curtain_fold_m(self) -> float:
-        return self._pick(0.18, 0.055, 0.045)
+        return self._pick(0.30, 0.25, 0.045)
+
+    @property
+    def shutter_pitch_m(self) -> float:
+        return self._pick(0.30, 0.16, 0.085)
+
+    def emits(self, semantic: str) -> bool:
+        """Microgeometry only; never reject a shell, opening or major prop."""
+        return self.level != BLOCK or semantic not in {
+            'curtain_fold', 'shutter_slat', 'sign_letter', 'door_flute',
+            'gate_flute', 'garage_slat', 'gate_seam', 'roller_slat',
+            'louver_slat', 'door_raised_panel', 'condenser_louver',
+            'hvac_louver', 'corrugation', 'mortar', 'cladding_joint',
+            'downpipe_clamp', 'grille_diamond', 'balcony_ornament', 'tank_rib',
+        }
 
     @property
     def cladding_joint_m(self) -> float:

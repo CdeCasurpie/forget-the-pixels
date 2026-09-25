@@ -528,6 +528,8 @@ class MeshBuilder:
         Positions are shared by index inside one component: a plain box
         closes with 8 positions and 12 triangles, not 36 positions.
         """
+        if not self.budget.emits(semantic):
+            return
         mat_idx = self.mat_index(material)
         if uv_scale is None:
             uv_scale = self.materials[mat_idx].get("real_scale_m", 1.0)
@@ -655,6 +657,8 @@ class MeshBuilder:
         """
         if min(u2 - u1, z2 - z1, w2 - w1) <= 1e-7:
             return
+        if not self.budget.emits(semantic):
+            return
         footprint = Polygon([np.asarray(a)+np.asarray(t)*u+np.asarray(n)*w
                              for u,w in ((u1,w1),(u2,w1),(u2,w2),(u1,w2))])
         if chamfer > 0 and z2 - z1 > 3 * chamfer and \
@@ -752,6 +756,8 @@ class MeshBuilder:
         """Closed indexed cylinder between two points; ring vertices are shared
         between the side faces and both end caps. One beam is one component:
         connected, closed and 2-manifold."""
+        if not self.budget.emits(semantic):
+            return
         mat_idx = self.mat_index(material)
         a, b = np.array(a, float), np.array(b, float)
         direction = b - a
@@ -903,12 +909,30 @@ class MeshBuilder:
                              ((u0,w1),(u1,w1),(u1,w2),(u0,w2))])
         if not limit.buffer(1e-9).covers(footprint) and all(_is_rectilinear(p) for p in doms) and not (cuts_u or cuts_z or depth_fn):
             # At oblique cadastral corners the old midpoint-line clip let the
-            # back of the wall escape the parcel. Sweep only actual opening
-            # height events, then clip each connected solid in XY. No distance
-            # grid; each connected prism remains a manifold component.
+            # back of the wall escape the parcel. Isolate only the affected
+            # corner strips. The unaffected middle remains one sparse shell;
+            # opening heights never propagate across the full clipped facade.
             identity=component_id or self._auto_id(semantic)
             piece=0
-            for domain in doms:
+            cuts={u0,u1}
+            for outside in polygons(footprint.difference(limit)):
+                projected=[float(np.dot(np.asarray(p)-a,t)) for p in outside.exterior.coords]
+                cuts.update((max(u0,min(projected)),min(u1,max(projected))))
+            slices=[]
+            ordered=sorted(cuts)
+            for left,right in zip(ordered,ordered[1:]):
+                if right-left<1e-8: continue
+                shape=Polygon([a+t*u+n*w for u,w in ((left,w1),(right,w1),(right,w2),(left,w2))])
+                safe=limit.buffer(1e-9).covers(shape)
+                for domain in doms:
+                    for local in polygons(domain.intersection(Polygon([(left,-1e6),(right,-1e6),(right,1e6),(left,1e6)]))):
+                        if safe:
+                            self.panel(a,t,n,[local],w1,w2,mat_fn,semantic,
+                                       component_id=f'{identity}/core{piece}',assembly_id=assembly_id,clip=clip)
+                            piece+=1
+                        else:
+                            slices.append(local)
+            for domain in slices:
                 heights=sorted({float(z) for ring in [domain.exterior,*domain.interiors] for _,z in ring.coords})
                 for low,high in zip(heights,heights[1:]):
                     line=LineString([(u0-1,(low+high)/2),(u1+1,(low+high)/2)])

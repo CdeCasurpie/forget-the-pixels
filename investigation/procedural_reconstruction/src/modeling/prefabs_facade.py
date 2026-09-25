@@ -285,7 +285,8 @@ def shutter(mb, a, t, n, feature):
              feature.v_m + feature.height_m, 0.02, 0.02 + feature.depth_m,
              "shutter_leaf", "wood")
         for level in np.arange(feature.v_m + 0.06,
-                               feature.v_m + feature.height_m - 0.04, 0.085):
+                               feature.v_m + feature.height_m - 0.04,
+                               getattr(mb,'budget',DEFAULT_BUDGET).shutter_pitch_m):
             _add(mb, a, t, n, feature, u + 0.02, u + leaf - 0.02, level,
                  level + 0.045, 0.02 + feature.depth_m,
                  0.03 + feature.depth_m, "shutter_slat", "wood")
