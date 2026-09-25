@@ -942,7 +942,11 @@ class MeshBuilder:
                         if span.geom_type!='LineString' or span.length<1e-9: continue
                         left,_,right,_=span.bounds
                         shape=Polygon([a+t*u+n*w for u,w in ((left,w1),(right,w1),(right,w2),(left,w2))])
-                        for polygon in polygons(shape.intersection(limit)):
+                        # Precision normalization may split a cadastral
+                        # sliver into touching islands. Give each island its
+                        # own closed component before calling solid().
+                        clipped=shapely.set_precision(shape.intersection(limit),VERTEX_QUANTUM_M)
+                        for polygon in polygons(clipped):
                             with self.component(semantic,f'{identity}/clip{piece}',assembly_id):
                                 self.solid(polygon,low,high,mat_fn('front',(left+right)/2,(low+high)/2,w2),semantic,
                                            facade_origin=a,facade_tangent=t,facade_normal=n,clip=clip)
