@@ -160,7 +160,8 @@ def analyze_topology(mesh, open_semantics=()):
         stats["assembly_id"] = part.get("assembly_id", "")
         closed = (stats["connected"] == 1 and not stats["boundary_edges"]
                   and not stats["non_manifold_edges"]
-                  and not stats["incoherent_edges"])
+                  and not stats["incoherent_edges"]
+                  and not stats["degenerate_faces"] and not stats["duplicate_faces"])
         if closed:
             stats["expectation"] = "closed_solid"
         elif (stats["semantic"] in open_semantics and stats["connected"] == 1

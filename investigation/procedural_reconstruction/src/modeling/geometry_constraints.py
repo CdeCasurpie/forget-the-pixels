@@ -9,6 +9,9 @@ from shapely.ops import linemerge, unary_union
 # leaks out as vertices microns outside the lot, which long thin triangles then
 # smear into metres of apparent violation.
 CADASTRAL_GRID_M = 1e-4
+# Thin finish coatings protrude 2 mm, with their backs buried in the support.
+# This is architectural surface separation, not a tessellation tolerance.
+SURFACE_EPSILON_M = 0.002
 
 
 def snap(geometry, grid: float = CADASTRAL_GRID_M):

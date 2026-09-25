@@ -49,3 +49,24 @@ def test_panel_propagates_internal_exception(monkeypatch):
         mb.panel([0,0],[1,0],[0,-1],[box(0,0,2,3)],-.2,0,lambda *args:'plaster','wall')
     assert mb._open is None
     assert not mb.parts
+
+
+def test_oblique_lot_clips_full_wall_thickness():
+    from modeling.validation import validate_mesh
+    lot=Polygon([(0,0),(10,0),(8,5),(2,5)])
+    mb=MeshBuilder(lot)
+    # Back plane intersects oblique parcel ends: a midpoint-only clip fails.
+    mb.panel([0,0],[1,0],[0,-1],[box(0,0,10,3)],-.2,0,lambda *args:'brick','wall')
+    mesh=mb.finish()
+    validate_mesh(mesh,lot)
+    assert not analyze_topology(mesh)['violations']
+
+
+def test_cadastral_touching_strip_splits_closed_components():
+    polygon=Polygon([(32.83442911439568,46.11105837686406),
+        (28.55413949598008,40.67468763776125),(28.5769,40.6551),
+        (32.858,46.0925),(32.87615393227103,46.07514418588271),
+        (32.87764240467026,46.07703468594662)])
+    mb=MeshBuilder(box(20,30,40,60))
+    mb.solid(polygon,0,.28,'stone','plinth')
+    assert not analyze_topology(mb.finish())['violations']

@@ -16,6 +16,7 @@ from modeling.detail import DEFAULT_BUDGET, DetailBudget
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import compose_wall, resolve_family
 from modeling.geometry_constraints import (
+    SURFACE_EPSILON_M,
     front_lines,
     outward_normal,
     parcel_polygon,
@@ -426,13 +427,10 @@ def _brick_frame_polys(length, total_height, levels):
 
 
 def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
-    """One stepped shell per wall.
+    """Sparse closed wall bands with real holes and independent local relief.
 
-    Region boundaries (openings, material zones, recess steps, frame strips)
-    become grid cuts before triangulation, so no triangle ever crosses a
-    material or depth discontinuity: the finish predicate is exact, never a
-    centroid guess across a boundary. Concrete/brick side walls are a single
-    manifold shell with a 15 mm step instead of two coincident solids.
+    Only a genuine 120 mm ground-floor recess divides the structural shell.
+    Paint and the 15 mm concrete frame never subdivide its back or base caps.
     """
     wall_rect = box(0, 0, length, total_height)
     hole_rects = [box(op.u_m, op.v_m, op.u_m + op.width_m, op.v_m + op.height_m)
@@ -442,41 +440,44 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
         if not shape.is_empty:
             shape = shape.difference(hole)
 
-    cuts_u, cuts_z = set(), set()
     levels = f.floor_levels_m
     first = levels[1] if len(levels) > 1 else total_height
+    brick_side = not f.is_front and f.wall_material == 'brick'
+    bands = [(0., total_height, -.015 if brick_side else 0.)]
     if f.is_front and len(levels) >= 4:
-        cuts_z.add(first)
-    if not f.is_front and f.wall_material == "brick":
-        columns, slabs = _frame_intervals(length, levels)
-        for c0, c1 in columns:
-            cuts_u.update((c0, c1))
-        for s0, s1 in slabs:
-            cuts_z.update((s0, s1))
-    for region in regions:
-        cuts_u.update((region.u_m, region.u_m + region.width_m))
-        cuts_z.update((region.v_m, region.v_m + region.height_m))
+        bands = [(0., first, -.12), (first, total_height, 0.)]
 
-    def mat_fn(kind, u, v, w):
-        mat, _ = _cell_finish(f, u, v, length, total_height, regions)
-        return mat
+    def emit(domain, back, front, material, semantic, label):
+        for index, poly in enumerate(polygons(domain)):
+            mb.panel(a,t,n,[poly],back,front,lambda *args:material,semantic,
+                     component_id=f'{f.edge_id}/{label}_{index}',assembly_id=f.edge_id,
+                     clip='envelope' if semantic=='material_coating' and f.is_front else 'parcel')
 
-    def depth_fn(u, v):
-        _, depth = _cell_finish(f, u, v, length, total_height, regions)
-        return depth
+    # Last material region wins, as in the old finish predicate. Subtract only
+    # overlapping local coatings, never propagate their edges through the wall.
+    coatings=[]
+    if f.ground_floor_material:
+        coatings.append((box(0,0,length,first),f.ground_floor_material))
+    coatings.extend((box(r.u_m,r.v_m,r.u_m+r.width_m,r.v_m+r.height_m),r.material_slot) for r in regions)
+    for bi,(bottom,top,depth) in enumerate(bands):
+        band=shape.intersection(box(0,bottom,length,top))
+        emit(band,-.20,depth,f.wall_material,'wall',f'wall_{bi}')
+        for ci,(region,material) in enumerate(coatings):
+            patch=band.intersection(region)
+            for later,_ in coatings[ci+1:]: patch=patch.difference(later)
+            emit(patch,depth-SURFACE_EPSILON_M,depth+SURFACE_EPSILON_M,
+                 material,'material_coating',f'coating_{bi}_{ci}')
 
-    polys = []
-    if not shape.is_empty:
-        polys = ([shape] if shape.geom_type == "Polygon"
-                 else [g for g in shape.geoms if g.geom_type == "Polygon"])
-    for k, poly in enumerate(polys):
-        if poly.area <= 1e-10:
-            continue
-        mb.panel(a, t, n, [poly], -0.20, 0.0, mat_fn, "wall",
-                 component_id=f"{f.edge_id}/wall_{k}",
-                 assembly_id=f.edge_id,
-                 cuts_u=tuple(sorted(cuts_u)), cuts_z=tuple(sorted(cuts_z)),
-                 depth_fn=depth_fn)
+    if brick_side:
+        columns,slabs=_frame_intervals(length,levels)
+        # Slabs own intersections, so column fronts do not coincide with them.
+        horizontal=unary_union([box(0,z0,length,z1) for z0,z1 in slabs])
+        for index,(u0,u1) in enumerate(columns):
+            emit(shape.intersection(box(u0,0,u1,total_height)).difference(horizontal),
+                 -.015-SURFACE_EPSILON_M,0.,'concrete','structural_column',f'column_{index}')
+        for index,(z0,z1) in enumerate(slabs):
+            emit(shape.intersection(box(0,z0,length,z1)),-.015-SURFACE_EPSILON_M,
+                 0.,'concrete','structural_beam',f'beam_{index}')
 
 
 def facade(mb, f, total_height):

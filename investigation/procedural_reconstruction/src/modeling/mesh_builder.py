@@ -172,6 +172,19 @@ def _clean_ring(coords):
     for p in pts:
         if not out or out[-1] != p:
             out.append(p)
+    # Clipping at cadastral corners produces nearly collinear vertices. Keeping
+    # them on the swept ring while rejecting their microscopic cap triangles
+    # leaves an open shell. Remove only redundant boundary points (<1 nm).
+    changed = True
+    while changed and len(out) > 3:
+        changed = False
+        for i, point in enumerate(out):
+            before, after = np.asarray(out[i-1]), np.asarray(out[(i+1)%len(out)])
+            edge = after-before
+            length = np.linalg.norm(edge)
+            delta = np.asarray(point)-before
+            if length and abs(edge[0]*delta[1]-edge[1]*delta[0])/length < 1e-9 and 0 <= np.dot(delta,edge) <= length*length:
+                out.pop(i); changed=True; break
     return out
 
 
@@ -520,13 +533,22 @@ class MeshBuilder:
             uv_scale = self.materials[mat_idx].get("real_scale_m", 1.0)
         if not np.isfinite(uv_scale) or uv_scale <= 0:
             raise ValueError("UV scale must be finite and positive")
+        clipped = shapely.set_precision(shape.intersection(self.limit_for(semantic, clip)), VERTEX_QUANTUM_M)
+        pieces = list(polygons(clipped))
+        if self._open is None and len(pieces)>1:
+            # A thin strip clipped at a concave lot can split into separate
+            # islands; these are separate closed components, not one shell.
+            for piece in pieces:
+                self.solid(piece,bottom,top,material,semantic,
+                           facade_origin=facade_origin,facade_tangent=facade_tangent,
+                           facade_normal=facade_normal,uv_scale=uv_scale,clip=clip)
+            return
         auto = self._ensure_component(semantic)
         try:
             def height(value, xy):
                 return value(*xy) if callable(value) else value
 
-            clipped = shape.intersection(self.limit_for(semantic, clip))
-            for poly in polygons(clipped):
+            for poly in pieces:
                 coords = np.array(poly.exterior.coords)[:, :2]
                 if any(height(top, p) <= height(bottom, p) for p in coords):
                     raise ValueError("Solid must have positive thickness everywhere")
@@ -633,8 +655,11 @@ class MeshBuilder:
         """
         if min(u2 - u1, z2 - z1, w2 - w1) <= 1e-7:
             return
+        footprint = Polygon([np.asarray(a)+np.asarray(t)*u+np.asarray(n)*w
+                             for u,w in ((u1,w1),(u2,w1),(u2,w2),(u1,w2))])
         if chamfer > 0 and z2 - z1 > 3 * chamfer and \
-                min(u2 - u1, w2 - w1) > 3 * chamfer:
+                min(u2 - u1, w2 - w1) > 3 * chamfer and \
+                self.limit_for(semantic,clip).covers(footprint):
             self._chamfered_box(a, t, n, u1, u2, z1, z2, w1, w2,
                                 material, semantic, chamfer, clip)
             return
@@ -874,6 +899,31 @@ class MeshBuilder:
         u1 = max(p.bounds[2] for p in doms)
         wmid = 0.5 * (w1 + w2)
         limit = self.limit_for(semantic, clip)
+        footprint = Polygon([a+t*u+n*w for u,w in
+                             ((u0,w1),(u1,w1),(u1,w2),(u0,w2))])
+        if not limit.buffer(1e-9).covers(footprint) and all(_is_rectilinear(p) for p in doms) and not (cuts_u or cuts_z or depth_fn):
+            # At oblique cadastral corners the old midpoint-line clip let the
+            # back of the wall escape the parcel. Sweep only actual opening
+            # height events, then clip each connected solid in XY. No distance
+            # grid; each connected prism remains a manifold component.
+            identity=component_id or self._auto_id(semantic)
+            piece=0
+            for domain in doms:
+                heights=sorted({float(z) for ring in [domain.exterior,*domain.interiors] for _,z in ring.coords})
+                for low,high in zip(heights,heights[1:]):
+                    line=LineString([(u0-1,(low+high)/2),(u1+1,(low+high)/2)])
+                    cross=domain.intersection(line)
+                    spans=[cross] if cross.geom_type=='LineString' else getattr(cross,'geoms',())
+                    for span in spans:
+                        if span.geom_type!='LineString' or span.length<1e-9: continue
+                        left,_,right,_=span.bounds
+                        shape=Polygon([a+t*u+n*w for u,w in ((left,w1),(right,w1),(right,w2),(left,w2))])
+                        for polygon in polygons(shape.intersection(limit)):
+                            with self.component(semantic,f'{identity}/clip{piece}',assembly_id):
+                                self.solid(polygon,low,high,mat_fn('front',(left+right)/2,(low+high)/2,w2),semantic,
+                                           facade_origin=a,facade_tangent=t,facade_normal=n,clip=clip)
+                            piece+=1
+            return identity if piece else None
         probe = LineString([a + t * (u0 - 1.0) + n * wmid,
                             a + t * (u1 + 1.0) + n * wmid])
         hit = probe.intersection(limit)
