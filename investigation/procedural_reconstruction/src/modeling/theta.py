@@ -5,9 +5,10 @@ facades and replans roofs. This adapter shares its geometry primitives instead.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, replace, field
+from dataclasses import asdict, dataclass, replace, field, fields
 import hashlib
 import json
+import re
 import numpy as np
 from shapely.geometry import Polygon, LineString, Point, box as rect
 from shapely.geometry.polygon import orient
@@ -191,7 +192,7 @@ def _masses(p, theta):
     if theta.masses is not None:
         result=[]
         for x in theta.masses:
-            _check(x.role and '/' not in x.role,"Invalid semantic mass role")
+            _check(bool(re.fullmatch(r'[a-z][a-z0-9_]*',x.role)),"Invalid semantic mass role")
             poly=_polygon(Polygon(x.footprint),x.role)
             _check(parcel.covers(poly),"Mass outside parcel")
             result.append(MassSpec(x.role,_ring(poly),x.levels_m[0],x.levels_m[-1],x.levels_m,x.role,None))
@@ -297,6 +298,21 @@ def _facade_controls(c, family):
     return c
 
 
+def _facade_override_controls(local, global_controls, family):
+    if local.mode == 'explicit':
+        return _facade_controls(local,family)
+    template=global_controls if global_controls.mode=='repeat' else _facade_controls(FacadeControls(),family)
+    patch={field_.name:getattr(local,field_.name) for field_ in fields(FacadeControls)
+           if field_.name!='mode' and getattr(local,field_.name) is not None}
+    if 'bay_count' in patch:
+        patch['bay_axes_m']=None
+    if 'bay_axes_m' in patch:
+        patch['bay_count']=None
+    if patch.get('balconies') is False:
+        patch['balcony_depth_m']=None
+    return _facade_controls(replace(template,**patch),family)
+
+
 def _composition(c, family, length, levels, height, ground, top):
     if c.mode == "explicit":
         return (), c.openings, c.projections or (), c.material_regions or ()
@@ -360,7 +376,8 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     if theta.masses is not None:
         theta=replace(theta,masses=tuple(ArchitecturalMass(m.role,m.footprint,m.floor_levels) for m in masses))
     default = _facade_controls(theta.facade, theta.family)
-    facade_refs = tuple(replace(x,mass_role=_mass_ref(x.mass_role,masses),controls=_facade_controls(x.controls,theta.family)) for x in theta.facades)
+    facade_refs = tuple(replace(x,mass_role=_mass_ref(x.mass_role,masses),
+                                controls=_facade_override_controls(x.controls,default,theta.family)) for x in theta.facades)
     overrides = {(x.mass_role,x.edge): x.controls for x in facade_refs}
     _check(len(overrides) == len(facade_refs), "Duplicate facade override")
     roof_refs = tuple(replace(x,mass_ref=_mass_ref(x.mass_ref,masses)) for x in theta.roofs)
@@ -515,8 +532,25 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         for name,value in asdict(override.controls).items():
             if original['controls'].get(name) is None and value is not None:
                 path=f'facades[{override.mass_role},edge:{override.edge}].controls.{name}'
-                completed[path]='prior/completed'
-                detailed[path]={"value":value,"source":"prior/completed","policy":"conservative-0.2"}
+                source='inherited/global' if override.controls.mode=='repeat' and default.mode=='repeat' and value==asdict(default)[name] else 'prior/completed'
+                completed[path]=source
+                detailed[path]={"value":value,"source":source,"policy":"global facade" if source=='inherited/global' else 'conservative-0.2'}
+    for field_name in ('projections','material_regions'):
+        if requested['facade'][field_name] is None:
+            path=f'facade.{field_name}'
+            completed[path]='derived/family'
+            detailed[path]={"value":{wall.facade.edge_id:[asdict(entity) for entity in getattr(wall.facade,field_name)]
+                                      for wall in walls if wall.facade.is_front},
+                            "source":"derived/family","policy":"FAMILY_RULES"}
+    for override in theta.facades:
+        original=next(x for x in requested['facades'] if _mass_ref(x['mass_role'],masses)==override.mass_role and x['edge']==override.edge)
+        for field_name in ('projections','material_regions'):
+            if original['controls'][field_name] is None:
+                path=f'facades[{override.mass_role},edge:{override.edge}].controls.{field_name}'
+                completed[path]='derived/family' if override.controls.mode=='repeat' else 'prior/completed'
+                detailed[path]={"value":{wall.facade.edge_id:[asdict(entity) for entity in getattr(wall.facade,field_name)]
+                                          for wall in walls if wall.mass_role==override.mass_role and wall.edge==override.edge},
+                                "source":completed[path],"policy":"FAMILY_RULES" if override.controls.mode=='repeat' else 'conservative-0.2'}
     return ResolvedArchitecture("0.2",context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed)
 
 

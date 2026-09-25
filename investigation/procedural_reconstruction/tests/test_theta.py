@@ -267,6 +267,17 @@ def test_repeat_sparse_corrections_and_explicit_mode():
         resolve_theta(P,replace(T,facade=replace(T.facade,added_openings=(added,))))
 
 
+def test_facade_override_inherits_global_repeat_controls():
+    t=replace(T,facade=FacadeControls(bay_count=5,balconies=True,balcony_depth_m=.8),
+              facades=(FacadeOverride('main:0',0,FacadeControls(opening_edits=(OpeningEdit(1,1,'suppress'),))),))
+    r=resolve_theta(P,t)
+    wall=next(w for w in r.walls if w.mass_role=='main:0' and w.edge==0)
+    assert len(wall.axes_m)==5
+    assert len(wall.facade.openings)==14
+    assert r.theta.facades[0].controls.balcony_depth_m==.8
+    assert r.theta.facades[0].controls.window_ratio==r.theta.facade.window_ratio
+
+
 def test_same_role_refs_canonical_under_json_reordering():
     left=ArchitecturalMass('main',((0.,0.),(5.,0.),(5.,16.),(0.,16.)),(0.,2.8,5.6))
     right=ArchitecturalMass('main',((5.,0.),(10.,0.),(10.,16.),(5.,16.)),(0.,2.8,5.6))

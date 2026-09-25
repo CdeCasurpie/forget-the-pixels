@@ -5,7 +5,7 @@
     "facade": {"bay_count": 4, "balconies": true},
     "facades": [{
       "mass_role": "main:0", "edge": 0,
-      "controls": {"bay_count": 4, "balconies": true,
+      "controls": {
         "opening_edits": [
           {"floor": 0, "bay": 2, "action": "replace", "opening": {"kind": "gate", "u_m": 6.4, "v_m": 0.04, "width_m": 2.0, "height_m": 2.2, "prefab": "roller"}},
           {"floor": 1, "bay": 1, "action": "suppress"},
