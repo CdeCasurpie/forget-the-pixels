@@ -59,6 +59,15 @@ class ArchitecturalMass:
 
 
 @dataclass(frozen=True)
+class OpeningEdit:
+    """Sparse correction of one generated bay on one local storey."""
+    floor: int
+    bay: int
+    action: str  # suppress | replace
+    opening: Opening | None = None
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -70,12 +79,14 @@ class FacadeControls:
     balcony_depth_m: float | None = None
     gallery_depth_m: float | None = None
     awning_depth_m: float | None = None
-    cladding: str = "stucco"
-    services: bool = False
+    cladding: str | None = None
+    services: bool | None = None
     openings: tuple[Opening, ...] | None = None
-    projections: tuple[FacadeProjection, ...] = ()
-    material_regions: tuple[FacadeMaterialRegion, ...] = ()
-    stairs: tuple[ExteriorStairSpecification, ...] = ()
+    projections: tuple[FacadeProjection, ...] | None = None
+    material_regions: tuple[FacadeMaterialRegion, ...] | None = None
+    stairs: tuple[ExteriorStairSpecification, ...] | None = None
+    opening_edits: tuple[OpeningEdit, ...] | None = None
+    added_openings: tuple[Opening, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -90,7 +101,15 @@ class RoofControls:
     kind: str | None = None
     parapet_m: float | None = None
     slope_deg: float | None = None
-    props: tuple[RoofObject, ...] = ()
+    props: tuple[RoofObject, ...] | None = None
+
+
+@dataclass(frozen=True)
+class RoofOverride:
+    mass_ref: str  # canonical role:index; unique legacy role accepted on input
+    kind: str | None = None
+    parapet_m: float | None = None
+    slope_deg: float | None = None
 
 
 @dataclass(frozen=True)
@@ -131,7 +150,7 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
-    schema_version: str = "0.1"
+    schema_version: str = "0.2"
     height_m: float | None = None
     floors: int | None = None
     family: str | None = None
@@ -139,12 +158,13 @@ class ThetaCandidate:
     facade: FacadeControls = field(default_factory=FacadeControls)
     facades: tuple[FacadeOverride, ...] = ()
     roof: RoofControls = field(default_factory=RoofControls)
+    roofs: tuple[RoofOverride, ...] = ()
     site: SiteControls = field(default_factory=SiteControls)
     primary_color: tuple[float, float, float] | None = None
-    side_material: str = "brick"
+    side_material: str | None = None
     masses: tuple[ArchitecturalMass, ...] | None = None
     materials: tuple[MaterialControl, ...] = ()
-    finish: str = "standard"
+    finish: str | None = None
 
 
 @dataclass(frozen=True)
@@ -157,7 +177,7 @@ class NuisanceParameters:
 class GrammarConfig:
     implementation: str = "theta-candidate-v0"
     grammar_reference: str = "grammar-v1.0"
-    completion_policy: str = "conservative-0.1"
+    completion_policy: str = "conservative-0.2"
     detail: int = 2
 
 
