@@ -57,9 +57,9 @@
     "code": "src/modeling/families.py:15",
     "function": "apply_family",
     "expression": "np.random.default_rng(spec.seed)",
-    "classification": "UNUSED",
+    "classification": "CONFIG",
     "pathway": "legacy_only",
-    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "3fc7bdc3da297abd8fdc04949bb11557ce39b74624624bb854541e23368a82de"
   },
   {
@@ -120,18 +120,18 @@
     "code": "src/modeling/grammar.py:963",
     "function": "generate_mesh",
     "expression": "np.random.default_rng(spec.seed)",
-    "classification": "UNUSED",
+    "classification": "CONFIG",
     "pathway": "legacy_only",
-    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
   },
   {
     "code": "src/modeling/grammar.py:1182",
     "function": "generate_v4_mesh",
     "expression": "np.random.default_rng(spec.seed)",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Shared architectural stream; facade services and cladding",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "5c410d6a4b2c72da29cedafe9fe5d216d23df30d978a0fa1f6e77861b3c3f000"
   },
   {
@@ -201,9 +201,9 @@
     "code": "src/modeling/layout.py:87",
     "function": "propose_building",
     "expression": "np.random.default_rng(seed)",
-    "classification": "UNUSED",
+    "classification": "CONFIG",
     "pathway": "legacy_only",
-    "reason": "Seed/stream creation. Not reached by V4; preserved for old API",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "600f107fdd56aabd536f070512833e8e2cebf3dcda18ed75602502f4aa45b68d"
   },
   {
@@ -228,9 +228,9 @@
     "code": "src/modeling/massing.py:241",
     "function": "generate_masses",
     "expression": "np.random.default_rng(program.seed if seed is None else seed)",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Mass pattern, split, setback or addition; never nuisance",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "722f12c15612e84614817636bef0321b1cc78814df1bf40bff0f618bc838cd01"
   },
   {
@@ -327,9 +327,9 @@
     "code": "src/modeling/materials.py:71",
     "function": "appearance_for_style",
     "expression": "np.random.default_rng(seed)",
-    "classification": "XI",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Foliage, rebar or small color variation; not massing",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "621569f430e84bc8546380314d5f2027251ed98c0b494323cbec0bf5ae40b60e"
   },
   {
@@ -372,18 +372,18 @@
     "code": "src/modeling/roofscape.py:214",
     "function": "plan_roof",
     "expression": "np.random.default_rng(resolve_seed(seed, lot_id, mass.id, \"roof\", \"plan\"))",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
     "code": "src/modeling/roofscape.py:214",
     "function": "plan_roof",
     "expression": "resolve_seed(seed, lot_id, mass.id, \"roof\", \"plan\")",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
@@ -444,18 +444,18 @@
     "code": "src/modeling/roofscape.py:260",
     "function": "plan_roof",
     "expression": "np.random.default_rng(\n                    resolve_seed(seed, lot_id, mass.id, \"roof\", \"props\")\n                )",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
     "code": "src/modeling/roofscape.py:395",
     "function": "_build_roof_body",
     "expression": "np.random.default_rng(prop.seed)",
-    "classification": "XI",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Object internal variation, object identity already planned",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
@@ -480,18 +480,18 @@
     "code": "src/modeling/roofscape.py:261",
     "function": "plan_roof",
     "expression": "resolve_seed(seed, lot_id, mass.id, \"roof\", \"props\")",
-    "classification": "THETA",
+    "classification": "CONFIG",
     "pathway": "V4",
-    "reason": "Seed/stream creation. Roof class/depth/parapet or significant rooftop object layout",
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
     "code": "src/modeling/roofscape.py:205",
     "function": "scatter_props",
     "expression": "rng.integers(0, 2**31 - 1)",
-    "classification": "THETA",
+    "classification": "XI",
     "pathway": "V4",
-    "reason": "Roof class/depth/parapet or significant rooftop object layout",
+    "reason": "Seed for internal object detail, after object identity/layout chosen",
     "source_sha256": "8028652186da25673187b25ba4bf7f5edcf0d2fcf310c19430fe99779693d95d"
   },
   {
@@ -522,39 +522,39 @@
     "source_sha256": "ba62fdb1fcec8f90706be15f57b30d514ea47549ba7e4690bebf665f0bbdecce"
   },
   {
-    "code": "src/modeling/theta.py:400",
+    "code": "src/modeling/theta.py:571",
     "function": "_rng",
     "expression": "np.random.default_rng(int.from_bytes(digest[:8],\"little\"))",
-    "classification": "XI",
+    "classification": "CONFIG",
     "pathway": "candidate",
-    "reason": "Seed/stream creation. Only curtain/foliage/rebar streams; roof object identity explicit",
-    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
+    "source_sha256": "4c565e16d6963deda3edca1a54276921d4c5db6edc692866b8615245e3663ec6"
   },
   {
-    "code": "src/modeling/theta.py:279",
+    "code": "src/modeling/theta.py:364",
     "function": "_composition",
     "expression": "np.random.default_rng(0)",
     "classification": "CONFIG",
     "pathway": "candidate",
-    "reason": "Seed/stream creation. Fixed RNG for family relief; sampled depths overwritten by theta",
-    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+    "reason": "Seed/stream creation. Stream creation, not an architectural value; consumers classified separately",
+    "source_sha256": "4c565e16d6963deda3edca1a54276921d4c5db6edc692866b8615245e3663ec6"
   },
   {
-    "code": "src/modeling/theta.py:432",
+    "code": "src/modeling/theta.py:603",
     "function": "generate_resolved",
     "expression": "_rng(nuisance.seed,f\"roof/{roof.mass_id}/{prop.kind}/{prop.position}\").integers(0,2**31)",
     "classification": "XI",
     "pathway": "candidate",
     "reason": "Only curtain/foliage/rebar streams; roof object identity explicit",
-    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+    "source_sha256": "4c565e16d6963deda3edca1a54276921d4c5db6edc692866b8615245e3663ec6"
   },
   {
-    "code": "src/modeling/theta.py:422",
+    "code": "src/modeling/theta.py:593",
     "function": "generate_resolved",
     "expression": "_rng(nuisance.seed,f\"{f.edge_id}/curtain/{i}\").uniform(.15,.55)",
     "classification": "XI",
     "pathway": "candidate",
     "reason": "Only curtain/foliage/rebar streams; roof object identity explicit",
-    "source_sha256": "b7bfbf0a21cf8e06e07f6eae7f57147915a60a9bbe46e87892b79b03148681a5"
+    "source_sha256": "4c565e16d6963deda3edca1a54276921d4c5db6edc692866b8615245e3663ec6"
   }
 ]

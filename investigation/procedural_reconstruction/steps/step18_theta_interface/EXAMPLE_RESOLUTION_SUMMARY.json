@@ -1,0 +1,1153 @@
+[
+  {
+    "example": "01_simple.json",
+    "explicit": {
+      "height_m": 5.6,
+      "floors": 2,
+      "family": "quiet_house",
+      "facade.bay_count": 3,
+      "facade.balconies": false,
+      "primary_color[0]": 0.78,
+      "primary_color[1]": 0.76,
+      "primary_color[2]": 0.64
+    },
+    "completed": {
+      "massing.pattern": {
+        "value": "single_block",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "massing.front_setback_m": {
+        "value": 0.0,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.kind": {
+        "value": "flat",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.parapet_m": {
+        "value": 0.5,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.fence": {
+        "value": "none",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.garden": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "side_material": {
+        "value": "brick",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "finish": {
+        "value": "standard",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.props": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_ratio": {
+        "value": 0.46,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_height_m": {
+        "value": 1.55,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.sill_m": {
+        "value": 0.95,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.cladding": {
+        "value": "stucco",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.services": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.stairs": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.opening_edits": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.added_openings": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.projections": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 5.32,
+              "width_m": 9.92,
+              "height_m": 0.22,
+              "depth_m": 0.22,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 9.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 5.3,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      },
+      "facade.material_regions": {
+        "value": {
+          "main:0/edge0/z0": []
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      }
+    },
+    "derived": {
+      "floor_height_m": 2.8,
+      "mass_refs": [
+        "main:0"
+      ],
+      "wall_count": 4,
+      "roof_count": 1,
+      "opening_count": 6
+    },
+    "nuisance": {
+      "seed": 18,
+      "curtains": true
+    }
+  },
+  {
+    "example": "02_republicano.json",
+    "explicit": {
+      "height_m": 7.2,
+      "floors": 2,
+      "family": "republicano",
+      "facade.bay_count": 4,
+      "roof.kind": "flat",
+      "roof.parapet_m": 0.7,
+      "primary_color[0]": 0.78,
+      "primary_color[1]": 0.3,
+      "primary_color[2]": 0.17
+    },
+    "completed": {
+      "massing.pattern": {
+        "value": "single_block",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "massing.front_setback_m": {
+        "value": 0.0,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.fence": {
+        "value": "none",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.garden": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "side_material": {
+        "value": "brick",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "finish": {
+        "value": "standard",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.props": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_ratio": {
+        "value": 0.42,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_height_m": {
+        "value": 2.25,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.sill_m": {
+        "value": 0.75,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.balconies": {
+        "value": true,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.balcony_depth_m": {
+        "value": 0.9,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.cladding": {
+        "value": "stucco",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.services": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.stairs": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.opening_edits": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.added_openings": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.projections": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "kind": "sill_band",
+              "u_m": 0.06,
+              "v_m": 3.62,
+              "width_m": 11.88,
+              "height_m": 0.1,
+              "depth_m": 0.13,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "pilaster",
+              "u_m": 0.05,
+              "v_m": 0.0,
+              "width_m": 0.34,
+              "height_m": 7.1000000000000005,
+              "depth_m": 0.09,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "pilaster",
+              "u_m": 11.61,
+              "v_m": 0.0,
+              "width_m": 0.34,
+              "height_m": 7.1000000000000005,
+              "depth_m": 0.09,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 6.720000000000001,
+              "width_m": 11.92,
+              "height_m": 0.42,
+              "depth_m": 0.42,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "balcony",
+              "u_m": 0.9236000000000002,
+              "v_m": 3.7800000000000002,
+              "width_m": 1.6327999999999998,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "balusters"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 6.6036,
+              "v_m": 3.7800000000000002,
+              "width_m": 1.6327999999999998,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "balusters"
+            },
+            {
+              "kind": "shutter",
+              "u_m": 3.9836,
+              "v_m": 4.35,
+              "width_m": 1.1927999999999999,
+              "height_m": 2.25,
+              "depth_m": 0.05,
+              "material_slot": "wood",
+              "border_width_m": 0.32,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "shutter",
+              "u_m": 9.6636,
+              "v_m": 4.35,
+              "width_m": 1.1927999999999999,
+              "height_m": 2.25,
+              "depth_m": 0.05,
+              "material_slot": "wood",
+              "border_width_m": 0.32,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 11.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 6.9,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      },
+      "facade.material_regions": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "u_m": 0.0,
+              "v_m": 0.0,
+              "width_m": 12.0,
+              "height_m": 3.6,
+              "material_slot": "stone",
+              "source": "family_rule",
+              "score": 0.0
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      }
+    },
+    "derived": {
+      "floor_height_m": 3.6,
+      "mass_refs": [
+        "main:0"
+      ],
+      "wall_count": 4,
+      "roof_count": 1,
+      "opening_count": 8
+    },
+    "nuisance": {
+      "seed": 18,
+      "curtains": true
+    }
+  },
+  {
+    "example": "03_galeria.json",
+    "explicit": {
+      "height_m": 6.6,
+      "floors": 2,
+      "family": "galeria_madera",
+      "facade.bay_count": 3,
+      "facade.gallery_depth_m": 1.1,
+      "facade.awning_depth_m": 1.0,
+      "primary_color[0]": 0.83,
+      "primary_color[1]": 0.77,
+      "primary_color[2]": 0.6
+    },
+    "completed": {
+      "massing.pattern": {
+        "value": "single_block",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "massing.front_setback_m": {
+        "value": 0.0,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.kind": {
+        "value": "flat",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.parapet_m": {
+        "value": 0.5,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.fence": {
+        "value": "none",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.garden": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "side_material": {
+        "value": "brick",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "finish": {
+        "value": "standard",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.props": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_ratio": {
+        "value": 0.62,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_height_m": {
+        "value": 1.85,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.sill_m": {
+        "value": 0.25,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.balconies": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.cladding": {
+        "value": "stucco",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.services": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.stairs": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.opening_edits": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.added_openings": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.projections": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 6.34,
+              "width_m": 10.92,
+              "height_m": 0.2,
+              "depth_m": 0.2,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "gallery",
+              "u_m": 0.1,
+              "v_m": 3.5,
+              "width_m": 10.8,
+              "height_m": 2.35,
+              "depth_m": 1.1,
+              "material_slot": "wood",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "awning",
+              "u_m": 0.25,
+              "v_m": 2.8499999999999996,
+              "width_m": 10.5,
+              "height_m": 0.4,
+              "depth_m": 1.0,
+              "material_slot": "roof",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "shutter",
+              "u_m": 0.9761333333333333,
+              "v_m": 3.55,
+              "width_m": 2.1410666666666662,
+              "height_m": 1.85,
+              "depth_m": 0.05,
+              "material_slot": "wood",
+              "border_width_m": 0.32,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "shutter",
+              "u_m": 4.429466666666666,
+              "v_m": 3.55,
+              "width_m": 2.1410666666666662,
+              "height_m": 1.85,
+              "depth_m": 0.05,
+              "material_slot": "wood",
+              "border_width_m": 0.32,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "shutter",
+              "u_m": 7.8828,
+              "v_m": 3.55,
+              "width_m": 2.1410666666666662,
+              "height_m": 1.85,
+              "depth_m": 0.05,
+              "material_slot": "wood",
+              "border_width_m": 0.32,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 10.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 6.3,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      },
+      "facade.material_regions": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "u_m": 0.0,
+              "v_m": 0.0,
+              "width_m": 11.0,
+              "height_m": 3.3,
+              "material_slot": "wood",
+              "source": "family_rule",
+              "score": 0.0
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      }
+    },
+    "derived": {
+      "floor_height_m": 3.3,
+      "mass_refs": [
+        "main:0"
+      ],
+      "wall_count": 4,
+      "roof_count": 1,
+      "opening_count": 6
+    },
+    "nuisance": {
+      "seed": 18,
+      "curtains": true
+    }
+  },
+  {
+    "example": "04_mixed.json",
+    "explicit": {
+      "height_m": 9.6,
+      "floors": 3,
+      "family": "mixed_use",
+      "facade.bay_count": 4,
+      "facade.balconies": true,
+      "facade.balcony_depth_m": 1.0,
+      "primary_color[0]": 0.72,
+      "primary_color[1]": 0.78,
+      "primary_color[2]": 0.68
+    },
+    "completed": {
+      "massing.pattern": {
+        "value": "single_block",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "massing.front_setback_m": {
+        "value": 0.0,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.kind": {
+        "value": "flat",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.parapet_m": {
+        "value": 0.5,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.fence": {
+        "value": "none",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "site.garden": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "side_material": {
+        "value": "brick",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "finish": {
+        "value": "standard",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.props": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_ratio": {
+        "value": 0.58,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_height_m": {
+        "value": 1.6,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.sill_m": {
+        "value": 0.9,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.awning_depth_m": {
+        "value": 1.0,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.cladding": {
+        "value": "stucco",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.services": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.stairs": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.opening_edits": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.added_openings": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.projections": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "kind": "sill_band",
+              "u_m": 0.06,
+              "v_m": 3.2199999999999998,
+              "width_m": 11.88,
+              "height_m": 0.1,
+              "depth_m": 0.13,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "sill_band",
+              "u_m": 0.06,
+              "v_m": 6.419999999999999,
+              "width_m": 11.88,
+              "height_m": 0.1,
+              "depth_m": 0.13,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 9.299999999999999,
+              "width_m": 11.92,
+              "height_m": 0.24,
+              "depth_m": 0.24,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "balcony",
+              "u_m": 0.6964000000000001,
+              "v_m": 3.38,
+              "width_m": 2.0871999999999997,
+              "height_m": 1.05,
+              "depth_m": 1.0,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 6.3764,
+              "v_m": 3.38,
+              "width_m": 2.0871999999999997,
+              "height_m": 1.05,
+              "depth_m": 1.0,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 0.6964000000000001,
+              "v_m": 6.579999999999999,
+              "width_m": 2.0871999999999997,
+              "height_m": 1.05,
+              "depth_m": 1.0,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 6.3764,
+              "v_m": 6.579999999999999,
+              "width_m": 2.0871999999999997,
+              "height_m": 1.05,
+              "depth_m": 1.0,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "awning",
+              "u_m": 0.25,
+              "v_m": 2.7499999999999996,
+              "width_m": 11.5,
+              "height_m": 0.4,
+              "depth_m": 1.0,
+              "material_slot": "roof",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "sign_box",
+              "u_m": 4.2,
+              "v_m": 2.9,
+              "width_m": 3.6,
+              "height_m": 0.46,
+              "depth_m": 0.1,
+              "material_slot": "sign",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "TIENDA"
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 11.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 9.299999999999999,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      },
+      "facade.material_regions": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "u_m": 0.0,
+              "v_m": 0.0,
+              "width_m": 12.0,
+              "height_m": 3.1999999999999997,
+              "material_slot": "stone",
+              "source": "family_rule",
+              "score": 0.0
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      }
+    },
+    "derived": {
+      "floor_height_m": 3.1999999999999997,
+      "mass_refs": [
+        "main:0"
+      ],
+      "wall_count": 4,
+      "roof_count": 1,
+      "opening_count": 12
+    },
+    "nuisance": {
+      "seed": 18,
+      "curtains": true
+    }
+  },
+  {
+    "example": "05_setback.json",
+    "explicit": {
+      "height_m": 11.2,
+      "floors": 4,
+      "family": "balcony_apartments",
+      "massing.pattern": "stepped_back",
+      "massing.front_setback_m": 3.0,
+      "massing.upper_setback_m": 2.5,
+      "facade.bay_count": 4,
+      "facade.balconies": true,
+      "facade.balcony_depth_m": 0.9,
+      "site.fence": "reja",
+      "site.garden": true,
+      "primary_color[0]": 0.74,
+      "primary_color[1]": 0.77,
+      "primary_color[2]": 0.81
+    },
+    "completed": {
+      "roof.kind": {
+        "value": "flat",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.parapet_m": {
+        "value": 0.5,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "side_material": {
+        "value": "brick",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "finish": {
+        "value": "standard",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "roof.props": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_ratio": {
+        "value": 0.56,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.window_height_m": {
+        "value": 1.95,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.sill_m": {
+        "value": 0.3,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.cladding": {
+        "value": "stucco",
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.services": {
+        "value": false,
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.stairs": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.opening_edits": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.added_openings": {
+        "value": [],
+        "source": "prior/completed",
+        "policy": "conservative-0.2"
+      },
+      "facade.projections": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 8.079999999999998,
+              "width_m": 11.92,
+              "height_m": 0.26,
+              "depth_m": 0.26,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "balcony",
+              "u_m": 0.7248,
+              "v_m": 2.98,
+              "width_m": 2.0304,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 6.4048,
+              "v_m": 2.98,
+              "width_m": 2.0304,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 0.7248,
+              "v_m": 5.779999999999999,
+              "width_m": 2.0304,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "balcony",
+              "u_m": 6.4048,
+              "v_m": 5.779999999999999,
+              "width_m": 2.0304,
+              "height_m": 1.05,
+              "depth_m": 0.9,
+              "material_slot": "concrete",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": "bars"
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 11.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 8.099999999999998,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ],
+          "setback:0/edge0/z8.4": [
+            {
+              "kind": "cornice",
+              "u_m": 0.04,
+              "v_m": 2.480000000000001,
+              "width_m": 11.92,
+              "height_m": 0.26,
+              "depth_m": 0.26,
+              "material_slot": "stone",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            },
+            {
+              "kind": "downpipe",
+              "u_m": 11.72,
+              "v_m": 0.15,
+              "width_m": 0.12,
+              "height_m": 2.500000000000001,
+              "depth_m": 0.1,
+              "material_slot": "metal",
+              "border_width_m": 0.14,
+              "source": "family_rule",
+              "score": 0.0,
+              "label": ""
+            }
+          ]
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      },
+      "facade.material_regions": {
+        "value": {
+          "main:0/edge0/z0": [
+            {
+              "u_m": 0.0,
+              "v_m": 0.0,
+              "width_m": 12.0,
+              "height_m": 2.8,
+              "material_slot": "stone",
+              "source": "family_rule",
+              "score": 0.0
+            }
+          ],
+          "setback:0/edge0/z8.4": []
+        },
+        "source": "derived/family",
+        "policy": "FAMILY_RULES"
+      }
+    },
+    "derived": {
+      "floor_height_m": 2.8,
+      "mass_refs": [
+        "main:0",
+        "setback:0"
+      ],
+      "wall_count": 8,
+      "roof_count": 2,
+      "opening_count": 16
+    },
+    "nuisance": {
+      "seed": 18,
+      "curtains": true
+    }
+  }
+]
