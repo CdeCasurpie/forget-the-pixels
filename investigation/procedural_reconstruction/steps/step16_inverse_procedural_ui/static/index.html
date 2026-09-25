@@ -120,6 +120,11 @@
         let selectedLotId = null;
         let generatedModels = [];
         let panoViewer = null;
+        async function responseJson(response) {
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || `HTTP ${response.status}`);
+            return data;
+        }
 
         // Using CartoDB Dark Matter to avoid Mapbox 401 Unauthorized errors
         const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
@@ -201,12 +206,18 @@
                             
                             document.getElementById('params-info').innerHTML = '';
                             document.getElementById('btn-generate').disabled = true;
+                            document.getElementById('btn-download').disabled = true;
+                            document.getElementById('btn-calculate').disabled = true;
+                            window.currentTopCameras = [];
+                            previewEdgesData = null;
+                            camerasData = camerasData.map(c => ({...c, selected: false}));
                             document.getElementById('status-msg').innerText = 'Analizando frentes...';
                             
                             // Fetch explicit fronts preview
                             fetch(`/api/preview_fronts/${selectedLotId}`)
-                                .then(r => r.json())
+                                .then(responseJson)
                                 .then(data => {
+                                    if (selectedLotId !== info.object.properties.id) return;
                                     previewEdgesData = data;
                                     document.getElementById('status-msg').innerText = 'Lote seleccionado. Requiere descargar fotos.';
                                     document.getElementById('btn-download').disabled = true;
@@ -242,8 +253,12 @@
                                             document.getElementById('btn-calculate').disabled = false;
                                         }
                                     }
+                                    if (!data.top_cameras || !data.top_cameras.length) {
+                                        document.getElementById('status-msg').innerText = 'Sin cámaras cercanas: puedes generar con altura estimada por defecto.';
+                                        document.getElementById('btn-generate').disabled = false;
+                                    }
                                     renderLayers();
-                                });
+                                }).catch(e => { document.getElementById('status-msg').innerText = `Error al analizar frentes: ${e.message}`; });
                             
                             renderLayers();
 
@@ -336,7 +351,7 @@
                     id: `glb-${model.id}`,
                     data: [model],
                     scenegraph: model.url,
-                    getPosition: d => [d.lon, d.lat],
+                    getPosition: d => [d.lon, d.lat, 0],
                     getOrientation: [0, 0, 90],
                     sizeScale: 1,
                     _lighting: 'pbr'
@@ -350,7 +365,7 @@
             document.getElementById('status-msg').innerText = "Cargando cámara...";
             if (!cam.downloaded) {
                 fetch(`/api/download_camera/${cam.pano_id}`, {method: 'POST'})
-                    .then(r => r.json())
+                    .then(responseJson)
                     .then(data => {
                         
                         if (data.status === 'success') {
@@ -402,39 +417,36 @@
             document.getElementById('status-msg').innerText = "Descargando cámaras top K...";
             
             let downloadPromises = [];
-            let newCamerasData = [...camerasData];
+            camerasData = camerasData.map(c => ({...c, loading: window.currentTopCameras.includes(c.pano_id) && !c.downloaded}));
+            renderLayers();
             
             window.currentTopCameras.forEach(pano_id => {
-                let idx = newCamerasData.findIndex(c => c.pano_id === pano_id);
-                if (idx !== -1 && !newCamerasData[idx].downloaded) {
-                    newCamerasData[idx] = { ...newCamerasData[idx], loading: true };
+                let idx = camerasData.findIndex(c => c.pano_id === pano_id);
+                if (idx !== -1 && !camerasData[idx].downloaded) {
                     let downloadPromise = fetch(`/api/download_camera/${pano_id}`, {method: 'POST'})
-                        .then(r => r.json())
+                        .then(responseJson)
                         .then(resData => {
-                            if (resData.status === 'success') {
-                                let latestCamData = [...camerasData];
-                                let cIdx = latestCamData.findIndex(c => c.pano_id === pano_id);
-                                if (cIdx !== -1) {
-                                    latestCamData[cIdx] = { ...latestCamData[cIdx], downloaded: true, loading: false };
-                                }
-                                camerasData = latestCamData;
-                                renderLayers();
-                            }
+                            camerasData = camerasData.map(c => c.pano_id === pano_id ? {...c, downloaded: true, loading: false} : c);
+                            renderLayers();
                         });
                     downloadPromises.push(downloadPromise);
                 }
             });
-            camerasData = newCamerasData;
-            renderLayers();
-            
-            Promise.all(downloadPromises).then(() => {
+            Promise.allSettled(downloadPromises).then(results => {
+                camerasData = camerasData.map(c => ({...c, loading: false}));
+                renderLayers();
+                if (results.some(r => r.status === 'rejected')) {
+                    document.getElementById('status-msg').innerText = 'Algunas descargas fallaron. Reintenta antes de calcular.';
+                    document.getElementById('btn-download').disabled = false;
+                    return;
+                }
                 document.getElementById('status-msg').innerText = "Fotos descargadas. Listo para calcular altura.";
                 document.getElementById('btn-calculate').disabled = false;
             });
         });
 
         document.getElementById('btn-calculate').addEventListener('click', () => {
-            if (!selectedLotId || !window.currentTopCameras) return;
+            if (selectedLotId === null || !window.currentTopCameras) return;
             document.getElementById('btn-calculate').disabled = true;
             document.getElementById('status-msg').innerText = "Calculando altura con Visión Computacional (Esto puede tomar un momento)...";
             
@@ -443,7 +455,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pano_ids: window.currentTopCameras })
             })
-            .then(r => r.json())
+            .then(responseJson)
             .then(hData => {
                 document.getElementById('status-msg').innerText = `¡Altura calculada! ${hData.height_m}m (${hData.floors} pisos)`;
                 document.getElementById('btn-generate').disabled = false;
@@ -453,6 +465,9 @@
                     document.getElementById('plot-img').src = hData.plot_url;
                     document.getElementById('plot-container').style.display = 'block';
                 }
+            }).catch(e => {
+                document.getElementById('status-msg').innerText = `Error al calcular altura: ${e.message}`;
+                document.getElementById('btn-calculate').disabled = false;
             });
         });
 
@@ -468,10 +483,12 @@
             paramsDiv.innerHTML = "Extrayendo parámetros de las cámaras...";
             
             fetch(`/api/generate/${selectedLotId}`, { method: 'POST' })
-                .then(res => res.json())
+                .then(responseJson)
                 .then(data => {
                     if (data.status === 'success') {
-                        status.innerText = "¡Casa generada con éxito!";
+                        status.innerText = data.preview_allowed
+                            ? 'Modelo generado y cargado en el mapa.'
+                            : `Modelo generado (${data.components} componentes); vista 3D omitida para proteger la memoria.`;
                         
                         const p = data.params;
                         paramsDiv.innerHTML = `
@@ -482,13 +499,21 @@
                             Altura techo: ${p.roof_z}m
                         `;
                         
+                        const download = document.createElement('a');
+                        download.href = data.url;
+                        download.download = `lot_${selectedLotId}.glb`;
+                        download.textContent = 'Descargar modelo GLB';
+                        download.style.color = '#f1c40f';
+                        paramsDiv.appendChild(download);
                         generatedModels = generatedModels.filter(m => m.id !== selectedLotId);
-                        generatedModels.push({
-                            id: selectedLotId,
-                            url: data.url,
-                            lon: data.lon,
-                            lat: data.lat
-                        });
+                        if (data.preview_allowed) {
+                            generatedModels.push({
+                                id: selectedLotId,
+                                url: `${data.url}?v=${Date.now()}`,
+                                lon: data.lon,
+                                lat: data.lat
+                            });
+                        }
                         
                         deckgl.setProps({
                             initialViewState: {
@@ -508,7 +533,7 @@
                     btn.disabled = false;
                 })
                 .catch(err => {
-                    status.innerText = "Error de conexión.";
+                    status.innerText = `Error de generación: ${err.message}`;
                     btn.disabled = false;
                 });
         });

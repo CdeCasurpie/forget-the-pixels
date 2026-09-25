@@ -524,9 +524,9 @@ def _facade_body(mb, f, total_height):
             raise ValueError("Invalid facade material region")
         if (
             region.u_m < 0
-            or region.u_m + region.width_m > length
+            or region.u_m + region.width_m > length + 1e-8
             or region.v_m < 0
-            or region.v_m + region.height_m > total_height
+            or region.v_m + region.height_m > total_height + 1e-8
         ):
             raise ValueError(f"Material region outside facade {f.edge_id}")
     for feature in features:

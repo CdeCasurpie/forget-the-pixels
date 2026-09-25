@@ -1,0 +1,11 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,20],[0,20]], "fronts": [0]},
+  "theta": {
+    "height_m": 11.2, "floors": 4, "family": "balcony_apartments",
+    "massing": {"pattern": "stepped_back", "front_setback_m": 3.0, "upper_setback_m": 2.5},
+    "facade": {"bay_count": 4, "balconies": true, "balcony_depth_m": 0.9},
+    "site": {"fence": "reja", "garden": true},
+    "primary_color": [0.74,0.77,0.81]
+  },
+  "nuisance": {"seed": 18}
+}

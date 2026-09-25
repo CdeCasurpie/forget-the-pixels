@@ -405,7 +405,8 @@ def _relief(length, levels, axes, pitch, openings, rules, band_height,
         )
     if is_top_band and rules.get("crown"):
         regions.append(
-            FacadeMaterialRegion(0.0, max(0.0, band_height - 0.55), length, 0.55,
-                                 rules["crown"], source="family_rule")
+            FacadeMaterialRegion(0.0, max(0.0, band_height - 0.55), length,
+                                 min(0.55, band_height),
+                                  rules["crown"], source="family_rule")
         )
     return projections, regions

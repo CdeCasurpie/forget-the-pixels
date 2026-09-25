@@ -15,6 +15,8 @@ METHODS={'default_rng','Random','seed','resolve_seed','uniform','choice','intege
 
 def classify(path, function, expression):
     file=path.stem
+    if any(expression.startswith(prefix) for prefix in ('np.random.default_rng(', 'resolve_seed(', 'random.Random(')):
+        return 'CONFIG','legacy_only' if file in ('layout','families') or (file=='grammar' and function!='generate_v4_mesh') else 'candidate' if file=='theta' else 'V4','Stream creation, not an architectural value; consumers classified separately'
     if file=='theta':
         if function in ('_rng','generate_resolved'):
             return 'XI','candidate','Only curtain/foliage/rebar streams; roof object identity explicit'
@@ -28,6 +30,8 @@ def classify(path, function, expression):
             return 'XI','V4','Curtain presence/coverage; architectural opening unchanged'
         return 'THETA','V4','Family or balcony/gallery/awning depth'
     if file=='roofscape':
+        if function=='scatter_props' and '.integers(' in expression:
+            return 'XI','V4','Seed for internal object detail, after object identity/layout chosen'
         if function=='_build_roof_body':
             return 'XI','V4','Object internal variation, object identity already planned'
         return 'THETA','V4','Roof class/depth/parapet or significant rooftop object layout'

@@ -1,0 +1,9 @@
+{
+  "context": {"parcel": [[0,0],[11,0],[11,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "height_m": 6.6, "floors": 2, "family": "galeria_madera",
+    "facade": {"bay_count": 3, "gallery_depth_m": 1.1, "awning_depth_m": 1.0},
+    "primary_color": [0.83,0.77,0.60]
+  },
+  "nuisance": {"seed": 18}
+}

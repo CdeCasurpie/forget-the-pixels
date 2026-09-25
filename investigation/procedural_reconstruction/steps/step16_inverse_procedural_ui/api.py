@@ -1,5 +1,4 @@
 import sys
-import os
 import json
 import random
 from pathlib import Path
@@ -9,12 +8,12 @@ from fastapi.responses import FileResponse, JSONResponse
 import geopandas as gpd
 import cv2
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from shapely.geometry import Point
 from shapely.ops import nearest_points
 from pyproj import Transformer, Geod
-import sys
-from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'src'))
 from vision.projection.cylindrical import extract_full_vertical_strip
 from vision.segmentation.roof_boundary import detect_roof_boundary
@@ -27,7 +26,7 @@ import uvicorn
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT / "src"))
 
-from domain.architecture import ParcelContext, BuildingProgram, MassSpec, SitePlan, BuildingSpecificationV4
+from domain.architecture import ParcelContext, BuildingProgram, SitePlan, BuildingSpecificationV4
 from modeling.grammar import generate_v4_mesh
 from modeling.massing import generate_masses
 from modeling.exporters.glb_exporter import export_glb
@@ -42,20 +41,29 @@ calculated_heights = {}
 
 @app.post("/api/estimate_height/{lot_idx}")
 def estimate_height(lot_idx: int, req: HeightRequest):
-    if not req.pano_ids:
-        return {"height_m": 6.0, "floors": 2}
-        
     global calculated_heights, gdf_utm
-    
+    if lot_idx not in gdf_utm.index:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    if len(req.pano_ids) > 4:
+        raise HTTPException(status_code=400, detail="Select up to four panoramas")
+    if not req.pano_ids:
+        calculated_heights[lot_idx] = {"height_m": 6.0, "floors": 2}
+        return {"height_m": 6.0, "floors": 2, "plot_url": None}
+        
     polygon = gdf_utm.loc[lot_idx].geometry
     to_geo = Transformer.from_crs('EPSG:32718', 'EPSG:4326', always_xy=True)
     geod = Geod(ellps='WGS84')
     
     observations = []
     fig, axes = plt.subplots(len(req.pano_ids), 2, figsize=(10, 4*len(req.pano_ids)), squeeze=False)
+    for row in axes:
+        for ax in row:
+            ax.axis("off")
     
     for i, pano_id in enumerate(req.pano_ids):
         # 1. Load image
+        if pano_id not in gdf_cams_utm.index:
+            continue
         img_path = str(CACHE_DIR / f"{pano_id}.jpg")
         bgr = cv2.imread(img_path)
         if bgr is None:
@@ -64,15 +72,11 @@ def estimate_height(lot_idx: int, req: HeightRequest):
         h, w = rgb.shape[:2]
         
         # 2. Get camera data
-        cam_rows = gdf_cams_utm[gdf_cams_utm['pano_id'] == pano_id]
-        if cam_rows.empty:
-            continue
-        cam_row = cam_rows.iloc[0]
+        cam_row = gdf_cams_utm.loc[pano_id]
         cam_x, cam_y = cam_row.geometry.x, cam_row.geometry.y
         cam_lon, cam_lat = cam_row['lon'], cam_row['lat']
         heading_deg = cam_row.get('heading_deg', 0.0) # Or however heading is stored
-        if 'heading_deg' not in cam_row:
-            # Fallback if heading is not found
+        if not np.isfinite(heading_deg):
             heading_deg = 0.0
             
         camera_point = Point(cam_x, cam_y)
@@ -110,6 +114,8 @@ def estimate_height(lot_idx: int, req: HeightRequest):
         
         # 5. Plotting
         crop = extract_full_vertical_strip(rgb, yaw, 90, 600, h)
+        axes[i, 0].axis("on")
+        axes[i, 1].axis("on")
         axes[i, 0].imshow(crop)
         axes[i, 0].axvline(300, color='yellow', lw=1)
         axes[i, 0].plot(300, cut, 'rx', ms=12)
@@ -121,9 +127,11 @@ def estimate_height(lot_idx: int, req: HeightRequest):
         axes[i, 1].set_title(f'Strip {len(cols)}px | sep={separation:.3f}')
         
     fig.tight_layout()
-    plot_path = f"steps/step16_inverse_procedural_ui/static/assets/height_plot_{lot_idx}.png"
-    fig.savefig(plot_path, dpi=100)
-    plt.close(fig)
+    plot_path = ASSETS_DIR / f"height_plot_{lot_idx}.png"
+    try:
+        fig.savefig(plot_path, dpi=100)
+    finally:
+        plt.close(fig)
     
     # 6. Fit height
     if len(observations) >= 2:
@@ -137,7 +145,7 @@ def estimate_height(lot_idx: int, req: HeightRequest):
     else:
         final_h = 6.0
         
-    floors = max(1, int(final_h / 3.0))
+    floors = max(1, int(round(final_h / 3.0)))
     calculated_heights[lot_idx] = {"height_m": final_h, "floors": floors}
     
     return {
@@ -145,6 +153,10 @@ def estimate_height(lot_idx: int, req: HeightRequest):
         "floors": floors, 
         "plot_url": f"/assets/height_plot_{lot_idx}.png"
     }
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -154,6 +166,7 @@ ASSETS_DIR.mkdir(exist_ok=True, parents=True)
 GEOJSON_PATH = ROOT / "Lotes" / "shp_files" / "BARRANCO_LM_geogpsperu.geojson"
 METADATA_PATH = ROOT / "steps" / "step2_vector_to_lots" / "data" / "barranco_metadata" / "metadata.json"
 CACHE_DIR = ROOT / "Lotes" / "streetview_cache"
+CACHE_DIR.mkdir(exist_ok=True, parents=True)
 
 
 ALIGNMENT_PATH = ROOT / "steps" / "step16_inverse_procedural_ui" / "alignment.json"
@@ -451,6 +464,11 @@ def generate_model(lot_idx: int):
         
         # 1. Run parameter extraction (Mock)
         params = estimate_parameters(lot_idx, cams_list)
+        # Bound work before allocating potentially millions of mesh/render vertices.
+        floors = len(params["floor_levels"]) - 1
+        if (floors > 20 or target_poly.area * floors > 2500
+                or len(target_poly.exterior.coords) > 100):
+            raise HTTPException(status_code=422, detail="Lote demasiado grande para la generación interactiva")
         
         # Translate to origin
         cx, cy = target_poly.centroid.x, target_poly.centroid.y
@@ -473,7 +491,9 @@ def generate_model(lot_idx: int):
         site = SitePlan(masses=masses, free_space=(), access_nodes=(), boundaries=(), exclusion_zones=())
         spec = BuildingSpecificationV4(context=ctx, program=program, site_plan=site, facades=(), components=(), seed=lot_idx)
         
-        mesh = generate_v4_mesh(spec)
+        mesh = generate_v4_mesh(spec, detail=1)
+        component_count = len(mesh.components)
+        triangle_count = len(mesh.faces)
         
         glb_filename = f"lot_{lot_idx}.glb"
         glb_path = ASSETS_DIR / glb_filename
@@ -488,8 +508,13 @@ def generate_model(lot_idx: int):
             "url": f"/assets/{glb_filename}",
             "lat": geo_centroid.y,
             "lon": geo_centroid.x,
-            "params": params
+            "params": params,
+            "preview_allowed": component_count <= 300 and triangle_count <= 40000,
+            "components": component_count,
+            "triangles": triangle_count
         }
+    except HTTPException:
+        raise
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -498,6 +523,8 @@ def generate_model(lot_idx: int):
 @app.post("/api/download_camera/{pano_id}")
 def download_camera(pano_id: str):
     from streetlevel import streetview
+    if pano_id not in gdf_cams_utm.index:
+        raise HTTPException(status_code=404, detail="Camera not found")
     
     cache_path = CACHE_DIR / f"{pano_id}.jpg"
     if cache_path.exists():
@@ -509,6 +536,8 @@ def download_camera(pano_id: str):
             raise HTTPException(status_code=404, detail="Pano no encontrado en Google APIs")
         streetview.download_panorama(pano, str(cache_path))
         return {"status": "success", "url": f"/cache/{pano_id}.jpg"}
+    except HTTPException:
+        raise
     except Exception as e:
         import traceback
         traceback.print_exc()

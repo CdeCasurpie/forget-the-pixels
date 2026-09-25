@@ -1,5 +1,7 @@
-"""Future public orchestration API for procedural reconstruction."""
+"""Public orchestration API for procedural reconstruction."""
 
-from .contracts import ReconstructionConfig, ReconstructionResult
+from .contracts import BuildingRequest, GenerationReport
+from .theta import ReconstructionResult, reconstruct, generate_from_theta
 
-__all__ = ["ReconstructionConfig", "ReconstructionResult"]
+__all__ = ["BuildingRequest", "GenerationReport", "ReconstructionResult",
+           "reconstruct", "generate_from_theta"]
