@@ -1,0 +1,134 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -12.0261,
+        41.4207
+      ],
+      [
+        -5.0262,
+        50.3581
+      ],
+      [
+        -10.4012,
+        54.9831
+      ],
+      [
+        -17.7614,
+        46.408
+      ],
+      [
+        -12.0261,
+        41.4207
+      ]
+    ],
+    "fronts": [
+      1,
+      2
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_xWUjthZLxjXQq1H6qjMyhQ.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_Rm3qqLA7CLC3G_Tr0ZTbvg.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "brick_courtyard",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.5
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "reja",
+      "garden": true
+    },
+    "primary_color": [
+      0.75,
+      0.66,
+      0.6
+    ],
+    "side_material": "brick",
+    "finish": "standard",
+    "materials": [
+      {
+        "slot": "brick",
+        "template": "brick",
+        "color": [
+          0.7,
+          0.4,
+          0.33
+        ]
+      }
+    ],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            -12.0261,
+            41.4207
+          ],
+          [
+            -16.6224,
+            45.4304
+          ],
+          [
+            -10.241,
+            52.8649
+          ],
+          [
+            -5.9529,
+            49.175
+          ],
+          [
+            -12.0261,
+            41.4207
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          2.9,
+          5.8
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 36
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.7,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    },
+    "site.garden": {
+      "state": "observed",
+      "confidence": 0.7,
+      "view_ids": [
+        "vista_01"
+      ]
+    }
+  }
+}

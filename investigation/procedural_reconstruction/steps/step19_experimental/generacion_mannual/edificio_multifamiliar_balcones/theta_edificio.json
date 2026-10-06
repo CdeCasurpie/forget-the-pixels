@@ -1,0 +1,61 @@
+{
+  "context": {"parcel": [[0, 0], [10, 0], [10, 18], [0, 18]], "fronts": [0], "crs": "EPSG:32718"},
+  "observations": [
+    {"view_id": "referencia_aguirre", "image_path": "referencia.png"}
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 24.8,
+    "floors": 8,
+    "family": "balcony_apartments",
+    "massing": {"pattern": "single_block", "front_setback_m": 0.0},
+    "facade": {
+      "bay_count": 4,
+      "balconies": true,
+      "balcony_depth_m": 1.2,
+      "window_ratio": 0.8,
+      "opening_edits": [
+        {"floor": 0, "bay": 0, "action": "replace", "opening": {
+          "kind": "door", "u_m": 0.89, "v_m": 0.05, "width_m": 1.2, "height_m": 2.9,
+          "mullion_columns": 2, "mullion_rows": 3, "prefab": "storefront", "grille": false}},
+        {"floor": 0, "bay": 1, "action": "replace", "opening": {
+          "kind": "window", "u_m": 2.90, "v_m": 0.40, "width_m": 1.85, "height_m": 2.5,
+          "mullion_columns": 3, "mullion_rows": 3, "prefab": "storefront", "grille": false}},
+        {"floor": 0, "bay": 2, "action": "replace", "opening": {
+          "kind": "window", "u_m": 5.24, "v_m": 0.40, "width_m": 1.85, "height_m": 2.5,
+          "mullion_columns": 3, "mullion_rows": 3, "prefab": "storefront", "grille": false}},
+        {"floor": 0, "bay": 3, "action": "replace", "opening": {
+          "kind": "window", "u_m": 7.60, "v_m": 0.40, "width_m": 1.85, "height_m": 2.5,
+          "mullion_columns": 3, "mullion_rows": 3, "prefab": "storefront", "grille": false}},
+        {"floor": 1, "bay": 1, "action": "suppress"},
+        {"floor": 2, "bay": 1, "action": "suppress"},
+        {"floor": 3, "bay": 1, "action": "suppress"},
+        {"floor": 4, "bay": 1, "action": "suppress"},
+        {"floor": 5, "bay": 1, "action": "suppress"},
+        {"floor": 6, "bay": 1, "action": "suppress"},
+        {"floor": 7, "bay": 1, "action": "suppress"}
+      ],
+      "material_regions": [
+        {"u_m": 2.70, "v_m": 3.10, "width_m": 2.26, "height_m": 21.69, "material_slot": "wood"}
+      ]
+    },
+    "roof": {"kind": "flat", "parapet_m": 0.5},
+    "site": {"fence": "none", "garden": false},
+    "primary_color": [0.55, 0.55, 0.54],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": [
+      {"slot": "concrete", "template": "concrete", "color": [0.84, 0.83, 0.80]},
+      {"slot": "wood", "template": "wood", "color": [0.60, 0.42, 0.28]}
+    ]
+  },
+  "nuisance": {"seed": 5},
+  "evidence": {
+    "height_m": {"state": "inferred", "confidence": 0.7, "view_ids": ["referencia_aguirre"]},
+    "floors": {"state": "inferred", "confidence": 0.8, "view_ids": ["referencia_aguirre"]},
+    "family": {"state": "inferred", "confidence": 0.7, "view_ids": ["referencia_aguirre"]},
+    "facade.balconies": {"state": "observed", "confidence": 0.9, "view_ids": ["referencia_aguirre"]},
+    "facade.material_regions": {"state": "inferred", "confidence": 0.6, "view_ids": ["referencia_aguirre"]},
+    "site.garden": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_aguirre"]}
+  }
+}

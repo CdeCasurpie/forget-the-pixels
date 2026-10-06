@@ -1,0 +1,39 @@
+{
+  "context": {"parcel": [[0, 0], [7, 0], [7, 14], [0, 14]], "fronts": [0], "crs": "EPSG:32718"},
+  "observations": [
+    {"view_id": "casa_referencia", "image_path": "casa_referencia.png"}
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 6.5,
+    "floors": 2,
+    "family": "ribbon_windows",
+    "massing": {"pattern": "single_block", "front_setback_m": 3.5},
+    "facade": {"bay_count": 3, "balconies": false, "window_ratio": 0.85},
+    "roof": {"kind": "flat", "parapet_m": 0.5},
+    "site": {
+      "fence": "none",
+      "garden": true,
+      "runs": [
+        {"edge": 0, "start_m": 0.0, "end_m": 7.0, "kind": "reja", "height_m": 2.1,
+         "gate_u": null, "gate_width": 0.0, "garage_u": null, "garage_width": 0.0},
+        {"edge": 1, "start_m": 0.0, "end_m": 3.5, "kind": "concreto", "height_m": 2.2},
+        {"edge": 3, "start_m": 10.5, "end_m": 14.0, "kind": "concreto", "height_m": 2.2}
+      ]
+    },
+    "primary_color": [0.93, 0.92, 0.87],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [
+      {"slot": "brick", "template": "brick", "color": [0.82, 0.58, 0.52]}
+    ]
+  },
+  "nuisance": {"seed": 7},
+  "evidence": {
+    "height_m": {"state": "inferred", "confidence": 0.6, "view_ids": ["casa_referencia"]},
+    "floors": {"state": "inferred", "confidence": 0.7, "view_ids": ["casa_referencia"]},
+    "family": {"state": "inferred", "confidence": 0.5, "view_ids": ["casa_referencia"]},
+    "massing.front_setback_m": {"state": "inferred", "confidence": 0.5, "view_ids": ["casa_referencia"]},
+    "site.garden": {"state": "observed", "confidence": 0.8, "view_ids": ["casa_referencia"]}
+  }
+}

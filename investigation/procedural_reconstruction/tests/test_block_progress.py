@@ -8,14 +8,15 @@ import trimesh
 from shapely.geometry.polygon import orient
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'steps' / 'step19_experimental'))
 
 from domain.models import MeshData
 from domain.theta import ReconstructionContext
 from modeling.exporters.glb_exporter import export_glb
 from modeling.theta import resolve_theta
-from scripts.glb_incremental import append_glb
-from scripts.step1_select_block import clean_geometry, load_lots, select_block_lots
-from scripts.step3_generate_full_block import choose_theta, select_fronts
+from glb_incremental import append_glb
+from step1_select_block import clean_geometry, load_lots, select_block_lots
+from step3_generate_full_block import choose_theta, select_fronts
 from spatial.street_fronts import annotate_street_fronts
 
 

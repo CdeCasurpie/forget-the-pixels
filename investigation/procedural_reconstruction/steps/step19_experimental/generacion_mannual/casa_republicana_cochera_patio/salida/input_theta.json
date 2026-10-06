@@ -1,0 +1,89 @@
+{
+  "context": {"parcel": [[0, 0], [7, 0], [7, 15], [0, 15]], "fronts": [0], "crs": "EPSG:32718"},
+  "observations": [
+    {"view_id": "referencia_tumbes_casa", "image_path": "referencia.png"}
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "republicano",
+    "massing": {"pattern": "explicit"},
+    "masses": [
+      {"role": "main", "footprint": [[0, 0], [4.6, 0], [4.6, 2], [7, 2], [7, 12], [0, 12]], "levels_m": [0.0, 3.2, 6.4]}
+    ],
+    "facade": {"mode": "repeat"},
+    "facades": [
+      {"mass_role": "main", "edge": 0, "controls": {
+        "mode": "explicit",
+        "openings": [
+          {"kind": "door", "u_m": 0.45, "v_m": 0.0, "width_m": 0.95, "height_m": 2.25,
+           "frame_width_m": 0.07, "recess_m": 0.10,
+           "mullion_columns": 1, "mullion_rows": 1, "prefab": "wood_panel", "grille": false},
+          {"kind": "gate", "u_m": 1.75, "v_m": 0.0, "width_m": 2.1, "height_m": 2.5,
+           "frame_width_m": 0.09, "recess_m": 0.16,
+           "mullion_columns": 1, "mullion_rows": 1, "prefab": "wood_panel", "grille": false},
+          {"kind": "window", "u_m": 1.75, "v_m": 2.62, "width_m": 2.1, "height_m": 0.34,
+           "frame_width_m": 0.05, "recess_m": 0.10,
+           "mullion_columns": 5, "mullion_rows": 1, "prefab": "slim_window",
+           "grille": true, "grille_pattern": "grid"},
+          {"kind": "window", "u_m": 0.80, "v_m": 3.95, "width_m": 1.05, "height_m": 1.75,
+           "frame_width_m": 0.07, "recess_m": 0.14,
+           "mullion_columns": 2, "mullion_rows": 3, "prefab": "legacy", "grille": false},
+          {"kind": "window", "u_m": 2.75, "v_m": 3.95, "width_m": 1.05, "height_m": 1.75,
+           "frame_width_m": 0.07, "recess_m": 0.14,
+           "mullion_columns": 2, "mullion_rows": 3, "prefab": "legacy", "grille": false}
+        ],
+        "projections": [
+          {"kind": "sill_band", "u_m": 0.60, "v_m": 3.78, "width_m": 3.40, "height_m": 0.14, "depth_m": 0.15, "material_slot": "stone"},
+          {"kind": "cornice", "u_m": 0.04, "v_m": 5.92, "width_m": 4.52, "height_m": 0.42, "depth_m": 0.30, "material_slot": "stone"},
+          {"kind": "panel", "u_m": 1.90, "v_m": 6.34, "width_m": 0.80, "height_m": 0.44, "depth_m": 0.16, "material_slot": "plaster"}
+        ],
+        "material_regions": []
+      }},
+      {"mass_role": "main", "edge": 2, "controls": {
+        "mode": "explicit",
+        "openings": [
+          {"kind": "door", "u_m": 0.55, "v_m": 0.0, "width_m": 0.85, "height_m": 2.20,
+           "frame_width_m": 0.07, "recess_m": 0.10,
+           "mullion_columns": 1, "mullion_rows": 1, "prefab": "wood_panel", "grille": false},
+          {"kind": "door", "u_m": 0.35, "v_m": 3.15, "width_m": 0.80, "height_m": 2.05,
+           "frame_width_m": 0.06, "recess_m": 0.10,
+           "mullion_columns": 2, "mullion_rows": 2, "prefab": "slim_window", "grille": false},
+          {"kind": "window", "u_m": 1.50, "v_m": 4.55, "width_m": 0.45, "height_m": 0.45,
+           "frame_width_m": 0.05, "recess_m": 0.10,
+           "mullion_columns": 1, "mullion_rows": 1, "prefab": "legacy", "grille": false}
+        ],
+        "projections": [
+          {"kind": "balcony", "u_m": 0.15, "v_m": 3.10, "width_m": 2.10, "height_m": 1.05, "depth_m": 0.90, "material_slot": "plaster", "label": "solid"},
+          {"kind": "cornice", "u_m": 0.03, "v_m": 5.92, "width_m": 2.34, "height_m": 0.38, "depth_m": 0.26, "material_slot": "stone"}
+        ],
+        "material_regions": []
+      }}
+    ],
+    "roof": {"kind": "flat", "parapet_m": 0.5},
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": [
+        {"edge": 0, "start_m": 4.6, "end_m": 7.0, "kind": "concreto", "height_m": 1.5,
+         "gate_u": 0.7, "gate_width": 1.0, "garage_u": null, "garage_width": 0.0}
+      ]
+    },
+    "primary_color": [0.74, 0.70, 0.61],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": [
+      {"slot": "wood", "template": "wood", "color": [0.40, 0.20, 0.14]},
+      {"slot": "metal", "template": "metal", "color": [0.42, 0.14, 0.11]}
+    ]
+  },
+  "nuisance": {"seed": 11},
+  "evidence": {
+    "family": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_tumbes_casa"]},
+    "masses[main:0].levels_m": {"state": "observed", "confidence": 0.75, "view_ids": ["referencia_tumbes_casa"]},
+    "roof.parapet_m": {"state": "observed", "confidence": 0.7, "view_ids": ["referencia_tumbes_casa"]},
+    "site.garden": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_tumbes_casa"]},
+    "site.runs": {"state": "observed", "confidence": 0.85, "view_ids": ["referencia_tumbes_casa"]},
+    "facades[main,edge:0].controls.openings": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_tumbes_casa"]},
+    "facades[main,edge:2].controls.openings": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_tumbes_casa"]}
+  }
+}

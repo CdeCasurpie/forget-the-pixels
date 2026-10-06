@@ -1,0 +1,987 @@
+{
+  "seed": 123,
+  "seed_lot_index": "1850",
+  "lots": 24,
+  "ok": 14,
+  "parcial": 5,
+  "sin_visibilidad": 5,
+  "failed": 0,
+  "params": {
+    "fotos_por_lote": 2,
+    "simplify_tolerance_m": 0.1,
+    "zoom": 3,
+    "fov": 120.0,
+    "max_camera_distance_m": 60.0,
+    "fallback_distance_m": 150.0
+  },
+  "results": [
+    {
+      "order": 1,
+      "lot_index": 1831,
+      "status": "sin_visibilidad",
+      "fronts": [
+        1
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "0NNVCN5NTvOD1dEspTEwrQ",
+          "lat": -12.14386901697936,
+          "lon": -77.01677917635352,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.05,
+          "target_edge_index": null,
+          "target_bearing_deg": 153.94,
+          "relative_yaw_deg": -67.95,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/0NNVCN5NTvOD1dEspTEwrQ.jpg",
+          "vista": "lote_1831/fotos/vista_01_0NNVCN5NTvOD1dEspTEwrQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "p0KfJX_WsJLntOzUN7VEwA",
+          "lat": -12.14393796844331,
+          "lon": -77.0168423528939,
+          "date": "2024-05",
+          "camera_to_lot_m": 3.67,
+          "target_edge_index": null,
+          "target_bearing_deg": 72.91,
+          "relative_yaw_deg": -148.57,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/p0KfJX_WsJLntOzUN7VEwA.jpg",
+          "vista": "lote_1831/fotos/vista_02_p0KfJX_WsJLntOzUN7VEwA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 2,
+      "lot_index": 1832,
+      "status": "ok",
+      "fronts": [
+        3
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "uVrg2yZQCNPTkELc-0SaXQ",
+          "lat": -12.14400225934139,
+          "lon": -77.01632797715575,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.28,
+          "target_edge_index": 0,
+          "target_bearing_deg": 250.26,
+          "relative_yaw_deg": 118.17,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/uVrg2yZQCNPTkELc-0SaXQ.jpg",
+          "vista": "lote_1832/fotos/vista_01_uVrg2yZQCNPTkELc-0SaXQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "ybFo6xYwlNMxF3ZQzD9RMA",
+          "lat": -12.14394224363853,
+          "lon": -77.01639739252627,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.38,
+          "target_edge_index": 0,
+          "target_bearing_deg": 181.61,
+          "relative_yaw_deg": 50.37,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/ybFo6xYwlNMxF3ZQzD9RMA.jpg",
+          "vista": "lote_1832/fotos/vista_02_ybFo6xYwlNMxF3ZQzD9RMA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 3,
+      "lot_index": 1849,
+      "status": "sin_visibilidad",
+      "fronts": [
+        3
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "p0KfJX_WsJLntOzUN7VEwA",
+          "lat": -12.14393796844331,
+          "lon": -77.0168423528939,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.23,
+          "target_edge_index": null,
+          "target_bearing_deg": 146.51,
+          "relative_yaw_deg": -74.96,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/p0KfJX_WsJLntOzUN7VEwA.jpg",
+          "vista": "lote_1849/fotos/vista_01_p0KfJX_WsJLntOzUN7VEwA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "PHUhpomYJ2Bixistgqru3Q",
+          "lat": -12.14400683663504,
+          "lon": -77.01690377205806,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.26,
+          "target_edge_index": null,
+          "target_bearing_deg": 130.79,
+          "relative_yaw_deg": -90.38,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/PHUhpomYJ2Bixistgqru3Q.jpg",
+          "vista": "lote_1849/fotos/vista_02_PHUhpomYJ2Bixistgqru3Q.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 4,
+      "lot_index": 1850,
+      "status": "parcial",
+      "fronts": [
+        0
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "zWXcuWNyZbMlxD7UqoSpYA",
+          "lat": -12.14381818631367,
+          "lon": -77.01653780476181,
+          "date": "2024-05",
+          "camera_to_lot_m": 21.05,
+          "target_edge_index": 3,
+          "target_bearing_deg": 211.71,
+          "relative_yaw_deg": 77.94,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/zWXcuWNyZbMlxD7UqoSpYA.jpg",
+          "vista": "lote_1850/fotos/vista_01_zWXcuWNyZbMlxD7UqoSpYA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "0NNVCN5NTvOD1dEspTEwrQ",
+          "lat": -12.14386901697936,
+          "lon": -77.01677917635352,
+          "date": "2024-05",
+          "camera_to_lot_m": 16.03,
+          "target_edge_index": null,
+          "target_bearing_deg": 140.14,
+          "relative_yaw_deg": -81.75,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/0NNVCN5NTvOD1dEspTEwrQ.jpg",
+          "vista": "lote_1850/fotos/vista_02_0NNVCN5NTvOD1dEspTEwrQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 5,
+      "lot_index": 1851,
+      "status": "sin_visibilidad",
+      "fronts": [
+        1
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "CJSpJIsIpIcb1tU_gFWlhA",
+          "lat": -12.14388078592319,
+          "lon": -77.0164688288091,
+          "date": "2024-05",
+          "camera_to_lot_m": 18.61,
+          "target_edge_index": null,
+          "target_bearing_deg": 210.08,
+          "relative_yaw_deg": 79.09,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/CJSpJIsIpIcb1tU_gFWlhA.jpg",
+          "vista": "lote_1851/fotos/vista_01_CJSpJIsIpIcb1tU_gFWlhA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "ybFo6xYwlNMxF3ZQzD9RMA",
+          "lat": -12.14394224363853,
+          "lon": -77.01639739252627,
+          "date": "2024-05",
+          "camera_to_lot_m": 18.62,
+          "target_edge_index": null,
+          "target_bearing_deg": 235.02,
+          "relative_yaw_deg": 103.78,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/ybFo6xYwlNMxF3ZQzD9RMA.jpg",
+          "vista": "lote_1851/fotos/vista_02_ybFo6xYwlNMxF3ZQzD9RMA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 6,
+      "lot_index": 1973,
+      "status": "ok",
+      "fronts": [
+        1,
+        2
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "xWUjthZLxjXQq1H6qjMyhQ",
+          "lat": -12.14375415929878,
+          "lon": -77.01660730787954,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.92,
+          "target_edge_index": 2,
+          "target_bearing_deg": 228.96,
+          "relative_yaw_deg": 97.09,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/xWUjthZLxjXQq1H6qjMyhQ.jpg",
+          "vista": "lote_1973/fotos/vista_01_xWUjthZLxjXQq1H6qjMyhQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "Rm3qqLA7CLC3G_Tr0ZTbvg",
+          "lat": -12.14368427673002,
+          "lon": -77.01668665209796,
+          "date": "2024-05",
+          "camera_to_lot_m": 10.61,
+          "target_edge_index": 2,
+          "target_bearing_deg": 168.39,
+          "relative_yaw_deg": 36.87,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/Rm3qqLA7CLC3G_Tr0ZTbvg.jpg",
+          "vista": "lote_1973/fotos/vista_02_Rm3qqLA7CLC3G_Tr0ZTbvg.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 7,
+      "lot_index": 1975,
+      "status": "ok",
+      "fronts": [
+        0,
+        1
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "zWXcuWNyZbMlxD7UqoSpYA",
+          "lat": -12.14381818631367,
+          "lon": -77.01653780476181,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.63,
+          "target_edge_index": 2,
+          "target_bearing_deg": 250.24,
+          "relative_yaw_deg": 116.48,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/zWXcuWNyZbMlxD7UqoSpYA.jpg",
+          "vista": "lote_1975/fotos/vista_01_zWXcuWNyZbMlxD7UqoSpYA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "xWUjthZLxjXQq1H6qjMyhQ",
+          "lat": -12.14375415929878,
+          "lon": -77.01660730787954,
+          "date": "2024-05",
+          "camera_to_lot_m": 8.28,
+          "target_edge_index": 2,
+          "target_bearing_deg": 183.36,
+          "relative_yaw_deg": 51.49,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/xWUjthZLxjXQq1H6qjMyhQ.jpg",
+          "vista": "lote_1975/fotos/vista_02_xWUjthZLxjXQq1H6qjMyhQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 8,
+      "lot_index": 1976,
+      "status": "ok",
+      "fronts": [
+        0,
+        3
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "CJSpJIsIpIcb1tU_gFWlhA",
+          "lat": -12.14388078592319,
+          "lon": -77.0164688288091,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.3,
+          "target_edge_index": 0,
+          "target_bearing_deg": 239.44,
+          "relative_yaw_deg": 108.45,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/CJSpJIsIpIcb1tU_gFWlhA.jpg",
+          "vista": "lote_1976/fotos/vista_01_CJSpJIsIpIcb1tU_gFWlhA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "zWXcuWNyZbMlxD7UqoSpYA",
+          "lat": -12.14381818631367,
+          "lon": -77.01653780476181,
+          "date": "2024-05",
+          "camera_to_lot_m": 8.1,
+          "target_edge_index": 0,
+          "target_bearing_deg": 175.13,
+          "relative_yaw_deg": 41.37,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/zWXcuWNyZbMlxD7UqoSpYA.jpg",
+          "vista": "lote_1976/fotos/vista_02_zWXcuWNyZbMlxD7UqoSpYA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 9,
+      "lot_index": 1977,
+      "status": "sin_visibilidad",
+      "fronts": [
+        3
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "0NNVCN5NTvOD1dEspTEwrQ",
+          "lat": -12.14386901697936,
+          "lon": -77.01677917635352,
+          "date": "2024-05",
+          "camera_to_lot_m": 8.77,
+          "target_edge_index": null,
+          "target_bearing_deg": 140.21,
+          "relative_yaw_deg": -81.68,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/0NNVCN5NTvOD1dEspTEwrQ.jpg",
+          "vista": "lote_1977/fotos/vista_01_0NNVCN5NTvOD1dEspTEwrQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "p0KfJX_WsJLntOzUN7VEwA",
+          "lat": -12.14393796844331,
+          "lon": -77.0168423528939,
+          "date": "2024-05",
+          "camera_to_lot_m": 9.88,
+          "target_edge_index": null,
+          "target_bearing_deg": 97.9,
+          "relative_yaw_deg": -123.57,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/p0KfJX_WsJLntOzUN7VEwA.jpg",
+          "vista": "lote_1977/fotos/vista_02_p0KfJX_WsJLntOzUN7VEwA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 10,
+      "lot_index": 1980,
+      "status": "ok",
+      "fronts": [
+        0
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "ybFo6xYwlNMxF3ZQzD9RMA",
+          "lat": -12.14394224363853,
+          "lon": -77.01639739252627,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.3,
+          "target_edge_index": 3,
+          "target_bearing_deg": 245.91,
+          "relative_yaw_deg": 114.67,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/ybFo6xYwlNMxF3ZQzD9RMA.jpg",
+          "vista": "lote_1980/fotos/vista_01_ybFo6xYwlNMxF3ZQzD9RMA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "CJSpJIsIpIcb1tU_gFWlhA",
+          "lat": -12.14388078592319,
+          "lon": -77.0164688288091,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.69,
+          "target_edge_index": 3,
+          "target_bearing_deg": 177.37,
+          "relative_yaw_deg": 46.38,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/CJSpJIsIpIcb1tU_gFWlhA.jpg",
+          "vista": "lote_1980/fotos/vista_02_CJSpJIsIpIcb1tU_gFWlhA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 11,
+      "lot_index": 1983,
+      "status": "parcial",
+      "fronts": [
+        5
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "74mN2Rm2t_AFSd2HiWqy6w",
+          "lat": -12.14407380447606,
+          "lon": -77.01696475185548,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.4,
+          "target_edge_index": 0,
+          "target_bearing_deg": 107.94,
+          "relative_yaw_deg": -114.37,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/74mN2Rm2t_AFSd2HiWqy6w.jpg",
+          "vista": "lote_1983/fotos/vista_01_74mN2Rm2t_AFSd2HiWqy6w.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "PHUhpomYJ2Bixistgqru3Q",
+          "lat": -12.14400683663504,
+          "lon": -77.01690377205806,
+          "date": "2024-05",
+          "camera_to_lot_m": 5.22,
+          "target_edge_index": null,
+          "target_bearing_deg": 165.36,
+          "relative_yaw_deg": -55.81,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/PHUhpomYJ2Bixistgqru3Q.jpg",
+          "vista": "lote_1983/fotos/vista_02_PHUhpomYJ2Bixistgqru3Q.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 12,
+      "lot_index": 1984,
+      "status": "ok",
+      "fronts": [
+        1
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "uVrg2yZQCNPTkELc-0SaXQ",
+          "lat": -12.14400225934139,
+          "lon": -77.01632797715575,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.32,
+          "target_edge_index": 2,
+          "target_bearing_deg": 198.31,
+          "relative_yaw_deg": 66.22,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/uVrg2yZQCNPTkELc-0SaXQ.jpg",
+          "vista": "lote_1984/fotos/vista_01_uVrg2yZQCNPTkELc-0SaXQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "ERm0QpQhRNpmoN-8xs0EcQ",
+          "lat": -12.14406367115677,
+          "lon": -77.01625917681892,
+          "date": "2024-05",
+          "camera_to_lot_m": 8.6,
+          "target_edge_index": 2,
+          "target_bearing_deg": 265.81,
+          "relative_yaw_deg": 133.86,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/ERm0QpQhRNpmoN-8xs0EcQ.jpg",
+          "vista": "lote_1984/fotos/vista_02_ERm0QpQhRNpmoN-8xs0EcQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 13,
+      "lot_index": 1987,
+      "status": "ok",
+      "fronts": [
+        0
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "CKZBWnTHtu2O83UC42gg5Q",
+          "lat": -12.14412638531866,
+          "lon": -77.01619081578146,
+          "date": "2024-05",
+          "camera_to_lot_m": 6.77,
+          "target_edge_index": 4,
+          "target_bearing_deg": 269.5,
+          "relative_yaw_deg": 136.19,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/CKZBWnTHtu2O83UC42gg5Q.jpg",
+          "vista": "lote_1987/fotos/vista_01_CKZBWnTHtu2O83UC42gg5Q.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "ERm0QpQhRNpmoN-8xs0EcQ",
+          "lat": -12.14406367115677,
+          "lon": -77.01625917681892,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.09,
+          "target_edge_index": 4,
+          "target_bearing_deg": 201.63,
+          "relative_yaw_deg": 69.68,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/ERm0QpQhRNpmoN-8xs0EcQ.jpg",
+          "vista": "lote_1987/fotos/vista_02_ERm0QpQhRNpmoN-8xs0EcQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 14,
+      "lot_index": 1989,
+      "status": "parcial",
+      "fronts": [
+        6
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "JnzRF8EExeoLQ31dq-qExg",
+          "lat": -12.14413829891319,
+          "lon": -77.0170258194893,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.73,
+          "target_edge_index": 1,
+          "target_bearing_deg": 84.95,
+          "relative_yaw_deg": -137.88,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/JnzRF8EExeoLQ31dq-qExg.jpg",
+          "vista": "lote_1989/fotos/vista_01_JnzRF8EExeoLQ31dq-qExg.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "74mN2Rm2t_AFSd2HiWqy6w",
+          "lat": -12.14407380447606,
+          "lon": -77.01696475185548,
+          "date": "2024-05",
+          "camera_to_lot_m": 3.97,
+          "target_edge_index": null,
+          "target_bearing_deg": 156.18,
+          "relative_yaw_deg": -66.13,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/74mN2Rm2t_AFSd2HiWqy6w.jpg",
+          "vista": "lote_1989/fotos/vista_02_74mN2Rm2t_AFSd2HiWqy6w.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 15,
+      "lot_index": 1992,
+      "status": "ok",
+      "fronts": [
+        0
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "CKZBWnTHtu2O83UC42gg5Q",
+          "lat": -12.14412638531866,
+          "lon": -77.01619081578146,
+          "date": "2024-05",
+          "camera_to_lot_m": 6.76,
+          "target_edge_index": 3,
+          "target_bearing_deg": 201.85,
+          "relative_yaw_deg": 68.54,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/CKZBWnTHtu2O83UC42gg5Q.jpg",
+          "vista": "lote_1992/fotos/vista_01_CKZBWnTHtu2O83UC42gg5Q.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "IWYDcQRrdYra3Oc4xzTNiA",
+          "lat": -12.14418784501052,
+          "lon": -77.01612482713416,
+          "date": "2024-05",
+          "camera_to_lot_m": 8.02,
+          "target_edge_index": 3,
+          "target_bearing_deg": 270.66,
+          "relative_yaw_deg": 137.97,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/IWYDcQRrdYra3Oc4xzTNiA.jpg",
+          "vista": "lote_1992/fotos/vista_02_IWYDcQRrdYra3Oc4xzTNiA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 16,
+      "lot_index": 1993,
+      "status": "ok",
+      "fronts": [
+        0
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "lgNOHOw28aEi-SBHao-leA",
+          "lat": -12.14419788197008,
+          "lon": -77.01708240587361,
+          "date": "2024-05",
+          "camera_to_lot_m": 2.04,
+          "target_edge_index": 3,
+          "target_bearing_deg": 77.73,
+          "relative_yaw_deg": -145.39,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/lgNOHOw28aEi-SBHao-leA.jpg",
+          "vista": "lote_1993/fotos/vista_01_lgNOHOw28aEi-SBHao-leA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "3mvt4e10RzdY5nDe-pOCyQ",
+          "lat": -12.14422265497463,
+          "lon": -77.01716702179961,
+          "date": "2024-05",
+          "camera_to_lot_m": 10.03,
+          "target_edge_index": 3,
+          "target_bearing_deg": 74.24,
+          "relative_yaw_deg": 147.07,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/3mvt4e10RzdY5nDe-pOCyQ.jpg",
+          "vista": "lote_1993/fotos/vista_02_3mvt4e10RzdY5nDe-pOCyQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 17,
+      "lot_index": 1995,
+      "status": "ok",
+      "fronts": [
+        0,
+        1,
+        4
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "99n0FNAbJts5rfz7dMO21g",
+          "lat": -12.14424391184945,
+          "lon": -77.01606042007093,
+          "date": "2024-05",
+          "camera_to_lot_m": 6.33,
+          "target_edge_index": 4,
+          "target_bearing_deg": 215.27,
+          "relative_yaw_deg": 86.77,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/99n0FNAbJts5rfz7dMO21g.jpg",
+          "vista": "lote_1995/fotos/vista_01_99n0FNAbJts5rfz7dMO21g.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "IWYDcQRrdYra3Oc4xzTNiA",
+          "lat": -12.14418784501052,
+          "lon": -77.01612482713416,
+          "date": "2024-05",
+          "camera_to_lot_m": 6.37,
+          "target_edge_index": 3,
+          "target_bearing_deg": 203.39,
+          "relative_yaw_deg": 70.69,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/IWYDcQRrdYra3Oc4xzTNiA.jpg",
+          "vista": "lote_1995/fotos/vista_02_IWYDcQRrdYra3Oc4xzTNiA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 18,
+      "lot_index": 1997,
+      "status": "ok",
+      "fronts": [
+        1,
+        2
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "3mvt4e10RzdY5nDe-pOCyQ",
+          "lat": -12.14422265497463,
+          "lon": -77.01716702179961,
+          "date": "2024-05",
+          "camera_to_lot_m": 7.46,
+          "target_edge_index": 6,
+          "target_bearing_deg": 98.57,
+          "relative_yaw_deg": 171.41,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/3mvt4e10RzdY5nDe-pOCyQ.jpg",
+          "vista": "lote_1997/fotos/vista_01_3mvt4e10RzdY5nDe-pOCyQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "brzbd_Mi0hk1UjbzabzcKw",
+          "lat": -12.14431973244044,
+          "lon": -77.01717290888676,
+          "date": "2024-05",
+          "camera_to_lot_m": 10.54,
+          "target_edge_index": 5,
+          "target_bearing_deg": 89.69,
+          "relative_yaw_deg": -145.58,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/brzbd_Mi0hk1UjbzabzcKw.jpg",
+          "vista": "lote_1997/fotos/vista_02_brzbd_Mi0hk1UjbzabzcKw.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 19,
+      "lot_index": 1999,
+      "status": "ok",
+      "fronts": [
+        5
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "qebtGG42ZDjonm1s_i3qmw",
+          "lat": -12.14459132546097,
+          "lon": -77.01623228932036,
+          "date": "2025-10",
+          "camera_to_lot_m": 9.38,
+          "target_edge_index": 0,
+          "target_bearing_deg": 354.07,
+          "relative_yaw_deg": -50.42,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/qebtGG42ZDjonm1s_i3qmw.jpg",
+          "vista": "lote_1999/fotos/vista_01_qebtGG42ZDjonm1s_i3qmw.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "-DC4tlDeMuOzg3XddaqCWg",
+          "lat": -12.14452780793656,
+          "lon": -77.01616840952042,
+          "date": "2025-10",
+          "camera_to_lot_m": 9.95,
+          "target_edge_index": 0,
+          "target_bearing_deg": 304.72,
+          "relative_yaw_deg": -98.97,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/-DC4tlDeMuOzg3XddaqCWg.jpg",
+          "vista": "lote_1999/fotos/vista_02_-DC4tlDeMuOzg3XddaqCWg.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 20,
+      "lot_index": 2000,
+      "status": "parcial",
+      "fronts": [
+        1
+      ],
+      "front_source": "fallback_unverified",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "yvKIC1PYjcSR2GUq6XC-rw",
+          "lat": -12.14441786120372,
+          "lon": -77.01693970972336,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.93,
+          "target_edge_index": 2,
+          "target_bearing_deg": 83.04,
+          "relative_yaw_deg": 131.69,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/yvKIC1PYjcSR2GUq6XC-rw.jpg",
+          "vista": "lote_2000/fotos/vista_01_yvKIC1PYjcSR2GUq6XC-rw.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "Zd22OOdvzXHXvUMutGFqDQ",
+          "lat": -12.14447834617907,
+          "lon": -77.01687117333532,
+          "date": "2024-05",
+          "camera_to_lot_m": 4.3,
+          "target_edge_index": null,
+          "target_bearing_deg": 2.56,
+          "relative_yaw_deg": 50.31,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/Zd22OOdvzXHXvUMutGFqDQ.jpg",
+          "vista": "lote_2000/fotos/vista_02_Zd22OOdvzXHXvUMutGFqDQ.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 21,
+      "lot_index": 2002,
+      "status": "sin_visibilidad",
+      "fronts": [
+        0
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "Zd22OOdvzXHXvUMutGFqDQ",
+          "lat": -12.14447834617907,
+          "lon": -77.01687117333532,
+          "date": "2024-05",
+          "camera_to_lot_m": 2.03,
+          "target_edge_index": null,
+          "target_bearing_deg": 67.59,
+          "relative_yaw_deg": 115.34,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/Zd22OOdvzXHXvUMutGFqDQ.jpg",
+          "vista": "lote_2002/fotos/vista_01_Zd22OOdvzXHXvUMutGFqDQ.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "u-LD1Qg2Ly_FHPzgKVkPQw",
+          "lat": -12.1445405065195,
+          "lon": -77.01680193397061,
+          "date": "2024-05",
+          "camera_to_lot_m": 2.22,
+          "target_edge_index": null,
+          "target_bearing_deg": 16.44,
+          "relative_yaw_deg": 66.46,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/u-LD1Qg2Ly_FHPzgKVkPQw.jpg",
+          "vista": "lote_2002/fotos/vista_02_u-LD1Qg2Ly_FHPzgKVkPQw.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 22,
+      "lot_index": 2005,
+      "status": "ok",
+      "fronts": [
+        0
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "BzSnH4ujLRdtTxUFHlBYsw",
+          "lat": -12.14472321794312,
+          "lon": -77.01636338778644,
+          "date": "2025-10",
+          "camera_to_lot_m": 8.71,
+          "target_edge_index": 4,
+          "target_bearing_deg": 357.72,
+          "relative_yaw_deg": -43.65,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/BzSnH4ujLRdtTxUFHlBYsw.jpg",
+          "vista": "lote_2005/fotos/vista_01_BzSnH4ujLRdtTxUFHlBYsw.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "fh48OQRJlNzl-iISdEincw",
+          "lat": -12.1446570226546,
+          "lon": -77.01629889298238,
+          "date": "2025-10",
+          "camera_to_lot_m": 8.75,
+          "target_edge_index": 4,
+          "target_bearing_deg": 302.62,
+          "relative_yaw_deg": -101.5,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/fh48OQRJlNzl-iISdEincw.jpg",
+          "vista": "lote_2005/fotos/vista_02_fh48OQRJlNzl-iISdEincw.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 23,
+      "lot_index": 2008,
+      "status": "parcial",
+      "fronts": [
+        0
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "XBUJOWM9d2ogj6ULSY_8JA",
+          "lat": -12.14466039498577,
+          "lon": -77.01665827094939,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.87,
+          "target_edge_index": 3,
+          "target_bearing_deg": 347.06,
+          "relative_yaw_deg": 36.18,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/XBUJOWM9d2ogj6ULSY_8JA.jpg",
+          "vista": "lote_2008/fotos/vista_01_XBUJOWM9d2ogj6ULSY_8JA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "1WKOfKXeGaCNV_o_C1usiA",
+          "lat": -12.14472120708364,
+          "lon": -77.01658762558476,
+          "date": "2024-05",
+          "camera_to_lot_m": 1.84,
+          "target_edge_index": null,
+          "target_bearing_deg": 349.9,
+          "relative_yaw_deg": 38.69,
+          "visibility": "sin_visibilidad",
+          "raw_panorama": "panoramas/1WKOfKXeGaCNV_o_C1usiA.jpg",
+          "vista": "lote_2008/fotos/vista_02_1WKOfKXeGaCNV_o_C1usiA.jpg"
+        }
+      ],
+      "error": ""
+    },
+    {
+      "order": 24,
+      "lot_index": 2018,
+      "status": "ok",
+      "fronts": [
+        0,
+        1,
+        2
+      ],
+      "front_source": "street_inferred",
+      "cameras": [
+        {
+          "rank": 1,
+          "pano_id": "l5dJ9qpNE464PIpPWvjTJA",
+          "lat": -12.14478496984669,
+          "lon": -77.01651434415554,
+          "date": "2024-05",
+          "camera_to_lot_m": 3.47,
+          "target_edge_index": 3,
+          "target_bearing_deg": 11.42,
+          "relative_yaw_deg": 59.7,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/l5dJ9qpNE464PIpPWvjTJA.jpg",
+          "vista": "lote_2018/fotos/vista_01_l5dJ9qpNE464PIpPWvjTJA.jpg"
+        },
+        {
+          "rank": 2,
+          "pano_id": "BUWYkoM49QPJ3-jiyOUWCQ",
+          "lat": -12.14479223892402,
+          "lon": -77.0164262130735,
+          "date": "2025-10",
+          "camera_to_lot_m": 8.24,
+          "target_edge_index": 2,
+          "target_bearing_deg": 345.79,
+          "relative_yaw_deg": -55.78,
+          "visibility": "verificada",
+          "raw_panorama": "panoramas/BUWYkoM49QPJ3-jiyOUWCQ.jpg",
+          "vista": "lote_2018/fotos/vista_02_BUWYkoM49QPJ3-jiyOUWCQ.jpg"
+        }
+      ],
+      "error": ""
+    }
+  ]
+}

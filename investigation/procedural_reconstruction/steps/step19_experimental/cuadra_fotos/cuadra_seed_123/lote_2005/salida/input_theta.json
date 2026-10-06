@@ -1,0 +1,123 @@
+{
+  "context": {
+    "parcel": [
+      [
+        21.0664,
+        -41.702
+      ],
+      [
+        29.3153,
+        -32.2014
+      ],
+      [
+        10.4425,
+        -15.8909
+      ],
+      [
+        2.3488,
+        -25.0782
+      ],
+      [
+        14.2862,
+        -35.3907
+      ],
+      [
+        21.0664,
+        -41.702
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_BzSnH4ujLRdtTxUFHlBYsw.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_fh48OQRJlNzl-iISdEincw.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "quiet_house",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 4,
+      "window_ratio": 0.46
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.3
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "primary_color": [
+      0.78,
+      0.6,
+      0.55
+    ],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            21.0664,
+            -41.702
+          ],
+          [
+            29.3153,
+            -32.2014
+          ],
+          [
+            10.4425,
+            -15.8909
+          ],
+          [
+            2.3488,
+            -25.0782
+          ],
+          [
+            14.2862,
+            -35.3907
+          ],
+          [
+            21.0664,
+            -41.702
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.4
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 52
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    }
+  }
+}

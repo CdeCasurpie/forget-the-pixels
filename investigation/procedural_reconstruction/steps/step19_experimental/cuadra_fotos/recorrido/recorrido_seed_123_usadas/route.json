@@ -1,0 +1,535 @@
+{
+ "cuadra": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/investigation/procedural_reconstruction/scripts/cuadra_fotos/cuadra_seed_123",
+ "panos": [
+  {
+   "rank": 0,
+   "pano_id": "XBUJOWM9d2ogj6ULSY_8JA",
+   "date": "2024-05",
+   "heading_deg": 310.8834838867188,
+   "gsv": "panos_gsv/XBUJOWM9d2ogj6ULSY_8JA.jpg",
+   "modelo": "panos_modelo/XBUJOWM9d2ogj6ULSY_8JA.jpg",
+   "usada_en": [
+    {
+     "lote": 2008,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 1,
+   "pano_id": "u-LD1Qg2Ly_FHPzgKVkPQw",
+   "date": "2024-05",
+   "heading_deg": 309.9807739257812,
+   "gsv": "panos_gsv/u-LD1Qg2Ly_FHPzgKVkPQw.jpg",
+   "modelo": "panos_modelo/u-LD1Qg2Ly_FHPzgKVkPQw.jpg",
+   "usada_en": [
+    {
+     "lote": 2002,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 2,
+   "pano_id": "Zd22OOdvzXHXvUMutGFqDQ",
+   "date": "2024-05",
+   "heading_deg": 312.2564392089844,
+   "gsv": "panos_gsv/Zd22OOdvzXHXvUMutGFqDQ.jpg",
+   "modelo": "panos_modelo/Zd22OOdvzXHXvUMutGFqDQ.jpg",
+   "usada_en": [
+    {
+     "lote": 2000,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 2002,
+     "vista": 1,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 3,
+   "pano_id": "yvKIC1PYjcSR2GUq6XC-rw",
+   "date": "2024-05",
+   "heading_deg": 311.3477783203125,
+   "gsv": "panos_gsv/yvKIC1PYjcSR2GUq6XC-rw.jpg",
+   "modelo": "panos_modelo/yvKIC1PYjcSR2GUq6XC-rw.jpg",
+   "usada_en": [
+    {
+     "lote": 2000,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 4,
+   "pano_id": "brzbd_Mi0hk1UjbzabzcKw",
+   "date": "2024-05",
+   "heading_deg": 235.27545166015622,
+   "gsv": "panos_gsv/brzbd_Mi0hk1UjbzabzcKw.jpg",
+   "modelo": "panos_modelo/brzbd_Mi0hk1UjbzabzcKw.jpg",
+   "usada_en": [
+    {
+     "lote": 1997,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 5,
+   "pano_id": "3mvt4e10RzdY5nDe-pOCyQ",
+   "date": "2024-05",
+   "heading_deg": 287.1613464355469,
+   "gsv": "panos_gsv/3mvt4e10RzdY5nDe-pOCyQ.jpg",
+   "modelo": "panos_modelo/3mvt4e10RzdY5nDe-pOCyQ.jpg",
+   "usada_en": [
+    {
+     "lote": 1993,
+     "vista": 2,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1997,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 6,
+   "pano_id": "lgNOHOw28aEi-SBHao-leA",
+   "date": "2024-05",
+   "heading_deg": 223.12701416015622,
+   "gsv": "panos_gsv/lgNOHOw28aEi-SBHao-leA.jpg",
+   "modelo": "panos_modelo/lgNOHOw28aEi-SBHao-leA.jpg",
+   "usada_en": [
+    {
+     "lote": 1993,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 7,
+   "pano_id": "JnzRF8EExeoLQ31dq-qExg",
+   "date": "2024-05",
+   "heading_deg": 222.8327331542969,
+   "gsv": "panos_gsv/JnzRF8EExeoLQ31dq-qExg.jpg",
+   "modelo": "panos_modelo/JnzRF8EExeoLQ31dq-qExg.jpg",
+   "usada_en": [
+    {
+     "lote": 1989,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 8,
+   "pano_id": "74mN2Rm2t_AFSd2HiWqy6w",
+   "date": "2024-05",
+   "heading_deg": 222.3114013671875,
+   "gsv": "panos_gsv/74mN2Rm2t_AFSd2HiWqy6w.jpg",
+   "modelo": "panos_modelo/74mN2Rm2t_AFSd2HiWqy6w.jpg",
+   "usada_en": [
+    {
+     "lote": 1983,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1989,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 9,
+   "pano_id": "PHUhpomYJ2Bixistgqru3Q",
+   "date": "2024-05",
+   "heading_deg": 221.1683807373047,
+   "gsv": "panos_gsv/PHUhpomYJ2Bixistgqru3Q.jpg",
+   "modelo": "panos_modelo/PHUhpomYJ2Bixistgqru3Q.jpg",
+   "usada_en": [
+    {
+     "lote": 1849,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1983,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 10,
+   "pano_id": "p0KfJX_WsJLntOzUN7VEwA",
+   "date": "2024-05",
+   "heading_deg": 221.4731292724609,
+   "gsv": "panos_gsv/p0KfJX_WsJLntOzUN7VEwA.jpg",
+   "modelo": "panos_modelo/p0KfJX_WsJLntOzUN7VEwA.jpg",
+   "usada_en": [
+    {
+     "lote": 1831,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1849,
+     "vista": 1,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1977,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 11,
+   "pano_id": "0NNVCN5NTvOD1dEspTEwrQ",
+   "date": "2024-05",
+   "heading_deg": 221.8938598632812,
+   "gsv": "panos_gsv/0NNVCN5NTvOD1dEspTEwrQ.jpg",
+   "modelo": "panos_modelo/0NNVCN5NTvOD1dEspTEwrQ.jpg",
+   "usada_en": [
+    {
+     "lote": 1831,
+     "vista": 1,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1850,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1977,
+     "vista": 1,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  },
+  {
+   "rank": 12,
+   "pano_id": "Rm3qqLA7CLC3G_Tr0ZTbvg",
+   "date": "2024-05",
+   "heading_deg": 131.5223693847656,
+   "gsv": "panos_gsv/Rm3qqLA7CLC3G_Tr0ZTbvg.jpg",
+   "modelo": "panos_modelo/Rm3qqLA7CLC3G_Tr0ZTbvg.jpg",
+   "usada_en": [
+    {
+     "lote": 1973,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 13,
+   "pano_id": "xWUjthZLxjXQq1H6qjMyhQ",
+   "date": "2024-05",
+   "heading_deg": 131.8716888427734,
+   "gsv": "panos_gsv/xWUjthZLxjXQq1H6qjMyhQ.jpg",
+   "modelo": "panos_modelo/xWUjthZLxjXQq1H6qjMyhQ.jpg",
+   "usada_en": [
+    {
+     "lote": 1973,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1975,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 14,
+   "pano_id": "zWXcuWNyZbMlxD7UqoSpYA",
+   "date": "2024-05",
+   "heading_deg": 133.7633972167969,
+   "gsv": "panos_gsv/zWXcuWNyZbMlxD7UqoSpYA.jpg",
+   "modelo": "panos_modelo/zWXcuWNyZbMlxD7UqoSpYA.jpg",
+   "usada_en": [
+    {
+     "lote": 1850,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1975,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1976,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 15,
+   "pano_id": "CJSpJIsIpIcb1tU_gFWlhA",
+   "date": "2024-05",
+   "heading_deg": 130.9952697753906,
+   "gsv": "panos_gsv/CJSpJIsIpIcb1tU_gFWlhA.jpg",
+   "modelo": "panos_modelo/CJSpJIsIpIcb1tU_gFWlhA.jpg",
+   "usada_en": [
+    {
+     "lote": 1851,
+     "vista": 1,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1976,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1980,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 16,
+   "pano_id": "ybFo6xYwlNMxF3ZQzD9RMA",
+   "date": "2024-05",
+   "heading_deg": 131.2422943115234,
+   "gsv": "panos_gsv/ybFo6xYwlNMxF3ZQzD9RMA.jpg",
+   "modelo": "panos_modelo/ybFo6xYwlNMxF3ZQzD9RMA.jpg",
+   "usada_en": [
+    {
+     "lote": 1832,
+     "vista": 2,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1851,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    },
+    {
+     "lote": 1980,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 17,
+   "pano_id": "uVrg2yZQCNPTkELc-0SaXQ",
+   "date": "2024-05",
+   "heading_deg": 132.0930633544922,
+   "gsv": "panos_gsv/uVrg2yZQCNPTkELc-0SaXQ.jpg",
+   "modelo": "panos_modelo/uVrg2yZQCNPTkELc-0SaXQ.jpg",
+   "usada_en": [
+    {
+     "lote": 1832,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1984,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 18,
+   "pano_id": "ERm0QpQhRNpmoN-8xs0EcQ",
+   "date": "2024-05",
+   "heading_deg": 131.9549560546875,
+   "gsv": "panos_gsv/ERm0QpQhRNpmoN-8xs0EcQ.jpg",
+   "modelo": "panos_modelo/ERm0QpQhRNpmoN-8xs0EcQ.jpg",
+   "usada_en": [
+    {
+     "lote": 1984,
+     "vista": 2,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1987,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 19,
+   "pano_id": "CKZBWnTHtu2O83UC42gg5Q",
+   "date": "2024-05",
+   "heading_deg": 133.3135375976562,
+   "gsv": "panos_gsv/CKZBWnTHtu2O83UC42gg5Q.jpg",
+   "modelo": "panos_modelo/CKZBWnTHtu2O83UC42gg5Q.jpg",
+   "usada_en": [
+    {
+     "lote": 1987,
+     "vista": 1,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1992,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 20,
+   "pano_id": "IWYDcQRrdYra3Oc4xzTNiA",
+   "date": "2024-05",
+   "heading_deg": 132.6978302001953,
+   "gsv": "panos_gsv/IWYDcQRrdYra3Oc4xzTNiA.jpg",
+   "modelo": "panos_modelo/IWYDcQRrdYra3Oc4xzTNiA.jpg",
+   "usada_en": [
+    {
+     "lote": 1992,
+     "vista": 2,
+     "visibility": "verificada"
+    },
+    {
+     "lote": 1995,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 21,
+   "pano_id": "99n0FNAbJts5rfz7dMO21g",
+   "date": "2024-05",
+   "heading_deg": 128.5001678466797,
+   "gsv": "panos_gsv/99n0FNAbJts5rfz7dMO21g.jpg",
+   "modelo": "panos_modelo/99n0FNAbJts5rfz7dMO21g.jpg",
+   "usada_en": [
+    {
+     "lote": 1995,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 22,
+   "pano_id": "-DC4tlDeMuOzg3XddaqCWg",
+   "date": "2025-10",
+   "heading_deg": 43.69286727905273,
+   "gsv": "panos_gsv/-DC4tlDeMuOzg3XddaqCWg.jpg",
+   "modelo": "panos_modelo/-DC4tlDeMuOzg3XddaqCWg.jpg",
+   "usada_en": [
+    {
+     "lote": 1999,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 23,
+   "pano_id": "qebtGG42ZDjonm1s_i3qmw",
+   "date": "2025-10",
+   "heading_deg": 44.48740005493164,
+   "gsv": "panos_gsv/qebtGG42ZDjonm1s_i3qmw.jpg",
+   "modelo": "panos_modelo/qebtGG42ZDjonm1s_i3qmw.jpg",
+   "usada_en": [
+    {
+     "lote": 1999,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 24,
+   "pano_id": "fh48OQRJlNzl-iISdEincw",
+   "date": "2025-10",
+   "heading_deg": 44.11144638061523,
+   "gsv": "panos_gsv/fh48OQRJlNzl-iISdEincw.jpg",
+   "modelo": "panos_modelo/fh48OQRJlNzl-iISdEincw.jpg",
+   "usada_en": [
+    {
+     "lote": 2005,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 25,
+   "pano_id": "BzSnH4ujLRdtTxUFHlBYsw",
+   "date": "2025-10",
+   "heading_deg": 41.372516632080085,
+   "gsv": "panos_gsv/BzSnH4ujLRdtTxUFHlBYsw.jpg",
+   "modelo": "panos_modelo/BzSnH4ujLRdtTxUFHlBYsw.jpg",
+   "usada_en": [
+    {
+     "lote": 2005,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 26,
+   "pano_id": "BUWYkoM49QPJ3-jiyOUWCQ",
+   "date": "2025-10",
+   "heading_deg": 41.57697296142578,
+   "gsv": "panos_gsv/BUWYkoM49QPJ3-jiyOUWCQ.jpg",
+   "modelo": "panos_modelo/BUWYkoM49QPJ3-jiyOUWCQ.jpg",
+   "usada_en": [
+    {
+     "lote": 2018,
+     "vista": 2,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 27,
+   "pano_id": "l5dJ9qpNE464PIpPWvjTJA",
+   "date": "2024-05",
+   "heading_deg": 311.7228698730469,
+   "gsv": "panos_gsv/l5dJ9qpNE464PIpPWvjTJA.jpg",
+   "modelo": "panos_modelo/l5dJ9qpNE464PIpPWvjTJA.jpg",
+   "usada_en": [
+    {
+     "lote": 2018,
+     "vista": 1,
+     "visibility": "verificada"
+    }
+   ]
+  },
+  {
+   "rank": 28,
+   "pano_id": "1WKOfKXeGaCNV_o_C1usiA",
+   "date": "2024-05",
+   "heading_deg": 311.2125244140625,
+   "gsv": "panos_gsv/1WKOfKXeGaCNV_o_C1usiA.jpg",
+   "modelo": "panos_modelo/1WKOfKXeGaCNV_o_C1usiA.jpg",
+   "usada_en": [
+    {
+     "lote": 2008,
+     "vista": 2,
+     "visibility": "sin_visibilidad"
+    }
+   ]
+  }
+ ]
+}

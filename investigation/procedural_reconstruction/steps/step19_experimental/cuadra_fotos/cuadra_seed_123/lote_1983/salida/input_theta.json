@@ -1,0 +1,142 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -41.6786,
+        18.5432
+      ],
+      [
+        -25.8384,
+        4.9213
+      ],
+      [
+        -24.7134,
+        6.1712
+      ],
+      [
+        -21.4634,
+        3.4212
+      ],
+      [
+        -16.901,
+        8.0463
+      ],
+      [
+        -36.0798,
+        25.0661
+      ],
+      [
+        -41.6786,
+        18.5432
+      ]
+    ],
+    "fronts": [
+      5
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_74mN2Rm2t_AFSd2HiWqy6w.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_PHUhpomYJ2Bixistgqru3Q.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "quiet_house",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.46
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "ladrillos",
+      "garden": false
+    },
+    "primary_color": [
+      0.88,
+      0.87,
+      0.84
+    ],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": [
+      {
+        "slot": "brick",
+        "template": "brick",
+        "color": [
+          0.68,
+          0.3,
+          0.2
+        ]
+      }
+    ],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            -16.901,
+            8.0463
+          ],
+          [
+            -21.4634,
+            3.4212
+          ],
+          [
+            -24.7134,
+            6.1712
+          ],
+          [
+            -25.8384,
+            4.9213
+          ],
+          [
+            -39.4014,
+            16.5886
+          ],
+          [
+            -33.8348,
+            23.0737
+          ],
+          [
+            -16.901,
+            8.0463
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.0,
+          6.0
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 41
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    }
+  }
+}

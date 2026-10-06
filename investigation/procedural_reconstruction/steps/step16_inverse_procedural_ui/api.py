@@ -163,9 +163,9 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 ASSETS_DIR = STATIC_DIR / "assets"
 ASSETS_DIR.mkdir(exist_ok=True, parents=True)
 
-GEOJSON_PATH = ROOT / "Lotes" / "shp_files" / "BARRANCO_LM_geogpsperu.geojson"
-METADATA_PATH = ROOT / "steps" / "step2_vector_to_lots" / "data" / "barranco_metadata" / "metadata.json"
-CACHE_DIR = ROOT / "Lotes" / "streetview_cache"
+GEOJSON_PATH = ROOT / "data" / "lotes" / "BARRANCO_LM_geogpsperu.geojson"
+METADATA_PATH = ROOT / "data" / "poses_barranco" / "metadata.json"
+CACHE_DIR = ROOT / "data" / "fotos_barranco"
 CACHE_DIR.mkdir(exist_ok=True, parents=True)
 
 

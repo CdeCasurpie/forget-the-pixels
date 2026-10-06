@@ -1,0 +1,142 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -27.0884,
+        0.2962
+      ],
+      [
+        -38.1254,
+        -12.5229
+      ],
+      [
+        -31.3415,
+        -18.3946
+      ],
+      [
+        -20.2759,
+        -5.5161
+      ],
+      [
+        -27.0884,
+        0.2962
+      ]
+    ],
+    "fronts": [
+      1
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_yvKIC1PYjcSR2GUq6XC-rw.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_Zd22OOdvzXHXvUMutGFqDQ.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "quiet_house",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.55,
+      "material_regions": [
+        {
+          "u_m": 0.0,
+          "v_m": 3.2,
+          "width_m": 8.97,
+          "height_m": 3.2,
+          "material_slot": "brick"
+        }
+      ]
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "reja",
+      "garden": false
+    },
+    "primary_color": [
+      0.9,
+      0.89,
+      0.86
+    ],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [
+      {
+        "slot": "brick",
+        "template": "brick",
+        "color": [
+          0.7,
+          0.3,
+          0.2
+        ]
+      }
+    ],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            -27.0884,
+            0.2962
+          ],
+          [
+            -20.2759,
+            -5.5161
+          ],
+          [
+            -30.6891,
+            -17.6352
+          ],
+          [
+            -37.4721,
+            -11.7642
+          ],
+          [
+            -27.0884,
+            0.2962
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.2,
+          6.4
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 50
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    },
+    "facade.material_regions": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01"
+      ]
+    }
+  }
+}

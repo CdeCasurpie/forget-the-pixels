@@ -1,0 +1,199 @@
+{
+  "lot_index": 1999,
+  "crs": "EPSG:32718",
+  "local_origin_utm": [
+    280551.0675,
+    8656679.6363
+  ],
+  "centroid_lat": -12.144406901785826,
+  "centroid_lon": -77.01632900808673,
+  "parcel_local_m": [
+    [
+      47.702,
+      -11.0246
+    ],
+    [
+      31.3171,
+      3.1089
+    ],
+    [
+      26.0047,
+      -2.9536
+    ],
+    [
+      23.2235,
+      -1.3286
+    ],
+    [
+      10.4425,
+      -15.8909
+    ],
+    [
+      29.3153,
+      -32.2014
+    ],
+    [
+      47.702,
+      -11.0246
+    ]
+  ],
+  "fronts": [
+    5
+  ],
+  "front_source": "street_inferred",
+  "street_edges": [
+    {
+      "edge_index": 0,
+      "start_xy": [
+        47.702,
+        -11.0246
+      ],
+      "end_xy": [
+        31.3171,
+        3.1089
+      ],
+      "length_m": 21.638409605606416,
+      "outward_normal_xy": [
+        0.6531672270561915,
+        0.7572136907767354
+      ],
+      "clear_sample_ratio": 0.0,
+      "minimum_clearance_m": 0.05,
+      "is_street_facing": false
+    },
+    {
+      "edge_index": 1,
+      "start_xy": [
+        31.3171,
+        3.1089
+      ],
+      "end_xy": [
+        26.0047,
+        -2.9536
+      ],
+      "length_m": 8.0607381802165,
+      "outward_normal_xy": [
+        -0.752102334111188,
+        0.6590463405743959
+      ],
+      "clear_sample_ratio": 0.0,
+      "minimum_clearance_m": 0.05,
+      "is_street_facing": false
+    },
+    {
+      "edge_index": 2,
+      "start_xy": [
+        26.0047,
+        -2.9536
+      ],
+      "end_xy": [
+        23.2235,
+        -1.3286
+      ],
+      "length_m": 3.2211330987712987,
+      "outward_normal_xy": [
+        0.5044808612906607,
+        0.8634228747209755
+      ],
+      "clear_sample_ratio": 0.0,
+      "minimum_clearance_m": 0.05,
+      "is_street_facing": false
+    },
+    {
+      "edge_index": 3,
+      "start_xy": [
+        23.2235,
+        -1.3286
+      ],
+      "end_xy": [
+        10.4425,
+        -15.8909
+      ],
+      "length_m": 19.37561721055616,
+      "outward_normal_xy": [
+        -0.7515786383344844,
+        0.6596435025066814
+      ],
+      "clear_sample_ratio": 0.0,
+      "minimum_clearance_m": 0.05,
+      "is_street_facing": false
+    },
+    {
+      "edge_index": 4,
+      "start_xy": [
+        10.4425,
+        -15.8909
+      ],
+      "end_xy": [
+        29.3153,
+        -32.2014
+      ],
+      "length_m": 24.944237612923747,
+      "outward_normal_xy": [
+        -0.6538784729804465,
+        -0.7565995919723719
+      ],
+      "clear_sample_ratio": 0.0,
+      "minimum_clearance_m": 0.05,
+      "is_street_facing": false
+    },
+    {
+      "edge_index": 5,
+      "start_xy": [
+        29.3153,
+        -32.2014
+      ],
+      "end_xy": [
+        47.702,
+        -11.0246
+      ],
+      "length_m": 28.045099306830775,
+      "outward_normal_xy": [
+        0.7550980571797118,
+        -0.6556118699683713
+      ],
+      "clear_sample_ratio": 1.0,
+      "minimum_clearance_m": 3.415783321883924,
+      "is_street_facing": true
+    }
+  ],
+  "area_m2": 670.78,
+  "simplify_tolerance_m": 0.1,
+  "simplify": {
+    "vertices_in": 7,
+    "vertices_out": 6,
+    "simplified": true
+  },
+  "seed": 123,
+  "status": "ok",
+  "cameras": [
+    {
+      "rank": 1,
+      "pano_id": "qebtGG42ZDjonm1s_i3qmw",
+      "lat": -12.14459132546097,
+      "lon": -77.01623228932036,
+      "date": "2025-10",
+      "camera_to_lot_m": 9.38,
+      "target_edge_index": 0,
+      "target_bearing_deg": 354.07,
+      "relative_yaw_deg": -50.42,
+      "visibility": "verificada",
+      "raw_panorama": "panoramas/qebtGG42ZDjonm1s_i3qmw.jpg",
+      "vista": "lote_1999/fotos/vista_01_qebtGG42ZDjonm1s_i3qmw.jpg"
+    },
+    {
+      "rank": 2,
+      "pano_id": "-DC4tlDeMuOzg3XddaqCWg",
+      "lat": -12.14452780793656,
+      "lon": -77.01616840952042,
+      "date": "2025-10",
+      "camera_to_lot_m": 9.95,
+      "target_edge_index": 0,
+      "target_bearing_deg": 304.72,
+      "relative_yaw_deg": -98.97,
+      "visibility": "verificada",
+      "raw_panorama": "panoramas/-DC4tlDeMuOzg3XddaqCWg.jpg",
+      "vista": "lote_1999/fotos/vista_02_-DC4tlDeMuOzg3XddaqCWg.jpg"
+    }
+  ]
+}

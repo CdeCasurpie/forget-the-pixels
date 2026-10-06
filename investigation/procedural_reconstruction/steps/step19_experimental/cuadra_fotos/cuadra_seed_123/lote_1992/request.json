@@ -1,0 +1,115 @@
+{
+  "context": {
+    "parcel": [
+      [
+        43.359,
+        8.6844
+      ],
+      [
+        39.2647,
+        12.2098
+      ],
+      [
+        31.3171,
+        3.1089
+      ],
+      [
+        35.6608,
+        -0.641
+      ],
+      [
+        43.359,
+        8.6844
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_CKZBWnTHtu2O83UC42gg5Q.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_IWYDcQRrdYra3Oc4xzTNiA.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "quiet_house",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 2,
+      "window_ratio": 0.46
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.3
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "primary_color": [
+      0.78,
+      0.62,
+      0.3
+    ],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            43.359,
+            8.6844
+          ],
+          [
+            39.2647,
+            12.2098
+          ],
+          [
+            31.3171,
+            3.1089
+          ],
+          [
+            35.6608,
+            -0.641
+          ],
+          [
+            43.359,
+            8.6844
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.2
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 45
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    }
+  }
+}

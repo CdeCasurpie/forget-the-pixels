@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass, replace, field, fields
 import hashlib
 import json
 import re
+import shapely
 import numpy as np
 from shapely.geometry import Polygon, LineString, Point, box as rect
 from shapely.geometry.polygon import orient
@@ -403,8 +404,9 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             is_front = any(float(np.dot(n,normal))>.85 for normal in front_normals)
             key = (mass.id,edge)
             control = overrides.get(key, default if is_front else _facade_controls(FacadeControls(mode="explicit",openings=()),theta.family))
+            clean_line = shapely.set_precision(line, grid_size=1e-4)
             for band in exposures[mass.id]["walls"]:
-                segment = line.intersection(band["exposed_segments"])
+                segment = clean_line.intersection(band["exposed_segments"])
                 if segment.is_empty or segment.length < .1:
                     continue
                 if key in overrides:

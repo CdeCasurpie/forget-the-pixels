@@ -1,0 +1,125 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -47.237,
+        12.0673
+      ],
+      [
+        -52.2134,
+        6.2695
+      ],
+      [
+        -43.1506,
+        -1.5787
+      ],
+      [
+        -38.307,
+        4.1712
+      ],
+      [
+        -47.237,
+        12.0673
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_lgNOHOw28aEi-SBHao-leA.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_3mvt4e10RzdY5nDe-pOCyQ.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "balcony_apartments",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.7,
+      "balconies": true,
+      "balcony_depth_m": 1.0
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.5
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "primary_color": [
+      0.9,
+      0.89,
+      0.86
+    ],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": [],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            -47.237,
+            12.0673
+          ],
+          [
+            -52.2134,
+            6.2695
+          ],
+          [
+            -43.1506,
+            -1.5787
+          ],
+          [
+            -38.307,
+            4.1712
+          ],
+          [
+            -47.237,
+            12.0673
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.1,
+          6.2
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 46
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.7,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    },
+    "facade.balconies": {
+      "state": "observed",
+      "confidence": 0.8,
+      "view_ids": [
+        "vista_01"
+      ]
+    }
+  }
+}

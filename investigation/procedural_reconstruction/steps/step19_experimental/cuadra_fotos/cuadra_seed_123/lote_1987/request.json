@@ -1,0 +1,123 @@
+{
+  "context": {
+    "parcel": [
+      [
+        39.2647,
+        12.2098
+      ],
+      [
+        28.1606,
+        21.7707
+      ],
+      [
+        14.8486,
+        5.8589
+      ],
+      [
+        23.2235,
+        -1.3286
+      ],
+      [
+        26.0047,
+        -2.9536
+      ],
+      [
+        39.2647,
+        12.2098
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_CKZBWnTHtu2O83UC42gg5Q.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_ERm0QpQhRNpmoN-8xs0EcQ.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "quiet_house",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 5,
+      "window_ratio": 0.46
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.3
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "primary_color": [
+      0.72,
+      0.55,
+      0.35
+    ],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            39.2647,
+            12.2098
+          ],
+          [
+            28.1606,
+            21.7707
+          ],
+          [
+            14.8486,
+            5.8589
+          ],
+          [
+            23.2235,
+            -1.3286
+          ],
+          [
+            26.0047,
+            -2.9536
+          ],
+          [
+            39.2647,
+            12.2098
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.4
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 43
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.6,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    }
+  }
+}

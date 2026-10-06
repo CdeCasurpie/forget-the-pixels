@@ -1,0 +1,26 @@
+{
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 6.2,
+    "floors": 2,
+    "family": "brick_courtyard",
+    "massing": {"pattern": "single_block", "front_setback_m": 0.0},
+    "facade": {"bay_count": 3, "window_ratio": 0.5},
+    "facades": [
+      {"mass_role": "main", "edge": 2, "controls": {"mode": "repeat", "bay_count": 5}}
+    ],
+    "roof": {"kind": "flat", "parapet_m": 0.4},
+    "site": {"fence": "none", "garden": false},
+    "primary_color": [0.72, 0.62, 0.55],
+    "side_material": "brick",
+    "finish": "standard",
+    "materials": [
+      {"slot": "brick", "template": "brick", "color": [0.70, 0.48, 0.38]}
+    ]
+  },
+  "nuisance": {"seed": 54},
+  "evidence": {
+    "floors": {"state": "observed", "confidence": 0.8, "view_ids": [0, 1]},
+    "family": {"state": "inferred", "confidence": 0.7, "view_ids": [0, 1]}
+  }
+}

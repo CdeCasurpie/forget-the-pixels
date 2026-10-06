@@ -1,0 +1,25 @@
+{
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 6.4,
+    "floors": 2,
+    "family": "balcony_apartments",
+    "massing": {"pattern": "single_block", "front_setback_m": 0.0},
+    "facade": {"bay_count": 3, "window_ratio": 0.6, "balconies": true, "balcony_depth_m": 1.0},
+    "facades": [
+      {"mass_role": "main", "edge": 0, "controls": {"mode": "repeat", "bay_count": 7}}
+    ],
+    "roof": {"kind": "flat", "parapet_m": 0.5},
+    "site": {"fence": "none", "garden": false},
+    "primary_color": [0.90, 0.89, 0.86],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": []
+  },
+  "nuisance": {"seed": 48},
+  "evidence": {
+    "floors": {"state": "observed", "confidence": 0.8, "view_ids": [0, 1]},
+    "family": {"state": "inferred", "confidence": 0.7, "view_ids": [0, 1]},
+    "facade.balconies": {"state": "observed", "confidence": 0.8, "view_ids": [0]}
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 6.4,
+    "floors": 2,
+    "family": "quiet_house",
+    "massing": {"pattern": "single_block", "front_setback_m": 1.0},
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.55,
+      "material_regions": [
+        {"u_m": 0.0, "v_m": 3.2, "width_m": 8.97, "height_m": 3.2, "material_slot": "brick"}
+      ]
+    },
+    "roof": {"kind": "flat", "parapet_m": 0.4},
+    "site": {"fence": "reja", "garden": false},
+    "primary_color": [0.90, 0.89, 0.86],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": [
+      {"slot": "brick", "template": "brick", "color": [0.70, 0.30, 0.20]}
+    ]
+  },
+  "nuisance": {"seed": 50},
+  "evidence": {
+    "floors": {"state": "observed", "confidence": 0.8, "view_ids": [0, 1]},
+    "family": {"state": "inferred", "confidence": 0.6, "view_ids": [0, 1]},
+    "facade.material_regions": {"state": "inferred", "confidence": 0.6, "view_ids": [0]}
+  }
+}

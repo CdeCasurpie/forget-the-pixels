@@ -1,0 +1,24 @@
+{
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 8.6,
+    "floors": 3,
+    "family": "brick_courtyard",
+    "massing": {"pattern": "single_block", "front_setback_m": 1.5},
+    "facade": {"bay_count": 2, "window_ratio": 0.5},
+    "roof": {"kind": "flat", "parapet_m": 0.4},
+    "site": {"fence": "reja", "garden": true},
+    "primary_color": [0.82, 0.78, 0.68],
+    "side_material": "brick",
+    "finish": "standard",
+    "materials": [
+      {"slot": "brick", "template": "brick", "color": [0.80, 0.74, 0.58]}
+    ]
+  },
+  "nuisance": {"seed": 42},
+  "evidence": {
+    "floors": {"state": "inferred", "confidence": 0.7, "view_ids": [0, 1]},
+    "family": {"state": "inferred", "confidence": 0.65, "view_ids": [0, 1]},
+    "site.garden": {"state": "observed", "confidence": 0.7, "view_ids": [0]}
+  }
+}

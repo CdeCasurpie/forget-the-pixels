@@ -1,0 +1,43 @@
+{
+  "context": {"parcel": [[0, 0], [8, 0], [8, 18], [0, 18]], "fronts": [0], "crs": "EPSG:32718"},
+  "observations": [
+    {"view_id": "referencia_tumbes", "image_path": "referencia.png"}
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 16.0,
+    "floors": 5,
+    "family": "balcony_apartments",
+    "massing": {"pattern": "single_block", "front_setback_m": 1.0},
+    "facade": {
+      "bay_count": 3,
+      "balconies": true,
+      "balcony_depth_m": 1.2,
+      "window_ratio": 0.8
+    },
+    "roof": {"kind": "flat", "parapet_m": 0.5},
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": [
+        {"edge": 0, "start_m": 0.0, "end_m": 8.0, "kind": "ladrillos", "height_m": 2.6,
+         "gate_u": null, "gate_width": 0.0, "garage_u": null, "garage_width": 0.0}
+      ]
+    },
+    "primary_color": [0.63, 0.64, 0.61],
+    "side_material": "plaster",
+    "finish": "premium",
+    "materials": [
+      {"slot": "concrete", "template": "concrete", "color": [0.70, 0.44, 0.30]},
+      {"slot": "brick", "template": "brick", "color": [0.75, 0.47, 0.29]}
+    ]
+  },
+  "nuisance": {"seed": 21},
+  "evidence": {
+    "height_m": {"state": "inferred", "confidence": 0.7, "view_ids": ["referencia_tumbes"]},
+    "floors": {"state": "inferred", "confidence": 0.8, "view_ids": ["referencia_tumbes"]},
+    "family": {"state": "inferred", "confidence": 0.7, "view_ids": ["referencia_tumbes"]},
+    "facade.balconies": {"state": "observed", "confidence": 0.9, "view_ids": ["referencia_tumbes"]},
+    "site.garden": {"state": "observed", "confidence": 0.8, "view_ids": ["referencia_tumbes"]}
+  }
+}

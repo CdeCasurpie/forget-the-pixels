@@ -1,0 +1,133 @@
+{
+  "lots": 24,
+  "local_origin_utm": [
+    280551.0675,
+    8656679.6363
+  ],
+  "crs": "EPSG:32718",
+  "triangles": 147508,
+  "glb": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/investigation/procedural_reconstruction/scripts/cuadra_fotos/cuadra_seed_123/cuadra_completa.glb",
+  "iso": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/investigation/procedural_reconstruction/scripts/cuadra_fotos/cuadra_seed_123/cuadra_completa_iso.png",
+  "per_lot": [
+    {
+      "lot_index": 1831,
+      "triangles": 4236,
+      "vertices": 2542
+    },
+    {
+      "lot_index": 1832,
+      "triangles": 6084,
+      "vertices": 3674
+    },
+    {
+      "lot_index": 1849,
+      "triangles": 10644,
+      "vertices": 6358
+    },
+    {
+      "lot_index": 1850,
+      "triangles": 3264,
+      "vertices": 1994
+    },
+    {
+      "lot_index": 1851,
+      "triangles": 9016,
+      "vertices": 5372
+    },
+    {
+      "lot_index": 1973,
+      "triangles": 7224,
+      "vertices": 4344
+    },
+    {
+      "lot_index": 1975,
+      "triangles": 7108,
+      "vertices": 4234
+    },
+    {
+      "lot_index": 1976,
+      "triangles": 11424,
+      "vertices": 6754
+    },
+    {
+      "lot_index": 1977,
+      "triangles": 4292,
+      "vertices": 2578
+    },
+    {
+      "lot_index": 1980,
+      "triangles": 5720,
+      "vertices": 3454
+    },
+    {
+      "lot_index": 1983,
+      "triangles": 3244,
+      "vertices": 1910
+    },
+    {
+      "lot_index": 1984,
+      "triangles": 3764,
+      "vertices": 2292
+    },
+    {
+      "lot_index": 1987,
+      "triangles": 2424,
+      "vertices": 1404
+    },
+    {
+      "lot_index": 1989,
+      "triangles": 7704,
+      "vertices": 4698
+    },
+    {
+      "lot_index": 1992,
+      "triangles": 1120,
+      "vertices": 660
+    },
+    {
+      "lot_index": 1993,
+      "triangles": 2068,
+      "vertices": 1290
+    },
+    {
+      "lot_index": 1995,
+      "triangles": 8096,
+      "vertices": 4686
+    },
+    {
+      "lot_index": 1997,
+      "triangles": 8448,
+      "vertices": 5302
+    },
+    {
+      "lot_index": 1999,
+      "triangles": 5288,
+      "vertices": 3300
+    },
+    {
+      "lot_index": 2000,
+      "triangles": 3852,
+      "vertices": 2288
+    },
+    {
+      "lot_index": 2002,
+      "triangles": 6876,
+      "vertices": 4030
+    },
+    {
+      "lot_index": 2005,
+      "triangles": 2068,
+      "vertices": 1202
+    },
+    {
+      "lot_index": 2008,
+      "triangles": 14596,
+      "vertices": 9278
+    },
+    {
+      "lot_index": 2018,
+      "triangles": 8948,
+      "vertices": 5204
+    }
+  ]
+}

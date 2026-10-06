@@ -1,0 +1,146 @@
+{
+  "context": {
+    "parcel": [
+      [
+        3.3825,
+        -48.45
+      ],
+      [
+        8.2237,
+        -52.6403
+      ],
+      [
+        11.7862,
+        -52.3904
+      ],
+      [
+        21.0664,
+        -41.702
+      ],
+      [
+        14.2862,
+        -35.3907
+      ],
+      [
+        3.3825,
+        -48.45
+      ]
+    ],
+    "fronts": [
+      0,
+      1,
+      2
+    ],
+    "crs": "EPSG:32718"
+  },
+  "observations": [
+    {
+      "view_id": "vista_01",
+      "image_path": "fotos/vista_01_l5dJ9qpNE464PIpPWvjTJA.jpg"
+    },
+    {
+      "view_id": "vista_02",
+      "image_path": "fotos/vista_02_BUWYkoM49QPJ3-jiyOUWCQ.jpg"
+    }
+  ],
+  "theta": {
+    "schema_version": "0.2",
+    "family": "brick_courtyard",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "facade": {
+      "bay_count": 3,
+      "window_ratio": 0.5
+    },
+    "facades": [
+      {
+        "mass_role": "main",
+        "edge": 2,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 5
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "primary_color": [
+      0.72,
+      0.62,
+      0.55
+    ],
+    "side_material": "brick",
+    "finish": "standard",
+    "materials": [
+      {
+        "slot": "brick",
+        "template": "brick",
+        "color": [
+          0.7,
+          0.48,
+          0.38
+        ]
+      }
+    ],
+    "masses": [
+      {
+        "role": "main",
+        "footprint": [
+          [
+            3.3825,
+            -48.45
+          ],
+          [
+            8.2237,
+            -52.6403
+          ],
+          [
+            11.7862,
+            -52.3904
+          ],
+          [
+            21.0664,
+            -41.702
+          ],
+          [
+            14.2862,
+            -35.3907
+          ],
+          [
+            3.3825,
+            -48.45
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.1,
+          6.2
+        ]
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 54
+  },
+  "evidence": {
+    "floors": {
+      "state": "unknown",
+      "view_ids": []
+    },
+    "family": {
+      "state": "inferred",
+      "confidence": 0.7,
+      "view_ids": [
+        "vista_01",
+        "vista_02"
+      ]
+    }
+  }
+}

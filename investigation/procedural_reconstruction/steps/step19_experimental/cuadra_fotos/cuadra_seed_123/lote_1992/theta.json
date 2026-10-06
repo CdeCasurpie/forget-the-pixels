@@ -1,0 +1,21 @@
+{
+  "theta": {
+    "schema_version": "0.2",
+    "height_m": 3.2,
+    "floors": 1,
+    "family": "quiet_house",
+    "massing": {"pattern": "single_block", "front_setback_m": 0.0},
+    "facade": {"bay_count": 2, "window_ratio": 0.46},
+    "roof": {"kind": "flat", "parapet_m": 0.3},
+    "site": {"fence": "none", "garden": false},
+    "primary_color": [0.78, 0.62, 0.30],
+    "side_material": "plaster",
+    "finish": "standard",
+    "materials": []
+  },
+  "nuisance": {"seed": 45},
+  "evidence": {
+    "floors": {"state": "observed", "confidence": 0.8, "view_ids": [0, 1]},
+    "family": {"state": "inferred", "confidence": 0.6, "view_ids": [0, 1]}
+  }
+}
