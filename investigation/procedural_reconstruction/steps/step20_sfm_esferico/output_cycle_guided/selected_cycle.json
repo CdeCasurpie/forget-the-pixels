@@ -1,0 +1,278 @@
+{
+  "panorama_ids": [
+    "uhHLFAhV-bWngBMv-4AU8g",
+    "ECzhT6bY9nh3I6-VjlMgWA",
+    "9XMRcfratLMcK68PqcDF9w",
+    "f0kNFkpNxBFFjxgs6LXfKw",
+    "XGUl7nrjYl4ADPMq63WxhQ",
+    "X9Ic0KmEnvgVSfeSNpXokQ",
+    "kvss86UpEH5VurbDJbqlGw",
+    "Cn0D8J59eh1r0JBbJN1w-Q",
+    "QOWhPlL-ceDVxZ5TFbpIVQ",
+    "oC-F-61ythyBdgbK9iGvEg",
+    "dinOKt8p26GiToIwr0gu3Q",
+    "2PPZmEZThEpF_iyk8MsfUQ",
+    "8RLaIY6eOdBp5mK4UAXFdg",
+    "8cOp5B6974ipycwwLvSUCA",
+    "2yqEB2yuxzTjHTzt342unQ",
+    "Pum5WAmTtims6FrUWrHs-g",
+    "q2DDEFXM3vkdoqbxrMzIgQ",
+    "VjhBE5U3hy05kw61-Pq_xQ",
+    "rtuqVQvmG0R9yHEegLIs0A",
+    "i72kDrthtlrb_yJioHipfw",
+    "qQZqrADx7qpa7EGYSh5z7A",
+    "1_KoCl7ipDXd9fzt0tjU6w",
+    "S2CjDlig8EY_0YwJ0RvW4Q",
+    "kBVDmilzjh4_7mVrPOHkNw",
+    "LXl6s23Baclp4dAh4Sa7Ug",
+    "3zvsgnsk3BZxw9IOm9TQPw",
+    "GOmGpmHvqtT1Q5LRWCD3Wg",
+    "hhleFNFD6P5GiTeNRkfZ-w",
+    "EmxQoaOOxABcIa_wFDsdog",
+    "XqDXX5GZp6KwwqwVi9b2Kg"
+  ],
+  "pairs": [
+    [
+      "uhHLFAhV-bWngBMv-4AU8g",
+      "ECzhT6bY9nh3I6-VjlMgWA"
+    ],
+    [
+      "ECzhT6bY9nh3I6-VjlMgWA",
+      "9XMRcfratLMcK68PqcDF9w"
+    ],
+    [
+      "9XMRcfratLMcK68PqcDF9w",
+      "f0kNFkpNxBFFjxgs6LXfKw"
+    ],
+    [
+      "f0kNFkpNxBFFjxgs6LXfKw",
+      "XGUl7nrjYl4ADPMq63WxhQ"
+    ],
+    [
+      "XGUl7nrjYl4ADPMq63WxhQ",
+      "X9Ic0KmEnvgVSfeSNpXokQ"
+    ],
+    [
+      "X9Ic0KmEnvgVSfeSNpXokQ",
+      "kvss86UpEH5VurbDJbqlGw"
+    ],
+    [
+      "kvss86UpEH5VurbDJbqlGw",
+      "Cn0D8J59eh1r0JBbJN1w-Q"
+    ],
+    [
+      "Cn0D8J59eh1r0JBbJN1w-Q",
+      "QOWhPlL-ceDVxZ5TFbpIVQ"
+    ],
+    [
+      "QOWhPlL-ceDVxZ5TFbpIVQ",
+      "oC-F-61ythyBdgbK9iGvEg"
+    ],
+    [
+      "oC-F-61ythyBdgbK9iGvEg",
+      "dinOKt8p26GiToIwr0gu3Q"
+    ],
+    [
+      "dinOKt8p26GiToIwr0gu3Q",
+      "2PPZmEZThEpF_iyk8MsfUQ"
+    ],
+    [
+      "2PPZmEZThEpF_iyk8MsfUQ",
+      "8RLaIY6eOdBp5mK4UAXFdg"
+    ],
+    [
+      "8RLaIY6eOdBp5mK4UAXFdg",
+      "8cOp5B6974ipycwwLvSUCA"
+    ],
+    [
+      "8cOp5B6974ipycwwLvSUCA",
+      "2yqEB2yuxzTjHTzt342unQ"
+    ],
+    [
+      "2yqEB2yuxzTjHTzt342unQ",
+      "Pum5WAmTtims6FrUWrHs-g"
+    ],
+    [
+      "Pum5WAmTtims6FrUWrHs-g",
+      "q2DDEFXM3vkdoqbxrMzIgQ"
+    ],
+    [
+      "q2DDEFXM3vkdoqbxrMzIgQ",
+      "VjhBE5U3hy05kw61-Pq_xQ"
+    ],
+    [
+      "VjhBE5U3hy05kw61-Pq_xQ",
+      "rtuqVQvmG0R9yHEegLIs0A"
+    ],
+    [
+      "rtuqVQvmG0R9yHEegLIs0A",
+      "i72kDrthtlrb_yJioHipfw"
+    ],
+    [
+      "i72kDrthtlrb_yJioHipfw",
+      "qQZqrADx7qpa7EGYSh5z7A"
+    ],
+    [
+      "qQZqrADx7qpa7EGYSh5z7A",
+      "1_KoCl7ipDXd9fzt0tjU6w"
+    ],
+    [
+      "1_KoCl7ipDXd9fzt0tjU6w",
+      "S2CjDlig8EY_0YwJ0RvW4Q"
+    ],
+    [
+      "S2CjDlig8EY_0YwJ0RvW4Q",
+      "kBVDmilzjh4_7mVrPOHkNw"
+    ],
+    [
+      "kBVDmilzjh4_7mVrPOHkNw",
+      "LXl6s23Baclp4dAh4Sa7Ug"
+    ],
+    [
+      "LXl6s23Baclp4dAh4Sa7Ug",
+      "3zvsgnsk3BZxw9IOm9TQPw"
+    ],
+    [
+      "3zvsgnsk3BZxw9IOm9TQPw",
+      "GOmGpmHvqtT1Q5LRWCD3Wg"
+    ],
+    [
+      "GOmGpmHvqtT1Q5LRWCD3Wg",
+      "hhleFNFD6P5GiTeNRkfZ-w"
+    ],
+    [
+      "hhleFNFD6P5GiTeNRkfZ-w",
+      "EmxQoaOOxABcIa_wFDsdog"
+    ],
+    [
+      "EmxQoaOOxABcIa_wFDsdog",
+      "XqDXX5GZp6KwwqwVi9b2Kg"
+    ],
+    [
+      "XqDXX5GZp6KwwqwVi9b2Kg",
+      "uhHLFAhV-bWngBMv-4AU8g"
+    ]
+  ],
+  "coordinates": {
+    "uhHLFAhV-bWngBMv-4AU8g": {
+      "lat": -12.13574582852974,
+      "lon": -77.02085597270938
+    },
+    "ECzhT6bY9nh3I6-VjlMgWA": {
+      "lat": -12.13568844153216,
+      "lon": -77.02091413886174
+    },
+    "9XMRcfratLMcK68PqcDF9w": {
+      "lat": -12.13560047878774,
+      "lon": -77.02094181609965
+    },
+    "f0kNFkpNxBFFjxgs6LXfKw": {
+      "lat": -12.13551531029504,
+      "lon": -77.02096896614596
+    },
+    "XGUl7nrjYl4ADPMq63WxhQ": {
+      "lat": -12.13539655499608,
+      "lon": -77.02100665988944
+    },
+    "X9Ic0KmEnvgVSfeSNpXokQ": {
+      "lat": -12.13528753478196,
+      "lon": -77.02104066332632
+    },
+    "kvss86UpEH5VurbDJbqlGw": {
+      "lat": -12.13526120272897,
+      "lon": -77.0209536777711
+    },
+    "Cn0D8J59eh1r0JBbJN1w-Q": {
+      "lat": -12.13523398110093,
+      "lon": -77.02086414408896
+    },
+    "QOWhPlL-ceDVxZ5TFbpIVQ": {
+      "lat": -12.13520570891691,
+      "lon": -77.02078128803173
+    },
+    "oC-F-61ythyBdgbK9iGvEg": {
+      "lat": -12.13517647661512,
+      "lon": -77.02069078771356
+    },
+    "dinOKt8p26GiToIwr0gu3Q": {
+      "lat": -12.13514596942409,
+      "lon": -77.02059501545857
+    },
+    "2PPZmEZThEpF_iyk8MsfUQ": {
+      "lat": -12.13512244835564,
+      "lon": -77.0205042514076
+    },
+    "8RLaIY6eOdBp5mK4UAXFdg": {
+      "lat": -12.13510794944014,
+      "lon": -77.02041278437166
+    },
+    "8cOp5B6974ipycwwLvSUCA": {
+      "lat": -12.13508118599247,
+      "lon": -77.02032571050094
+    },
+    "2yqEB2yuxzTjHTzt342unQ": {
+      "lat": -12.1350520699655,
+      "lon": -77.02024127251005
+    },
+    "Pum5WAmTtims6FrUWrHs-g": {
+      "lat": -12.13502206258939,
+      "lon": -77.02014883876262
+    },
+    "q2DDEFXM3vkdoqbxrMzIgQ": {
+      "lat": -12.13510254430857,
+      "lon": -77.02012195212704
+    },
+    "VjhBE5U3hy05kw61-Pq_xQ": {
+      "lat": -12.13517756060213,
+      "lon": -77.02009691064737
+    },
+    "rtuqVQvmG0R9yHEegLIs0A": {
+      "lat": -12.13526345574885,
+      "lon": -77.02006888175694
+    },
+    "i72kDrthtlrb_yJioHipfw": {
+      "lat": -12.13535085953155,
+      "lon": -77.0200402378058
+    },
+    "qQZqrADx7qpa7EGYSh5z7A": {
+      "lat": -12.13546739882777,
+      "lon": -77.01997381192984
+    },
+    "1_KoCl7ipDXd9fzt0tjU6w": {
+      "lat": -12.13549485017881,
+      "lon": -77.02006097391835
+    },
+    "S2CjDlig8EY_0YwJ0RvW4Q": {
+      "lat": -12.13552295363595,
+      "lon": -77.02014927808669
+    },
+    "kBVDmilzjh4_7mVrPOHkNw": {
+      "lat": -12.13555091952384,
+      "lon": -77.02023828510866
+    },
+    "LXl6s23Baclp4dAh4Sa7Ug": {
+      "lat": -12.13557794567864,
+      "lon": -77.02032729206525
+    },
+    "3zvsgnsk3BZxw9IOm9TQPw": {
+      "lat": -12.13560587824519,
+      "lon": -77.02041559603948
+    },
+    "GOmGpmHvqtT1Q5LRWCD3Wg": {
+      "lat": -12.13563497767616,
+      "lon": -77.0205032848975
+    },
+    "hhleFNFD6P5GiTeNRkfZ-w": {
+      "lat": -12.13566373736039,
+      "lon": -77.02059281884634
+    },
+    "EmxQoaOOxABcIa_wFDsdog": {
+      "lat": -12.13569309722377,
+      "lon": -77.02068059544048
+    },
+    "XqDXX5GZp6KwwqwVi9b2Kg": {
+      "lat": -12.13571951699254,
+      "lon": -77.02076942634339
+    }
+  }
+}

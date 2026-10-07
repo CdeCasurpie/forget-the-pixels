@@ -1,0 +1,259 @@
+{
+  "pair": "P16_P17",
+  "keypoints_A": 16204,
+  "keypoints_B": 12232,
+  "guide_epipolar_deg": 1.5,
+  "lowe_ratio": 0.7,
+  "candidate_distribution": {
+    "p25": 437.0,
+    "p50": 621.0,
+    "p75": 855.0,
+    "p90": 994.0,
+    "p100": 1072.0
+  },
+  "queries_with_less_than_two_candidates": 0,
+  "baseline": {
+    "camera_a": "P16",
+    "camera_b": "P17",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 8.734732061078503,
+    "within_distance": true,
+    "matches_input": 435,
+    "passed_epipolar": 260,
+    "passed_positive_depth": 256,
+    "passed_parallax": 136,
+    "passed_ray_gap": 136,
+    "final_points": 136,
+    "median_epipolar_residual_deg": 0.27128278945180273,
+    "median_parallax_deg": 2.7916403598070856,
+    "median_ray_gap_m": 0.12650805353561162,
+    "residual_percentiles_deg": {
+      "p0": 0.002155368253607809,
+      "p25": 0.15734254136380094,
+      "p50": 0.27128278945180273,
+      "p75": 1.0123373585102429,
+      "p90": 14.13162792742627,
+      "p95": 26.077373433292994,
+      "p100": 78.25704543809618
+    },
+    "ray_gap_percentiles_m": {
+      "p0": 0.0026891301418957726,
+      "p25": 0.08516487343331863,
+      "p50": 0.12650805353561162,
+      "p75": 0.16205749146695417,
+      "p90": 0.22951826263699057,
+      "p95": 0.283909306593824,
+      "p100": 0.7594855942301405
+    },
+    "parallax_percentiles_deg": {
+      "p0": 0.10112986230508016,
+      "p25": 0.5652865234613916,
+      "p50": 2.7916403598070856,
+      "p75": 9.531797239657102,
+      "p90": 11.397482936146623,
+      "p95": 12.742449914302682,
+      "p100": 179.83252996438918
+    },
+    "undefined_residuals": 0,
+    "epipolar_threshold_deg": 0.3515625
+  },
+  "guided": {
+    "matches_input": 873,
+    "passed_epipolar": 544,
+    "passed_positive_depth": 507,
+    "passed_parallax": 346,
+    "passed_ray_gap": 346,
+    "final_points": 346,
+    "median_epipolar_residual_deg": 0.26416708674988004,
+    "median_parallax_deg": 8.076801775995468,
+    "median_ray_gap_m": 0.1104867240309658,
+    "residual_percentiles_deg": {
+      "p0": 0.001877609699095244,
+      "p25": 0.1519197614063729,
+      "p50": 0.26416708674988004,
+      "p75": 0.5895537992475792,
+      "p90": 1.0521768806176188,
+      "p95": 1.2700019078661557,
+      "p100": 1.4925091484644781
+    },
+    "ray_gap_percentiles_m": {
+      "p0": 0.0014832811100151727,
+      "p25": 0.06064082969890511,
+      "p50": 0.1104867240309658,
+      "p75": 0.15184449905389447,
+      "p90": 0.21887889519728737,
+      "p95": 0.2823555554450265,
+      "p100": 6.64246239095312
+    },
+    "parallax_percentiles_deg": {
+      "p0": 0.08592742861568269,
+      "p25": 1.2997042710694813,
+      "p50": 8.076801775995468,
+      "p75": 11.249358048876992,
+      "p90": 41.590499578388275,
+      "p95": 96.69219186250386,
+      "p100": 179.83253912924883
+    },
+    "undefined_residuals": 0,
+    "epipolar_threshold_deg": 0.3515625
+  },
+  "coverage": {
+    "baseline_lowe": {
+      "A": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 72,
+        "occupied_percent": 36.0,
+        "bbox_uv": [
+          [
+            6.877701759338379,
+            313.7395324707031
+          ],
+          [
+            4094.978515625,
+            1834.0733642578125
+          ]
+        ]
+      },
+      "B": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 54,
+        "occupied_percent": 27.0,
+        "bbox_uv": [
+          [
+            1.7788376808166504,
+            319.9293212890625
+          ],
+          [
+            4085.66943359375,
+            1637.021240234375
+          ]
+        ]
+      }
+    },
+    "baseline_final": {
+      "A": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 32,
+        "occupied_percent": 16.0,
+        "bbox_uv": [
+          [
+            49.77508544921875,
+            335.1835021972656
+          ],
+          [
+            4004.731689453125,
+            1794.26708984375
+          ]
+        ]
+      },
+      "B": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 22,
+        "occupied_percent": 11.0,
+        "bbox_uv": [
+          [
+            121.39231872558594,
+            420.99810791015625
+          ],
+          [
+            3967.2236328125,
+            1637.021240234375
+          ]
+        ]
+      }
+    },
+    "guided_matches": {
+      "A": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 105,
+        "occupied_percent": 52.5,
+        "bbox_uv": [
+          [
+            6.877701759338379,
+            285.8606262207031
+          ],
+          [
+            4094.978515625,
+            1954.06787109375
+          ]
+        ]
+      },
+      "B": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 75,
+        "occupied_percent": 37.5,
+        "bbox_uv": [
+          [
+            1.7788376808166504,
+            273.7264404296875
+          ],
+          [
+            4085.66943359375,
+            1774.3525390625
+          ]
+        ]
+      }
+    },
+    "guided_final": {
+      "A": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 52,
+        "occupied_percent": 26.0,
+        "bbox_uv": [
+          [
+            44.90531921386719,
+            285.8606262207031
+          ],
+          [
+            4004.731689453125,
+            1815.090576171875
+          ]
+        ]
+      },
+      "B": {
+        "grid": [
+          20,
+          10
+        ],
+        "occupied_cells": 35,
+        "occupied_percent": 17.5,
+        "bbox_uv": [
+          [
+            57.47405242919922,
+            273.7264404296875
+          ],
+          [
+            3967.2236328125,
+            1637.021240234375
+          ]
+        ]
+      }
+    }
+  },
+  "final_common": 136,
+  "final_new": 210,
+  "final_lost": 0,
+  "identity": "Exact original (index_A,index_B) pair; changed partner counts as both lost and new",
+  "mutual_implemented": false
+}

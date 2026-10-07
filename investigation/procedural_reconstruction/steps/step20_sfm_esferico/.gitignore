@@ -1,0 +1,9 @@
+.dependencies/
+__pycache__/
+# Caché de rayos recomputable (23 MB, se regenera en cada corrida)
+output_cycle_guided/cache/
+# Mapas de profundidad: bulk pesado (3.6 GB en .npy/.png a 4096x2048).
+# Se conserva summary.json + metadata.json por panorama; lo demás se regenera con render_depth_maps.py
+output_depth_maps/**/*.npy
+output_depth_maps/**/*.png
+output_depth_maps/**/*.jpg

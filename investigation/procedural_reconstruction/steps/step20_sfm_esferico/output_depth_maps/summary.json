@@ -1,0 +1,1132 @@
+{
+  "panoramas_processed": 30,
+  "processed_this_run": 30,
+  "projected_points_total": 104590,
+  "average_projected_points": 3486.3333333333335,
+  "total_seconds": 66.41101694107056,
+  "source_points": 3890,
+  "configuration": {
+    "method": "hybrid",
+    "downscale": 8,
+    "max_depth": 150.0,
+    "min_confidence": 0.15,
+    "support_deg": 5.0,
+    "inputs": {
+      "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+      "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+      "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+    }
+  },
+  "panoramas": [
+    {
+      "camera": "P0",
+      "panorama_id": "uhHLFAhV-bWngBMv-4AU8g",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3416,
+      "occupied_sparse_pixels": 3065,
+      "min_depth": 4.732368469238281,
+      "median_depth": 92.06915283203125,
+      "max_depth": 149.70838928222656,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.43176400661468506,
+      "seconds": 2.221843719482422,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P1",
+      "panorama_id": "ECzhT6bY9nh3I6-VjlMgWA",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3429,
+      "occupied_sparse_pixels": 3079,
+      "min_depth": 1.0085722208023071,
+      "median_depth": 93.53732299804688,
+      "max_depth": 149.95277404785156,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.45247840881347656,
+      "seconds": 2.413914918899536,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P2",
+      "panorama_id": "9XMRcfratLMcK68PqcDF9w",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3467,
+      "occupied_sparse_pixels": 3126,
+      "min_depth": 4.0019354820251465,
+      "median_depth": 90.99551391601562,
+      "max_depth": 149.13978576660156,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4891597032546997,
+      "seconds": 2.5672857761383057,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P3",
+      "panorama_id": "f0kNFkpNxBFFjxgs6LXfKw",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3488,
+      "occupied_sparse_pixels": 3132,
+      "min_depth": 2.6111106872558594,
+      "median_depth": 89.23255920410156,
+      "max_depth": 149.94569396972656,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4934951066970825,
+      "seconds": 2.3081347942352295,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P4",
+      "panorama_id": "XGUl7nrjYl4ADPMq63WxhQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3506,
+      "occupied_sparse_pixels": 3141,
+      "min_depth": 0.9231102466583252,
+      "median_depth": 87.14494323730469,
+      "max_depth": 149.9735565185547,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5301079750061035,
+      "seconds": 2.1924781799316406,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P5",
+      "panorama_id": "X9Ic0KmEnvgVSfeSNpXokQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3489,
+      "occupied_sparse_pixels": 3115,
+      "min_depth": 0.6785369515419006,
+      "median_depth": 87.46470642089844,
+      "max_depth": 149.63882446289062,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4550809860229492,
+      "seconds": 2.1489686965942383,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P6",
+      "panorama_id": "kvss86UpEH5VurbDJbqlGw",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3487,
+      "occupied_sparse_pixels": 3144,
+      "min_depth": 1.1999897956848145,
+      "median_depth": 79.84559631347656,
+      "max_depth": 149.39601135253906,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4706043004989624,
+      "seconds": 2.014986276626587,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P7",
+      "panorama_id": "Cn0D8J59eh1r0JBbJN1w-Q",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3485,
+      "occupied_sparse_pixels": 3135,
+      "min_depth": 0.6945012807846069,
+      "median_depth": 72.16630554199219,
+      "max_depth": 149.45437622070312,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.48763811588287354,
+      "seconds": 2.203993320465088,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P8",
+      "panorama_id": "QOWhPlL-ceDVxZ5TFbpIVQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3476,
+      "occupied_sparse_pixels": 3159,
+      "min_depth": 1.9653154611587524,
+      "median_depth": 65.80210876464844,
+      "max_depth": 149.6555633544922,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5183383226394653,
+      "seconds": 2.271641254425049,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P9",
+      "panorama_id": "oC-F-61ythyBdgbK9iGvEg",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3472,
+      "occupied_sparse_pixels": 3161,
+      "min_depth": 0.6086145639419556,
+      "median_depth": 59.63636016845703,
+      "max_depth": 149.916748046875,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5081404447555542,
+      "seconds": 2.2159531116485596,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P10",
+      "panorama_id": "dinOKt8p26GiToIwr0gu3Q",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3525,
+      "occupied_sparse_pixels": 3206,
+      "min_depth": 3.0471549034118652,
+      "median_depth": 56.95703125,
+      "max_depth": 149.80535888671875,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5393961668014526,
+      "seconds": 2.319685697555542,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P11",
+      "panorama_id": "2PPZmEZThEpF_iyk8MsfUQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3561,
+      "occupied_sparse_pixels": 3243,
+      "min_depth": 1.9666651487350464,
+      "median_depth": 54.79588317871094,
+      "max_depth": 149.99452209472656,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5339339971542358,
+      "seconds": 2.180619716644287,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P12",
+      "panorama_id": "8RLaIY6eOdBp5mK4UAXFdg",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3546,
+      "occupied_sparse_pixels": 3238,
+      "min_depth": 1.0103797912597656,
+      "median_depth": 53.2811279296875,
+      "max_depth": 149.99940490722656,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5156224966049194,
+      "seconds": 2.259969711303711,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P13",
+      "panorama_id": "8cOp5B6974ipycwwLvSUCA",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3543,
+      "occupied_sparse_pixels": 3234,
+      "min_depth": 1.1126712560653687,
+      "median_depth": 53.59031677246094,
+      "max_depth": 149.8346710205078,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5345656871795654,
+      "seconds": 2.272901773452759,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P14",
+      "panorama_id": "2yqEB2yuxzTjHTzt342unQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3537,
+      "occupied_sparse_pixels": 3233,
+      "min_depth": 0.1913427710533142,
+      "median_depth": 56.852535247802734,
+      "max_depth": 149.47329711914062,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5252935886383057,
+      "seconds": 2.153330087661743,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P15",
+      "panorama_id": "Pum5WAmTtims6FrUWrHs-g",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3521,
+      "occupied_sparse_pixels": 3201,
+      "min_depth": 1.2425228357315063,
+      "median_depth": 61.02976989746094,
+      "max_depth": 149.8948516845703,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4707183837890625,
+      "seconds": 2.1390395164489746,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P16",
+      "panorama_id": "q2DDEFXM3vkdoqbxrMzIgQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3510,
+      "occupied_sparse_pixels": 3208,
+      "min_depth": 0.11933333426713943,
+      "median_depth": 57.67645263671875,
+      "max_depth": 149.3127899169922,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.517177939414978,
+      "seconds": 2.2428534030914307,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P17",
+      "panorama_id": "VjhBE5U3hy05kw61-Pq_xQ",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3512,
+      "occupied_sparse_pixels": 3178,
+      "min_depth": 1.2650156021118164,
+      "median_depth": 57.15856170654297,
+      "max_depth": 149.9370880126953,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.460455060005188,
+      "seconds": 2.223932981491089,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P18",
+      "panorama_id": "rtuqVQvmG0R9yHEegLIs0A",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3472,
+      "occupied_sparse_pixels": 3139,
+      "min_depth": 0.6164641976356506,
+      "median_depth": 57.69743347167969,
+      "max_depth": 149.8569793701172,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.40188825130462646,
+      "seconds": 2.33656644821167,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P19",
+      "panorama_id": "i72kDrthtlrb_yJioHipfw",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3436,
+      "occupied_sparse_pixels": 3091,
+      "min_depth": 0.21593554317951202,
+      "median_depth": 62.21617889404297,
+      "max_depth": 149.8125762939453,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.3994140625,
+      "seconds": 2.1298792362213135,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P20",
+      "panorama_id": "qQZqrADx7qpa7EGYSh5z7A",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3375,
+      "occupied_sparse_pixels": 3039,
+      "min_depth": 2.5759410858154297,
+      "median_depth": 70.30429077148438,
+      "max_depth": 149.99156188964844,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4267423152923584,
+      "seconds": 2.1675195693969727,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P21",
+      "panorama_id": "1_KoCl7ipDXd9fzt0tjU6w",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3415,
+      "occupied_sparse_pixels": 3075,
+      "min_depth": 0.6438209414482117,
+      "median_depth": 67.5404052734375,
+      "max_depth": 149.92649841308594,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.42989611625671387,
+      "seconds": 2.593331813812256,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P22",
+      "panorama_id": "S2CjDlig8EY_0YwJ0RvW4Q",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3470,
+      "occupied_sparse_pixels": 3148,
+      "min_depth": 0.36524057388305664,
+      "median_depth": 67.272216796875,
+      "max_depth": 149.99815368652344,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4403597116470337,
+      "seconds": 2.33608341217041,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P23",
+      "panorama_id": "kBVDmilzjh4_7mVrPOHkNw",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3493,
+      "occupied_sparse_pixels": 3159,
+      "min_depth": 0.9397103190422058,
+      "median_depth": 67.93675994873047,
+      "max_depth": 149.91744995117188,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4846036434173584,
+      "seconds": 2.1248459815979004,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P24",
+      "panorama_id": "LXl6s23Baclp4dAh4Sa7Ug",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3503,
+      "occupied_sparse_pixels": 3163,
+      "min_depth": 2.990196704864502,
+      "median_depth": 67.9814224243164,
+      "max_depth": 149.98728942871094,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5206966400146484,
+      "seconds": 1.9966552257537842,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P25",
+      "panorama_id": "3zvsgnsk3BZxw9IOm9TQPw",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3522,
+      "occupied_sparse_pixels": 3193,
+      "min_depth": 1.5478941202163696,
+      "median_depth": 67.94532775878906,
+      "max_depth": 149.87933349609375,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5439324378967285,
+      "seconds": 1.9072635173797607,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P26",
+      "panorama_id": "GOmGpmHvqtT1Q5LRWCD3Wg",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3526,
+      "occupied_sparse_pixels": 3188,
+      "min_depth": 2.236542224884033,
+      "median_depth": 70.3939437866211,
+      "max_depth": 149.97080993652344,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.5054296255111694,
+      "seconds": 2.11315655708313,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P27",
+      "panorama_id": "hhleFNFD6P5GiTeNRkfZ-w",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3521,
+      "occupied_sparse_pixels": 3196,
+      "min_depth": 0.41613635420799255,
+      "median_depth": 74.07872009277344,
+      "max_depth": 149.8428192138672,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4990607500076294,
+      "seconds": 2.183987855911255,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P28",
+      "panorama_id": "EmxQoaOOxABcIa_wFDsdog",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3481,
+      "occupied_sparse_pixels": 3142,
+      "min_depth": 0.1952323317527771,
+      "median_depth": 80.0465316772461,
+      "max_depth": 149.93679809570312,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4541813135147095,
+      "seconds": 2.0251708030700684,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    },
+    {
+      "camera": "P29",
+      "panorama_id": "XqDXX5GZp6KwwqwVi9b2Kg",
+      "resolution": [
+        4096,
+        2048
+      ],
+      "projected_points": 3406,
+      "occupied_sparse_pixels": 3077,
+      "min_depth": 2.1809427738189697,
+      "median_depth": 85.3611831665039,
+      "max_depth": 149.94129943847656,
+      "method": "hybrid",
+      "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+      "configuration": {
+        "method": "hybrid",
+        "downscale": 8,
+        "max_depth": 150.0,
+        "min_confidence": 0.15,
+        "support_deg": 5.0,
+        "inputs": {
+          "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+          "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+          "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+        }
+      },
+      "confidence_fraction": 0.4545772075653076,
+      "seconds": 1.9835195541381836,
+      "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+      "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+      "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+      "visual_scale_m": [
+        0,
+        150.0
+      ],
+      "duplicates": "Minimum radial distance per original ERP pixel"
+    }
+  ]
+}

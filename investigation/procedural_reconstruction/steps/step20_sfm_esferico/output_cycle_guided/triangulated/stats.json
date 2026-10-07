@@ -1,0 +1,53 @@
+{
+  "thresholds": {
+    "epipolar_px": 4.0,
+    "min_parallax_deg": 2.0,
+    "max_ray_gap_m": 1.0
+  },
+  "mask_semantics": "Cumulative, input-match aligned",
+  "median_population": "Residual: all defined inputs. Parallax/gap: valid epipolar-pass triangulations before further filters.",
+  "npz_layout": "points_xyz/colors_rgb: final only; final_indices maps to all other per-match arrays. NaN means not triangulated/undefined.",
+  "pairs": {
+    "P29_P2": {
+      "matches_input": 200,
+      "passed_epipolar": 44,
+      "passed_positive_depth": 12,
+      "passed_parallax": 11,
+      "passed_ray_gap": 11,
+      "final_points": 11,
+      "median_epipolar_residual_deg": 0.6655482432172409,
+      "median_parallax_deg": 51.55377032267746,
+      "median_ray_gap_m": 0.09126539330782175,
+      "residual_percentiles_deg": {
+        "p0": 0.00786370394967048,
+        "p25": 0.38186335225415796,
+        "p50": 0.6655482432172409,
+        "p75": 1.055766042889811,
+        "p90": 1.307343460416388,
+        "p95": 1.4063443764372616,
+        "p100": 1.4990997360638327
+      },
+      "ray_gap_percentiles_m": {
+        "p0": 0.0023713300635470735,
+        "p25": 0.02781785158358255,
+        "p50": 0.09126539330782175,
+        "p75": 0.13819777870741293,
+        "p90": 0.2984328387540042,
+        "p95": 0.9202205244238085,
+        "p100": 3.744561552182559
+      },
+      "parallax_percentiles_deg": {
+        "p0": 1.5797150517192744,
+        "p25": 23.570062865998096,
+        "p50": 51.55377032267746,
+        "p75": 79.27301587532648,
+        "p90": 102.54543403925524,
+        "p95": 113.83796267964905,
+        "p100": 171.79606311627532
+      },
+      "undefined_residuals": 0,
+      "epipolar_threshold_deg": 0.3515625
+    }
+  },
+  "total_points": 11
+}

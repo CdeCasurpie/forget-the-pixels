@@ -1,0 +1,37 @@
+{
+  "camera": "P10",
+  "panorama_id": "dinOKt8p26GiToIwr0gu3Q",
+  "resolution": [
+    4096,
+    2048
+  ],
+  "projected_points": 3525,
+  "occupied_sparse_pixels": 3206,
+  "min_depth": 3.0471549034118652,
+  "median_depth": 56.95703125,
+  "max_depth": 149.80535888671875,
+  "method": "hybrid",
+  "interpolation": "local spherical k=8 inverse-depth IDW, reduced resolution; no image-edge guidance",
+  "configuration": {
+    "method": "hybrid",
+    "downscale": 8,
+    "max_depth": 150.0,
+    "min_confidence": 0.15,
+    "support_deg": 5.0,
+    "inputs": {
+      "reconstruction.ply": "18b7cf8efc0aef737e52d34640590c6c0ef4d46436b39c649d8ac17b9d4f4c3f",
+      "camera_poses.json": "d2c6a850d8c043450a2a8426a4778c71d07cd206cdd3cb610f6fce7fe8dc383c",
+      "selected_cycle.json": "c716212004f765a70c460b609a6d5999f47d03811abe445009c7e4a3d5ab2d70"
+    }
+  },
+  "confidence_fraction": 0.5393961668014526,
+  "seconds": 2.319685697555542,
+  "units": "meters, Euclidean radial distance; NPY float32 at original resolution",
+  "visibility": "Not tested: all finite nonzero projectable points within max_depth; pixel collision minimum only",
+  "confidence": "Angular proximity (5 deg default decay scale) and local inverse-depth agreement; not visibility probability",
+  "visual_scale_m": [
+    0,
+    150.0
+  ],
+  "duplicates": "Minimum radial distance per original ERP pixel"
+}

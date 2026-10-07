@@ -1,0 +1,632 @@
+[
+  {
+    "camera_a": "P0",
+    "camera_b": "P1",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 8.965842471616464,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P1",
+    "camera_b": "P2",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.186413235696005,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P2",
+    "camera_b": "P3",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.874228357710212,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P3",
+    "camera_b": "P4",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 13.762898099321465,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P4",
+    "camera_b": "P5",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 12.615345409755403,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P5",
+    "camera_b": "P6",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.906168817956022,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P6",
+    "camera_b": "P7",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.200210881119007,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P7",
+    "camera_b": "P8",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.54562734167449,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P8",
+    "camera_b": "P9",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.367993469855605,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P9",
+    "camera_b": "P10",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.95728911586463,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P10",
+    "camera_b": "P11",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.21639454290832,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P11",
+    "camera_b": "P12",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.084382666117437,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P12",
+    "camera_b": "P13",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.929487926738457,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P13",
+    "camera_b": "P14",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.73895500865519,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P14",
+    "camera_b": "P15",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.594705228672517,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P15",
+    "camera_b": "P16",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.37181847159033,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P16",
+    "camera_b": "P17",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 8.734732061078503,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P17",
+    "camera_b": "P18",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.979785893011396,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P18",
+    "camera_b": "P19",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.159160747568006,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P19",
+    "camera_b": "P20",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 14.781083807541213,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P20",
+    "camera_b": "P21",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.961564577253592,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P21",
+    "camera_b": "P22",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.102008025726239,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P22",
+    "camera_b": "P23",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.17018588693257,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P23",
+    "camera_b": "P24",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.139039144124146,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P24",
+    "camera_b": "P25",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.096183239234442,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P25",
+    "camera_b": "P26",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.072967969053956,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P26",
+    "camera_b": "P27",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.251744457368238,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P27",
+    "camera_b": "P28",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.09125120230698,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P28",
+    "camera_b": "P29",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 10.101112144240306,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P29",
+    "camera_b": "P0",
+    "cycle_step_distance": 1,
+    "camera_distance_m": 9.859801879523394,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P0",
+    "camera_b": "P2",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 18.59689960644334,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P1",
+    "camera_b": "P3",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.060607142973645,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P2",
+    "camera_b": "P4",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 23.63712210292914,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P3",
+    "camera_b": "P5",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 26.378163066489318,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P4",
+    "camera_b": "P6",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 16.045332334110896,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P5",
+    "camera_b": "P7",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.106375928336007,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P6",
+    "camera_b": "P8",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 19.742968322361886,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P7",
+    "camera_b": "P9",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 19.91293467281638,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P8",
+    "camera_b": "P10",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 21.325237684734816,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P9",
+    "camera_b": "P11",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 21.165523076438483,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P10",
+    "camera_b": "P12",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.276513382623175,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P11",
+    "camera_b": "P13",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 19.962705261512884,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P12",
+    "camera_b": "P14",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 19.66555122750931,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P13",
+    "camera_b": "P15",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.332802531147525,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P14",
+    "camera_b": "P16",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 14.137185283601521,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P15",
+    "camera_b": "P17",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 18.106550414303598,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P16",
+    "camera_b": "P18",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 18.714414199840494,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P17",
+    "camera_b": "P19",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.138942693538603,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P18",
+    "camera_b": "P20",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 24.820903963763328,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P19",
+    "camera_b": "P21",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 16.08784824748602,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P20",
+    "camera_b": "P22",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.06354927838017,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P21",
+    "camera_b": "P23",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.272158498049592,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P22",
+    "camera_b": "P24",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.30898286965578,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P23",
+    "camera_b": "P25",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.234874633473602,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P24",
+    "camera_b": "P26",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.168640340914376,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P25",
+    "camera_b": "P27",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.324471711931004,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P26",
+    "camera_b": "P28",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.342621056119985,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P27",
+    "camera_b": "P29",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 20.18942011153891,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P28",
+    "camera_b": "P0",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 19.960820119276168,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P29",
+    "camera_b": "P1",
+    "cycle_step_distance": 2,
+    "camera_distance_m": 16.122408673014288,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P0",
+    "camera_b": "P3",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 28.31172334066331,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P1",
+    "camera_b": "P4",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 33.82350350922779,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P2",
+    "camera_b": "P5",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 36.252344992301374,
+    "within_distance": false
+  },
+  {
+    "camera_a": "P3",
+    "camera_b": "P6",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 28.159447756908293,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P4",
+    "camera_b": "P7",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 23.750386274949147,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P5",
+    "camera_b": "P8",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 29.648101699745002,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P6",
+    "camera_b": "P9",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.11095833997458,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P7",
+    "camera_b": "P10",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.869708849902388,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P8",
+    "camera_b": "P11",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 31.530191116727703,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P9",
+    "camera_b": "P12",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 31.195238950767447,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P10",
+    "camera_b": "P13",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.176667910912585,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P11",
+    "camera_b": "P14",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 29.664638447260348,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P12",
+    "camera_b": "P15",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.260252504865605,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P13",
+    "camera_b": "P16",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 22.304213533624893,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P14",
+    "camera_b": "P17",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 20.967354623701425,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P15",
+    "camera_b": "P18",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 28.08618786649034,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P16",
+    "camera_b": "P19",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 28.87356352008702,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P17",
+    "camera_b": "P20",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 34.750004907941474,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P18",
+    "camera_b": "P21",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 25.61209802503908,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P19",
+    "camera_b": "P22",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 22.434350142709352,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P20",
+    "camera_b": "P23",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.233718470619944,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P21",
+    "camera_b": "P24",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.410740586029338,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P22",
+    "camera_b": "P25",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.40500860991418,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P23",
+    "camera_b": "P26",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.306482740317488,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P24",
+    "camera_b": "P27",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.420361673602308,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P25",
+    "camera_b": "P28",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.415542579838622,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P26",
+    "camera_b": "P29",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.441081446095623,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P27",
+    "camera_b": "P0",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 30.048826246151314,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P28",
+    "camera_b": "P1",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 25.42592268025548,
+    "within_distance": true
+  },
+  {
+    "camera_a": "P29",
+    "camera_b": "P2",
+    "cycle_step_distance": 3,
+    "camera_distance_m": 22.92388373205758,
+    "within_distance": true
+  }
+]
