@@ -20,3 +20,6 @@
 investigation/Lotes/nube_densa/
 investigation/Lotes/nube_sparse/
 investigation/Lotes/images/
+
+# Fotos GSV descargadas (pesadas, no pushear)
+investigation/procedural_reconstruction/data/fotos_barranco/
