@@ -1,0 +1,26 @@
+{
+  "family": "balcony_apartments",
+  "height_m": 9.2,
+  "floors": 3,
+  "massing": {
+    "pattern": "single_block",
+    "front_setback_m": 0.5
+  },
+  "facade": {
+    "bay_count": 3,
+    "balconies": true
+  },
+  "primary_color": [
+    0.76,
+    0.73,
+    0.64
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "concreto_bajo",
+    "garden": false
+  }
+}

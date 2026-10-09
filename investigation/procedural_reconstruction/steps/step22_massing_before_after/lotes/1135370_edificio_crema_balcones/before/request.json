@@ -1,0 +1,54 @@
+{
+  "context": {
+    "parcel": [
+      [
+        1.719,
+        0.0
+      ],
+      [
+        0.0,
+        19.688
+      ],
+      [
+        10.172,
+        20.576
+      ],
+      [
+        11.884,
+        0.965
+      ]
+    ],
+    "fronts": [
+      1
+    ]
+  },
+  "theta": {
+    "height_m": 9.2,
+    "floors": 3,
+    "family": "balcony_apartments",
+    "facade": {
+      "bay_count": 3,
+      "balconies": true
+    },
+    "primary_color": [
+      0.76,
+      0.73,
+      0.64
+    ],
+    "massing": {
+      "pattern": "single_block",
+      "front_setback_m": 0.5
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "concreto_bajo",
+      "garden": false
+    }
+  },
+  "nuisance": {
+    "seed": 82
+  }
+}

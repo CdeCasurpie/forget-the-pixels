@@ -1,0 +1,54 @@
+{
+  "context": {
+    "parcel": [
+      [
+        7.52,
+        0.592
+      ],
+      [
+        0.745,
+        0.0
+      ],
+      [
+        0.0,
+        9.973
+      ],
+      [
+        6.775,
+        10.565
+      ]
+    ],
+    "fronts": [
+      1,
+      2
+    ]
+  },
+  "theta": {
+    "height_m": 6.9,
+    "floors": 2,
+    "family": "republicano",
+    "facade": {
+      "bay_count": 2,
+      "balconies": true
+    },
+    "primary_color": [
+      0.64,
+      0.39,
+      0.31
+    ],
+    "massing": {
+      "pattern": "single_block"
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    }
+  },
+  "nuisance": {
+    "seed": 90
+  }
+}

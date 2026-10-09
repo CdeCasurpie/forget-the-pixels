@@ -1,0 +1,150 @@
+{
+  "context": {
+    "parcel": [
+      [
+        6.455,
+        0.0
+      ],
+      [
+        0.0,
+        20.597
+      ],
+      [
+        23.003,
+        27.847
+      ],
+      [
+        26.805,
+        25.633
+      ],
+      [
+        28.542,
+        7.249
+      ],
+      [
+        28.554,
+        7.124
+      ],
+      [
+        9.474,
+        0.954
+      ],
+      [
+        8.455,
+        0.625
+      ]
+    ],
+    "fronts": [
+      1,
+      2,
+      3
+    ]
+  },
+  "theta": {
+    "height_m": 5.4,
+    "floors": 1,
+    "family": "republicano",
+    "facade": {
+      "bay_count": 4,
+      "balconies": false
+    },
+    "primary_color": [
+      0.78,
+      0.79,
+      0.76
+    ],
+    "massing": {
+      "pattern": "single_block"
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "facades": [
+      {
+        "mass_role": "main:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 1,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 2,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 3,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 4,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 5,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 4,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 6,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 1,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 7,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 4,
+          "balconies": false
+        }
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 3
+  }
+}

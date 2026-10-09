@@ -1,0 +1,53 @@
+{
+  "context": {
+    "parcel": [
+      [
+        8.594,
+        0.0
+      ],
+      [
+        0.0,
+        9.062
+      ],
+      [
+        19.656,
+        27.937
+      ],
+      [
+        25.125,
+        17.312
+      ]
+    ],
+    "fronts": [
+      2
+    ]
+  },
+  "theta": {
+    "height_m": 4.2,
+    "floors": 1,
+    "family": "workshop",
+    "facade": {
+      "bay_count": 4,
+      "balconies": false
+    },
+    "primary_color": [
+      0.52,
+      0.31,
+      0.27
+    ],
+    "massing": {
+      "pattern": "single_block"
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    }
+  },
+  "nuisance": {
+    "seed": 9
+  }
+}

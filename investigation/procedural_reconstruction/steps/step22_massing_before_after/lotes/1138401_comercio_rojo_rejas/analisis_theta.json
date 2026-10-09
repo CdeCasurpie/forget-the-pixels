@@ -1,0 +1,25 @@
+{
+  "family": "workshop",
+  "height_m": 4.2,
+  "floors": 1,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 4,
+    "balconies": false
+  },
+  "primary_color": [
+    0.52,
+    0.31,
+    0.27
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  }
+}

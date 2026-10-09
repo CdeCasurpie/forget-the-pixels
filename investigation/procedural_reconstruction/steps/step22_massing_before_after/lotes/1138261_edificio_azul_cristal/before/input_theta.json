@@ -1,0 +1,234 @@
+{
+  "context": {
+    "parcel": [
+      [
+        4.406,
+        0.0
+      ],
+      [
+        4.375,
+        0.438
+      ],
+      [
+        3.156,
+        11.187
+      ],
+      [
+        1.875,
+        22.75
+      ],
+      [
+        0.0,
+        39.812
+      ],
+      [
+        7.687,
+        40.562
+      ],
+      [
+        25.281,
+        42.312
+      ],
+      [
+        27.063,
+        42.49
+      ],
+      [
+        28.188,
+        30.553
+      ],
+      [
+        69.442,
+        35.229
+      ],
+      [
+        69.499,
+        34.625
+      ],
+      [
+        70.569,
+        23.09
+      ],
+      [
+        15.625,
+        17.0
+      ],
+      [
+        17.125,
+        1.25
+      ]
+    ],
+    "fronts": [
+      5,
+      10
+    ]
+  },
+  "theta": {
+    "height_m": 9.3,
+    "floors": 3,
+    "family": "ribbon_windows",
+    "facade": {
+      "bay_count": 4,
+      "balconies": false
+    },
+    "primary_color": [
+      0.69,
+      0.78,
+      0.82
+    ],
+    "massing": {
+      "pattern": "single_block"
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "facades": [
+      {
+        "mass_role": "main:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 1,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 2,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 3,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 4,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 5,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 6,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 7,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 3,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 8,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 9,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 10,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 11,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 12,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 4,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 13,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 63
+  }
+}

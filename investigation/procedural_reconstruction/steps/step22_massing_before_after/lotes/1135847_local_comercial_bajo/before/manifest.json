@@ -1,0 +1,57 @@
+{
+  "lot": 1135847,
+  "parcel_source": "original cadastral polygon, translated to local metres",
+  "fronts_ring_order": [
+    2
+  ],
+  "street_edge_indices": [
+    1
+  ],
+  "triangles": 884,
+  "validation": {
+    "vertices": 540,
+    "triangles": 884,
+    "parts": 58,
+    "semantic_types": [
+      "curtain_fold",
+      "facade_projection_panel",
+      "floor_slab",
+      "glazing",
+      "interior_backing",
+      "louver_slat",
+      "opening_reveal",
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "shutter_back",
+      "slim_frame",
+      "slim_mullion",
+      "top_cornice",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "louver_slat": 216,
+      "wall": 156,
+      "slim_frame": 96,
+      "opening_reveal": 72,
+      "parapet_cap": 64,
+      "plinth": 60,
+      "parapet": 32,
+      "floor_slab": 28,
+      "top_cornice": 28,
+      "glazing": 24,
+      "interior_backing": 24,
+      "curtain_fold": 24,
+      "slim_mullion": 24,
+      "shutter_back": 12,
+      "facade_projection_panel": 12,
+      "roof_slab": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 1.5135155244938754e-05,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "63a00e78c13f4f5629323e75d17ae36056f831726bb8bbb8cfadf6d0902e52ec"
+}

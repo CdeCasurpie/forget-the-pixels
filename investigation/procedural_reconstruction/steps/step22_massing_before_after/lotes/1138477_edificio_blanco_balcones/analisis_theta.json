@@ -1,0 +1,96 @@
+{
+  "family": "balcony_apartments",
+  "height_m": 9.6,
+  "floors": 3,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 3,
+    "balconies": true
+  },
+  "primary_color": [
+    0.83,
+    0.85,
+    0.82
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  },
+  "facades": [
+    {
+      "mass_role": "main:0",
+      "edge": 0,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 1,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 2,
+      "controls": {
+        "mode": "repeat",
+        "bay_count": 2,
+        "balconies": true
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 3,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 4,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 5,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 6,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    }
+  ]
+}

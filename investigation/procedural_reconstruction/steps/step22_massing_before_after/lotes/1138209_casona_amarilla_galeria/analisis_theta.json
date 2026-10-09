@@ -1,0 +1,26 @@
+{
+  "family": "galeria_madera",
+  "height_m": 7.2,
+  "floors": 2,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 3,
+    "balconies": false
+  },
+  "primary_color": [
+    0.85,
+    0.8,
+    0.64
+  ],
+  "roof": {
+    "kind": "tile_shed",
+    "slope_deg": 12,
+    "parapet_m": 0
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  }
+}

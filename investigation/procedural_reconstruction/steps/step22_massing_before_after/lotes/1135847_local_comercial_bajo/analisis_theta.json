@@ -1,0 +1,36 @@
+{
+  "height_m": 6.6,
+  "floors": 2,
+  "family": "mixed_use",
+  "massing": {"pattern": "single_block"},
+  "primary_color": [0.84, 0.82, 0.74],
+  "side_material": "concrete",
+  "roof": {"kind": "flat", "parapet_m": 0.35},
+  "site": {"fence": "none", "garden": false},
+  "facade": {"balconies": false, "services": false},
+  "facades": [
+    {
+      "mass_role": "main:0",
+      "edge": 0,
+      "controls": {
+        "mode": "explicit",
+        "openings": [
+          {"kind": "window", "u_m": 0.35, "v_m": 0.18, "width_m": 1.45, "height_m": 2.36, "prefab": "storefront", "mullion_columns": 2, "mullion_rows": 1},
+          {"kind": "door", "u_m": 2.04, "v_m": 0.08, "width_m": 1.45, "height_m": 2.46, "prefab": "storefront", "mullion_columns": 2, "mullion_rows": 1},
+          {"kind": "window", "u_m": 0.23, "v_m": 3.58, "width_m": 3.50, "height_m": 2.64, "prefab": "louver", "mullion_columns": 1, "mullion_rows": 1}
+        ],
+        "projections": [
+          {"kind": "panel", "u_m": 0.22, "v_m": 2.63, "width_m": 3.55, "height_m": 0.45, "depth_m": 0.10, "material_slot": "accent"}
+        ],
+        "material_regions": [],
+        "services": false
+      }
+    }
+  ],
+  "materials": [
+    {"slot": "plaster", "template": "plaster", "color": [0.85, 0.83, 0.76]},
+    {"slot": "accent", "template": "accent", "color": [0.27, 0.29, 0.24]},
+    {"slot": "metal", "template": "metal", "color": [0.88, 0.87, 0.81]},
+    {"slot": "frame", "template": "frame", "color": [0.28, 0.28, 0.26]}
+  ]
+}

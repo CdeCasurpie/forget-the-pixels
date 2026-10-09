@@ -1,0 +1,150 @@
+{
+  "context": {
+    "parcel": [
+      [
+        8.197,
+        0.0
+      ],
+      [
+        6.479,
+        8.25
+      ],
+      [
+        0.0,
+        29.78
+      ],
+      [
+        1.885,
+        30.624
+      ],
+      [
+        30.384,
+        43.499
+      ],
+      [
+        39.321,
+        7.259
+      ],
+      [
+        22.055,
+        3.23
+      ],
+      [
+        10.353,
+        0.5
+      ]
+    ],
+    "fronts": [
+      3,
+      4
+    ]
+  },
+  "theta": {
+    "height_m": 3.7,
+    "floors": 1,
+    "family": "quiet_house",
+    "facade": {
+      "bay_count": 2,
+      "balconies": false
+    },
+    "primary_color": [
+      0.72,
+      0.64,
+      0.5
+    ],
+    "massing": {
+      "pattern": "single_block"
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4
+    },
+    "site": {
+      "fence": "none",
+      "garden": false
+    },
+    "facades": [
+      {
+        "mass_role": "main:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 1,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 2,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 3,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 4,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 5,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 2,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 6,
+        "controls": {
+          "mode": "repeat",
+          "bay_count": 2,
+          "balconies": false
+        }
+      },
+      {
+        "mass_role": "main:0",
+        "edge": 7,
+        "controls": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 21
+  }
+}

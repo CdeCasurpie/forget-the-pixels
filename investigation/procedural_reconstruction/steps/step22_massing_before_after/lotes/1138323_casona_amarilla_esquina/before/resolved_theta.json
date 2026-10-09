@@ -1,0 +1,4994 @@
+{
+  "boundaries": [],
+  "completed": {
+    "facade.added_openings": "prior/completed",
+    "facade.cladding": "prior/completed",
+    "facade.material_regions": "derived/family",
+    "facade.opening_edits": "prior/completed",
+    "facade.projections": "derived/family",
+    "facade.services": "prior/completed",
+    "facade.sill_m": "prior/completed",
+    "facade.stairs": "prior/completed",
+    "facade.window_height_m": "prior/completed",
+    "facade.window_ratio": "prior/completed",
+    "facades[main:0,edge:0].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:0].controls.cladding": "inherited/global",
+    "facades[main:0,edge:0].controls.material_regions": "derived/family",
+    "facades[main:0,edge:0].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:0].controls.projections": "derived/family",
+    "facades[main:0,edge:0].controls.services": "inherited/global",
+    "facades[main:0,edge:0].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:0].controls.stairs": "inherited/global",
+    "facades[main:0,edge:0].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:0].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:10].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:10].controls.cladding": "inherited/global",
+    "facades[main:0,edge:10].controls.material_regions": "derived/family",
+    "facades[main:0,edge:10].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:10].controls.projections": "derived/family",
+    "facades[main:0,edge:10].controls.services": "inherited/global",
+    "facades[main:0,edge:10].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:10].controls.stairs": "inherited/global",
+    "facades[main:0,edge:10].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:10].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:11].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:11].controls.cladding": "inherited/global",
+    "facades[main:0,edge:11].controls.material_regions": "derived/family",
+    "facades[main:0,edge:11].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:11].controls.projections": "derived/family",
+    "facades[main:0,edge:11].controls.services": "inherited/global",
+    "facades[main:0,edge:11].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:11].controls.stairs": "inherited/global",
+    "facades[main:0,edge:11].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:11].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:1].controls.added_openings": "prior/completed",
+    "facades[main:0,edge:1].controls.cladding": "prior/completed",
+    "facades[main:0,edge:1].controls.opening_edits": "prior/completed",
+    "facades[main:0,edge:1].controls.services": "prior/completed",
+    "facades[main:0,edge:1].controls.stairs": "prior/completed",
+    "facades[main:0,edge:2].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:2].controls.cladding": "inherited/global",
+    "facades[main:0,edge:2].controls.material_regions": "derived/family",
+    "facades[main:0,edge:2].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:2].controls.projections": "derived/family",
+    "facades[main:0,edge:2].controls.services": "inherited/global",
+    "facades[main:0,edge:2].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:2].controls.stairs": "inherited/global",
+    "facades[main:0,edge:2].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:2].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:3].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:3].controls.cladding": "inherited/global",
+    "facades[main:0,edge:3].controls.material_regions": "derived/family",
+    "facades[main:0,edge:3].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:3].controls.projections": "derived/family",
+    "facades[main:0,edge:3].controls.services": "inherited/global",
+    "facades[main:0,edge:3].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:3].controls.stairs": "inherited/global",
+    "facades[main:0,edge:3].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:3].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:4].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:4].controls.cladding": "inherited/global",
+    "facades[main:0,edge:4].controls.material_regions": "derived/family",
+    "facades[main:0,edge:4].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:4].controls.projections": "derived/family",
+    "facades[main:0,edge:4].controls.services": "inherited/global",
+    "facades[main:0,edge:4].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:4].controls.stairs": "inherited/global",
+    "facades[main:0,edge:4].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:4].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:5].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:5].controls.cladding": "inherited/global",
+    "facades[main:0,edge:5].controls.material_regions": "derived/family",
+    "facades[main:0,edge:5].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:5].controls.projections": "derived/family",
+    "facades[main:0,edge:5].controls.services": "inherited/global",
+    "facades[main:0,edge:5].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:5].controls.stairs": "inherited/global",
+    "facades[main:0,edge:5].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:5].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:6].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:6].controls.cladding": "inherited/global",
+    "facades[main:0,edge:6].controls.material_regions": "derived/family",
+    "facades[main:0,edge:6].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:6].controls.projections": "derived/family",
+    "facades[main:0,edge:6].controls.services": "inherited/global",
+    "facades[main:0,edge:6].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:6].controls.stairs": "inherited/global",
+    "facades[main:0,edge:6].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:6].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:7].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:7].controls.cladding": "inherited/global",
+    "facades[main:0,edge:7].controls.material_regions": "derived/family",
+    "facades[main:0,edge:7].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:7].controls.projections": "derived/family",
+    "facades[main:0,edge:7].controls.services": "inherited/global",
+    "facades[main:0,edge:7].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:7].controls.stairs": "inherited/global",
+    "facades[main:0,edge:7].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:7].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:8].controls.added_openings": "inherited/global",
+    "facades[main:0,edge:8].controls.cladding": "inherited/global",
+    "facades[main:0,edge:8].controls.material_regions": "derived/family",
+    "facades[main:0,edge:8].controls.opening_edits": "inherited/global",
+    "facades[main:0,edge:8].controls.projections": "derived/family",
+    "facades[main:0,edge:8].controls.services": "inherited/global",
+    "facades[main:0,edge:8].controls.sill_m": "inherited/global",
+    "facades[main:0,edge:8].controls.stairs": "inherited/global",
+    "facades[main:0,edge:8].controls.window_height_m": "inherited/global",
+    "facades[main:0,edge:8].controls.window_ratio": "inherited/global",
+    "facades[main:0,edge:9].controls.added_openings": "prior/completed",
+    "facades[main:0,edge:9].controls.cladding": "prior/completed",
+    "facades[main:0,edge:9].controls.opening_edits": "prior/completed",
+    "facades[main:0,edge:9].controls.services": "prior/completed",
+    "facades[main:0,edge:9].controls.stairs": "prior/completed",
+    "finish": "prior/completed",
+    "massing.front_setback_m": "prior/completed",
+    "roof.props": "prior/completed",
+    "side_material": "prior/completed"
+  },
+  "completion_details": {
+    "facade.added_openings": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facade.cladding": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": "stucco"
+    },
+    "facade.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge0/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.7147422823284
+          }
+        ],
+        "main:0/edge1/z0": [],
+        "main:0/edge10/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 13.76806627671439
+          }
+        ],
+        "main:0/edge11/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.295459077779791
+          }
+        ],
+        "main:0/edge2/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.781914839461022
+          }
+        ],
+        "main:0/edge3/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.686039560158166
+          }
+        ],
+        "main:0/edge4/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 42.808620638838626
+          }
+        ],
+        "main:0/edge5/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.22052738921709
+          }
+        ],
+        "main:0/edge6/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 29.7351074993853
+          }
+        ],
+        "main:0/edge7/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.098931791715656
+          }
+        ],
+        "main:0/edge8/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 32.84637955696183
+          }
+        ],
+        "main:0/edge9/z0": []
+      }
+    },
+    "facade.opening_edits": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facade.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge0/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.3247422823284,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.6347422823284
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.4347422823284,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge1/z0": [],
+        "main:0/edge10/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.378066276714389,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 13.68806627671439
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.48806627671439,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge11/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.905459077779791,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.215459077779791
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.0154590777797905,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge2/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.391914839461021,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.701914839461022
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.501914839461023,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge3/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.2960395601581665,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.606039560158166
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.406039560158166,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge4/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.418620638838625,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 42.72862063883863
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.528620638838625,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge5/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.830527389217091,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.14052738921709
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.94052738921709,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge6/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.3451074993853,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 29.655107499385302
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.4551074993853,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge7/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.708931791715656,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.018931791715656
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.818931791715656,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge8/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.45637955696183,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 32.76637955696183
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.56637955696183,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "main:0/edge9/z0": []
+      }
+    },
+    "facade.services": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": false
+    },
+    "facade.sill_m": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": 0.75
+    },
+    "facade.stairs": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facade.window_height_m": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": 2.25
+    },
+    "facade.window_ratio": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": 0.42
+    },
+    "facades[main:0,edge:0].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:0].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:0].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge0/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.7147422823284
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:0].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:0].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge0/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.3247422823284,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.6347422823284
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.4347422823284,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:0].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:0].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:0].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:0].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:0].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:10].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:10].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:10].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge10/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 13.76806627671439
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:10].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:10].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge10/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.378066276714389,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 13.68806627671439
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.48806627671439,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:10].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:10].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:10].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:10].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:10].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:11].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:11].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:11].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge11/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.295459077779791
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:11].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:11].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge11/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.905459077779791,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.215459077779791
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.0154590777797905,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:11].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:11].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:11].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:11].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:11].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:1].controls.added_openings": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facades[main:0,edge:1].controls.cladding": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:1].controls.opening_edits": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facades[main:0,edge:1].controls.services": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": false
+    },
+    "facades[main:0,edge:1].controls.stairs": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facades[main:0,edge:2].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:2].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:2].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge2/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.781914839461022
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:2].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:2].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge2/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.391914839461021,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.701914839461022
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.501914839461023,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:2].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:2].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:2].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:2].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:2].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:3].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:3].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:3].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge3/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.686039560158166
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:3].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:3].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge3/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.2960395601581665,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.606039560158166
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.406039560158166,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:3].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:3].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:3].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:3].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:3].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:4].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:4].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:4].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge4/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 42.808620638838626
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:4].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:4].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge4/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.418620638838625,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 42.72862063883863
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.528620638838625,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:4].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:4].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:4].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:4].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:4].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:5].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:5].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:5].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge5/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.22052738921709
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:5].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:5].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge5/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.830527389217091,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.14052738921709
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.94052738921709,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:5].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:5].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:5].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:5].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:5].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:6].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:6].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:6].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge6/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 29.7351074993853
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:6].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:6].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge6/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.3451074993853,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 29.655107499385302
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.4551074993853,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:6].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:6].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:6].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:6].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:6].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:7].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:7].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:7].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge7/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.098931791715656
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:7].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:7].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge7/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.708931791715656,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.018931791715656
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.818931791715656,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:7].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:7].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:7].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:7].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:7].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:8].controls.added_openings": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:8].controls.cladding": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:8].controls.material_regions": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge8/z0": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 32.84637955696183
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:8].controls.opening_edits": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:8].controls.projections": {
+      "policy": "FAMILY_RULES",
+      "source": "derived/family",
+      "value": {
+        "main:0/edge8/z0": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.45637955696183,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 32.76637955696183
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.56637955696183,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ]
+      }
+    },
+    "facades[main:0,edge:8].controls.services": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": false
+    },
+    "facades[main:0,edge:8].controls.sill_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.75
+    },
+    "facades[main:0,edge:8].controls.stairs": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": []
+    },
+    "facades[main:0,edge:8].controls.window_height_m": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 2.25
+    },
+    "facades[main:0,edge:8].controls.window_ratio": {
+      "policy": "global facade",
+      "source": "inherited/global",
+      "value": 0.42
+    },
+    "facades[main:0,edge:9].controls.added_openings": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facades[main:0,edge:9].controls.cladding": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": "stucco"
+    },
+    "facades[main:0,edge:9].controls.opening_edits": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "facades[main:0,edge:9].controls.services": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": false
+    },
+    "facades[main:0,edge:9].controls.stairs": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "finish": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": "standard"
+    },
+    "massing.front_setback_m": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": 0.0
+    },
+    "roof.props": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": []
+    },
+    "side_material": {
+      "policy": "conservative-0.2",
+      "source": "prior/completed",
+      "value": "brick"
+    }
+  },
+  "context": {
+    "crs": "EPSG:32718",
+    "fronts": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11
+    ],
+    "locked_height_m": null,
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "parcel": [
+      [
+        0.0,
+        32.125
+      ],
+      [
+        5.75,
+        17.5
+      ],
+      [
+        5.219,
+        17.375
+      ],
+      [
+        10.125,
+        2.375
+      ],
+      [
+        16.375,
+        0.0
+      ],
+      [
+        55.499,
+        17.375
+      ],
+      [
+        58.155,
+        23.0
+      ],
+      [
+        51.312,
+        51.937
+      ],
+      [
+        45.749,
+        54.437
+      ],
+      [
+        14.844,
+        43.312
+      ],
+      [
+        15.062,
+        42.687
+      ],
+      [
+        2.094,
+        38.062
+      ]
+    ]
+  },
+  "masses": [
+    {
+      "base_z": 0.0,
+      "floor_levels": [
+        0.0,
+        5.9
+      ],
+      "footprint": [
+        [
+          0.0,
+          32.125
+        ],
+        [
+          5.75,
+          17.5
+        ],
+        [
+          5.219,
+          17.375
+        ],
+        [
+          10.125,
+          2.375
+        ],
+        [
+          16.375,
+          0.0
+        ],
+        [
+          55.499,
+          17.375
+        ],
+        [
+          58.155,
+          23.0
+        ],
+        [
+          51.312,
+          51.937
+        ],
+        [
+          45.749,
+          54.437
+        ],
+        [
+          14.844,
+          43.312
+        ],
+        [
+          15.062,
+          42.687
+        ],
+        [
+          2.094,
+          38.062
+        ]
+      ],
+      "id": "main:0",
+      "parent_ids": [],
+      "role": "main",
+      "roof_spec": null,
+      "roof_z": 5.9,
+      "support_ids": []
+    }
+  ],
+  "roofs": [
+    {
+      "mass_id": "main:0",
+      "parapet_height_m": 0.4,
+      "parapet_profile": "cap",
+      "props": [],
+      "roof_z": 5.9,
+      "surfaces": [
+        {
+          "base_z": 5.9,
+          "eave_point": [
+            10.125,
+            2.375
+          ],
+          "inward_normal": [
+            0.930654778630774,
+            0.36589845997449233
+          ],
+          "kind": "flat",
+          "polygon": [
+            [
+              0.0,
+              32.125
+            ],
+            [
+              5.75,
+              17.5
+            ],
+            [
+              5.219,
+              17.375
+            ],
+            [
+              10.125,
+              2.375
+            ],
+            [
+              16.375,
+              0.0
+            ],
+            [
+              55.499,
+              17.375
+            ],
+            [
+              58.155,
+              23.0
+            ],
+            [
+              51.312,
+              51.937
+            ],
+            [
+              45.749,
+              54.437
+            ],
+            [
+              14.844,
+              43.312
+            ],
+            [
+              15.062,
+              42.687
+            ],
+            [
+              2.094,
+              38.062
+            ]
+          ],
+          "slope_deg": 0.0,
+          "thickness_m": 0.14
+        }
+      ]
+    }
+  ],
+  "schema_version": "0.2",
+  "theta": {
+    "facade": {
+      "added_openings": [],
+      "awning_depth_m": null,
+      "balconies": false,
+      "balcony_depth_m": null,
+      "bay_axes_m": null,
+      "bay_count": 5,
+      "cladding": "stucco",
+      "gallery_depth_m": null,
+      "material_regions": null,
+      "mode": "repeat",
+      "opening_edits": [],
+      "openings": null,
+      "projections": null,
+      "services": false,
+      "sill_m": 0.75,
+      "stairs": [],
+      "window_height_m": 2.25,
+      "window_ratio": 0.42
+    },
+    "facades": [
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 0,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": [],
+          "mode": "explicit",
+          "opening_edits": [],
+          "openings": [],
+          "projections": [],
+          "services": false,
+          "sill_m": null,
+          "stairs": [],
+          "window_height_m": null,
+          "window_ratio": null
+        },
+        "edge": 1,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 2,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 3,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 4,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 5,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 6,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 7,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 8,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": [],
+          "mode": "explicit",
+          "opening_edits": [],
+          "openings": [],
+          "projections": [],
+          "services": false,
+          "sill_m": null,
+          "stairs": [],
+          "window_height_m": null,
+          "window_ratio": null
+        },
+        "edge": 9,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 10,
+        "mass_role": "main:0"
+      },
+      {
+        "controls": {
+          "added_openings": [],
+          "awning_depth_m": null,
+          "balconies": false,
+          "balcony_depth_m": null,
+          "bay_axes_m": null,
+          "bay_count": null,
+          "cladding": "stucco",
+          "gallery_depth_m": null,
+          "material_regions": null,
+          "mode": "repeat",
+          "opening_edits": [],
+          "openings": null,
+          "projections": null,
+          "services": false,
+          "sill_m": 0.75,
+          "stairs": [],
+          "window_height_m": 2.25,
+          "window_ratio": 0.42
+        },
+        "edge": 11,
+        "mass_role": "main:0"
+      }
+    ],
+    "family": "republicano",
+    "finish": "standard",
+    "floors": 1,
+    "height_m": 5.9,
+    "masses": null,
+    "massing": {
+      "corner_reach_m": null,
+      "front_depth_m": null,
+      "front_setback_m": 0.0,
+      "low_floors": null,
+      "pattern": "single_block",
+      "podium_floors": null,
+      "upper_setback_m": null
+    },
+    "materials": [],
+    "primary_color": [
+      0.88,
+      0.77,
+      0.51
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.4,
+      "props": [],
+      "slope_deg": null
+    },
+    "roofs": [],
+    "schema_version": "0.2",
+    "side_material": "brick",
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": null
+    }
+  },
+  "walls": [
+    {
+      "axes_m": [
+        1.82747422823284,
+        4.84242268469852,
+        7.857371141164199,
+        10.872319597629879,
+        13.887268054095559
+      ],
+      "base_z": 0.0,
+      "edge": 0,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge0/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.7147422823284
+          }
+        ],
+        "normal_xy": [
+          -0.930654778630774,
+          -0.36589845997449233
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.2274742282328401,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.209283508840728,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2662783517155851
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.224231965306407,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2662783517155851
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 10.239180421772087,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2662783517155851
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 13.254128878237767,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2662783517155851
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.3247422823284,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.6347422823284
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.4347422823284,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          0.0,
+          32.125
+        ],
+        "vertex_b": [
+          5.75,
+          17.5
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 15.7147422823284
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [],
+      "base_z": 0.0,
+      "edge": 1,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge1/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [],
+        "normal_xy": [
+          -0.2291415070374434,
+          0.973393121895059
+        ],
+        "observed": false,
+        "openings": [],
+        "ornamented": false,
+        "projections": [],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          5.75,
+          17.5
+        ],
+        "vertex_b": [
+          5.219,
+          17.375
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 0.5455144361059565
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.8341914839461022,
+        4.862574451838307,
+        7.89095741973051,
+        10.919340387622714,
+        13.94772335551492
+      ],
+      "base_z": 0.0,
+      "edge": 2,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge2/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 15.781914839461022
+          }
+        ],
+        "normal_xy": [
+          -0.9504550083171197,
+          -0.31086215138691925
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.2341914839461023,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.226614028580944,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.271920846514725
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.254996996473148,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.271920846514725
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 10.283379964365352,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.271920846514725
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 13.311762932257558,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.271920846514725
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.391914839461021,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 15.701914839461022
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 15.501914839461023,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          5.219,
+          17.375
+        ],
+        "vertex_b": [
+          10.125,
+          2.375
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 15.781914839461022
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.8315098900395417,
+        4.854529670118625
+      ],
+      "base_z": 0.0,
+      "edge": 3,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge3/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.686039560158166
+          }
+        ],
+        "normal_xy": [
+          -0.3552177606235726,
+          -0.9347835805883489
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.2315098900395416,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.219695516302018,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2696683076332143
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.2960395601581665,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.606039560158166
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.406039560158166,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          10.125,
+          2.375
+        ],
+        "vertex_b": [
+          16.375,
+          0.0
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 6.686039560158166
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.8260221656728082,
+        4.838066497018424,
+        7.85011082836404,
+        10.862155159709657,
+        13.874199491055272,
+        16.88624382240089,
+        19.898288153746506,
+        22.91033248509212,
+        25.922376816437737,
+        28.934421147783354,
+        31.946465479128968,
+        34.95850981047459,
+        37.9705541418202,
+        40.982598473165815
+      ],
+      "base_z": 0.0,
+      "edge": 4,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge4/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 42.808620638838626
+          }
+        ],
+        "normal_xy": [
+          0.4058761936430235,
+          -0.9139280690699081
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.2260221656728083,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.205537187435845,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.217581518781461,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 10.229625850127078,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 13.241670181472694,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 16.25371451281831,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 19.265758844163926,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 22.27780317550954,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 25.289847506855157,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 28.301891838200774,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 31.313936169546388,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 34.32598050089201,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 37.33802483223762,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 40.350069163583235,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.2650586191651576
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.418620638838625,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 42.72862063883863
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 42.528620638838625,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          16.375,
+          0.0
+        ],
+        "vertex_b": [
+          55.499,
+          17.375
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 42.808620638838626
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.7151318473042727,
+        4.505395541912819
+      ],
+      "base_z": 0.0,
+      "edge": 5,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge5/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.22052738921709
+          }
+        ],
+        "normal_xy": [
+          0.9042641641206498,
+          -0.426973443538568
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.129176471436479,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.1719107517355878
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 3.9194401660450247,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.1719107517355878
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.830527389217091,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.14052738921709
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.94052738921709,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          55.499,
+          17.375
+        ],
+        "vertex_b": [
+          58.155,
+          23.0
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 6.22052738921709
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.9363948610769612,
+        5.169184583230884,
+        8.401974305384806,
+        11.634764027538727,
+        14.867553749692648,
+        18.10034347184657,
+        21.333133194000496,
+        24.565922916154417,
+        27.798712638308338
+      ],
+      "base_z": 0.0,
+      "edge": 6,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge6/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 29.7351074993853
+          }
+        ],
+        "normal_xy": [
+          0.9731594210849313,
+          0.23013200810326534
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.3363948610769611,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.4902987415785605,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.723088463732483,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 10.955878185886403,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 14.188667908040324,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 17.421457630194247,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 20.65424735234817,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 23.887037074502093,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 27.119826796656014,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3577716833046467
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.3451074993853,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 29.655107499385302
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 29.4551074993853,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          58.155,
+          23.0
+        ],
+        "vertex_b": [
+          51.312,
+          51.937
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 29.7351074993853
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.6847329479289141,
+        4.4141988437867425
+      ],
+      "base_z": 0.0,
+      "edge": 7,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge7/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.098931791715656
+          }
+        ],
+        "normal_xy": [
+          0.4099078470422997,
+          0.9121269412385246
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.1115451097987705,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.146375676260287
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 3.841011005656599,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.146375676260287
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.708931791715656,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.018931791715656
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.818931791715656,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          51.312,
+          51.937
+        ],
+        "vertex_b": [
+          45.749,
+          54.437
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 6.098931791715656
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.9303189778480914,
+        5.150956933544275,
+        8.371594889240457,
+        11.59223284493664,
+        14.812870800632824,
+        18.033508756329006,
+        21.25414671202519,
+        24.47478466772137,
+        27.695422623417553,
+        30.916060579113736
+      ],
+      "base_z": 0.0,
+      "edge": 8,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge8/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 32.84637955696183
+          }
+        ],
+        "normal_xy": [
+          -0.3386979067421159,
+          0.9408951737406825
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.3303189778480915,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.474622962848077,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.6952609185442595,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 10.915898874240444,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 14.136536829936627,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 17.357174785632807,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 20.57781274132899,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 23.79845069702517,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 27.019088652721354,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 30.239726608417538,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3526679413923954
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.45637955696183,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 32.76637955696183
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 32.56637955696183,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          45.749,
+          54.437
+        ],
+        "vertex_b": [
+          14.844,
+          43.312
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 32.84637955696183
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [],
+      "base_z": 0.0,
+      "edge": 9,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge9/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [],
+        "normal_xy": [
+          -0.9442111071878618,
+          -0.3293408341871262
+        ],
+        "observed": false,
+        "openings": [],
+        "ornamented": false,
+        "projections": [],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          14.844,
+          43.312
+        ],
+        "vertex_b": [
+          15.062,
+          42.687
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 0.6619282438452071
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.9610082845892987,
+        5.243024853767896,
+        8.525041422946494,
+        11.80705799212509
+      ],
+      "base_z": 0.0,
+      "edge": 10,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge10/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 13.76806627671439
+          }
+        ],
+        "normal_xy": [
+          -0.3359222643939589,
+          0.9418897134401857
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.3610082845892988,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.2
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 4.553801374240391,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3784469590550104
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 7.835817943418989,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3784469590550104
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 11.117834512597584,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.3784469590550104
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.378066276714389,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 13.68806627671439
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 13.48806627671439,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          15.062,
+          42.687
+        ],
+        "vertex_b": [
+          2.094,
+          38.062
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 13.76806627671439
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    },
+    {
+      "axes_m": [
+        1.7338647694449478,
+        4.561594308334843
+      ],
+      "base_z": 0.0,
+      "edge": 11,
+      "facade": {
+        "assigned_views": [],
+        "balcony_pattern": "vertical",
+        "cladding": "stucco",
+        "edge_id": "main:0/edge11/z0",
+        "exterior_stairs": [],
+        "floor_levels_m": [
+          0.0,
+          5.9
+        ],
+        "ground_floor_material": null,
+        "is_front": true,
+        "material_regions": [
+          {
+            "height_m": 5.9,
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.0,
+            "v_m": 0.0,
+            "width_m": 6.295459077779791
+          }
+        ],
+        "normal_xy": [
+          -0.9430606928976798,
+          0.3326206991624966
+        ],
+        "observed": false,
+        "openings": [
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.3,
+            "kind": "door",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "wood_panel",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 1.14004156627807,
+            "v_m": 0.04,
+            "view_id": null,
+            "width_m": 1.1876464063337555
+          },
+          {
+            "balcony_depth_m": 0.75,
+            "curtain": 0.0,
+            "frame_width_m": 0.06,
+            "grille": true,
+            "grille_pattern": "vertical",
+            "height_m": 2.25,
+            "kind": "window",
+            "mullion_columns": 2,
+            "mullion_rows": 2,
+            "prefab": "legacy",
+            "recess_m": 0.08,
+            "score": 0.0,
+            "source": "assumed",
+            "style": "sliding",
+            "u_m": 3.967771105167966,
+            "v_m": 0.75,
+            "view_id": null,
+            "width_m": 1.1876464063337555
+          }
+        ],
+        "ornamented": false,
+        "projections": [
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.05,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.09,
+            "height_m": 5.800000000000001,
+            "kind": "pilaster",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 5.905459077779791,
+            "v_m": 0.0,
+            "width_m": 0.34
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.42,
+            "height_m": 0.42,
+            "kind": "cornice",
+            "label": "",
+            "material_slot": "stone",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 0.04,
+            "v_m": 5.420000000000001,
+            "width_m": 6.215459077779791
+          },
+          {
+            "border_width_m": 0.14,
+            "depth_m": 0.1,
+            "height_m": 5.6000000000000005,
+            "kind": "downpipe",
+            "label": "",
+            "material_slot": "metal",
+            "score": 0.0,
+            "source": "family_rule",
+            "u_m": 6.0154590777797905,
+            "v_m": 0.15,
+            "width_m": 0.12
+          }
+        ],
+        "services": false,
+        "style": "standard",
+        "vertex_a": [
+          2.094,
+          38.062
+        ],
+        "vertex_b": [
+          0.0,
+          32.125
+        ],
+        "wall_color_rgb": [
+          200,
+          190,
+          170
+        ],
+        "wall_material": "plaster",
+        "width_m": 6.295459077779791
+      },
+      "height_m": 5.9,
+      "mass_role": "main:0"
+    }
+  ]
+}

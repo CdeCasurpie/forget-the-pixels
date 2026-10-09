@@ -1,0 +1,33 @@
+{
+  "height_m": 7.2,
+  "floors": 2,
+  "family": "quiet_house",
+  "massing": {"pattern": "single_block"},
+  "facade": {"balconies": false, "services": false},
+  "roof": {"kind": "flat", "parapet_m": 0.25},
+  "site": {"fence": "none", "garden": false},
+  "primary_color": [0.75, 0.73, 0.68],
+  "side_material": "plaster",
+  "facades": [
+    {"mass_role": "main:0", "edge": 0, "controls": {"mode": "explicit", "openings": [
+      {"kind": "door", "u_m": 5.1, "v_m": 0.05, "width_m": 2.8, "height_m": 2.95, "prefab": "metal_gate", "frame_width_m": 0.12},
+      {"kind": "window", "u_m": 1.4, "v_m": 4.30, "width_m": 2.4, "height_m": 1.4, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 5.0, "v_m": 4.00, "width_m": 1.0, "height_m": 2.30, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 9.1, "v_m": 4.00, "width_m": 1.0, "height_m": 2.30, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 12.5, "v_m": 4.75, "width_m": 0.9, "height_m": 1.25, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 14.5, "v_m": 4.75, "width_m": 0.9, "height_m": 1.25, "prefab": "slim_window", "grille": true}
+    ], "projections": [], "material_regions": []}},
+    {"mass_role": "main:0", "edge": 3, "controls": {"mode": "explicit", "openings": [
+      {"kind": "door", "u_m": 5.0, "v_m": 0.05, "width_m": 2.8, "height_m": 2.95, "prefab": "metal_gate", "frame_width_m": 0.12},
+      {"kind": "window", "u_m": 2.0, "v_m": 4.15, "width_m": 2.3, "height_m": 1.45, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 8.5, "v_m": 4.05, "width_m": 1.15, "height_m": 2.2, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 12.8, "v_m": 4.75, "width_m": 0.85, "height_m": 1.15, "prefab": "slim_window", "grille": true},
+      {"kind": "window", "u_m": 14.8, "v_m": 4.75, "width_m": 0.85, "height_m": 1.15, "prefab": "slim_window", "grille": true}
+    ], "projections": [], "material_regions": []}}
+  ],
+  "materials": [
+    {"slot": "plaster", "template": "plaster", "color": [0.75, 0.73, 0.68]},
+    {"slot": "frame", "template": "frame", "color": [0.86, 0.84, 0.78]},
+    {"slot": "metal", "template": "metal", "color": [0.72, 0.72, 0.70]}
+  ]
+}

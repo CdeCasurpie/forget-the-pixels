@@ -1,0 +1,104 @@
+{
+  "family": "republicano",
+  "height_m": 5.4,
+  "floors": 1,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 4,
+    "balconies": false
+  },
+  "primary_color": [
+    0.78,
+    0.79,
+    0.76
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  },
+  "facades": [
+    {
+      "mass_role": "main:0",
+      "edge": 0,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 1,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 2,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 3,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 4,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 5,
+      "controls": {
+        "mode": "repeat",
+        "bay_count": 4,
+        "balconies": false
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 6,
+      "controls": {
+        "mode": "repeat",
+        "bay_count": 1,
+        "balconies": false
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 7,
+      "controls": {
+        "mode": "repeat",
+        "bay_count": 4,
+        "balconies": false
+      }
+    }
+  ]
+}

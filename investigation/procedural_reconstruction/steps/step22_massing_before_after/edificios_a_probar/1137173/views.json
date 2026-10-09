@@ -1,0 +1,47 @@
+{
+  "objectid": 1137173,
+  "description": "",
+  "nominal_roof_height_m": 15.0,
+  "offset_east_north_m": [
+    4.9543337123501505,
+    -0.13096518744685284
+  ],
+  "projection": "rectilinear perspective (pinhole), no overlay",
+  "views": [
+    {
+      "file": "01_-lLjTX0ZdkSoCvxIsOb74Q.jpg",
+      "camera_id": "-lLjTX0ZdkSoCvxIsOb74Q",
+      "distance_to_lot_m": 5.77,
+      "horizontal_fov_deg": 116.19,
+      "vertical_fov_deg": 96.96
+    },
+    {
+      "file": "02_3V6FwCUKEJ0KNhv7g69V1g.jpg",
+      "camera_id": "3V6FwCUKEJ0KNhv7g69V1g",
+      "distance_to_lot_m": 6.5,
+      "horizontal_fov_deg": 110.94,
+      "vertical_fov_deg": 91.24
+    },
+    {
+      "file": "03_tl08DTXBccdJiYZb_UgbQg.jpg",
+      "camera_id": "tl08DTXBccdJiYZb_UgbQg",
+      "distance_to_lot_m": 7.6,
+      "horizontal_fov_deg": 103.92,
+      "vertical_fov_deg": 83.89
+    },
+    {
+      "file": "04_R7b6SYXrPXv9eXioH229bw.jpg",
+      "camera_id": "R7b6SYXrPXv9eXioH229bw",
+      "distance_to_lot_m": 10.15,
+      "horizontal_fov_deg": 93.61,
+      "vertical_fov_deg": 73.66
+    },
+    {
+      "file": "05_no2vGvr5SUA1JemBQGgS7Q.jpg",
+      "camera_id": "no2vGvr5SUA1JemBQGgS7Q",
+      "distance_to_lot_m": 15.57,
+      "horizontal_fov_deg": 74.54,
+      "vertical_fov_deg": 56.3
+    }
+  ]
+}

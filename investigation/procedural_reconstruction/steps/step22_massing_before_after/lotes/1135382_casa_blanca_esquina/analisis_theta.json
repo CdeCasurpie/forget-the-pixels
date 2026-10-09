@@ -1,0 +1,25 @@
+{
+  "family": "quiet_house",
+  "height_m": 6.5,
+  "floors": 2,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 3,
+    "balconies": false
+  },
+  "primary_color": [
+    0.82,
+    0.88,
+    0.85
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  }
+}

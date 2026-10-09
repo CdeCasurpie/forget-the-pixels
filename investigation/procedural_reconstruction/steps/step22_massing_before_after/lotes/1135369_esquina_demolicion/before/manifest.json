@@ -1,0 +1,65 @@
+{
+  "lot": 1135369,
+  "parcel_source": "original cadastral polygon, translated to local metres",
+  "fronts_ring_order": [
+    1,
+    2
+  ],
+  "street_edge_indices": [
+    1,
+    2
+  ],
+  "triangles": 4632,
+  "validation": {
+    "vertices": 2708,
+    "triangles": 4632,
+    "parts": 221,
+    "semantic_types": [
+      "curtain_fold",
+      "door_handle",
+      "door_leaf",
+      "floor_slab",
+      "gate_seam",
+      "glazing",
+      "interior_backing",
+      "opening_reveal",
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "security_bar",
+      "security_crossbar",
+      "slim_frame",
+      "slim_mullion",
+      "slim_transom",
+      "top_cornice",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "security_bar": 1664,
+      "security_crossbar": 672,
+      "gate_seam": 360,
+      "slim_frame": 352,
+      "wall": 308,
+      "curtain_fold": 288,
+      "opening_reveal": 264,
+      "glazing": 108,
+      "interior_backing": 108,
+      "slim_mullion": 108,
+      "slim_transom": 108,
+      "parapet_cap": 64,
+      "plinth": 56,
+      "floor_slab": 40,
+      "top_cornice": 40,
+      "parapet": 32,
+      "door_leaf": 24,
+      "door_handle": 24,
+      "roof_slab": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 8.214177627172575e-07,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "03bea78df7243d72968a68cfae07bd1a07ddd666cdc031f2a0032f55405c8c54"
+}

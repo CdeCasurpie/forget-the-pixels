@@ -1,0 +1,25 @@
+{
+  "family": "republicano",
+  "height_m": 6.9,
+  "floors": 2,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 2,
+    "balconies": true
+  },
+  "primary_color": [
+    0.64,
+    0.39,
+    0.31
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  }
+}

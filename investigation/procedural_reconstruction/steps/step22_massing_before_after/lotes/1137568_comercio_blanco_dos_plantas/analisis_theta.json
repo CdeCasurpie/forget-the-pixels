@@ -1,0 +1,76 @@
+{
+  "family": "mixed_use",
+  "height_m": 6.3,
+  "floors": 2,
+  "massing": {
+    "pattern": "single_block"
+  },
+  "facade": {
+    "bay_count": 2,
+    "balconies": false
+  },
+  "primary_color": [
+    0.84,
+    0.83,
+    0.77
+  ],
+  "roof": {
+    "kind": "flat",
+    "parapet_m": 0.4
+  },
+  "site": {
+    "fence": "none",
+    "garden": false
+  },
+  "facades": [
+    {
+      "mass_role": "main:0",
+      "edge": 0,
+      "controls": {
+        "mode": "repeat",
+        "bay_count": 2,
+        "balconies": false
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 1,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 2,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 3,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    },
+    {
+      "mass_role": "main:0",
+      "edge": 4,
+      "controls": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      }
+    }
+  ]
+}
