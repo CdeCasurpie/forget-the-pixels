@@ -38,7 +38,7 @@ def street_facing_edges(
     lot_index,
     *,
     neighbour_clearance_m: float = 1.25,
-    min_clear_sample_ratio: float = 2 / 3,
+    min_clear_sample_ratio: float = 3 / 5,
     samples_per_edge: int = 5,
     min_edge_length_m: float = 1.2,
 ) -> list[StreetEdge]:
@@ -48,6 +48,10 @@ def street_facing_edges(
     the nearest other parcel. At least 2/3 must be clear. It reliably excludes
     shared walls and narrow passages, but is a public-space candidate—not an
     authoritative road-centerline dataset.
+
+    With five samples, 3/5 is a strict majority. The previous default 2/3
+    rounded up to 4/5, rejecting short lot fronts free in their middle but
+    close to neighbours near both corners.
     """
     _validate_lots(lots)
     if lot_index not in lots.index:

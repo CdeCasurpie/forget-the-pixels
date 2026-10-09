@@ -1,0 +1,7 @@
+{
+  "crs": "EPSG:32718",
+  "east_m": 4.9543337123501505,
+  "north_m": -0.13096518744685284,
+  "operation": "translated_lot_xy = original_lot_xy + [east_m, north_m]",
+  "applies_to": "cadastral lots only; camera positions unchanged"
+}
