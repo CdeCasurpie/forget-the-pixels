@@ -13,6 +13,8 @@ La extensión horizontal de fachada y las dos demostraciones BCP/Metro están
 en `FACADE_ZONES.md`, `facade_zone_recipes.json` y `after_facade_zones/` de esos lotes.
 Los ritmos BayGroup y su relief compartido se documentan en `BAY_GROUPS.md`;
 `build_bay_groups.py` reproduce únicamente BCP y Metro en `after_bay_groups/`.
+La prueba opt-in `monumental_portal` de Metro se documenta en
+`MONUMENTAL_PORTAL.md` y `after_monumental_portal/`.
 `lotes/AUDITORIA_COMPARATIVAS.md` contiene el diagnóstico visual lote por
 lote, separando errores de elección de θ y límites reales de la gramática;
 `lotes/AREA_LIBRE_AUDIT.md` detalla las pruebas de retiro/cerco.

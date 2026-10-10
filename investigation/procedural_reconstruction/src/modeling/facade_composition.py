@@ -42,6 +42,53 @@ class ResolvedBay:
     role: str | None
 
 
+# Conservative dimensions shared by every monumental_portal. Prefab cornice
+# adds 4 cm drip beyond these nominal bounds, pilaster capitals 5 cm/side.
+PORTAL = dict(pier_width=.28, pier_gap=.14, frame_margin=.12,
+              pier_head=.24, cornice_height=.18, cornice_gap=.06,
+              pediment_height=.48, edge_clearance=.10)
+
+
+def _apply_motifs(c, openings, targets, length, height):
+    """Decorate post-edit openings; target is the (component floor, bay) key."""
+    if not c.motifs:
+        return tuple(openings), ()
+    ops=list(openings)
+    features=[]
+    for motif in c.motifs:
+        key=(motif.floor,motif.bay)
+        _check(key in targets, 'monumental_portal target bay/floor does not exist')
+        index=targets[key]
+        _check(index is not None, 'monumental_portal requires an opening after edits')
+        op=ops[index]
+        _check(op.kind in ('door','gate'), 'monumental_portal requires a door or gate')
+        if motif.opening_shape=='arch':
+            op=replace(op,shape='arch',arch_rise_m=min(op.width_m/2,op.height_m/3))
+            ops[index]=op
+        left=op.u_m-PORTAL['pier_gap']-PORTAL['pier_width']
+        right=op.u_m+op.width_m+PORTAL['pier_gap']
+        width=right+PORTAL['pier_width']-left
+        pier_top=op.v_m+op.height_m+PORTAL['pier_head']
+        cornice_z=pier_top+PORTAL['cornice_gap']
+        top= cornice_z+PORTAL['cornice_height']+(PORTAL['pediment_height'] if motif.pediment else 0.)
+        _check(left>=PORTAL['edge_clearance'] and left+width<=length-PORTAL['edge_clearance'] and
+               top<=height-.1 and op.v_m>=0 and pier_top>op.v_m,
+               'monumental_portal does not fit facade chart')
+        source='monumental_portal'
+        features.extend((
+            FacadeProjection('pilaster',left,0.,PORTAL['pier_width'],pier_top,.25,source=source),
+            FacadeProjection('pilaster',right,0.,PORTAL['pier_width'],pier_top,.25,source=source),
+            FacadeProjection('frame',op.u_m-PORTAL['frame_margin'],op.v_m,
+                op.width_m+2*PORTAL['frame_margin'],op.height_m+PORTAL['pier_head'],.3,
+                border_width_m=.10,source=source),
+            FacadeProjection('cornice',left, cornice_z,width,PORTAL['cornice_height'],.32,source=source),
+        ))
+        if motif.pediment:
+            features.append(FacadeProjection('pediment',left,cornice_z+PORTAL['cornice_height'],
+                                              width,PORTAL['pediment_height'],.28,source=source))
+    return tuple(ops),tuple(features)
+
+
 def validate_bay_groups(c):
     """Validate even inactive/hidden controls, before metric composition."""
     if not c.bay_groups:return
@@ -81,7 +128,8 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
     edits={(e.floor,e.bay):e for e in c.opening_edits}
     found=set()
     ops=[]
-    def append(op,bay):
+    targets={}
+    def append(op,bay,key):
         _check(op.u_m>=bay.start_m+.12 and op.u_m+op.width_m<=bay.end_m-.12+1e-8,
                'Opening outside its BayGroup')
         _check(op.width_m>0 and op.height_m>0 and op.v_m>=0 and op.v_m+op.height_m<=height-.1,
@@ -90,6 +138,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
         _check(all(shape.intersection(rect(x.u_m,x.v_m,x.u_m+x.width_m,x.v_m+x.height_m)).area<1e-8 for x in ops),
                'Opening edit/add overlaps another opening')
         ops.append(op)
+        targets[key]=len(ops)-1
     for local_floor,(z0,z1) in enumerate(zip(levels,levels[1:])):
         floor=local_floor if floor_indices is None else floor_indices[local_floor]
         for bay in bays:
@@ -97,13 +146,16 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             found.add(key)
             edit=edits.get(key)
             if edit is not None:
-                if edit.action=='replace':append(edit.opening,bay)
+                targets[key]=None
+                if edit.action=='replace':append(edit.opening,bay,key)
                 continue
             kind,prefab='window',rules['prefab']
             width,sill,h=bay.pitch_m*c.window_ratio,c.sill_m,c.window_height_m
             if ground and local_floor==0:
                 role=bay.ground_role
-                if role=='blind':continue
+                if role=='blind':
+                    targets[key]=None
+                    continue
                 if role in ('entrance','garage'):
                     kind,prefab=('door','wood_panel') if role=='entrance' else ('gate','roller')
                     # Explicit entry groups use their own available width,
@@ -116,16 +168,17 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             h=min(h,z1-z0-sill-.2)
             _check(h>=.5 and width>=.4,'Openings cannot fit in BayGroup: reduce count or dimensions')
             append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab=prefab,
-                           grille=rules['grille'],balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay)
+                           grille=rules['grille'],balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
     _check(set(edits)<=found,'Sparse edit targets nonexistent floor/bay')
     for op in c.added_openings:
         owners=[b for b in bays if b.start_m<=op.u_m and op.u_m+op.width_m<=b.end_m]
         _check(bool(owners),'Added opening outside BayGroups (gaps are blind)')
-        append(op,owners[0])
-    return _finish(c,rules,length,levels,height,ground,top,tuple(b.axis_m for b in bays),ops)
+        append(op,owners[0],None)
+    ops,motif_features=_apply_motifs(c,ops,targets,length,height)
+    return _finish(c,rules,length,levels,height,ground,top,tuple(b.axis_m for b in bays),ops,motif_features)
 
 
-def _finish(c, rules, length, levels, height, ground, top, axes, ops):
+def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_features=()):
     # All groups have been joined. Global relief runs exactly once; balconies
     # and shutters consume each opening's actual dimensions, not a global pitch.
     projections,regions=compose_relief(length,levels,ops,rules,height,ground,top,
@@ -133,7 +186,7 @@ def _finish(c, rules, length, levels, height, ground, top, axes, ops):
     projections=tuple(replace(x,depth_m=c.gallery_depth_m) if x.kind=='gallery' else
                       replace(x,depth_m=c.awning_depth_m) if x.kind=='awning' else x for x in projections)
     ops=tuple(replace(x,kind='window') if x.kind=='balcony_window' else x for x in ops)
-    return FacadeComposition(axes,ops,projections if c.projections is None else c.projections,
+    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features,
                              tuple(regions) if c.material_regions is None else c.material_regions)
 
 
@@ -155,6 +208,7 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     pitch = min([length-.64] + [b-a for a,b in zip(axes, axes[1:])] + [2*(axes[0]-.32), 2*(length-.32-axes[-1])])
     ops = []
     found=set()
+    targets={}
     edits={(e.floor,e.bay):e for e in c.opening_edits}
     for local_floor, (z0,z1) in enumerate(zip(levels, levels[1:])):
         floor=local_floor if floor_indices is None else floor_indices[local_floor]
@@ -179,10 +233,15 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
             edit=edits.get(key)
             if edit is None:
                 ops.append(opening)
+                targets[key]=len(ops)-1
             elif edit.action=="replace":
                 ops.append(edit.opening)
+                targets[key]=len(ops)-1
+            else:
+                targets[key]=None
     _check(set(edits)<=found,"Sparse edit targets nonexistent floor/bay")
     ops.extend(c.added_openings)
+    ops,motif_features=_apply_motifs(c,ops,targets,length,height)
     rectangles=[]
     for op in ops:
         _check(op.u_m>=.12 and op.v_m>=0 and op.width_m>0 and op.height_m>0 and
@@ -198,5 +257,5 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
                         replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
     ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
-    return FacadeComposition(axes, ops, projections if c.projections is None else c.projections,
+    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features,
                              tuple(regions) if c.material_regions is None else c.material_regions)

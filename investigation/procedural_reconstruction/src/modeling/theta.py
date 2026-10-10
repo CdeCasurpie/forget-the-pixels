@@ -279,6 +279,11 @@ def _mass_ref(value, masses):
 
 def _facade_controls(c, family):
     validate_bay_groups(c)
+    _check(len({(m.floor,m.bay) for m in c.motifs})==len(c.motifs), 'Duplicate motif target')
+    for motif in c.motifs:
+        _check(motif.kind=='monumental_portal' and motif.floor==0 and motif.bay>=0 and
+               motif.opening_shape in (None,'arch'), 'Invalid monumental_portal motif')
+    _check(not c.motifs or c.mode=='repeat', 'Motifs require repeat mode')
     _check(c.mode in ("repeat", "explicit"), "Facade mode must be repeat or explicit")
     c=replace(c, cladding=c.cladding if c.cladding is not None else "stucco",
               services=c.services if c.services is not None else False,
@@ -410,6 +415,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         controls.extend(f.controls for f in (*component.faces,*component.zones))
     for control in controls:
         _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
+        _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)

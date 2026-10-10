@@ -156,6 +156,16 @@ class BayGroup:
 
 
 @dataclass(frozen=True)
+class ArchitecturalMotif:
+    """Opt-in decoration of one existing bay; never creates another opening."""
+    kind: str
+    bay: int
+    floor: int = 0
+    opening_shape: str | None = None
+    pediment: bool = True
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -176,6 +186,7 @@ class FacadeControls:
     opening_edits: tuple[OpeningEdit, ...] | None = None
     added_openings: tuple[Opening, ...] | None = None
     bay_groups: tuple[BayGroup, ...] = ()
+    motifs: tuple[ArchitecturalMotif, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -333,7 +344,8 @@ def canonical(value) -> str:
     def data(x):
         if is_dataclass(x):
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
-                    if not (isinstance(x,FacadeControls) and f.name=='bay_groups' and not x.bay_groups)}
+                    if not (isinstance(x,FacadeControls) and
+                            (f.name=='bay_groups' and not x.bay_groups or f.name=='motifs' and not x.motifs))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x
