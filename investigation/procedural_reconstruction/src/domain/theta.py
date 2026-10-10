@@ -175,6 +175,19 @@ class CrownProfile:
 
 
 @dataclass(frozen=True)
+class OpeningProgram:
+    group: int
+    floor: int | None = None
+    kind: str | None = None
+    shape: str | None = None
+    width_ratio: float | None = None
+    height_m: float | None = None
+    sill_m: float | None = None
+    prefab: str | None = None
+    grille: bool | None = None
+
+
+@dataclass(frozen=True)
 class ArchitecturalOrder:
     pilaster_mode: str = "none"  # none | group_boundaries | bay_boundaries | explicit
     pilaster_width_m: float = 0.30
@@ -211,6 +224,7 @@ class FacadeControls:
     motifs: tuple[ArchitecturalMotif, ...] = ()
     crowns: tuple[CrownProfile, ...] = ()
     order: ArchitecturalOrder | None = None
+    opening_programs: tuple[OpeningProgram, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -371,7 +385,8 @@ def canonical(value) -> str:
                     if not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
-                             f.name=='order' and x.order is None))}
+                             f.name=='order' and x.order is None or
+                             f.name=='opening_programs' and not x.opening_programs))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x

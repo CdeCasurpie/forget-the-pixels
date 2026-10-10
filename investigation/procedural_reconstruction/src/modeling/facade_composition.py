@@ -218,8 +218,30 @@ def _order_projections(c,length,height,axes,bays=None):
     return tuple(result)
 
 
+def validate_opening_programs(c):
+    for p in c.opening_programs:
+        _check(bool(c.bay_groups) and type(p.group) is int and 0<=p.group<len(c.bay_groups),
+               'OpeningProgram requires an existing BayGroup')
+        _check(p.floor is None or type(p.floor) is int and p.floor>=0,'Invalid OpeningProgram floor')
+        _check(p.kind in (None,'window','door','gate') and p.shape in (None,'rectangle','arch'),
+               'Invalid OpeningProgram kind/shape')
+        _check(p.prefab in (None,'legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'),
+               'Invalid OpeningProgram prefab')
+        _check(p.grille is None or type(p.grille) is bool,'Invalid OpeningProgram grille')
+        for value,valid in ((p.width_ratio,lambda x:.1<=x<=.95),
+                            (p.height_m,lambda x:x>0),(p.sill_m,lambda x:x>=0)):
+            _check(value is None or math.isfinite(value) and valid(value),'Invalid OpeningProgram dimensions')
+    for i,p in enumerate(c.opening_programs):
+        _check(not any(q.group==p.group and (q.floor is None or p.floor is None or q.floor==p.floor)
+                       for q in c.opening_programs[:i]),'Ambiguous OpeningProgram group/floor')
+
+
 def _compose_grouped(c, family, length, levels, height, ground, top, floor_indices):
     bays=resolve_bay_layout(c,length)
+    validate_opening_programs(c)
+    floors=tuple(range(len(levels)-1)) if floor_indices is None else floor_indices
+    _check(all(p.floor is None or p.floor in floors for p in c.opening_programs),
+           'OpeningProgram floor does not exist in chart')
     rules=FAMILY_RULES[family]
     edits={(e.floor,e.bay):e for e in c.opening_edits}
     found=set()
@@ -238,6 +260,8 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
     for local_floor,(z0,z1) in enumerate(zip(levels,levels[1:])):
         floor=local_floor if floor_indices is None else floor_indices[local_floor]
         for bay in bays:
+            program=next((p for p in c.opening_programs if p.group==bay.group_index and
+                          (p.floor is None or p.floor==floor)),None)
             key=(floor,bay.global_index)
             found.add(key)
             edit=edits.get(key)
@@ -249,7 +273,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             width,sill,h=bay.pitch_m*c.window_ratio,c.sill_m,c.window_height_m
             if ground and local_floor==0:
                 role=bay.ground_role
-                if role=='blind':
+                if role=='blind' and (program is None or program.kind is None):
                     targets[key]=None
                     continue
                 if role in ('entrance','garage'):
@@ -262,9 +286,21 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             if floor>0 and c.balconies and bay.global_index%2==0:
                 kind,sill='balcony_window',.18
             h=min(h,z1-z0-sill-.2)
+            shape='rectangle'
+            grille=rules['grille']
+            if program is not None:
+                kind=program.kind if program.kind is not None else kind
+                prefab=program.prefab if program.prefab is not None else prefab
+                shape=program.shape or shape
+                grille=program.grille if program.grille is not None else grille
+                width=bay.pitch_m*program.width_ratio if program.width_ratio is not None else width
+                h=program.height_m if program.height_m is not None else h
+                sill=program.sill_m if program.sill_m is not None else sill
+                _check(sill+h<=z1-z0-.1,'OpeningProgram does not fit floor')
             _check(h>=.5 and width>=.4,'Openings cannot fit in BayGroup: reduce count or dimensions')
             append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab=prefab,
-                           grille=rules['grille'],balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
+                            grille=grille,shape=shape,arch_rise_m=min(width/2,h/3) if shape=='arch' else None,
+                            balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
     _check(set(edits)<=found,'Sparse edit targets nonexistent floor/bay')
     for op in c.added_openings:
         owners=[b for b in bays if b.start_m<=op.u_m and op.u_m+op.width_m<=b.end_m]
