@@ -46,6 +46,7 @@ class ResolvedWall:
     axes_m: tuple[float, ...]
     facade: FacadeSpecification
     visible_domains: tuple[tuple[float,float,float,float], ...] = ()
+    plane_offset_m: float = 0.
 
 
 @dataclass(frozen=True)
@@ -405,7 +406,8 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
                           exterior_stairs=stairs,is_front=is_front,program_enabled=True,wall_material='plaster',
                           services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
     visible=patch_domains(domains,(start,low,end,high))
-    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible)
+    _check(np.isfinite(zone.offset_m) and -2.<=zone.offset_m<=1., 'FacadeZone offset_m must be -2..1 m')
+    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,zone.offset_m)
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
@@ -713,10 +715,18 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     zoned_edges={(w.mass_role,w.edge) for w in resolved.walls if '/zone' in w.facade.edge_id}
     for wall in resolved.walls:
         f=wall.facade
+        if wall.plane_offset_m:
+            shift=np.asarray(f.normal_xy)*wall.plane_offset_m
+            f=replace(f,vertex_a=tuple(np.asarray(f.vertex_a)+shift),
+                      vertex_b=tuple(np.asarray(f.vertex_b)+shift))
         ops=tuple(replace(op,curtain=float(_rng(nuisance.seed,f"{f.edge_id}/curtain/{i}").uniform(.15,.55)))
                   if nuisance.curtains and op.kind=="window" and op.prefab in ("slim_window","storefront","legacy") else op
                   for i,op in enumerate(f.openings))
         local=_BandBuilder(builder,wall.base_z)
+        if wall.plane_offset_m:
+            from modeling.facade_depth import DepthEnvelopeBuilder, emit_returns
+            local=DepthEnvelopeBuilder(local)
+            emit_returns(local,wall)
         if wall.visible_domains and wall.visible_domains!=((0.,0.,f.width_m,wall.height_m),):
             local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,wall.visible_domains)
         facade(local,replace(f,openings=ops),wall.height_m)

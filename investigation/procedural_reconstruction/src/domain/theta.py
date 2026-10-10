@@ -101,6 +101,7 @@ class FacadeZone:
     u: tuple[float, float] = (0., 1.)
     z_m: tuple[float, float] | None = None
     role: str | None = None
+    offset_m: float = 0.  # outward positive; recess negative, in the face normal
 
 
 @dataclass(frozen=True)
@@ -382,7 +383,9 @@ def canonical(value) -> str:
     def data(x):
         if is_dataclass(x):
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
-                    if not (isinstance(x,FacadeControls) and
+                    if not (isinstance(x,FacadeZone) and f.name=='offset_m' and x.offset_m==0.)
+                    and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
+                    and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
                              f.name=='order' and x.order is None or
