@@ -166,6 +166,15 @@ class ArchitecturalMotif:
 
 
 @dataclass(frozen=True)
+class CrownProfile:
+    """Above-wall silhouette in the current facade or FacadeZone chart."""
+    u: tuple[float, float]
+    kind: str  # triangular | stepped
+    height_m: float
+    depth_m: float = 0.20
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -187,6 +196,7 @@ class FacadeControls:
     added_openings: tuple[Opening, ...] | None = None
     bay_groups: tuple[BayGroup, ...] = ()
     motifs: tuple[ArchitecturalMotif, ...] = ()
+    crowns: tuple[CrownProfile, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -345,7 +355,8 @@ def canonical(value) -> str:
         if is_dataclass(x):
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
                     if not (isinstance(x,FacadeControls) and
-                            (f.name=='bay_groups' and not x.bay_groups or f.name=='motifs' and not x.motifs))}
+                            (f.name=='bay_groups' and not x.bay_groups or
+                             f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x

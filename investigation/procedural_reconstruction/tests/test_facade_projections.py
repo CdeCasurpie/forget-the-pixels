@@ -63,6 +63,8 @@ REQUIRED = {
     "sign_box": "sign_box",
     "pediment": "pediment",
     "vertical_fins": "vertical_fin",
+    "crown_triangular": "crown_triangular",
+    "crown_stepped": "crown_stepped",
 }
 
 

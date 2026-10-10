@@ -23,7 +23,7 @@ from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
-from modeling.facade_composition import compose_facade, validate_bay_groups
+from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -279,6 +279,7 @@ def _mass_ref(value, masses):
 
 def _facade_controls(c, family):
     validate_bay_groups(c)
+    validate_crowns(c)
     _check(len({(m.floor,m.bay) for m in c.motifs})==len(c.motifs), 'Duplicate motif target')
     for motif in c.motifs:
         _check(motif.kind=='monumental_portal' and motif.floor==0 and motif.bay>=0 and
@@ -416,6 +417,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     for control in controls:
         _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
         _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
+        _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
@@ -662,6 +664,14 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
+    def crown_panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
+        lifted=[translate(p,yoff=self._z_offset) for p in polys]
+        target=self._builder
+        if isinstance(target,VisibleFacadeBuilder):
+            return target.crown_panel(a,t,n,lifted,w1,w2,mat_fn,semantic,
+                                      z_offset=self._z_offset,**kwargs)
+        return target.panel(a,t,n,lifted,w1,w2,mat_fn,semantic,**kwargs)
+
     def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
         offset=self._z_offset
         lifted=[translate(p,yoff=offset) for p in polys]

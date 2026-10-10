@@ -536,11 +536,13 @@ def _facade_body(mb, f, total_height):
         ):
             raise ValueError(f"Material region outside facade {f.edge_id}")
     for feature in features:
+        crown=feature.kind in ('crown_triangular','crown_stepped') and feature.source=='crown_profile'
         if (
             feature.u_m < 0
             or feature.u_m + feature.width_m > length
             or feature.v_m < 0
-            or feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5)
+            or (feature.v_m > total_height+1e-8 if crown else
+                feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
     _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)

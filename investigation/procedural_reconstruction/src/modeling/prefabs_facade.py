@@ -321,6 +321,24 @@ def pediment(mb,a,t,n,feature):
     mb.panel(a,t,n,[shape],-.02,feature.depth_m,lambda *args:feature.material_slot,'pediment')
 
 
+def crown_triangular(mb,a,t,n,feature):
+    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
+    shape=Polygon([(u,v),(u+w,v),(u+w/2,v+h)])
+    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
+                   lambda *args:feature.material_slot,'crown_triangular')
+
+
+def crown_stepped(mb,a,t,n,feature):
+    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
+    # Three tiers share one continuous polygon and one closed extrusion.
+    shape=Polygon([(u,v),(u+w,v),(u+w,v+h/3),(u+5*w/6,v+h/3),
+                   (u+5*w/6,v+2*h/3),(u+2*w/3,v+2*h/3),
+                   (u+2*w/3,v+h),(u+w/3,v+h),(u+w/3,v+2*h/3),
+                   (u+w/6,v+2*h/3),(u+w/6,v+h/3),(u,v+h/3)])
+    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
+                   lambda *args:feature.material_slot,'crown_stepped')
+
+
 def vertical_fins(mb,a,t,n,feature):
     pitch=max(.15,feature.border_width_m)
     for u in np.arange(feature.u_m,feature.u_m+feature.width_m-.04,pitch):
@@ -346,5 +364,7 @@ FACADE_PROJECTIONS = {
     "downpipe": downpipe,
     "sign_box": sign_box,
     "pediment": pediment,
+    "crown_triangular": crown_triangular,
+    "crown_stepped": crown_stepped,
     "vertical_fins": vertical_fins,
 }

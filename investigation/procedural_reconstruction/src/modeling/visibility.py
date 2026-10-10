@@ -41,6 +41,21 @@ class VisibleFacadeBuilder:
         clipped=[part for p in polys for part in polygons(p.intersection(self.mask))]
         return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)
 
+    def crown_panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,*,z_offset=0.,**kwargs):
+        """Extend only exposed top domains, and only for crown polygons.
+
+        Ordinary openings, wall shells and other projections continue using
+        the original mask. A crown cannot grow above a hidden top segment.
+        """
+        top=min(p.bounds[1] for p in polys)-z_offset
+        upper=max(p.bounds[3] for p in polys)
+        cap=unary_union([box(u0,z1+z_offset,u1,upper) for u0,z0,u1,z1 in self.domains
+                         if abs(z1-top)<1e-7 and upper>z1+z_offset])
+        original=unary_union([box(u0,z0+z_offset,u1,z1+z_offset) for u0,z0,u1,z1 in self.domains])
+        mask=original.union(cap)
+        clipped=[part for p in polys for part in polygons(p.intersection(mask))]
+        return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)
+
     def box(self,a,t,n,u1,u2,z1,z2,w1,w2,material='plaster',semantic='wall',**kwargs):
         if u2<=u1 or z2<=z1 or w2<=w1:
             return

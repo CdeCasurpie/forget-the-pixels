@@ -29,6 +29,29 @@ def _check(condition, message):
         raise ValueError(message)
 
 
+def validate_crowns(c):
+    previous=0.
+    for crown in c.crowns:
+        u0,u1=crown.u
+        _check(math.isfinite(u0) and math.isfinite(u1) and 0<=u0<u1<=1,
+               'Invalid CrownProfile u interval')
+        _check(u0>=previous, 'CrownProfiles must be ordered without overlap')
+        _check(crown.kind in ('triangular','stepped'), 'Invalid CrownProfile kind')
+        _check(math.isfinite(crown.height_m) and .20<=crown.height_m<=3.,
+               'Invalid CrownProfile height_m')
+        _check(math.isfinite(crown.depth_m) and .05<=crown.depth_m<=.8,
+               'Invalid CrownProfile depth_m')
+        previous=u1
+
+
+def _crown_projections(c, length, height):
+    validate_crowns(c)
+    return tuple(FacadeProjection('crown_'+x.kind,length*x.u[0],height,
+                                  length*(x.u[1]-x.u[0]),x.height_m,x.depth_m,
+                                  material_slot='plaster',source='crown_profile')
+                 for x in c.crowns)
+
+
 @dataclass(frozen=True)
 class ResolvedBay:
     axis_m: float
@@ -186,7 +209,8 @@ def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_feat
     projections=tuple(replace(x,depth_m=c.gallery_depth_m) if x.kind=='gallery' else
                       replace(x,depth_m=c.awning_depth_m) if x.kind=='awning' else x for x in projections)
     ops=tuple(replace(x,kind='window') if x.kind=='balcony_window' else x for x in ops)
-    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features,
+    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features+
+                             _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
 
 
@@ -200,7 +224,8 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     if c.bay_groups:
         return _compose_grouped(c,family,length,levels,height,ground,top,floor_indices)
     if c.mode == "explicit":
-        return FacadeComposition((), c.openings, c.projections or (), c.material_regions or ())
+        return FacadeComposition((), c.openings, (c.projections or ())+_crown_projections(c,length,height),
+                                 c.material_regions or ())
     rules = dict(FAMILY_RULES[family])
     count = c.bay_count or max(1, round((length-.64)/3.1))
     axes = c.bay_axes_m if c.bay_axes_m is not None else tuple(.32+(i+.5)*(length-.64)/count for i in range(count))
@@ -257,5 +282,6 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
                         replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
     ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
-    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features,
+    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+
+                             _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)

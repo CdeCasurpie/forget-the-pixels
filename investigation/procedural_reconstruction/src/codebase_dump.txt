@@ -587,7 +587,7 @@ class MeshData:
     components: tuple[dict[str, Any], ...] = ()
 
 ========================================================================
-FILE: domain/theta.py (358 lineas)
+FILE: domain/theta.py (369 lineas)
 ========================================================================
 """Experimental architectural target, NOT theta-v1. Distances are local metres.
 
@@ -757,6 +757,15 @@ class ArchitecturalMotif:
 
 
 @dataclass(frozen=True)
+class CrownProfile:
+    """Above-wall silhouette in the current facade or FacadeZone chart."""
+    u: tuple[float, float]
+    kind: str  # triangular | stepped
+    height_m: float
+    depth_m: float = 0.20
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -778,6 +787,7 @@ class FacadeControls:
     added_openings: tuple[Opening, ...] | None = None
     bay_groups: tuple[BayGroup, ...] = ()
     motifs: tuple[ArchitecturalMotif, ...] = ()
+    crowns: tuple[CrownProfile, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -936,7 +946,8 @@ def canonical(value) -> str:
         if is_dataclass(x):
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
                     if not (isinstance(x,FacadeControls) and
-                            (f.name=='bay_groups' and not x.bay_groups or f.name=='motifs' and not x.motifs))}
+                            (f.name=='bay_groups' and not x.bay_groups or
+                             f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x
@@ -2249,7 +2260,7 @@ def wall_domains(mass, masses, a, b):
     return tuple(domains)
 
 ========================================================================
-FILE: modeling/facade_composition.py (261 lineas)
+FILE: modeling/facade_composition.py (287 lineas)
 ========================================================================
 """Canonical theta-candidate composer in a local facade chart.
 
@@ -2280,6 +2291,29 @@ class FacadeComposition(NamedTuple):
 def _check(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def validate_crowns(c):
+    previous=0.
+    for crown in c.crowns:
+        u0,u1=crown.u
+        _check(math.isfinite(u0) and math.isfinite(u1) and 0<=u0<u1<=1,
+               'Invalid CrownProfile u interval')
+        _check(u0>=previous, 'CrownProfiles must be ordered without overlap')
+        _check(crown.kind in ('triangular','stepped'), 'Invalid CrownProfile kind')
+        _check(math.isfinite(crown.height_m) and .20<=crown.height_m<=3.,
+               'Invalid CrownProfile height_m')
+        _check(math.isfinite(crown.depth_m) and .05<=crown.depth_m<=.8,
+               'Invalid CrownProfile depth_m')
+        previous=u1
+
+
+def _crown_projections(c, length, height):
+    validate_crowns(c)
+    return tuple(FacadeProjection('crown_'+x.kind,length*x.u[0],height,
+                                  length*(x.u[1]-x.u[0]),x.height_m,x.depth_m,
+                                  material_slot='plaster',source='crown_profile')
+                 for x in c.crowns)
 
 
 @dataclass(frozen=True)
@@ -2439,7 +2473,8 @@ def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_feat
     projections=tuple(replace(x,depth_m=c.gallery_depth_m) if x.kind=='gallery' else
                       replace(x,depth_m=c.awning_depth_m) if x.kind=='awning' else x for x in projections)
     ops=tuple(replace(x,kind='window') if x.kind=='balcony_window' else x for x in ops)
-    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features,
+    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features+
+                             _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
 
 
@@ -2453,7 +2488,8 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     if c.bay_groups:
         return _compose_grouped(c,family,length,levels,height,ground,top,floor_indices)
     if c.mode == "explicit":
-        return FacadeComposition((), c.openings, c.projections or (), c.material_regions or ())
+        return FacadeComposition((), c.openings, (c.projections or ())+_crown_projections(c,length,height),
+                                 c.material_regions or ())
     rules = dict(FAMILY_RULES[family])
     count = c.bay_count or max(1, round((length-.64)/3.1))
     axes = c.bay_axes_m if c.bay_axes_m is not None else tuple(.32+(i+.5)*(length-.64)/count for i in range(count))
@@ -2510,7 +2546,8 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
                         replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
     ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
-    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features,
+    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+
+                             _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
 
 ========================================================================
@@ -3253,7 +3290,7 @@ def apply_edge_setbacks(parcel_poly: Polygon, specific_edges: list[LineString], 
     return footprint
 
 ========================================================================
-FILE: modeling/grammar.py (1355 lineas)
+FILE: modeling/grammar.py (1357 lineas)
 ========================================================================
 """Deterministic architectural assembly: facade grammar + roof + selected fences.
 
@@ -3793,11 +3830,13 @@ def _facade_body(mb, f, total_height):
         ):
             raise ValueError(f"Material region outside facade {f.edge_id}")
     for feature in features:
+        crown=feature.kind in ('crown_triangular','crown_stepped') and feature.source=='crown_profile'
         if (
             feature.u_m < 0
             or feature.u_m + feature.width_m > length
             or feature.v_m < 0
-            or feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5)
+            or (feature.v_m > total_height+1e-8 if crown else
+                feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
     _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)
@@ -6736,7 +6775,7 @@ def build_opening(mb, a, t, n, op):
                         mb.beam(p(*start),p(*end),.005,semantic="grille_diamond")
 
 ========================================================================
-FILE: modeling/prefabs_facade.py (350 lineas)
+FILE: modeling/prefabs_facade.py (370 lineas)
 ========================================================================
 """Facade-attached masses, in facade-local metres. No random choices here.
 
@@ -7061,6 +7100,24 @@ def pediment(mb,a,t,n,feature):
     mb.panel(a,t,n,[shape],-.02,feature.depth_m,lambda *args:feature.material_slot,'pediment')
 
 
+def crown_triangular(mb,a,t,n,feature):
+    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
+    shape=Polygon([(u,v),(u+w,v),(u+w/2,v+h)])
+    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
+                   lambda *args:feature.material_slot,'crown_triangular')
+
+
+def crown_stepped(mb,a,t,n,feature):
+    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
+    # Three tiers share one continuous polygon and one closed extrusion.
+    shape=Polygon([(u,v),(u+w,v),(u+w,v+h/3),(u+5*w/6,v+h/3),
+                   (u+5*w/6,v+2*h/3),(u+2*w/3,v+2*h/3),
+                   (u+2*w/3,v+h),(u+w/3,v+h),(u+w/3,v+2*h/3),
+                   (u+w/6,v+2*h/3),(u+w/6,v+h/3),(u,v+h/3)])
+    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
+                   lambda *args:feature.material_slot,'crown_stepped')
+
+
 def vertical_fins(mb,a,t,n,feature):
     pitch=max(.15,feature.border_width_m)
     for u in np.arange(feature.u_m,feature.u_m+feature.width_m-.04,pitch):
@@ -7086,6 +7143,8 @@ FACADE_PROJECTIONS = {
     "downpipe": downpipe,
     "sign_box": sign_box,
     "pediment": pediment,
+    "crown_triangular": crown_triangular,
+    "crown_stepped": crown_stepped,
     "vertical_fins": vertical_fins,
 }
 
@@ -8312,7 +8371,7 @@ class MaterialLibrary:
         self.image_cache.clear()
 
 ========================================================================
-FILE: modeling/theta.py (756 lineas)
+FILE: modeling/theta.py (766 lineas)
 ========================================================================
 """Resolve architectural decisions first; only then emit geometry.
 
@@ -8339,7 +8398,7 @@ from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
-from modeling.facade_composition import compose_facade, validate_bay_groups
+from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -8595,6 +8654,7 @@ def _mass_ref(value, masses):
 
 def _facade_controls(c, family):
     validate_bay_groups(c)
+    validate_crowns(c)
     _check(len({(m.floor,m.bay) for m in c.motifs})==len(c.motifs), 'Duplicate motif target')
     for motif in c.motifs:
         _check(motif.kind=='monumental_portal' and motif.floor==0 and motif.bay>=0 and
@@ -8732,6 +8792,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     for control in controls:
         _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
         _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
+        _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
@@ -8978,6 +9039,14 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
+    def crown_panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
+        lifted=[translate(p,yoff=self._z_offset) for p in polys]
+        target=self._builder
+        if isinstance(target,VisibleFacadeBuilder):
+            return target.crown_panel(a,t,n,lifted,w1,w2,mat_fn,semantic,
+                                      z_offset=self._z_offset,**kwargs)
+        return target.panel(a,t,n,lifted,w1,w2,mat_fn,semantic,**kwargs)
+
     def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
         offset=self._z_offset
         lifted=[translate(p,yoff=offset) for p in polys]
@@ -9266,7 +9335,7 @@ FILE: modeling/version.py (2 lineas)
 MATERIALIZER_VERSION = 'grammar-v1.1-dev'
 
 ========================================================================
-FILE: modeling/visibility.py (89 lineas)
+FILE: modeling/visibility.py (104 lineas)
 ========================================================================
 """Clip facade primitives in their original (u,z) chart, never reflow bays."""
 import numpy as np
@@ -9309,6 +9378,21 @@ class VisibleFacadeBuilder:
 
     def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
         clipped=[part for p in polys for part in polygons(p.intersection(self.mask))]
+        return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)
+
+    def crown_panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,*,z_offset=0.,**kwargs):
+        """Extend only exposed top domains, and only for crown polygons.
+
+        Ordinary openings, wall shells and other projections continue using
+        the original mask. A crown cannot grow above a hidden top segment.
+        """
+        top=min(p.bounds[1] for p in polys)-z_offset
+        upper=max(p.bounds[3] for p in polys)
+        cap=unary_union([box(u0,z1+z_offset,u1,upper) for u0,z0,u1,z1 in self.domains
+                         if abs(z1-top)<1e-7 and upper>z1+z_offset])
+        original=unary_union([box(u0,z0+z_offset,u1,z1+z_offset) for u0,z0,u1,z1 in self.domains])
+        mask=original.union(cap)
+        clipped=[part for p in polys for part in polygons(p.intersection(mask))]
         return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)
 
     def box(self,a,t,n,u1,u2,z1,z2,w1,w2,material='plaster',semantic='wall',**kwargs):
@@ -10798,4 +10882,4 @@ def select_vertical(masks, x: float, half_width: int = 0):
                          "area_pixels": int(masks[i].sum())})
     return [e['index'] for e in evidence if e['selected']], evidence
 
-[dump] 65 archivos, 10458 lineas totales.
+[dump] 65 archivos, 10542 lineas totales.
