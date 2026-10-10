@@ -32,6 +32,8 @@ def main():
                 components[ci]=replace(components[ci],zones=(FacadeZone('front',control),))
                 refs.pop(index)
             else:refs[index]=replace(old,controls=control)
+        if recipe.get('primary_color'):
+            request=replace(request,theta=replace(request.theta,primary_color=tuple(recipe['primary_color'])))
         request=replace(request,theta=replace(request.theta,facades=tuple(refs),
             massing=replace(request.theta.massing,components=tuple(components))))
         result=reconstruct(request)

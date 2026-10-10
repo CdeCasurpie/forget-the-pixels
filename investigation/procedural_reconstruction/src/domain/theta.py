@@ -12,7 +12,7 @@ from numbers import Real
 from dataclasses import asdict, dataclass, fields, is_dataclass, field
 from typing import Any, Union, get_args, get_origin, get_type_hints
 
-from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification
+from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification, FacadeTopProfile
 
 
 @dataclass(frozen=True)
@@ -247,6 +247,7 @@ class FacadeControls:
     crowns: tuple[CrownProfile, ...] = ()
     order: ArchitecturalOrder | None = None
     opening_programs: tuple[OpeningProgram, ...] = ()
+    top_profile: FacadeTopProfile | None = None
 
 
 @dataclass(frozen=True)
@@ -409,6 +410,7 @@ def canonical(value) -> str:
                     and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
                     and not (f.name=='section' and getattr(x,f.name) is None)
                     and not (f.name=='roof_bodies' and not getattr(x,f.name))
+                    and not (f.name=='top_profile' and getattr(x,f.name) is None)
                     and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or

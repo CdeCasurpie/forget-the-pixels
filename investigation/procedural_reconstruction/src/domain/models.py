@@ -159,6 +159,30 @@ class ExteriorStairSpecification:
 
 
 @dataclass(frozen=True)
+class FacadeTopProfile:
+    """Ordered (normalized u, rise in metres) silhouette above a chart's top.
+
+    Vertical segments use repeated u. A compact polyline can describe slopes,
+    shoulders and sampled curved crests without creating another storey.
+    """
+    points: tuple[tuple[float, float], ...]
+    depth_m: float = .30
+    trim_width_m: float = .16
+    trim_depth_m: float = .12
+    trim_material_slot: str = 'frame'
+
+
+@dataclass(frozen=True)
+class ResolvedTopProfile:
+    points_m: tuple[tuple[float, float], ...]
+    base_z_m: float
+    depth_m: float
+    trim_width_m: float
+    trim_depth_m: float
+    trim_material_slot: str
+
+
+@dataclass(frozen=True)
 class FacadeSpecification:
     edge_id: str
     vertex_a: tuple[float, float]
@@ -182,6 +206,7 @@ class FacadeSpecification:
     exterior_stairs: tuple[ExteriorStairSpecification, ...] = ()
     ornamented: bool = True
     program_enabled: bool | None = None  # None preserves legacy is_front gating
+    top_profile: ResolvedTopProfile | None = None
 
     @property
     def has_program(self) -> bool:

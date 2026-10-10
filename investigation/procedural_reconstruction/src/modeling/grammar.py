@@ -437,7 +437,8 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     Only a genuine 120 mm ground-floor recess divides the structural shell.
     Paint and the 15 mm concrete frame never subdivide its back or base caps.
     """
-    wall_rect = box(0, 0, length, total_height)
+    from modeling.facade_top import wall_domain
+    wall_rect = wall_domain(length,total_height,f.top_profile)
     from .apertures import opening_shape
     hole_rects = [opening_shape(op) for op in ops]
     shape = wall_rect
@@ -451,6 +452,9 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     bands = [(0., total_height, -.015 if brick_side else 0.)]
     if f.has_program and len(levels) >= 4:
         bands = [(0., first, -.12), (first, total_height, 0.)]
+    if f.top_profile:
+        bottom,_,depth=bands[-1]
+        bands[-1]=(bottom,wall_rect.bounds[3],depth)
 
     def emit(domain, back, front, material, semantic, label):
         for index, poly in enumerate(polygons(domain)):
@@ -466,7 +470,7 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     coatings.extend((box(r.u_m,r.v_m,r.u_m+r.width_m,r.v_m+r.height_m),r.material_slot) for r in regions)
     for bi,(bottom,top,depth) in enumerate(bands):
         band=shape.intersection(box(0,bottom,length,top))
-        emit(band,-.20,depth,f.wall_material,'wall',f'wall_{bi}')
+        emit(band,-f.top_profile.depth_m if f.top_profile else -.20,depth,f.wall_material,'wall',f'wall_{bi}')
         for ci,(region,material) in enumerate(coatings):
             patch=band.intersection(region)
             for later,_ in coatings[ci+1:]: patch=patch.difference(later)
@@ -503,6 +507,10 @@ def _facade_body(mb, f, total_height):
     regions = list(f.material_regions) if f.has_program else []
     features = list(f.projections) if f.has_program else []
     stairs = list(f.exterior_stairs) if f.has_program else []
+    from modeling.facade_top import wall_domain, emit_top_trim
+    from modeling.apertures import opening_shape
+    from shapely.affinity import translate
+    silhouette=wall_domain(length,total_height,f.top_profile)
     rectangles = []
     for op in ops:
         if (
@@ -518,7 +526,8 @@ def _facade_body(mb, f, total_height):
             op.u_m < 0.12
             or op.u_m + op.width_m > length - 0.12
             or op.v_m < 0
-            or op.v_m + op.height_m > total_height - 0.10
+            or (op.v_m + op.height_m > total_height - 0.10 if f.top_profile is None else
+                not silhouette.buffer(1e-8).covers(translate(opening_shape(op),yoff=.10)))
         ):
             raise ValueError(f"Opening outside facade {f.edge_id}")
         rect = box(op.u_m, op.v_m, op.u_m + op.width_m, op.v_m + op.height_m)
@@ -532,7 +541,8 @@ def _facade_body(mb, f, total_height):
             region.u_m < 0
             or region.u_m + region.width_m > length + 1e-8
             or region.v_m < 0
-            or region.v_m + region.height_m > total_height + 1e-8
+            or (region.v_m + region.height_m > total_height + 1e-8 if f.top_profile is None else
+                not silhouette.buffer(1e-8).covers(box(region.u_m,region.v_m,region.u_m+region.width_m,region.v_m+region.height_m)))
         ):
             raise ValueError(f"Material region outside facade {f.edge_id}")
     for feature in features:
@@ -541,11 +551,13 @@ def _facade_body(mb, f, total_height):
             feature.u_m < 0
             or feature.u_m + feature.width_m > length
             or feature.v_m < 0
-            or (feature.v_m > total_height+1e-8 if crown else
+            or (not silhouette.buffer(1e-8).covers(box(feature.u_m,feature.v_m,feature.u_m+feature.width_m,feature.v_m+feature.height_m)) if f.top_profile else
+                feature.v_m > total_height+1e-8 if crown else
                 feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
     _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)
+    if f.top_profile:emit_top_trim(mb,a,t,n,f.top_profile)
     if f.has_program and f.cladding == "horizontal":
         pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
         for y in np.arange(0.0, total_height - 0.018, pitch):

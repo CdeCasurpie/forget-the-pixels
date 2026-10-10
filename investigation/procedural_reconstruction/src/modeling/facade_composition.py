@@ -15,6 +15,9 @@ from domain.models import Opening, FacadeProjection, FacadeMaterialRegion
 from domain.theta import FacadeControls
 from modeling.detail import DetailBudget
 from modeling.facade_program import FAMILY_RULES, compose_relief
+from modeling.facade_top import resolve_top_profile, wall_domain
+from modeling.apertures import opening_shape
+from shapely.affinity import translate
 
 
 class FacadeComposition(NamedTuple):
@@ -27,6 +30,12 @@ class FacadeComposition(NamedTuple):
 def _check(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def _opening_fits(c,op,length,height):
+    if c.top_profile is None:return op.v_m+op.height_m<=height-.1
+    domain=wall_domain(length,height,resolve_top_profile(c.top_profile,length,height))
+    return domain.buffer(1e-8).covers(translate(opening_shape(op),yoff=.1))
 
 
 def validate_crowns(c):
@@ -86,7 +95,7 @@ def _apply_motifs(c, openings, targets, length, height):
         op=ops[index]
         _check(op.kind in ('door','gate'), 'monumental_portal requires a door or gate')
         if motif.opening_shape=='arch':
-            op=replace(op,shape='arch',arch_rise_m=min(op.width_m/2,op.height_m/3))
+            op=replace(op,shape='arch',arch_rise_m=min(op.width_m*.28,op.height_m*.25,.9))
             ops[index]=op
         left=op.u_m-PORTAL['pier_gap']-PORTAL['pier_width']
         right=op.u_m+op.width_m+PORTAL['pier_gap']
@@ -99,16 +108,16 @@ def _apply_motifs(c, openings, targets, length, height):
                'monumental_portal does not fit facade chart')
         source='monumental_portal'
         features.extend((
-            FacadeProjection('pilaster',left,0.,PORTAL['pier_width'],pier_top,.25,source=source),
-            FacadeProjection('pilaster',right,0.,PORTAL['pier_width'],pier_top,.25,source=source),
+            FacadeProjection('pilaster',left,0.,PORTAL['pier_width'],pier_top,.25,'frame',source=source),
+            FacadeProjection('pilaster',right,0.,PORTAL['pier_width'],pier_top,.25,'frame',source=source),
             FacadeProjection('frame',op.u_m-PORTAL['frame_margin'],op.v_m,
                 op.width_m+2*PORTAL['frame_margin'],op.height_m+PORTAL['pier_head'],.3,
-                border_width_m=.10,source=source),
-            FacadeProjection('cornice',left, cornice_z,width,PORTAL['cornice_height'],.32,source=source),
+                'frame',border_width_m=.10,source=source),
+            FacadeProjection('cornice',left, cornice_z,width,PORTAL['cornice_height'],.32,'frame',source=source),
         ))
         if motif.pediment:
             features.append(FacadeProjection('pediment',left,cornice_z+PORTAL['cornice_height'],
-                                              width,PORTAL['pediment_height'],.28,source=source))
+                                              width,PORTAL['pediment_height'],.28,'frame',source=source))
     return tuple(ops),tuple(features)
 
 
@@ -202,12 +211,12 @@ def _order_projections(c,length,height,axes,bays=None):
     # Centre the shaft on a boundary; collapse duplicate axes shared by groups.
     centres=sorted(set(round(min(max(x,o.pilaster_width_m/2+.05),
                                  length-o.pilaster_width_m/2-.05),6) for x in positions))
-    def feature(kind,u,z,w,h,depth):
-        return FacadeProjection(kind,u,z,w,h,depth,source='architectural_order')
+    def feature(kind,u,z,w,h,depth,material='frame'):
+        return FacadeProjection(kind,u,z,w,h,depth,material,source='architectural_order')
     result=[feature('pilaster',x-o.pilaster_width_m/2,0.,o.pilaster_width_m,
                     height-o.cornice_height_m,o.pilaster_depth_m) for x in centres]
     if o.plinth_height_m:
-        result.append(feature('panel',0.,0.,length,o.plinth_height_m,.12))
+        result.append(feature('panel',0.,0.,length,o.plinth_height_m,.12,'accent'))
     result.extend(feature('panel',0.,z-.04,length,.08,.14) for z in o.belt_courses_m)
     if o.entablature_height_m:
         result.append(feature('panel',0.,height-o.cornice_height_m-o.entablature_height_m,
@@ -250,7 +259,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
     def append(op,bay,key):
         _check(op.u_m>=bay.start_m+.12 and op.u_m+op.width_m<=bay.end_m-.12+1e-8,
                'Opening outside its BayGroup')
-        _check(op.width_m>0 and op.height_m>0 and op.v_m>=0 and op.v_m+op.height_m<=height-.1,
+        _check(op.width_m>0 and op.height_m>0 and op.v_m>=0 and _opening_fits(c,op,length,height),
                'Opening edit/add outside facade')
         shape=rect(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)
         _check(all(shape.intersection(rect(x.u_m,x.v_m,x.u_m+x.width_m,x.v_m+x.height_m)).area<1e-8 for x in ops),
@@ -296,10 +305,11 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
                 width=bay.pitch_m*program.width_ratio if program.width_ratio is not None else width
                 h=program.height_m if program.height_m is not None else h
                 sill=program.sill_m if program.sill_m is not None else sill
-                _check(sill+h<=z1-z0-.1,'OpeningProgram does not fit floor')
+                _check(sill+h<=z1-z0-.1 or c.top_profile is not None and abs(z1-height)<1e-8,
+                       'OpeningProgram does not fit floor')
             _check(h>=.5 and width>=.4,'Openings cannot fit in BayGroup: reduce count or dimensions')
             append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab=prefab,
-                            grille=grille,shape=shape,arch_rise_m=min(width/2,h/3) if shape=='arch' else None,
+                            grille=grille,shape=shape,arch_rise_m=min(width*.28,h*.25,.9) if shape=='arch' else None,
                             balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
     _check(set(edits)<=found,'Sparse edit targets nonexistent floor/bay')
     for op in c.added_openings:
@@ -385,7 +395,7 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     rectangles=[]
     for op in ops:
         _check(op.u_m>=.12 and op.v_m>=0 and op.width_m>0 and op.height_m>0 and
-               op.u_m+op.width_m<=length-.12 and op.v_m+op.height_m<=height-.1,
+               op.u_m+op.width_m<=length-.12 and _opening_fits(c,op,length,height),
                "Opening edit/add outside facade")
         shape=rect(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)
         _check(all(shape.intersection(other).area<1e-8 for other in rectangles),"Opening edit/add overlaps another opening")

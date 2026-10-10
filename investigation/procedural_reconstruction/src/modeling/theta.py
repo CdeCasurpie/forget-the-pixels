@@ -24,6 +24,7 @@ from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outw
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
 from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns, validate_order, validate_opening_programs
+from modeling.facade_top import validate_top_profile, resolve_top_profile, wall_domain, visible_profile_domains, roof_aperture_clearance
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -280,6 +281,8 @@ def _mass_ref(value, masses):
 
 
 def _facade_controls(c, family):
+    validate_top_profile(c.top_profile)
+    _check(c.top_profile is None or not c.crowns,'top_profile and crowns are alternative silhouette controls')
     validate_bay_groups(c)
     validate_crowns(c)
     validate_order(c)
@@ -386,13 +389,18 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
     floor_indices=tuple(next(i for i,(lo,hi) in enumerate(zip(mass.floor_levels,mass.floor_levels[1:]))
                              if lo<=base+(z0+z1)/2<hi) for z0,z1 in zip(levels,levels[1:]))
     axes,ops,projections,regions=compose_facade(control,theta.family,width,levels,high-low,
-                                             base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
+                                              base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
+    _check(control.top_profile is None or abs(roof-mass.roof_z)<1e-7,
+           'Top profile requires the component top, not an intermediate zone')
+    local_top=resolve_top_profile(control.top_profile,width,high-low)
+    silhouette=wall_domain(width,high-low,local_top)
     # User entities belong to their zone, not merely somewhere on the wall.
     # Generated relief may have small prefab overhangs; the domain clips them.
     for entities in (ops, control.projections or (), control.material_regions or ()):
         for entity in entities:
             _check(entity.width_m>0 and entity.height_m>0 and entity.u_m>=0 and entity.v_m>=0 and
-                   entity.u_m+entity.width_m<=width+1e-8 and entity.v_m+entity.height_m<=high-low+1e-8,
+                   entity.u_m+entity.width_m<=width+1e-8 and
+                   silhouette.buffer(1e-8).covers(rect(entity.u_m,entity.v_m,entity.u_m+entity.width_m,entity.v_m+entity.height_m)),
                    'Facade zone entity outside local bounds')
     for stair in control.stairs:
         _check(0<=stair.u_m and stair.u_m+stair.flight_width_m<=width and
@@ -405,7 +413,8 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
                           tuple(z-mass.base_z for z in mass.floor_levels),
                           openings=shifted(ops),projections=shifted(projections),material_regions=shifted(regions),
                           exterior_stairs=stairs,is_front=is_front,program_enabled=True,wall_material='plaster',
-                          services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
+                          services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
+                          top_profile=resolve_top_profile(control.top_profile,width,high-low,start,low))
     visible=patch_domains(domains,(start,low,end,high))
     _check(np.isfinite(zone.offset_m) and -2.<=zone.offset_m<=1., 'FacadeZone offset_m must be -2..1 m')
     if zone.section is not None:
@@ -442,6 +451,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
         _check(control.order is None or theta.schema_version=='0.3','order requires schema_version=0.3')
         _check(not control.opening_programs or theta.schema_version=='0.3','opening_programs require schema_version=0.3')
+        _check(control.top_profile is None or theta.schema_version=='0.3','top_profile requires schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
@@ -535,15 +545,20 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                 if length<1.5 and control.mode=='repeat' and not control.bay_groups:
                     control=_facade_controls(FacadeControls(mode='explicit',openings=()),theta.family)
                 axes, ops, projections, regions = compose_facade(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
+                _check(control.top_profile is None or abs(roof-mass.roof_z)<1e-7,'Top profile requires the component top')
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,
                                         openings=ops,is_front=is_front,program_enabled=program_enabled,
                                         wall_material="plaster" if is_front or component and key not in overrides else theta.side_material,
                                         projections=projections,material_regions=regions,exterior_stairs=control.stairs,
-                                        services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
+                                        services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
+                                        top_profile=resolve_top_profile(control.top_profile,length,roof-base))
                 walls.append(ResolvedWall(mass.id,edge,base,roof-base,axes,f,visible))
             walls.extend(w for w in zone_walls if w.visible_domains)
         area = exposures[mass.id].get("roof")
         area = area["exposed_area"] if area else Polygon()
+        for wall in walls:
+            if wall.mass_role==mass.id and wall.facade.top_profile is not None:
+                area=area.difference(roof_aperture_clearance(wall.facade,mass.roof_z-wall.base_z))
         surfaces = []
         for part in ([area] if area.geom_type=="Polygon" else getattr(area,"geoms",())):
             if part.is_empty:
@@ -757,8 +772,9 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
                 component=next(c for c in theta.massing.components if wall.mass_role.startswith(c.id+':'))
                 zone=component.zones[zone_index]
                 emit_section(local,wall,zone)
-        if wall.visible_domains and wall.visible_domains!=((0.,0.,f.width_m,wall.height_m),):
-            local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,wall.visible_domains)
+        domains=visible_profile_domains(wall.visible_domains,f.top_profile) if f.top_profile else wall.visible_domains
+        if domains and domains!=((0.,0.,f.width_m,wall.height_m),):
+            local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,domains)
         if wall.section is None or wall.section.back_wall:
             facade(local,replace(f,openings=ops),wall.height_m)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)

@@ -2,16 +2,22 @@
   "recipe": {
     "baseline": "after",
     "source": "after_architectural_order",
+    "primary_color": [
+      0.96,
+      0.8,
+      0.42
+    ],
     "capabilities": [
       "BayGroup",
       "OpeningProgram arqueado",
       "monumental_portal",
-      "CrownProfile en frente largo y esquina",
-      "ArchitecturalOrder"
+      "TopProfile integrado en frente largo y esquina",
+      "ArchitecturalOrder blanco"
     ],
     "MISSING_CAPABILITY": [
-      "Coronaci\u00f3n libre con curvas y ornamentos en lugar de triangular/stepped",
-      "Remate y orden que envuelvan ambas fachadas de esquina sin componer cada chart independientemente"
+      "Curvas libres y ornamentos finos del remate barroco",
+      "Remate y orden que envuelvan ambas fachadas de esquina sin componer cada chart independientemente",
+      "Letrero circular Metro como geometr\u00eda de detalle"
     ],
     "overrides": [
       {
@@ -23,49 +29,102 @@
             {
               "group": 0,
               "shape": "arch",
-              "height_m": 4.15,
-              "width_ratio": 0.66,
-              "sill_m": 0.7
+              "height_m": 4.2,
+              "width_ratio": 0.62,
+              "sill_m": 0.85
             },
             {
               "group": 1,
               "kind": "door",
               "shape": "arch",
-              "height_m": 4.6,
+              "height_m": 4.8,
               "width_ratio": 0.72,
               "sill_m": 0.04
             },
             {
               "group": 2,
               "shape": "arch",
-              "height_m": 4.15,
-              "width_ratio": 0.66,
-              "sill_m": 0.7
+              "height_m": 4.2,
+              "width_ratio": 0.62,
+              "sill_m": 0.85
             }
           ],
-          "crowns": [
-            {
-              "u": [
-                0.31,
-                0.59
+          "crowns": [],
+          "top_profile": {
+            "points": [
+              [
+                0.0,
+                0.0
               ],
-              "kind": "stepped",
-              "height_m": 2.7
-            }
-          ],
+              [
+                0.28,
+                0.0
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.33,
+                0.9
+              ],
+              [
+                0.36,
+                1.4
+              ],
+              [
+                0.39,
+                1.8
+              ],
+              [
+                0.42,
+                2.1
+              ],
+              [
+                0.48,
+                2.1
+              ],
+              [
+                0.51,
+                1.8
+              ],
+              [
+                0.54,
+                1.4
+              ],
+              [
+                0.57,
+                0.9
+              ],
+              [
+                0.6,
+                0.5
+              ],
+              [
+                0.62,
+                0.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "depth_m": 0.35,
+            "trim_width_m": 0.18,
+            "trim_depth_m": 0.14,
+            "trim_material_slot": "frame"
+          },
           "order": {
             "pilaster_mode": "bay_boundaries",
-            "pilaster_width_m": 0.43,
-            "pilaster_depth_m": 0.22,
-            "paired_bays": [
-              3
-            ],
-            "plinth_height_m": 0.45,
+            "pilaster_width_m": 0.35,
+            "pilaster_depth_m": 0.2,
+            "paired_bays": [],
+            "plinth_height_m": 0.55,
             "belt_courses_m": [
-              5.05
+              5.0
             ],
-            "entablature_height_m": 0.4,
-            "cornice_height_m": 0.32
+            "entablature_height_m": 0.35,
+            "cornice_height_m": 0.3
           }
         }
       },
@@ -75,43 +134,85 @@
         "merge": true,
         "drop_existing_projections": true,
         "controls": {
-          "crowns": [
-            {
-              "u": [
-                0.14,
-                0.86
+          "crowns": [],
+          "top_profile": {
+            "points": [
+              [
+                0.0,
+                0.0
               ],
-              "kind": "stepped",
-              "height_m": 2.9
-            }
-          ],
+              [
+                0.1,
+                0.0
+              ],
+              [
+                0.14,
+                0.6
+              ],
+              [
+                0.22,
+                1.2
+              ],
+              [
+                0.32,
+                1.8
+              ],
+              [
+                0.5,
+                2.2
+              ],
+              [
+                0.68,
+                1.8
+              ],
+              [
+                0.78,
+                1.2
+              ],
+              [
+                0.86,
+                0.6
+              ],
+              [
+                0.9,
+                0.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "depth_m": 0.35,
+            "trim_width_m": 0.18,
+            "trim_depth_m": 0.14,
+            "trim_material_slot": "frame"
+          },
           "order": {
             "pilaster_mode": "explicit",
             "pilaster_axes_u": [
-              0.12,
-              0.88
+              0.1,
+              0.9
             ],
-            "pilaster_width_m": 0.44,
-            "pilaster_depth_m": 0.22,
-            "plinth_height_m": 0.45,
-            "entablature_height_m": 0.42,
-            "cornice_height_m": 0.32
+            "pilaster_width_m": 0.36,
+            "pilaster_depth_m": 0.2,
+            "plinth_height_m": 0.55,
+            "entablature_height_m": 0.35,
+            "cornice_height_m": 0.3
           }
         }
       }
     ]
   },
   "comparisons": 5,
-  "mesh_sha256": "78bd5147775a3670c7c36cf00a4adebfbdce0965e9a35ee219eff49a5b85224d",
+  "mesh_sha256": "42329b152b64ad26f231de320bc92a4fb6f80c84a0ea29bcbdc606e8b579891f",
   "validation": {
-    "vertices": 13454,
-    "triangles": 24224,
-    "parts": 358,
+    "vertices": 13494,
+    "triangles": 24364,
+    "parts": 350,
     "semantic_types": [
       "arched_frame",
       "cornice_drip",
       "cornice_step",
-      "crown_stepped",
       "door_panel",
       "downpipe",
       "downpipe_clamp",
@@ -127,25 +228,28 @@
       "roof_slab",
       "security_bar",
       "site_patio",
+      "top_profile_lip",
+      "top_profile_moulding",
       "wall",
       "window_panel"
     ],
     "faces_by_semantic": {
       "arched_frame": 7560,
-      "security_bar": 5228,
-      "wall": 4128,
+      "security_bar": 5164,
+      "wall": 4212,
       "window_panel": 2600,
       "door_panel": 1040,
-      "pilaster_cap": 980,
-      "pilaster_base": 588,
-      "pilaster": 588,
+      "pilaster_cap": 836,
+      "pilaster_base": 564,
+      "pilaster": 564,
       "cornice_step": 396,
       "parapet_cap": 256,
       "plinth": 192,
+      "top_profile_moulding": 192,
+      "top_profile_lip": 192,
       "cornice_drip": 132,
       "parapet": 128,
       "pediment": 72,
-      "crown_stepped": 72,
       "roof_slab": 64,
       "facade_projection_panel": 60,
       "downpipe_clamp": 48,
@@ -154,7 +258,7 @@
       "site_patio": 12
     },
     "max_outside_triangle_area_m2": 0.0,
-    "min_triangle_area_m2": 1.066634216997456e-06,
+    "min_triangle_area_m2": 8.250295382531458e-08,
     "envelope_test": "passed",
     "topology": "assembly of intersecting closed components; not Boolean-unioned"
   }

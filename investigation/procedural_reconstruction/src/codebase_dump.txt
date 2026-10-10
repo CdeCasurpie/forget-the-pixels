@@ -23,7 +23,9 @@ src/
 │   │   └── obj_exporter.py
 │   ├── exposure.py
 │   ├── facade_composition.py
+│   ├── facade_depth.py
 │   ├── facade_program.py
+│   ├── facade_top.py
 │   ├── families.py
 │   ├── geometry_constraints.py
 │   ├── grammar.py
@@ -46,6 +48,7 @@ src/
 │   │   ├── contracts.py
 │   │   └── library.py
 │   ├── theta.py
+│   ├── top_composition.py
 │   ├── validation.py
 │   ├── version.py
 │   └── visibility.py
@@ -286,7 +289,7 @@ class BuildingSpecificationV4:
     seed: int
 
 ========================================================================
-FILE: domain/models.py (297 lineas)
+FILE: domain/models.py (322 lineas)
 ========================================================================
 """Typed, serializable contracts independent from CLI, plotting, and export."""
 
@@ -449,6 +452,30 @@ class ExteriorStairSpecification:
 
 
 @dataclass(frozen=True)
+class FacadeTopProfile:
+    """Ordered (normalized u, rise in metres) silhouette above a chart's top.
+
+    Vertical segments use repeated u. A compact polyline can describe slopes,
+    shoulders and sampled curved crests without creating another storey.
+    """
+    points: tuple[tuple[float, float], ...]
+    depth_m: float = .30
+    trim_width_m: float = .16
+    trim_depth_m: float = .12
+    trim_material_slot: str = 'frame'
+
+
+@dataclass(frozen=True)
+class ResolvedTopProfile:
+    points_m: tuple[tuple[float, float], ...]
+    base_z_m: float
+    depth_m: float
+    trim_width_m: float
+    trim_depth_m: float
+    trim_material_slot: str
+
+
+@dataclass(frozen=True)
 class FacadeSpecification:
     edge_id: str
     vertex_a: tuple[float, float]
@@ -472,6 +499,7 @@ class FacadeSpecification:
     exterior_stairs: tuple[ExteriorStairSpecification, ...] = ()
     ornamented: bool = True
     program_enabled: bool | None = None  # None preserves legacy is_front gating
+    top_profile: ResolvedTopProfile | None = None
 
     @property
     def has_program(self) -> bool:
@@ -587,7 +615,7 @@ class MeshData:
     components: tuple[dict[str, Any], ...] = ()
 
 ========================================================================
-FILE: domain/theta.py (384 lineas)
+FILE: domain/theta.py (428 lineas)
 ========================================================================
 """Experimental architectural target, NOT theta-v1. Distances are local metres.
 
@@ -603,7 +631,7 @@ from numbers import Real
 from dataclasses import asdict, dataclass, fields, is_dataclass, field
 from typing import Any, Union, get_args, get_origin, get_type_hints
 
-from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification
+from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification, FacadeTopProfile
 
 
 @dataclass(frozen=True)
@@ -677,6 +705,15 @@ class FaceBand:
 
 
 @dataclass(frozen=True)
+class FacadeSection:
+    """Covered local space between the original and recessed facade planes."""
+    back_wall: bool = True
+    column_axes_u: tuple[float, ...] = (0.08, 0.92)
+    column_width_m: float = .25
+    slab_m: float = .20
+
+
+@dataclass(frozen=True)
 class FacadeZone:
     """Independent composition on one face edge; never a massing operation.
 
@@ -692,6 +729,8 @@ class FacadeZone:
     u: tuple[float, float] = (0., 1.)
     z_m: tuple[float, float] | None = None
     role: str | None = None
+    offset_m: float = 0.  # outward positive; recess negative, in the face normal
+    section: FacadeSection | None = None
 
 
 @dataclass(frozen=True)
@@ -707,6 +746,17 @@ class MassComponent:
     roof: RoofControls | None = None
     slab_m: float = 0.18
     zones: tuple[FacadeZone, ...] = ()
+
+
+@dataclass(frozen=True)
+class RoofBody:
+    """Local upper body anchored to a component roof, using cadastral regions."""
+    id: str
+    parent: str
+    region: PlanRegion
+    height_m: float = 2.4
+    roof: RoofControls | None = None
+    facade: FacadeControls | None = None
 
 
 @dataclass(frozen=True)
@@ -766,6 +816,19 @@ class CrownProfile:
 
 
 @dataclass(frozen=True)
+class OpeningProgram:
+    group: int
+    floor: int | None = None
+    kind: str | None = None
+    shape: str | None = None
+    width_ratio: float | None = None
+    height_m: float | None = None
+    sill_m: float | None = None
+    prefab: str | None = None
+    grille: bool | None = None
+
+
+@dataclass(frozen=True)
 class ArchitecturalOrder:
     pilaster_mode: str = "none"  # none | group_boundaries | bay_boundaries | explicit
     pilaster_width_m: float = 0.30
@@ -802,6 +865,8 @@ class FacadeControls:
     motifs: tuple[ArchitecturalMotif, ...] = ()
     crowns: tuple[CrownProfile, ...] = ()
     order: ArchitecturalOrder | None = None
+    opening_programs: tuple[OpeningProgram, ...] = ()
+    top_profile: FacadeTopProfile | None = None
 
 
 @dataclass(frozen=True)
@@ -866,6 +931,7 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    roof_bodies: tuple[RoofBody, ...] = ()
     schema_version: str = "0.2"
     height_m: float | None = None
     floors: int | None = None
@@ -959,10 +1025,16 @@ def canonical(value) -> str:
     def data(x):
         if is_dataclass(x):
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
-                    if not (isinstance(x,FacadeControls) and
+                    if not (isinstance(x,FacadeZone) and f.name=='offset_m' and x.offset_m==0.)
+                    and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
+                    and not (f.name=='section' and getattr(x,f.name) is None)
+                    and not (f.name=='roof_bodies' and not getattr(x,f.name))
+                    and not (f.name=='top_profile' and getattr(x,f.name) is None)
+                    and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
-                             f.name=='order' and x.order is None))}
+                             f.name=='order' and x.order is None or
+                             f.name=='opening_programs' and not x.opening_programs))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x
@@ -2275,7 +2347,7 @@ def wall_domains(mass, masses, a, b):
     return tuple(domains)
 
 ========================================================================
-FILE: modeling/facade_composition.py (369 lineas)
+FILE: modeling/facade_composition.py (415 lineas)
 ========================================================================
 """Canonical theta-candidate composer in a local facade chart.
 
@@ -2294,6 +2366,9 @@ from domain.models import Opening, FacadeProjection, FacadeMaterialRegion
 from domain.theta import FacadeControls
 from modeling.detail import DetailBudget
 from modeling.facade_program import FAMILY_RULES, compose_relief
+from modeling.facade_top import resolve_top_profile, wall_domain
+from modeling.apertures import opening_shape
+from shapely.affinity import translate
 
 
 class FacadeComposition(NamedTuple):
@@ -2306,6 +2381,12 @@ class FacadeComposition(NamedTuple):
 def _check(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def _opening_fits(c,op,length,height):
+    if c.top_profile is None:return op.v_m+op.height_m<=height-.1
+    domain=wall_domain(length,height,resolve_top_profile(c.top_profile,length,height))
+    return domain.buffer(1e-8).covers(translate(opening_shape(op),yoff=.1))
 
 
 def validate_crowns(c):
@@ -2365,7 +2446,7 @@ def _apply_motifs(c, openings, targets, length, height):
         op=ops[index]
         _check(op.kind in ('door','gate'), 'monumental_portal requires a door or gate')
         if motif.opening_shape=='arch':
-            op=replace(op,shape='arch',arch_rise_m=min(op.width_m/2,op.height_m/3))
+            op=replace(op,shape='arch',arch_rise_m=min(op.width_m*.28,op.height_m*.25,.9))
             ops[index]=op
         left=op.u_m-PORTAL['pier_gap']-PORTAL['pier_width']
         right=op.u_m+op.width_m+PORTAL['pier_gap']
@@ -2378,16 +2459,16 @@ def _apply_motifs(c, openings, targets, length, height):
                'monumental_portal does not fit facade chart')
         source='monumental_portal'
         features.extend((
-            FacadeProjection('pilaster',left,0.,PORTAL['pier_width'],pier_top,.25,source=source),
-            FacadeProjection('pilaster',right,0.,PORTAL['pier_width'],pier_top,.25,source=source),
+            FacadeProjection('pilaster',left,0.,PORTAL['pier_width'],pier_top,.25,'frame',source=source),
+            FacadeProjection('pilaster',right,0.,PORTAL['pier_width'],pier_top,.25,'frame',source=source),
             FacadeProjection('frame',op.u_m-PORTAL['frame_margin'],op.v_m,
                 op.width_m+2*PORTAL['frame_margin'],op.height_m+PORTAL['pier_head'],.3,
-                border_width_m=.10,source=source),
-            FacadeProjection('cornice',left, cornice_z,width,PORTAL['cornice_height'],.32,source=source),
+                'frame',border_width_m=.10,source=source),
+            FacadeProjection('cornice',left, cornice_z,width,PORTAL['cornice_height'],.32,'frame',source=source),
         ))
         if motif.pediment:
             features.append(FacadeProjection('pediment',left,cornice_z+PORTAL['cornice_height'],
-                                              width,PORTAL['pediment_height'],.28,source=source))
+                                              width,PORTAL['pediment_height'],.28,'frame',source=source))
     return tuple(ops),tuple(features)
 
 
@@ -2481,12 +2562,12 @@ def _order_projections(c,length,height,axes,bays=None):
     # Centre the shaft on a boundary; collapse duplicate axes shared by groups.
     centres=sorted(set(round(min(max(x,o.pilaster_width_m/2+.05),
                                  length-o.pilaster_width_m/2-.05),6) for x in positions))
-    def feature(kind,u,z,w,h,depth):
-        return FacadeProjection(kind,u,z,w,h,depth,source='architectural_order')
+    def feature(kind,u,z,w,h,depth,material='frame'):
+        return FacadeProjection(kind,u,z,w,h,depth,material,source='architectural_order')
     result=[feature('pilaster',x-o.pilaster_width_m/2,0.,o.pilaster_width_m,
                     height-o.cornice_height_m,o.pilaster_depth_m) for x in centres]
     if o.plinth_height_m:
-        result.append(feature('panel',0.,0.,length,o.plinth_height_m,.12))
+        result.append(feature('panel',0.,0.,length,o.plinth_height_m,.12,'accent'))
     result.extend(feature('panel',0.,z-.04,length,.08,.14) for z in o.belt_courses_m)
     if o.entablature_height_m:
         result.append(feature('panel',0.,height-o.cornice_height_m-o.entablature_height_m,
@@ -2497,8 +2578,30 @@ def _order_projections(c,length,height,axes,bays=None):
     return tuple(result)
 
 
+def validate_opening_programs(c):
+    for p in c.opening_programs:
+        _check(bool(c.bay_groups) and type(p.group) is int and 0<=p.group<len(c.bay_groups),
+               'OpeningProgram requires an existing BayGroup')
+        _check(p.floor is None or type(p.floor) is int and p.floor>=0,'Invalid OpeningProgram floor')
+        _check(p.kind in (None,'window','door','gate') and p.shape in (None,'rectangle','arch'),
+               'Invalid OpeningProgram kind/shape')
+        _check(p.prefab in (None,'legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'),
+               'Invalid OpeningProgram prefab')
+        _check(p.grille is None or type(p.grille) is bool,'Invalid OpeningProgram grille')
+        for value,valid in ((p.width_ratio,lambda x:.1<=x<=.95),
+                            (p.height_m,lambda x:x>0),(p.sill_m,lambda x:x>=0)):
+            _check(value is None or math.isfinite(value) and valid(value),'Invalid OpeningProgram dimensions')
+    for i,p in enumerate(c.opening_programs):
+        _check(not any(q.group==p.group and (q.floor is None or p.floor is None or q.floor==p.floor)
+                       for q in c.opening_programs[:i]),'Ambiguous OpeningProgram group/floor')
+
+
 def _compose_grouped(c, family, length, levels, height, ground, top, floor_indices):
     bays=resolve_bay_layout(c,length)
+    validate_opening_programs(c)
+    floors=tuple(range(len(levels)-1)) if floor_indices is None else floor_indices
+    _check(all(p.floor is None or p.floor in floors for p in c.opening_programs),
+           'OpeningProgram floor does not exist in chart')
     rules=FAMILY_RULES[family]
     edits={(e.floor,e.bay):e for e in c.opening_edits}
     found=set()
@@ -2507,7 +2610,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
     def append(op,bay,key):
         _check(op.u_m>=bay.start_m+.12 and op.u_m+op.width_m<=bay.end_m-.12+1e-8,
                'Opening outside its BayGroup')
-        _check(op.width_m>0 and op.height_m>0 and op.v_m>=0 and op.v_m+op.height_m<=height-.1,
+        _check(op.width_m>0 and op.height_m>0 and op.v_m>=0 and _opening_fits(c,op,length,height),
                'Opening edit/add outside facade')
         shape=rect(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)
         _check(all(shape.intersection(rect(x.u_m,x.v_m,x.u_m+x.width_m,x.v_m+x.height_m)).area<1e-8 for x in ops),
@@ -2517,6 +2620,8 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
     for local_floor,(z0,z1) in enumerate(zip(levels,levels[1:])):
         floor=local_floor if floor_indices is None else floor_indices[local_floor]
         for bay in bays:
+            program=next((p for p in c.opening_programs if p.group==bay.group_index and
+                          (p.floor is None or p.floor==floor)),None)
             key=(floor,bay.global_index)
             found.add(key)
             edit=edits.get(key)
@@ -2528,7 +2633,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             width,sill,h=bay.pitch_m*c.window_ratio,c.sill_m,c.window_height_m
             if ground and local_floor==0:
                 role=bay.ground_role
-                if role=='blind':
+                if role=='blind' and (program is None or program.kind is None):
                     targets[key]=None
                     continue
                 if role in ('entrance','garage'):
@@ -2541,9 +2646,22 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
             if floor>0 and c.balconies and bay.global_index%2==0:
                 kind,sill='balcony_window',.18
             h=min(h,z1-z0-sill-.2)
+            shape='rectangle'
+            grille=rules['grille']
+            if program is not None:
+                kind=program.kind if program.kind is not None else kind
+                prefab=program.prefab if program.prefab is not None else prefab
+                shape=program.shape or shape
+                grille=program.grille if program.grille is not None else grille
+                width=bay.pitch_m*program.width_ratio if program.width_ratio is not None else width
+                h=program.height_m if program.height_m is not None else h
+                sill=program.sill_m if program.sill_m is not None else sill
+                _check(sill+h<=z1-z0-.1 or c.top_profile is not None and abs(z1-height)<1e-8,
+                       'OpeningProgram does not fit floor')
             _check(h>=.5 and width>=.4,'Openings cannot fit in BayGroup: reduce count or dimensions')
             append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab=prefab,
-                           grille=rules['grille'],balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
+                            grille=grille,shape=shape,arch_rise_m=min(width*.28,h*.25,.9) if shape=='arch' else None,
+                            balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
     _check(set(edits)<=found,'Sparse edit targets nonexistent floor/bay')
     for op in c.added_openings:
         owners=[b for b in bays if b.start_m<=op.u_m and op.u_m+op.width_m<=b.end_m]
@@ -2628,7 +2746,7 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     rectangles=[]
     for op in ops:
         _check(op.u_m>=.12 and op.v_m>=0 and op.width_m>0 and op.height_m>0 and
-               op.u_m+op.width_m<=length-.12 and op.v_m+op.height_m<=height-.1,
+               op.u_m+op.width_m<=length-.12 and _opening_fits(c,op,length,height),
                "Opening edit/add outside facade")
         shape=rect(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)
         _check(all(shape.intersection(other).area<1e-8 for other in rectangles),"Opening edit/add overlaps another opening")
@@ -2646,6 +2764,73 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+order_features+
                              _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
+
+========================================================================
+FILE: modeling/facade_depth.py (63 lineas)
+========================================================================
+"""Materialize displaced facade planes and closed perimeter returns.
+
+Visibility stays in the original chart: no reflow and no replacement mass.
+The existing facade materializer moves all openings and relief with the wall.
+"""
+import numpy as np
+from shapely.geometry import box
+from shapely.ops import unary_union
+from modeling.mesh_builder import polygons
+
+
+class DepthEnvelopeBuilder:
+    def __init__(self,builder):self._builder=builder
+
+    def __getattr__(self,name):return getattr(self._builder,name)
+
+    def panel(self,*args,**kwargs):
+        if kwargs.get('clip')=='parcel':kwargs['clip']='envelope'
+        return self._builder.panel(*args,**kwargs)
+
+
+def emit_returns(builder,wall):
+    """Thin closed return shells only on the exposed patch perimeter.
+
+    A union removes seams created by horizontal visibility decomposition.
+    Return thickness is 20 mm in chart coordinates, independent of depth.
+    """
+    f=wall.facade
+    mask=unary_union([box(*d) for d in wall.visible_domains])
+    rim=mask.difference(mask.buffer(-.02,join_style=2))
+    a=np.asarray(f.vertex_a)
+    t=(np.asarray(f.vertex_b)-a)/f.width_m
+    depth=wall.plane_offset_m
+    builder.panel(a,t,np.asarray(f.normal_xy),polygons(rim),min(0.,depth),max(0.,depth),
+                  lambda *args:f.wall_material,'facade_depth_return',clip='envelope',
+                  assembly_id=f.edge_id,component_id=f.edge_id+'/depth_returns')
+
+
+def section_geometry(section,start,end,low,high,depth):
+    """Closed boxes in (u,z,normal depth); the middle remains empty."""
+    s=section
+    parts=[(start,end,low,low+s.slab_m,depth,0.,'portico_floor'),
+           (start,end,high-s.slab_m,high,depth,0.,'portico_soffit')]
+    for axis in s.column_axes_u:
+        u=start+(end-start)*axis
+        h=s.column_width_m/2
+        parts.append((u-h,u+h,low+s.slab_m,high-s.slab_m,
+                      -s.column_width_m,0.,'portico_column'))
+    return parts
+
+
+def emit_section(builder,wall,zone):
+    f=wall.facade
+    a=np.asarray(f.vertex_a);t=(np.asarray(f.vertex_b)-a)/f.width_m
+    lo,hi=zone.z_m if zone.z_m is not None else (0.,wall.height_m)
+    start,end=(u*f.width_m for u in zone.u)
+    mask=unary_union([box(*d) for d in wall.visible_domains])
+    for i,(u0,u1,z0,z1,w0,w1,semantic) in enumerate(section_geometry(
+            wall.section,start,end,lo,hi,wall.plane_offset_m)):
+        shape=box(u0,z0,u1,z1).intersection(mask)
+        builder.panel(a,t,np.asarray(f.normal_xy),polygons(shape),w0,w1,
+                      lambda *args:'concrete',semantic,clip='envelope',
+                      assembly_id=f.edge_id,component_id=f.edge_id+'/'+semantic+str(i))
 
 ========================================================================
 FILE: modeling/facade_program.py (423 lineas)
@@ -3075,6 +3260,88 @@ def compose_relief(length, levels, openings, rules, band_height,
     return projections, regions
 
 ========================================================================
+FILE: modeling/facade_top.py (78 lineas)
+========================================================================
+"""Continuous facade silhouette, apertures and mouldings in one (u,z) chart.
+
+The profile extends the actual wall, rather than stacking a decorative crown
+over a horizontal lintel. No mass, storey or world-space footprint is added.
+"""
+import math
+from shapely.geometry import Polygon, LineString, box
+from shapely.ops import unary_union
+from domain.models import ResolvedTopProfile
+from modeling.mesh_builder import polygons
+
+
+def validate_top_profile(profile):
+    if profile is None:return
+    pts=profile.points
+    if not 2<=len(pts)<=64 or not all(math.isfinite(v) for p in pts for v in p):
+        raise ValueError('Top profile needs 2..64 finite (u,rise) points')
+    if pts[0][0]!=0 or pts[-1][0]!=1 or not all(0<=u<=1 and 0<=z<=4 for u,z in pts):
+        raise ValueError('Top profile spans u=0..1, rise=0..4 m')
+    if any(b[0]<a[0] or a==b for a,b in zip(pts,pts[1:])):
+        raise ValueError('Top profile must progress left to right without repeated points')
+    shape=Polygon([(0.,-1.),*pts,(1.,-1.)])
+    if not shape.is_valid or not LineString(pts).is_simple:
+        raise ValueError('Self-intersecting top profile')
+    if not (.12<=profile.depth_m<=.8 and 0<=profile.trim_width_m<=.5 and
+            .02<=profile.trim_depth_m<=.4):
+        raise ValueError('Invalid top profile depth/trim dimensions')
+
+
+def resolve_top_profile(profile,width,height,start=0.,low=0.):
+    if profile is None:return None
+    validate_top_profile(profile)
+    return ResolvedTopProfile(tuple((start+u*width,low+height+z) for u,z in profile.points),
+        low+height,profile.depth_m,profile.trim_width_m,profile.trim_depth_m,profile.trim_material_slot)
+
+
+def wall_domain(length,height,profile=None):
+    base=box(0.,0.,length,height)
+    if profile is None:return base
+    # Include a small overlap below the base so zero-rise segments are valid.
+    pts=profile.points_m
+    upper=Polygon([(pts[0][0],profile.base_z_m-.01),*pts,(pts[-1][0],profile.base_z_m-.01)])
+    return base.union(upper)
+
+
+def visible_profile_domains(domains,profile):
+    """Extend only intervals reaching the original top; occluders do not reflow."""
+    upper=max(z for _,z in profile.points_m)
+    return tuple(domains)+tuple((u0,z1,u1,upper) for u0,z0,u1,z1 in domains
+        if abs(z1-profile.base_z_m)<1e-7 and upper>z1)
+
+
+def emit_top_trim(mb,a,t,n,profile):
+    if not profile.trim_width_m:return
+    pts=profile.points_m
+    # Trim follows the top edge, including slopes and sampled arcs. Both
+    # layers have real depth and a common continuous silhouette.
+    below=Polygon([(pts[0][0],profile.base_z_m-5),*pts,(pts[-1][0],profile.base_z_m-5)])
+    path=LineString(pts)
+    for width,depth,name in ((profile.trim_width_m,profile.trim_depth_m,'top_profile_moulding'),
+                             (profile.trim_width_m*.28,profile.trim_depth_m+.045,'top_profile_lip')):
+        band=path.buffer(width,cap_style=2,join_style=2).intersection(below)
+        mb.panel(a,t,n,polygons(band),-.015,depth,
+                 lambda *args:profile.trim_material_slot,name,clip='envelope')
+
+
+def roof_aperture_clearance(facade,roof_z):
+    """Remove roof slab in the reveals of openings crossing its elevation."""
+    import numpy as np
+    a=np.asarray(facade.vertex_a);t=(np.asarray(facade.vertex_b)-a)/facade.width_m
+    n=np.asarray(facade.normal_xy)
+    cuts=[]
+    for op in facade.openings:
+        if op.v_m<roof_z<op.v_m+op.height_m:
+            lo,hi=op.u_m-.03,op.u_m+op.width_m+.03
+            depth=max(op.recess_m+.22,facade.top_profile.depth_m)
+            cuts.append(Polygon([a+t*u+n*w for u,w in ((lo,.01),(hi,.01),(hi,-depth),(lo,-depth))]))
+    return unary_union(cuts)
+
+========================================================================
 FILE: modeling/families.py (116 lineas)
 ========================================================================
 """Reference-inspired programs, independent of the number of street fronts.
@@ -3387,7 +3654,7 @@ def apply_edge_setbacks(parcel_poly: Polygon, specific_edges: list[LineString], 
     return footprint
 
 ========================================================================
-FILE: modeling/grammar.py (1357 lineas)
+FILE: modeling/grammar.py (1369 lineas)
 ========================================================================
 """Deterministic architectural assembly: facade grammar + roof + selected fences.
 
@@ -3828,7 +4095,8 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     Only a genuine 120 mm ground-floor recess divides the structural shell.
     Paint and the 15 mm concrete frame never subdivide its back or base caps.
     """
-    wall_rect = box(0, 0, length, total_height)
+    from modeling.facade_top import wall_domain
+    wall_rect = wall_domain(length,total_height,f.top_profile)
     from .apertures import opening_shape
     hole_rects = [opening_shape(op) for op in ops]
     shape = wall_rect
@@ -3842,6 +4110,9 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     bands = [(0., total_height, -.015 if brick_side else 0.)]
     if f.has_program and len(levels) >= 4:
         bands = [(0., first, -.12), (first, total_height, 0.)]
+    if f.top_profile:
+        bottom,_,depth=bands[-1]
+        bands[-1]=(bottom,wall_rect.bounds[3],depth)
 
     def emit(domain, back, front, material, semantic, label):
         for index, poly in enumerate(polygons(domain)):
@@ -3857,7 +4128,7 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     coatings.extend((box(r.u_m,r.v_m,r.u_m+r.width_m,r.v_m+r.height_m),r.material_slot) for r in regions)
     for bi,(bottom,top,depth) in enumerate(bands):
         band=shape.intersection(box(0,bottom,length,top))
-        emit(band,-.20,depth,f.wall_material,'wall',f'wall_{bi}')
+        emit(band,-f.top_profile.depth_m if f.top_profile else -.20,depth,f.wall_material,'wall',f'wall_{bi}')
         for ci,(region,material) in enumerate(coatings):
             patch=band.intersection(region)
             for later,_ in coatings[ci+1:]: patch=patch.difference(later)
@@ -3894,6 +4165,10 @@ def _facade_body(mb, f, total_height):
     regions = list(f.material_regions) if f.has_program else []
     features = list(f.projections) if f.has_program else []
     stairs = list(f.exterior_stairs) if f.has_program else []
+    from modeling.facade_top import wall_domain, emit_top_trim
+    from modeling.apertures import opening_shape
+    from shapely.affinity import translate
+    silhouette=wall_domain(length,total_height,f.top_profile)
     rectangles = []
     for op in ops:
         if (
@@ -3909,7 +4184,8 @@ def _facade_body(mb, f, total_height):
             op.u_m < 0.12
             or op.u_m + op.width_m > length - 0.12
             or op.v_m < 0
-            or op.v_m + op.height_m > total_height - 0.10
+            or (op.v_m + op.height_m > total_height - 0.10 if f.top_profile is None else
+                not silhouette.buffer(1e-8).covers(translate(opening_shape(op),yoff=.10)))
         ):
             raise ValueError(f"Opening outside facade {f.edge_id}")
         rect = box(op.u_m, op.v_m, op.u_m + op.width_m, op.v_m + op.height_m)
@@ -3923,7 +4199,8 @@ def _facade_body(mb, f, total_height):
             region.u_m < 0
             or region.u_m + region.width_m > length + 1e-8
             or region.v_m < 0
-            or region.v_m + region.height_m > total_height + 1e-8
+            or (region.v_m + region.height_m > total_height + 1e-8 if f.top_profile is None else
+                not silhouette.buffer(1e-8).covers(box(region.u_m,region.v_m,region.u_m+region.width_m,region.v_m+region.height_m)))
         ):
             raise ValueError(f"Material region outside facade {f.edge_id}")
     for feature in features:
@@ -3932,11 +4209,13 @@ def _facade_body(mb, f, total_height):
             feature.u_m < 0
             or feature.u_m + feature.width_m > length
             or feature.v_m < 0
-            or (feature.v_m > total_height+1e-8 if crown else
+            or (not silhouette.buffer(1e-8).covers(box(feature.u_m,feature.v_m,feature.u_m+feature.width_m,feature.v_m+feature.height_m)) if f.top_profile else
+                feature.v_m > total_height+1e-8 if crown else
                 feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
     _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)
+    if f.top_profile:emit_top_trim(mb,a,t,n,f.top_profile)
     if f.has_program and f.cladding == "horizontal":
         pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
         for y in np.arange(0.0, total_height - 0.018, pitch):
@@ -8468,7 +8747,7 @@ class MaterialLibrary:
         self.image_cache.clear()
 
 ========================================================================
-FILE: modeling/theta.py (768 lineas)
+FILE: modeling/theta.py (827 lineas)
 ========================================================================
 """Resolve architectural decisions first; only then emit geometry.
 
@@ -8495,7 +8774,8 @@ from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
-from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns, validate_order
+from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns, validate_order, validate_opening_programs
+from modeling.facade_top import validate_top_profile, resolve_top_profile, wall_domain, visible_profile_domains, roof_aperture_clearance
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -8518,6 +8798,8 @@ class ResolvedWall:
     axes_m: tuple[float, ...]
     facade: FacadeSpecification
     visible_domains: tuple[tuple[float,float,float,float], ...] = ()
+    plane_offset_m: float = 0.
+    section: FacadeSection | None = None
 
 
 @dataclass(frozen=True)
@@ -8750,9 +9032,12 @@ def _mass_ref(value, masses):
 
 
 def _facade_controls(c, family):
+    validate_top_profile(c.top_profile)
+    _check(c.top_profile is None or not c.crowns,'top_profile and crowns are alternative silhouette controls')
     validate_bay_groups(c)
     validate_crowns(c)
     validate_order(c)
+    validate_opening_programs(c)
     _check(len({(m.floor,m.bay) for m in c.motifs})==len(c.motifs), 'Duplicate motif target')
     for motif in c.motifs:
         _check(motif.kind=='monumental_portal' and motif.floor==0 and motif.bay>=0 and
@@ -8855,13 +9140,18 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
     floor_indices=tuple(next(i for i,(lo,hi) in enumerate(zip(mass.floor_levels,mass.floor_levels[1:]))
                              if lo<=base+(z0+z1)/2<hi) for z0,z1 in zip(levels,levels[1:]))
     axes,ops,projections,regions=compose_facade(control,theta.family,width,levels,high-low,
-                                             base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
+                                              base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
+    _check(control.top_profile is None or abs(roof-mass.roof_z)<1e-7,
+           'Top profile requires the component top, not an intermediate zone')
+    local_top=resolve_top_profile(control.top_profile,width,high-low)
+    silhouette=wall_domain(width,high-low,local_top)
     # User entities belong to their zone, not merely somewhere on the wall.
     # Generated relief may have small prefab overhangs; the domain clips them.
     for entities in (ops, control.projections or (), control.material_regions or ()):
         for entity in entities:
             _check(entity.width_m>0 and entity.height_m>0 and entity.u_m>=0 and entity.v_m>=0 and
-                   entity.u_m+entity.width_m<=width+1e-8 and entity.v_m+entity.height_m<=high-low+1e-8,
+                   entity.u_m+entity.width_m<=width+1e-8 and
+                   silhouette.buffer(1e-8).covers(rect(entity.u_m,entity.v_m,entity.u_m+entity.width_m,entity.v_m+entity.height_m)),
                    'Facade zone entity outside local bounds')
     for stair in control.stairs:
         _check(0<=stair.u_m and stair.u_m+stair.flight_width_m<=width and
@@ -8874,12 +9164,31 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
                           tuple(z-mass.base_z for z in mass.floor_levels),
                           openings=shifted(ops),projections=shifted(projections),material_regions=shifted(regions),
                           exterior_stairs=stairs,is_front=is_front,program_enabled=True,wall_material='plaster',
-                          services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
+                          services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
+                          top_profile=resolve_top_profile(control.top_profile,width,high-low,start,low))
     visible=patch_domains(domains,(start,low,end,high))
-    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible)
+    _check(np.isfinite(zone.offset_m) and -2.<=zone.offset_m<=1., 'FacadeZone offset_m must be -2..1 m')
+    if zone.section is not None:
+        s=zone.section
+        _check(zone.offset_m<=-.3, 'FacadeSection requires a recess of at least .3 m')
+        _check(.1<=s.slab_m<=.5 and .12<=s.column_width_m<=.6 and high-low>2*s.slab_m,
+               'Invalid FacadeSection slab/column dimensions')
+        _check(tuple(sorted(set(s.column_axes_u)))==s.column_axes_u and
+               all(s.column_width_m/2<=x*width<=width-s.column_width_m/2 for x in s.column_axes_u),
+               'Invalid FacadeSection column axes')
+        _check(all((b-a)*width>=s.column_width_m for a,b in zip(s.column_axes_u,s.column_axes_u[1:])),
+               'FacadeSection columns overlap')
+        _check(s.back_wall or not (ops or projections or regions or stairs),
+               'Open FacadeSection needs empty explicit controls')
+        _check(not any(low+1e-7<z-mass.base_z<high-1e-7 for z in mass.floor_levels),
+               'FacadeSection must not cross an intermediate floor slab; split zones by storey')
+    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,zone.offset_m,zone.section)
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
+    from modeling.top_composition import expand_roof_bodies
+    roof_bodies=theta.roof_bodies
+    theta=expand_roof_bodies(theta)
     requested=asdict(theta)
     context = _context(decode(ReconstructionContext, asdict(context)))
     theta, completed = _complete(decode(ThetaCandidate, asdict(theta)), context)
@@ -8892,10 +9201,18 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
         _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
         _check(control.order is None or theta.schema_version=='0.3','order requires schema_version=0.3')
+        _check(not control.opening_programs or theta.schema_version=='0.3','opening_programs require schema_version=0.3')
+        _check(control.top_profile is None or theta.schema_version=='0.3','top_profile requires schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
     masses = _masses(context, theta)
+    for body in roof_bodies:
+        parents=unary_union([mass_polygon(m) for m in masses if m.id.startswith(body.parent+':')])
+        for mass in masses:
+            if mass.id.startswith(body.id+':'):
+                _check(mass_polygon(mass).difference(parents.buffer(1e-7)).area<1e-6,
+                       'RoofBody must be supported by its named parent')
     if theta.masses is not None:
         theta=replace(theta,masses=tuple(ArchitecturalMass(m.role,m.footprint,m.floor_levels) for m in masses))
     default = _facade_controls(theta.facade, theta.family)
@@ -8979,15 +9296,20 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                 if length<1.5 and control.mode=='repeat' and not control.bay_groups:
                     control=_facade_controls(FacadeControls(mode='explicit',openings=()),theta.family)
                 axes, ops, projections, regions = compose_facade(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
+                _check(control.top_profile is None or abs(roof-mass.roof_z)<1e-7,'Top profile requires the component top')
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,
                                         openings=ops,is_front=is_front,program_enabled=program_enabled,
                                         wall_material="plaster" if is_front or component and key not in overrides else theta.side_material,
                                         projections=projections,material_regions=regions,exterior_stairs=control.stairs,
-                                        services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
+                                        services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
+                                        top_profile=resolve_top_profile(control.top_profile,length,roof-base))
                 walls.append(ResolvedWall(mass.id,edge,base,roof-base,axes,f,visible))
             walls.extend(w for w in zone_walls if w.visible_domains)
         area = exposures[mass.id].get("roof")
         area = area["exposed_area"] if area else Polygon()
+        for wall in walls:
+            if wall.mass_role==mass.id and wall.facade.top_profile is not None:
+                area=area.difference(roof_aperture_clearance(wall.facade,mass.roof_z-wall.base_z))
         surfaces = []
         for part in ([area] if area.geom_type=="Polygon" else getattr(area,"geoms",())):
             if part.is_empty:
@@ -9183,13 +9505,29 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     zoned_edges={(w.mass_role,w.edge) for w in resolved.walls if '/zone' in w.facade.edge_id}
     for wall in resolved.walls:
         f=wall.facade
+        if wall.plane_offset_m:
+            shift=np.asarray(f.normal_xy)*wall.plane_offset_m
+            f=replace(f,vertex_a=tuple(np.asarray(f.vertex_a)+shift),
+                      vertex_b=tuple(np.asarray(f.vertex_b)+shift))
         ops=tuple(replace(op,curtain=float(_rng(nuisance.seed,f"{f.edge_id}/curtain/{i}").uniform(.15,.55)))
                   if nuisance.curtains and op.kind=="window" and op.prefab in ("slim_window","storefront","legacy") else op
                   for i,op in enumerate(f.openings))
         local=_BandBuilder(builder,wall.base_z)
-        if wall.visible_domains and wall.visible_domains!=((0.,0.,f.width_m,wall.height_m),):
-            local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,wall.visible_domains)
-        facade(local,replace(f,openings=ops),wall.height_m)
+        if wall.plane_offset_m:
+            from modeling.facade_depth import DepthEnvelopeBuilder, emit_returns
+            local=DepthEnvelopeBuilder(local)
+            if wall.section is None:emit_returns(local,wall)
+            else:
+                from modeling.facade_depth import emit_section
+                zone_index=int(f.edge_id.rsplit('/zone',1)[1])
+                component=next(c for c in theta.massing.components if wall.mass_role.startswith(c.id+':'))
+                zone=component.zones[zone_index]
+                emit_section(local,wall,zone)
+        domains=visible_profile_domains(wall.visible_domains,f.top_profile) if f.top_profile else wall.visible_domains
+        if domains and domains!=((0.,0.,f.width_m,wall.height_m),):
+            local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,domains)
+        if wall.section is None or wall.section.back_wall:
+            facade(local,replace(f,openings=ops),wall.height_m)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
         for op in f.openings:
@@ -9238,6 +9576,38 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
 
 def generate_from_theta(context, theta, nuisance=NuisanceParameters(), config=GrammarConfig()):
     return generate_resolved(resolve_theta(context,theta),nuisance,config)
+
+========================================================================
+FILE: modeling/top_composition.py (28 lineas)
+========================================================================
+"""Compile roof-anchored bodies into the existing compositional pipeline.
+
+Real volumes reuse exposure, roof subtraction and opening materialization.
+No facade-only silhouette is used as a substitute for a roof behind it.
+"""
+from dataclasses import replace
+import math
+from domain.theta import MassComponent
+
+
+def expand_roof_bodies(theta):
+    if not theta.roof_bodies:return theta
+    if theta.schema_version!='0.3' or not theta.massing.components:
+        raise ValueError('RoofBody requires schema 0.3 and components')
+    components=list(theta.massing.components)
+    originals={c.id:c for c in components}
+    ids=set(originals)
+    for body in theta.roof_bodies:
+        if body.parent not in originals or body.id in ids:
+            raise ValueError('RoofBody needs an existing parent and a unique id')
+        if not math.isfinite(body.height_m) or not 2.2<=body.height_m<=6.:
+            raise ValueError('RoofBody height_m must be 2.2..6 m')
+        base=originals[body.parent].levels_m[-1]
+        components.append(MassComponent(body.id,body.region,(base,base+body.height_m),
+                                        roof=body.roof,facade=body.facade))
+        ids.add(body.id)
+    return replace(theta,roof_bodies=(),height_m=None,floors=None,
+                   massing=replace(theta.massing,components=tuple(components)))
 
 ========================================================================
 FILE: modeling/validation.py (184 lineas)
@@ -10981,4 +11351,4 @@ def select_vertical(masks, x: float, half_width: int = 0):
                          "area_pixels": int(masks[i].sum())})
     return [e['index'] for e in evidence if e['selected']], evidence
 
-[dump] 65 archivos, 10641 lineas totales.
+[dump] 68 archivos, 10996 lineas totales.
