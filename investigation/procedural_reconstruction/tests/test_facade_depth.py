@@ -43,3 +43,30 @@ def test_openings_move_with_plane_and_visibility():
 def test_invalid_depth(depth):
     with pytest.raises(ValueError):
         solve(body((FacadeZone('front',FacadeControls(mode='explicit',openings=()),offset_m=depth),)))
+
+
+@pytest.mark.parametrize('back_wall',[False,True])
+def test_portico_section(back_wall):
+    from domain.theta import FacadeSection
+    controls=FacadeControls(mode='explicit',openings=(),projections=(),material_regions=())
+    zone=FacadeZone('front',controls,(.2,.8),(0.,3.),offset_m=-1.2,
+                    section=FacadeSection(back_wall=back_wall))
+    mesh=generate_resolved(solve(body((zone,))))
+    for name in ('portico_floor','portico_soffit','portico_column'):
+        assert len(semantic_vertices(mesh,name))>0
+    columns=semantic_vertices(mesh,'portico_column')
+    assert columns[:,2].min()==pytest.approx(.2)
+    assert columns[:,2].max()==pytest.approx(2.8)
+    soffit=semantic_vertices(mesh,'portico_soffit')
+    assert np.ptp(soffit[:,1])==pytest.approx(1.2,abs=1e-5)
+    # Empty central air volume has neither support nor slab vertices.
+    assert not np.any((columns[:,0]>4.)&(columns[:,0]<8.))
+
+
+def test_portico_invalid_section():
+    from domain.theta import FacadeSection
+    controls=FacadeControls(mode='explicit',openings=())
+    for depth,section in [(0.,FacadeSection()),(-1.,FacadeSection(column_axes_u=(.5,.5))),
+                          (-1.,FacadeSection(slab_m=2.))]:
+        with pytest.raises(ValueError):
+            solve(body((FacadeZone('front',controls,offset_m=depth,section=section),)))

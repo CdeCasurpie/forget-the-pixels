@@ -150,6 +150,7 @@ def test_facade_zone_backwards_compatible():
     for wall in plan.walls:
         record=asdict(wall)
         assert record.pop('plane_offset_m')==0.
+        assert record.pop('section') is None
         record['facade'].pop('program_enabled')
         record['facade']['is_front']=wall.facade.has_program
         legacy.append(record)

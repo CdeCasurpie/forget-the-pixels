@@ -1,12 +1,16 @@
 """Two depth-only comparisons from oracle recipes; fixed cameras/seeds."""
 from dataclasses import asdict, replace
 import json
+import argparse
 from build_after import (STEP, ROOT, render_case, write_zone_review, fingerprint,
     gpd, Polygon, ParcelContext, street_envelope, validate_mesh, export_glb, reconstruct)
-from domain.theta import from_json, canonical
+from domain.theta import from_json, canonical, FacadeSection, FacadeControls
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--section',action='store_true')
+    args=parser.parse_args()
     lots=gpd.read_file(ROOT/'data/lotes/BARRANCO_LM_geogpsperu.geojson').to_crs(32718)
     poses=json.loads((ROOT/'data/poses_barranco/metadata.json').read_text())['panoramas']
     offset=json.loads((ROOT/'data/cadastral_offset.json').read_text())
@@ -20,13 +24,18 @@ def main():
                 for floor,(lo,hi) in enumerate(zip(c.levels_m,c.levels_m[1:])):
                     controls=replace(z.controls,opening_programs=tuple(p for p in z.controls.opening_programs
                         if p.floor is None or p.floor==floor),order=z.controls.order if floor else None)
-                    zones.append(replace(z,z_m=(lo,hi),controls=controls,offset_m=depth if floor==0 else 0.))
+                    section=None
+                    if args.section and floor==0:
+                        section=FacadeSection(back_wall=not name.startswith('1135370'),column_axes_u=(.06,.94))
+                        if not section.back_wall:
+                            controls=FacadeControls(mode='explicit',openings=(),projections=(),material_regions=())
+                    zones.append(replace(z,z_m=(lo,hi),controls=controls,offset_m=depth if floor==0 else 0.,section=section))
             return replace(c,zones=tuple(zones))
         components=tuple(split(c) for c in request.theta.massing.components)
         assert any(z.offset_m for c in components for z in c.zones)
         request=replace(request,theta=replace(request.theta,massing=replace(request.theta.massing,components=components)))
         result=reconstruct(request)
-        out=folder/'after_facade_depth';out.mkdir(exist_ok=True)
+        out=folder/('after_facade_section' if args.section else 'after_facade_depth');out.mkdir(exist_ok=True)
         validation=validate_mesh(result.mesh,Polygon(result.resolved.context.parcel),
             envelope=street_envelope(ParcelContext(result.resolved.context.parcel,explicit_fronts=result.resolved.context.fronts)))
         assert validation['envelope_test']=='passed'

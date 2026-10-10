@@ -47,6 +47,7 @@ class ResolvedWall:
     facade: FacadeSpecification
     visible_domains: tuple[tuple[float,float,float,float], ...] = ()
     plane_offset_m: float = 0.
+    section: FacadeSection | None = None
 
 
 @dataclass(frozen=True)
@@ -407,7 +408,21 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
                           services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
     visible=patch_domains(domains,(start,low,end,high))
     _check(np.isfinite(zone.offset_m) and -2.<=zone.offset_m<=1., 'FacadeZone offset_m must be -2..1 m')
-    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,zone.offset_m)
+    if zone.section is not None:
+        s=zone.section
+        _check(zone.offset_m<=-.3, 'FacadeSection requires a recess of at least .3 m')
+        _check(.1<=s.slab_m<=.5 and .12<=s.column_width_m<=.6 and high-low>2*s.slab_m,
+               'Invalid FacadeSection slab/column dimensions')
+        _check(tuple(sorted(set(s.column_axes_u)))==s.column_axes_u and
+               all(s.column_width_m/2<=x*width<=width-s.column_width_m/2 for x in s.column_axes_u),
+               'Invalid FacadeSection column axes')
+        _check(all((b-a)*width>=s.column_width_m for a,b in zip(s.column_axes_u,s.column_axes_u[1:])),
+               'FacadeSection columns overlap')
+        _check(s.back_wall or not (ops or projections or regions or stairs),
+               'Open FacadeSection needs empty explicit controls')
+        _check(not any(low+1e-7<z-mass.base_z<high-1e-7 for z in mass.floor_levels),
+               'FacadeSection must not cross an intermediate floor slab; split zones by storey')
+    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,zone.offset_m,zone.section)
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
@@ -726,10 +741,17 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         if wall.plane_offset_m:
             from modeling.facade_depth import DepthEnvelopeBuilder, emit_returns
             local=DepthEnvelopeBuilder(local)
-            emit_returns(local,wall)
+            if wall.section is None:emit_returns(local,wall)
+            else:
+                from modeling.facade_depth import emit_section
+                zone_index=int(f.edge_id.rsplit('/zone',1)[1])
+                component=next(c for c in theta.massing.components if wall.mass_role.startswith(c.id+':'))
+                zone=component.zones[zone_index]
+                emit_section(local,wall,zone)
         if wall.visible_domains and wall.visible_domains!=((0.,0.,f.width_m,wall.height_m),):
             local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,wall.visible_domains)
-        facade(local,replace(f,openings=ops),wall.height_m)
+        if wall.section is None or wall.section.back_wall:
+            facade(local,replace(f,openings=ops),wall.height_m)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
         for op in f.openings:

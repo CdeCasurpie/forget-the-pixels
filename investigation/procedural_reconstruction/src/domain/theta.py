@@ -86,6 +86,15 @@ class FaceBand:
 
 
 @dataclass(frozen=True)
+class FacadeSection:
+    """Covered local space between the original and recessed facade planes."""
+    back_wall: bool = True
+    column_axes_u: tuple[float, ...] = (0.08, 0.92)
+    column_width_m: float = .25
+    slab_m: float = .20
+
+
+@dataclass(frozen=True)
 class FacadeZone:
     """Independent composition on one face edge; never a massing operation.
 
@@ -102,6 +111,7 @@ class FacadeZone:
     z_m: tuple[float, float] | None = None
     role: str | None = None
     offset_m: float = 0.  # outward positive; recess negative, in the face normal
+    section: FacadeSection | None = None
 
 
 @dataclass(frozen=True)
@@ -385,6 +395,7 @@ def canonical(value) -> str:
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
                     if not (isinstance(x,FacadeZone) and f.name=='offset_m' and x.offset_m==0.)
                     and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
+                    and not (f.name=='section' and getattr(x,f.name) is None)
                     and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
