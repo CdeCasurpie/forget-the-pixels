@@ -175,6 +175,19 @@ class CrownProfile:
 
 
 @dataclass(frozen=True)
+class ArchitecturalOrder:
+    pilaster_mode: str = "none"  # none | group_boundaries | bay_boundaries | explicit
+    pilaster_width_m: float = 0.30
+    pilaster_depth_m: float = 0.16
+    pilaster_axes_u: tuple[float, ...] = ()
+    paired_bays: tuple[int, ...] = ()
+    plinth_height_m: float = 0.
+    belt_courses_m: tuple[float, ...] = ()
+    entablature_height_m: float = 0.
+    cornice_height_m: float = 0.
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -197,6 +210,7 @@ class FacadeControls:
     bay_groups: tuple[BayGroup, ...] = ()
     motifs: tuple[ArchitecturalMotif, ...] = ()
     crowns: tuple[CrownProfile, ...] = ()
+    order: ArchitecturalOrder | None = None
 
 
 @dataclass(frozen=True)
@@ -356,7 +370,8 @@ def canonical(value) -> str:
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
                     if not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
-                             f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns))}
+                             f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
+                             f.name=='order' and x.order is None))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x

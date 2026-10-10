@@ -23,7 +23,7 @@ from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
-from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns
+from modeling.facade_composition import compose_facade, validate_bay_groups, validate_crowns, validate_order
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -280,6 +280,7 @@ def _mass_ref(value, masses):
 def _facade_controls(c, family):
     validate_bay_groups(c)
     validate_crowns(c)
+    validate_order(c)
     _check(len({(m.floor,m.bay) for m in c.motifs})==len(c.motifs), 'Duplicate motif target')
     for motif in c.motifs:
         _check(motif.kind=='monumental_portal' and motif.floor==0 and motif.bay>=0 and
@@ -418,6 +419,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
         _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
         _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
+        _check(control.order is None or theta.schema_version=='0.3','order requires schema_version=0.3')
         validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)

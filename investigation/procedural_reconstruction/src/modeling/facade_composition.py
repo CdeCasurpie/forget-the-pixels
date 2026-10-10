@@ -145,6 +145,79 @@ def resolve_bay_layout(c, length):
     return tuple(bays)
 
 
+def validate_order(c):
+    order=c.order
+    if order is None:return
+    _check(order.pilaster_mode in ('none','group_boundaries','bay_boundaries','explicit'),
+           'Invalid ArchitecturalOrder pilaster_mode')
+    _check(.12<=order.pilaster_width_m<=.6 and .05<=order.pilaster_depth_m<=.5 and
+           all(math.isfinite(x) for x in (order.pilaster_width_m,order.pilaster_depth_m)),
+           'Invalid ArchitecturalOrder pilaster dimensions')
+    _check(order.pilaster_mode=='explicit' or not order.pilaster_axes_u,
+           'ArchitecturalOrder axes require explicit mode')
+    _check(tuple(sorted(set(order.pilaster_axes_u)))==order.pilaster_axes_u and
+           all(math.isfinite(x) and 0<=x<=1 for x in order.pilaster_axes_u),
+           'Invalid ArchitecturalOrder axes')
+    _check(tuple(sorted(set(order.paired_bays)))==order.paired_bays and
+           all(type(i) is int and i>=0 for i in order.paired_bays),
+           'Invalid ArchitecturalOrder paired_bays')
+    _check(all(math.isfinite(x) and 0<=x<=1.5 for x in
+               (order.plinth_height_m,order.entablature_height_m,order.cornice_height_m)),
+           'Invalid ArchitecturalOrder course heights')
+    _check(tuple(sorted(set(order.belt_courses_m)))==order.belt_courses_m and
+           all(math.isfinite(x) and x>0 for x in order.belt_courses_m),
+           'Invalid ArchitecturalOrder belt_courses_m')
+
+
+def _order_projections(c,length,height,axes,bays=None):
+    if c.order is None:return ()
+    o=c.order
+    validate_order(c)
+    _check(o.plinth_height_m+o.entablature_height_m+o.cornice_height_m<height and
+           all(.06<=z<=height-.06 for z in o.belt_courses_m),
+           'ArchitecturalOrder courses outside chart')
+    _check(not o.paired_bays or c.mode=='repeat', 'ArchitecturalOrder paired_bays require repeat')
+    _check(not o.paired_bays or max(o.paired_bays)<len(axes),
+           'ArchitecturalOrder paired_bays target nonexistent bay')
+    _check(o.pilaster_mode!='group_boundaries' or bool(bays),
+           'ArchitecturalOrder group_boundaries require BayGroups')
+    _check(o.pilaster_mode!='bay_boundaries' or bool(axes),
+           'ArchitecturalOrder bay_boundaries require bays')
+    if bays:
+        boundaries=tuple(sorted({v for b in bays for v in (b.start_m,b.end_m)}))
+        cells=tuple((b.axis_m-b.pitch_m/2,b.axis_m+b.pitch_m/2) for b in bays)
+    else:
+        boundaries=()
+        cuts=(0.,)+tuple((a+b)/2 for a,b in zip(axes,axes[1:]))+(length,)
+        cells=tuple(zip(cuts,cuts[1:]))
+    if o.pilaster_mode=='group_boundaries':positions=list(boundaries)
+    elif o.pilaster_mode=='bay_boundaries':
+        positions=list((0.,)+tuple((a+b)/2 for a,b in zip(axes,axes[1:]))+(length,))
+    elif o.pilaster_mode=='explicit':positions=[u*length for u in o.pilaster_axes_u]
+    else:positions=[]
+    for i in o.paired_bays:
+        lo,hi=cells[i]
+        positions.extend((lo+.12,hi-.12))
+    _check(all(0<=x<=length for x in positions),'ArchitecturalOrder pilasters outside chart')
+    # Centre the shaft on a boundary; collapse duplicate axes shared by groups.
+    centres=sorted(set(round(min(max(x,o.pilaster_width_m/2+.05),
+                                 length-o.pilaster_width_m/2-.05),6) for x in positions))
+    def feature(kind,u,z,w,h,depth):
+        return FacadeProjection(kind,u,z,w,h,depth,source='architectural_order')
+    result=[feature('pilaster',x-o.pilaster_width_m/2,0.,o.pilaster_width_m,
+                    height-o.cornice_height_m,o.pilaster_depth_m) for x in centres]
+    if o.plinth_height_m:
+        result.append(feature('panel',0.,0.,length,o.plinth_height_m,.12))
+    result.extend(feature('panel',0.,z-.04,length,.08,.14) for z in o.belt_courses_m)
+    if o.entablature_height_m:
+        result.append(feature('panel',0.,height-o.cornice_height_m-o.entablature_height_m,
+                              length,o.entablature_height_m,.18))
+    if o.cornice_height_m:
+        result.append(feature('cornice',.05,height-o.cornice_height_m-.05,
+                              length-.10,o.cornice_height_m,.3))
+    return tuple(result)
+
+
 def _compose_grouped(c, family, length, levels, height, ground, top, floor_indices):
     bays=resolve_bay_layout(c,length)
     rules=FAMILY_RULES[family]
@@ -198,18 +271,23 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
         _check(bool(owners),'Added opening outside BayGroups (gaps are blind)')
         append(op,owners[0],None)
     ops,motif_features=_apply_motifs(c,ops,targets,length,height)
-    return _finish(c,rules,length,levels,height,ground,top,tuple(b.axis_m for b in bays),ops,motif_features)
+    return _finish(c,rules,length,levels,height,ground,top,tuple(b.axis_m for b in bays),ops,motif_features,bays)
 
 
-def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_features=()):
+def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_features=(), bays=None):
     # All groups have been joined. Global relief runs exactly once; balconies
     # and shutters consume each opening's actual dimensions, not a global pitch.
-    projections,regions=compose_relief(length,levels,ops,rules,height,ground,top,
+    order_features=_order_projections(c,length,height,axes,bays)
+    relief_rules=dict(rules)
+    if c.order is not None and c.order.cornice_height_m and top:relief_rules['cornice']=0
+    if c.order is not None and (c.order.pilaster_mode!='none' or c.order.paired_bays):
+        relief_rules['pilasters']=False
+    projections,regions=compose_relief(length,levels,ops,relief_rules,height,ground,top,
                                        np.random.default_rng(0),[],DetailBudget(2))
     projections=tuple(replace(x,depth_m=c.gallery_depth_m) if x.kind=='gallery' else
                       replace(x,depth_m=c.awning_depth_m) if x.kind=='awning' else x for x in projections)
     ops=tuple(replace(x,kind='window') if x.kind=='balcony_window' else x for x in ops)
-    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features+
+    return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features+order_features+
                              _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
 
@@ -224,7 +302,8 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     if c.bay_groups:
         return _compose_grouped(c,family,length,levels,height,ground,top,floor_indices)
     if c.mode == "explicit":
-        return FacadeComposition((), c.openings, (c.projections or ())+_crown_projections(c,length,height),
+        return FacadeComposition((), c.openings, (c.projections or ())+_order_projections(c,length,height,())+
+                                 _crown_projections(c,length,height),
                                  c.material_regions or ())
     rules = dict(FAMILY_RULES[family])
     count = c.bay_count or max(1, round((length-.64)/3.1))
@@ -277,11 +356,14 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
         rectangles.append(shape)
     # Family relief is reused; its two random depths are always overwritten by
     # resolved architectural controls. This RNG never sees xi.
+    order_features=_order_projections(c,length,height,axes)
+    if c.order is not None and c.order.cornice_height_m and top:rules['cornice']=0
+    if c.order is not None and (c.order.pilaster_mode!='none' or c.order.paired_bays):rules['pilasters']=False
     projections, regions = compose_relief(length, levels, ops, rules, height,
                                   ground, top, np.random.default_rng(0), [], DetailBudget(2))
     projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
                         replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
     ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
-    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+
+    return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+order_features+
                              _crown_projections(c,length,height),
                              tuple(regions) if c.material_regions is None else c.material_regions)
