@@ -85,6 +85,10 @@ def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
 
 
 def opening(mb, a, t, n, op, pattern):
+    if op.shape!='rectangle' or op.prefab in ('open','screen'):
+        from .apertures import shaped_opening
+        shaped_opening(mb,a,t,n,op)
+        return
     if op.prefab != "legacy":
         from .prefabs import build_opening
         build_opening(mb, a, t, n, op)
@@ -386,7 +390,7 @@ def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
             wall_material = region.material_slot
 
     depth_outer = 0
-    if not f.is_front:
+    if not f.has_program:
         if f.wall_material == "brick":
             columns, slabs = _frame_intervals(length, f.floor_levels_m)
             # Exact strip tests (no halo): grid cuts run on the same edges,
@@ -405,7 +409,7 @@ def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
             depth_outer = 0.0
     else:
         # ── PHASE B: Recessed ground floor ───────────────────────
-        # On front walls of 3+ story buildings, the ground floor is
+        # On programmed walls of 3+ story buildings, the ground floor is
         # pushed back ~12cm to create a shadow / entrance effect.
         first_floor_z = f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
         if len(f.floor_levels_m) >= 4 and z_mid < first_floor_z:
@@ -434,8 +438,8 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     Paint and the 15 mm concrete frame never subdivide its back or base caps.
     """
     wall_rect = box(0, 0, length, total_height)
-    hole_rects = [box(op.u_m, op.v_m, op.u_m + op.width_m, op.v_m + op.height_m)
-                  for op in ops]
+    from .apertures import opening_shape
+    hole_rects = [opening_shape(op) for op in ops]
     shape = wall_rect
     for hole in hole_rects:
         if not shape.is_empty:
@@ -443,16 +447,16 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
 
     levels = f.floor_levels_m
     first = levels[1] if len(levels) > 1 else total_height
-    brick_side = not f.is_front and f.wall_material == 'brick'
+    brick_side = not f.has_program and f.wall_material == 'brick'
     bands = [(0., total_height, -.015 if brick_side else 0.)]
-    if f.is_front and len(levels) >= 4:
+    if f.has_program and len(levels) >= 4:
         bands = [(0., first, -.12), (first, total_height, 0.)]
 
     def emit(domain, back, front, material, semantic, label):
         for index, poly in enumerate(polygons(domain)):
             mb.panel(a,t,n,[poly],back,front,lambda *args:material,semantic,
                      component_id=f'{f.edge_id}/{label}_{index}',assembly_id=f.edge_id,
-                     clip='envelope' if semantic=='material_coating' and f.is_front else 'parcel')
+                     clip='envelope' if semantic=='material_coating' and f.has_program else 'parcel')
 
     # Last material region wins, as in the old finish predicate. Subtract only
     # overlapping local coatings, never propagate their edges through the wall.
@@ -495,10 +499,10 @@ def _facade_body(mb, f, total_height):
     length = np.linalg.norm(t)
     t /= length
     n = np.array([t[1], -t[0]])
-    ops = list(f.openings) if f.is_front else []
-    regions = list(f.material_regions) if f.is_front else []
-    features = list(f.projections) if f.is_front else []
-    stairs = list(f.exterior_stairs) if f.is_front else []
+    ops = list(f.openings) if f.has_program else []
+    regions = list(f.material_regions) if f.has_program else []
+    features = list(f.projections) if f.has_program else []
+    stairs = list(f.exterior_stairs) if f.has_program else []
     rectangles = []
     for op in ops:
         if (
@@ -536,11 +540,11 @@ def _facade_body(mb, f, total_height):
             feature.u_m < 0
             or feature.u_m + feature.width_m > length
             or feature.v_m < 0
-            or feature.v_m + feature.height_m > total_height + 0.5
+            or feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5)
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
     _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)
-    if f.is_front and f.cladding == "horizontal":
+    if f.has_program and f.cladding == "horizontal":
         pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
         for y in np.arange(0.0, total_height - 0.018, pitch):
             segs = [(0.0, length)]
@@ -574,7 +578,7 @@ def _facade_body(mb, f, total_height):
     # These are the exposed concrete floor slabs that protrude from every
     # inter-floor boundary. This is THE single biggest depth cue on any
     # Peruvian facade, regardless of style.
-    if f.is_front and len(f.floor_levels_m) > 2:
+    if f.has_program and len(f.floor_levels_m) > 2:
         for z in f.floor_levels_m[1:-1]:  # Skip ground (0) and roof
             # Thick concrete slab band: 15cm tall, protrudes 15cm
             mb.box(a, t, n, -0.02, length + 0.02,
@@ -589,7 +593,7 @@ def _facade_body(mb, f, total_height):
     # ── Existing ornamentation (plinth, floor bands, pilasters) ──────────
     if f.style != "premium":
         mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
-        if f.is_front and f.ornamented:
+        if f.has_program and f.ornamented:
             for z in f.floor_levels_m[1:]:
                 mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
             for u in [0.04, length - 0.16]:
@@ -607,7 +611,7 @@ def _facade_body(mb, f, total_height):
                     "corner_pilaster",
                 )
 
-    if f.is_front:
+    if f.has_program:
         if f.services and length > 3.5:
             # Air conditioning condenser, louvers, brackets and a drainpipe.
             first_floor = f.floor_levels_m[1] if len(f.floor_levels_m) > 2 else 0

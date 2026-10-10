@@ -1,0 +1,51 @@
+{
+  "lot": 1137173,
+  "hypothesis": "Marquesina abierta en cuatro apoyos principales y caseta posterior pequeña. Las tres fotos no son de la misma época.",
+  "before_request_sha256": "fa0c082cbc64ea8f0f456c5e46852f6fe76b0936e3cd4cfdfdad1551efc9d564",
+  "mass_count": 2,
+  "ground_occupancy_ratio": 0.09110070882300196,
+  "height_before_m": 4.5,
+  "height_after_m": 4.5,
+  "triangles": 516,
+  "validation": {
+    "vertices": 296,
+    "triangles": 516,
+    "parts": 28,
+    "semantic_types": [
+      "door_handle",
+      "door_leaf",
+      "door_raised_panel",
+      "entrance_step",
+      "opening_reveal",
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "site_parking",
+      "slim_frame",
+      "support_column",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "site_parking": 92,
+      "wall": 68,
+      "parapet_cap": 64,
+      "plinth": 48,
+      "support_column": 48,
+      "door_raised_panel": 36,
+      "slim_frame": 32,
+      "parapet": 32,
+      "opening_reveal": 24,
+      "roof_slab": 24,
+      "entrance_step": 24,
+      "door_leaf": 12,
+      "door_handle": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 0.0004374999894153804,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "4352958706b7f9a05a908b78ab4133fea82077a7546f5cbf70762c5647ca114a",
+  "comparisons": 3
+}

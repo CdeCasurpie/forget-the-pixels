@@ -30,7 +30,7 @@ def test_central_lot_resolves_ground_walls_after_translation():
     row = selected.loc[seed_index]
     fronts, _ = select_fronts(row)
     context = ReconstructionContext(tuple(orient(row.geometry, sign=1).exterior.coords), fronts)
-    theta, _ = choose_theta(123, seed_index)
+    theta, _ = choose_theta(123, seed_index, row.geometry)
     resolved = resolve_theta(context, theta)
     assert len(resolved.walls) >= 4
     assert resolved.walls[0].base_z == 0

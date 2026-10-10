@@ -38,6 +38,8 @@ def _evidence_value(theta, path):
             matches=[x for x in entries if x['mass_role']==ref and x['edge']==int(edge)]
         elif name=='roofs':
             matches=[x for x in entries if x['mass_ref']==selector]
+        elif name in ('components','zones'):
+            matches=[x for x in entries if x['id']==selector]
         elif name=='opening_edits':
             match_edit=re.fullmatch(r'floor:(\d+),bay:(\d+)',selector)
             if not match_edit:
@@ -68,7 +70,7 @@ def reconstruct(request: ReconstructionRequest) -> ReconstructionResult:
     if len(set(views)) != len(views):
         raise ValueError("Duplicate observation view_id")
     for path, evidence in request.evidence.items():
-        if evidence.state not in ("observed", "inferred", "unknown", "externally_known"):
+        if evidence.state not in ("observed", "inferred", "prior", "unknown", "externally_known"):
             raise ValueError(f"Invalid evidence state: {path}")
         if evidence.confidence is not None and not 0 <= evidence.confidence <= 1:
             raise ValueError(f"Invalid confidence: {path}")

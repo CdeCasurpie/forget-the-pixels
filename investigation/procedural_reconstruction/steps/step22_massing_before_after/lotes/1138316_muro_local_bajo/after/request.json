@@ -1,0 +1,269 @@
+{
+  "context": {
+    "parcel": [
+      [
+        8.197,
+        0.0
+      ],
+      [
+        6.479,
+        8.25
+      ],
+      [
+        0.0,
+        29.78
+      ],
+      [
+        1.885,
+        30.624
+      ],
+      [
+        30.384,
+        43.499
+      ],
+      [
+        39.321,
+        7.259
+      ],
+      [
+        22.055,
+        3.23
+      ],
+      [
+        10.353,
+        0.5
+      ]
+    ],
+    "fronts": [
+      3,
+      4
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "height_m": null,
+    "floors": null,
+    "family": "quiet_house",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null,
+      "components": [
+        {
+          "id": "booth",
+          "region": {
+            "front_edge": 6,
+            "u": [
+              0.72,
+              0.95
+            ],
+            "depth": [
+              0.65,
+              0.9
+            ],
+            "depth_m": null,
+            "fit": "parcel",
+            "width_reference": "parcel"
+          },
+          "levels_m": [
+            0.0,
+            3.7
+          ],
+          "kind": "enclosed",
+          "cutouts": [],
+          "support": {
+            "kind": "bearing",
+            "spacing_m": 4.0,
+            "column_width_m": 0.25,
+            "inset_m": 0.4,
+            "max_cantilever_m": 0.0
+          },
+          "facade": null,
+          "faces": [],
+          "roof": null,
+          "slab_m": 0.18
+        }
+      ],
+      "parcel_tolerance_m": 0.0
+    },
+    "facade": {
+      "mode": "explicit",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": [],
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null
+    },
+    "facades": [
+      {
+        "mass_role": "booth:0",
+        "edge": 4,
+        "controls": {
+          "mode": "explicit",
+          "bay_count": null,
+          "bay_axes_m": null,
+          "window_ratio": null,
+          "window_height_m": null,
+          "sill_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "gallery_depth_m": null,
+          "awning_depth_m": null,
+          "cladding": null,
+          "services": null,
+          "openings": [
+            {
+              "kind": "door",
+              "u_m": 2.138133168567948,
+              "v_m": 0.05,
+              "width_m": 4.493214412054986,
+              "height_m": 3.3000000000000003,
+              "frame_width_m": 0.06,
+              "recess_m": 0.08,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": false,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "wood_panel",
+              "curtain": 0.0,
+              "grille_pattern": "vertical",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            }
+          ],
+          "projections": [],
+          "material_regions": [],
+          "stairs": null,
+          "opening_edits": null,
+          "added_openings": null
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.25,
+      "slope_deg": null,
+      "props": []
+    },
+    "roofs": [],
+    "site": {
+      "fence": "concreto",
+      "garden": null,
+      "runs": null,
+      "zones": [
+        {
+          "id": "parking",
+          "kind": "parking",
+          "region": {
+            "front_edge": null,
+            "u": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": null,
+            "fit": "parcel",
+            "width_reference": "parcel"
+          },
+          "slope_deg": 0.0
+        }
+      ]
+    },
+    "primary_color": [
+      0.72,
+      0.64,
+      0.5
+    ],
+    "side_material": "plaster",
+    "masses": null,
+    "materials": [],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 21,
+    "curtains": true
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [
+    {
+      "view_id": "Ikl4tvY5yh3ZoKD2KLtxlA",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1138316/01_Ikl4tvY5yh3ZoKD2KLtxlA.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "2oiD30_kIyrQZ4jeff8WGw",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1138316/02_2oiD30_kIyrQZ4jeff8WGw.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "9LJQ-eXAXDBbkPBnbwMAQg",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1138316/03_9LJQ-eXAXDBbkPBnbwMAQg.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "WfvnJ-MlpdOIpyCQqoVBNA",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1138316/04_WfvnJ-MlpdOIpyCQqoVBNA.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    }
+  ],
+  "evidence": {
+    "massing.components[booth].levels_m": {
+      "state": "inferred",
+      "confidence": 0.55,
+      "view_ids": [
+        "Ikl4tvY5yh3ZoKD2KLtxlA",
+        "2oiD30_kIyrQZ4jeff8WGw",
+        "9LJQ-eXAXDBbkPBnbwMAQg",
+        "WfvnJ-MlpdOIpyCQqoVBNA"
+      ]
+    },
+    "massing.components[booth].region": {
+      "state": "prior",
+      "confidence": 0.3,
+      "view_ids": []
+    }
+  }
+}

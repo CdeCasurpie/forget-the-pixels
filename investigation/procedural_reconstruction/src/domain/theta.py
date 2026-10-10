@@ -49,6 +49,81 @@ class MassingControls:
     front_depth_m: float | None = None
     low_floors: int | None = None
     corner_reach_m: float | None = None
+    components: tuple[MassComponent, ...] = ()
+    parcel_tolerance_m: float = 0.0
+
+
+@dataclass(frozen=True)
+class PlanRegion:
+    """A box in a street frame, optionally intersected with the parcel.
+
+    u spans the parcel's projection along the canonical edge's tangent.
+    Depth is inward from that edge, in metres or fractions of parcel depth.
+    Null edge selects the longest declared front. No building XY is supplied.
+    """
+    front_edge: int | None = None
+    u: tuple[float, float] = (0., 1.)
+    depth: tuple[float, float] = (0., 1.)
+    depth_m: tuple[float, float] | None = None
+    fit: str = "parcel"  # parcel | rectangle (validated against tolerance)
+    width_reference: str = "parcel"  # parcel projection | edge length
+
+
+@dataclass(frozen=True)
+class SupportControls:
+    kind: str = "bearing"  # bearing | columns | cantilever
+    spacing_m: float = 4.0
+    column_width_m: float = 0.25
+    inset_m: float = 0.4
+    max_cantilever_m: float = 0.0
+
+
+@dataclass(frozen=True)
+class FaceBand:
+    face: str  # front | back | left | right | all, relative to component frame
+    controls: FacadeControls
+    z_m: tuple[float, float] | None = None  # local to body base
+
+
+@dataclass(frozen=True)
+class FacadeZone:
+    """Independent composition on one face edge; never a massing operation.
+
+    u is normalized along the original directed edge (vertex_a -> vertex_b).
+    z_m is relative to the component base; None spans its full height.
+    Controls' metric coordinates start at the zone's lower-left corner.
+    Repeated opening edits retain component storey indices, zone-local bays.
+    Zones override FaceBand/base controls and must have disjoint interiors.
+    role is descriptive metadata only, not a grammar selector.
+    """
+    face: str
+    controls: FacadeControls
+    u: tuple[float, float] = (0., 1.)
+    z_m: tuple[float, float] | None = None
+    role: str | None = None
+
+
+@dataclass(frozen=True)
+class MassComponent:
+    id: str
+    region: PlanRegion
+    levels_m: tuple[float, ...]
+    kind: str = "enclosed"  # enclosed | open
+    cutouts: tuple[PlanRegion, ...] = ()
+    support: SupportControls = field(default_factory=SupportControls)
+    facade: FacadeControls | None = None  # null is blind in compositional mode
+    faces: tuple[FaceBand, ...] = ()
+    roof: RoofControls | None = None
+    slab_m: float = 0.18
+    zones: tuple[FacadeZone, ...] = ()
+
+
+@dataclass(frozen=True)
+class SiteZone:
+    id: str
+    kind: str  # garden | patio | terrace | parking | driveway | corridor | paved | unclassified
+    region: PlanRegion = field(default_factory=PlanRegion)
+    slope_deg: float = 0.0  # ramp, rising inward from the region's near edge
 
 
 @dataclass(frozen=True)
@@ -139,6 +214,7 @@ class SiteControls:
     fence: str | None = None  # none | reja | concreto | ladrillos | concreto_bajo
     garden: bool | None = None
     runs: tuple[FenceRun, ...] | None = None  # explicit runs replace automatic fences
+    zones: tuple[SiteZone, ...] = ()
 
 
 @dataclass(frozen=True)

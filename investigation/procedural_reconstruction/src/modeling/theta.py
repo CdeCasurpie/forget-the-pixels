@@ -30,6 +30,10 @@ from modeling.roofscape import build_roof, _prop_footprint
 from modeling.prefabs_roof import BUILDERS
 from modeling.boundaries import generate_boundaries, BoundarySpec
 from modeling.site import draw_fence, plant_garden, entrance_step
+from modeling.assembly import (compose_masses, mass_polygon, ring as assembly_ring,
+    holes, resolve_supports, resolve_zones, StructuralPiece, ResolvedSiteZone, region_frame)
+from modeling.exposure import wall_domains
+from modeling.visibility import VisibleFacadeBuilder, patch_domains
 
 
 @dataclass(frozen=True)
@@ -40,6 +44,7 @@ class ResolvedWall:
     height_m: float
     axes_m: tuple[float, ...]
     facade: FacadeSpecification
+    visible_domains: tuple[tuple[float,float,float,float], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -66,6 +71,8 @@ class ResolvedArchitecture:
     boundaries: tuple[ResolvedBoundary, ...]
     completed: dict[str, str]
     completion_details: dict[str, dict] = field(default_factory=dict)
+    structures: tuple[StructuralPiece, ...] = ()
+    site_zones: tuple[ResolvedSiteZone, ...] = ()
 
 
 def _check(condition, message):
@@ -109,7 +116,16 @@ def _complete(theta, p):
             completed[path] = "prior/completed"
             return default
         return value
-    _check(theta.schema_version in ("0.1", "0.2"), "Unsupported theta schema")
+    _check(theta.schema_version in ("0.1", "0.2", "0.3"), "Unsupported theta schema")
+    if theta.massing.components:
+        _check(theta.masses is None, "components replace explicit masses")
+        _check(theta.schema_version=="0.3", "components require schema_version=0.3")
+        _check(all(len(c.levels_m)>=2 for c in theta.massing.components), "Invalid component levels")
+        height=max(c.levels_m[-1] for c in theta.massing.components)
+        _check(theta.height_m is None or abs(theta.height_m-height)<1e-7, "height conflicts with component levels")
+        floors=max(len(c.levels_m)-1 for c in theta.massing.components)
+        _check(theta.floors is None or theta.floors==floors,"floors conflict with component levels")
+        theta=replace(theta,height_m=height,floors=floors)
     if theta.masses is not None:
         _check(theta.masses and theta.height_m is None and theta.floors is None,
                "Explicit masses replace height/floors, not supplement them")
@@ -127,12 +143,15 @@ def _complete(theta, p):
         _check(abs(height-p.locked_height_m) < 1e-8, "theta height conflicts with externally locked height")
         completed["height_m"] = "external" if theta.masses is None and requested_height is None else "external/matched"
     floors = fill(theta.floors, max(1, round(height/2.8)), "floors")
-    _check(1 <= floors <= 60 and (theta.masses is not None or 2.2 <= height/floors <= 6), "Invalid floors/height (storeys must be 2.2..6m)")
+    _check(1 <= floors <= 60 and (theta.masses is not None or theta.massing.components or 2.2 <= height/floors <= 6), "Invalid floors/height (storeys must be 2.2..6m)")
     family = fill(theta.family, "quiet_house", "family")
     _check(family in FAMILY_RULES, "Unknown architectural family")
     m = theta.massing
-    pattern = fill(m.pattern, "single_block", "massing.pattern")
-    _check(pattern in ("single_block", "stepped_back", "podium_tower", "front_tall_rear_low", "front_low_rear_tall", "corner_accent", "explicit"), "Unsupported massing pattern")
+    pattern = fill(m.pattern, "composition" if m.components else "single_block", "massing.pattern")
+    _check(pattern in ("single_block", "stepped_back", "podium_tower", "front_tall_rear_low", "front_low_rear_tall", "corner_accent", "explicit", "composition"), "Unsupported massing pattern")
+    _check((pattern=="composition")==bool(m.components), "composition needs components exclusively")
+    _check(m.components or m.parcel_tolerance_m==0., "parcel_tolerance_m requires composition")
+    _check(not m.components or m.front_setback_m in (None,0.), "Use component regions for setbacks")
     _check(pattern != "explicit" or theta.masses is not None, "Explicit pattern requires masses")
     _check(pattern == "corner_accent" or m.corner_reach_m is None, "corner_reach inactive")
     upper = pattern in ("stepped_back", "podium_tower")
@@ -158,11 +177,11 @@ def _complete(theta, p):
         _check(m.front_depth_m > 0 and 1 <= m.low_floors < floors, "Invalid front/rear massing")
     roof = theta.roof
     kind = fill(roof.kind, "flat", "roof.kind")
-    _check(kind in ("flat", "corrugated", "tile_shed"), "Unsupported roof")
-    _check(kind == "tile_shed" or roof.slope_deg is None, "slope_deg inactive for flat/corrugated roof")
-    parapet = fill(roof.parapet_m, 0. if kind == "tile_shed" else .5, "roof.parapet_m")
-    _check(0 <= parapet <= 2 and (kind != "tile_shed" or parapet == 0), "Shed parapet unsupported; use zero")
-    slope = fill(roof.slope_deg, 12., "roof.slope_deg") if kind == "tile_shed" else None
+    _check(kind in ("flat", "corrugated", "tile_shed", "gable"), "Unsupported roof")
+    _check(kind in ("tile_shed","gable") or roof.slope_deg is None, "slope_deg inactive for flat/corrugated roof")
+    parapet = fill(roof.parapet_m, 0. if kind in ("tile_shed","gable") else .5, "roof.parapet_m")
+    _check(0 <= parapet <= 2 and (kind not in ("tile_shed","gable") or parapet == 0), "Sloped parapet unsupported; use zero")
+    slope = fill(roof.slope_deg, 12., "roof.slope_deg") if kind in ("tile_shed","gable") else None
     _check(slope is None or 1 <= slope <= 35, "Shed slope must be 1..35 degrees")
     site = replace(theta.site, fence=fill(theta.site.fence, "none", "site.fence"), garden=fill(theta.site.garden, False, "site.garden"))
     _check(site.runs is None or site.fence == "none", "Explicit fence runs replace automatic fence kind")
@@ -181,7 +200,7 @@ def _complete(theta, p):
     theta = replace(theta, height_m=height, floors=floors, family=family, massing=m,
                     roof=replace(roof,kind=kind,parapet_m=parapet,slope_deg=slope,
                                  props=fill(roof.props,(),"roof.props")), site=site, primary_color=color,
-                    side_material=side_material, finish=finish, schema_version="0.2")
+                    side_material=side_material, finish=finish, schema_version="0.3" if theta.schema_version=="0.3" else "0.2")
     return theta, completed
 
 
@@ -190,6 +209,8 @@ def _masses(p, theta):
     parcel = Polygon(p.parcel)
     fronts = front_lines(ctx)
     m = theta.massing
+    if m.components:
+        return compose_masses(p,m)
     if theta.masses is not None:
         result=[]
         for x in theta.masses:
@@ -269,7 +290,7 @@ def _facade_controls(c, family):
         _check(all(getattr(c, x) is None for x in ("bay_count", "bay_axes_m", "window_ratio", "window_height_m", "sill_m", "balconies", "balcony_depth_m", "gallery_depth_m", "awning_depth_m")), "Repeat fields inactive on explicit facade")
         for op in c.openings:
             _check(op.kind in ('window','door','gate','balcony_window'), 'Invalid opening kind')
-            _check(op.prefab in ('legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver'), 'Invalid opening prefab')
+            _check(op.prefab in ('legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'), 'Invalid opening prefab')
             _check(op.frame_width_m>0 and op.recess_m>0 and op.mullion_columns>=1 and op.mullion_rows>=1, 'Invalid frame/recess/mullions')
             _check(op.curtain==0, 'Curtain coverage belongs to xi, not explicit theta openings')
             _check(op.prefab=='legacy' or op.style=='sliding', 'style only controls legacy opening; inactive for this prefab')
@@ -314,7 +335,7 @@ def _facade_override_controls(local, global_controls, family):
     return _facade_controls(replace(template,**patch),family)
 
 
-def _composition(c, family, length, levels, height, ground, top):
+def _composition(c, family, length, levels, height, ground, top, floor_indices=None):
     if c.mode == "explicit":
         return (), c.openings, c.projections or (), c.material_regions or ()
     rules = dict(FAMILY_RULES[family])
@@ -325,15 +346,16 @@ def _composition(c, family, length, levels, height, ground, top):
     ops = []
     found=set()
     edits={(e.floor,e.bay):e for e in c.opening_edits}
-    for floor, (z0,z1) in enumerate(zip(levels, levels[1:])):
+    for local_floor, (z0,z1) in enumerate(zip(levels, levels[1:])):
+        floor=local_floor if floor_indices is None else floor_indices[local_floor]
         for i, axis in enumerate(axes):
             kind, prefab = "window", rules["prefab"]
             width, sill, h = pitch*c.window_ratio, c.sill_m, c.window_height_m
-            if ground and floor == 0 and i == 0:
+            if ground and local_floor == 0 and i == 0:
                 kind = "gate" if rules["ground"] == "garage" else "door"
                 prefab = "roller" if kind == "gate" else "wood_panel"
                 width, sill, h = min(pitch*.75, 3.2) if kind == "gate" else min(pitch*.42, 1.2), .04, min(2.3,z1-z0-.3)
-            elif ground and floor == 0 and rules["ground"] == "shopfront":
+            elif ground and local_floor == 0 and rules["ground"] == "shopfront":
                 prefab, sill = "storefront", .15
             if floor > 0 and c.balconies and i % 2 == 0:
                 kind, sill = "balcony_window", .18
@@ -369,10 +391,72 @@ def _composition(c, family, length, levels, height, ground, top):
     return axes, ops, projections if c.projections is None else c.projections, tuple(regions) if c.material_regions is None else c.material_regions
 
 
+def _validate_facade_zones(component, family):
+    """Validate before exposure, including zones on completely hidden faces."""
+    height=component.levels_m[-1]-component.levels_m[0]
+    previous=[]
+    _check(not component.zones or component.kind=='enclosed', 'Facade zones require an enclosed component')
+    for zone in component.zones:
+        label=f'Facade zone {component.id}/{zone.role or zone.face}'
+        _check(zone.face in ('all','front','back','left','right'), label+': invalid face')
+        _check(0<=zone.u[0]<zone.u[1]<=1, label+': invalid u (expected 0 <= u0 < u1 <= 1)')
+        low,high=zone.z_m if zone.z_m is not None else (0.,height)
+        _check(0<=low<high<=height, label+': invalid z_m (outside component height)')
+        shape=rect(zone.u[0],low,zone.u[1],high)
+        for other,area in previous:
+            if zone.face==other.face or 'all' in (zone.face,other.face):
+                _check(shape.intersection(area).area==0, label+': overlapping facade zones')
+        previous.append((zone,shape))
+        _facade_controls(zone.controls,family)
+
+
+def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, theta, is_front):
+    """Compose once locally, then translate entities to the original wall chart."""
+    height=mass.roof_z-mass.base_z
+    low,high=zone.z_m if zone.z_m is not None else (0.,height)
+    start,end=(u*length for u in zone.u)
+    width=end-start
+    control=_facade_controls(zone.controls,theta.family)
+    _check(control.mode!='repeat' or width>=1.5, 'Facade zone too narrow for repeat; use explicit controls')
+    base=mass.base_z+low
+    roof=mass.base_z+high
+    levels=tuple(sorted({0.,high-low,*[z-base for z in mass.floor_levels if base<z<roof]}))
+    # A horizontal neighbour never changes this zone's floor/bay indexing.
+    # A vertical zone retains the original component floor numbers for edits
+    # and upper-storey rules, even when its first local level is zero.
+    floor_indices=tuple(next(i for i,(lo,hi) in enumerate(zip(mass.floor_levels,mass.floor_levels[1:]))
+                             if lo<=base+(z0+z1)/2<hi) for z0,z1 in zip(levels,levels[1:]))
+    axes,ops,projections,regions=_composition(control,theta.family,width,levels,high-low,
+                                             base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
+    # User entities belong to their zone, not merely somewhere on the wall.
+    # Generated relief may have small prefab overhangs; the domain clips them.
+    for entities in (ops, control.projections or (), control.material_regions or ()):
+        for entity in entities:
+            _check(entity.width_m>0 and entity.height_m>0 and entity.u_m>=0 and entity.v_m>=0 and
+                   entity.u_m+entity.width_m<=width+1e-8 and entity.v_m+entity.height_m<=high-low+1e-8,
+                   'Facade zone entity outside local bounds')
+    for stair in control.stairs:
+        _check(0<=stair.u_m and stair.u_m+stair.flight_width_m<=width and
+               0<=stair.base_z_m<stair.target_z_m<=high-low, 'Facade zone stair outside local bounds')
+    def shifted(entities):
+        return tuple(replace(x,u_m=x.u_m+start,v_m=x.v_m+low) for x in entities)
+    stairs=tuple(replace(s,u_m=s.u_m+start,base_z_m=s.base_z_m+low,target_z_m=s.target_z_m+low)
+                 for s in control.stairs)
+    f=FacadeSpecification(f'{mass.id}/edge{edge}/zone{index}',a,b,length,tuple(normal),
+                          tuple(z-mass.base_z for z in mass.floor_levels),
+                          openings=shifted(ops),projections=shifted(projections),material_regions=shifted(regions),
+                          exterior_stairs=stairs,is_front=is_front,program_enabled=True,wall_material='plaster',
+                          services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
+    visible=patch_domains(domains,(start,low,end,high))
+    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible)
+
+
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
     requested=asdict(theta)
     context = _context(decode(ReconstructionContext, asdict(context)))
     theta, completed = _complete(decode(ThetaCandidate, asdict(theta)), context)
+    for component in theta.massing.components:
+        _validate_facade_zones(component,theta.family)
     masses = _masses(context, theta)
     if theta.masses is not None:
         theta=replace(theta,masses=tuple(ArchitecturalMass(m.role,m.footprint,m.floor_levels) for m in masses))
@@ -396,56 +480,106 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     front_normals = [outward_normal(Polygon(context.parcel), *list(line.coords))[1] for line in fronts]
     walls, roofs, used = [], [], set()
     for mass in masses:
-        ring = mass.footprint
-        for edge,a in enumerate(ring):
-            b = ring[(edge+1)%len(ring)]
+        component=next((c for c in theta.massing.components if c.id==mass.role),None)
+        rings=(mass.footprint,)+mass.footprint_holes
+        edges=[(a,r[(i+1)%len(r)]) for r in rings for i,a in enumerate(r)]
+        for edge,(a,b) in enumerate(edges):
+            if mass.kind=='open':
+                continue
             line = LineString([a,b])
-            t,n,length = outward_normal(Polygon(ring),a,b)
+            length=line.length
+            t=(np.asarray(b)-a)/length
+            n=np.array([t[1],-t[0]])
             is_front = any(float(np.dot(n,normal))>.85 for normal in front_normals)
             key = (mass.id,edge)
             control = overrides.get(key, default if is_front else _facade_controls(FacadeControls(mode="explicit",openings=()),theta.family))
-            clean_line = shapely.set_precision(line, grid_size=1e-4)
-            for band in exposures[mass.id]["walls"]:
-                segment = clean_line.intersection(band["exposed_segments"])
-                if segment.is_empty or segment.length < .1:
+            domains=wall_domains(mass,masses,a,b)
+            selected_zones=[]
+            if component:
+                _,ct,cn,_=region_frame(context,component.region)
+                face=max((('front',-cn),('back',cn),('left',-ct),('right',ct)),key=lambda x:np.dot(n,x[1]))[0]
+                selected_zones=[(i,z) for i,z in enumerate(component.zones) if z.face in ('all',face)]
+            # Resolve even hidden zones: bad local coordinates must not depend
+            # on the presence or height of an adjacent mass.
+            zone_walls=[_facade_zone_wall(z,i,mass,edge,a,b,n,length,domains,theta,is_front) for i,z in selected_zones]
+            if not domains:
+                continue
+            if key in overrides:
+                used.add(key)
+            # Compose in the original edge chart. Exposure clips geometry only;
+            # it must never relocate a door or restart a floor/bay sequence.
+            programs=[(0.,mass.roof_z-mass.base_z,control)]
+            if component and key not in overrides:
+                blind=FacadeControls(mode='explicit',openings=())
+                control=_facade_controls(component.facade or blind,theta.family)
+                selected=[f for f in component.faces if f.face in ('all',face)]
+                _check(all(f.face in ('all','front','back','left','right') for f in component.faces),'Invalid component face')
+                cuts={0.,mass.roof_z-mass.base_z}
+                for f in selected:
+                    if f.z_m:
+                        _check(0<=f.z_m[0]<f.z_m[1]<=mass.roof_z-mass.base_z,'Invalid face band')
+                        cuts.update(f.z_m)
+                programs=[]
+                zs=sorted(cuts)
+                for low,high in zip(zs,zs[1:]):
+                    active=[f for f in selected if f.z_m is None or f.z_m[0]<=low and f.z_m[1]>=high]
+                    local=_facade_controls(active[-1].controls,theta.family) if active else control
+                    programs.append((low,high,local))
+            # Explicit body/edge programs can dress non-street-facing walls.
+            program_enabled=is_front or component is not None or key in overrides
+            for low,high,control in programs:
+                visible=tuple((u0,max(z0,low)-low,u1,min(z1,high)-low) for u0,z0,u1,z1 in domains if min(z1,high)>max(z0,low)+1e-7)
+                if selected_zones:
+                    excluded=tuple((z.u[0]*length,(z.z_m or (0.,mass.roof_z-mass.base_z))[0]-low,
+                                    z.u[1]*length,(z.z_m or (0.,mass.roof_z-mass.base_z))[1]-low)
+                                   for _,z in selected_zones)
+                    visible=patch_domains(visible,(0.,0.,length,high-low),excluded)
+                if not visible:
                     continue
-                if key in overrides:
-                    used.add(key)
-                # Explicit edge coordinates cannot silently migrate to a shorter
-                # segment. Reject partial exposure until structured interval UI.
-                _check(abs(segment.length-length)<1e-5, "Partially exposed edges require a future interval schema")
-                base, roof = band["z_bottom"], band["z_top"]
+                base,roof=mass.base_z+low,mass.base_z+high
                 levels = tuple(sorted(set([0.,roof-base]+[z-base for z in mass.floor_levels if base<z<roof])))
-                has_entities=bool(control.openings or control.projections or control.material_regions or control.stairs)
-                _check(control.mode != "explicit" or not has_entities or (abs(base-mass.base_z)<1e-7 and abs(roof-mass.roof_z)<1e-7), "Explicit facade crossing exposure bands is unsupported")
+                if length<1.5 and control.mode=='repeat':
+                    control=_facade_controls(FacadeControls(mode='explicit',openings=()),theta.family)
                 axes, ops, projections, regions = _composition(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,
-                                        openings=ops,is_front=is_front or key in overrides,wall_material="plaster" if is_front else theta.side_material,
+                                        openings=ops,is_front=is_front,program_enabled=program_enabled,
+                                        wall_material="plaster" if is_front or component and key not in overrides else theta.side_material,
                                         projections=projections,material_regions=regions,exterior_stairs=control.stairs,
                                         services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish)
-                walls.append(ResolvedWall(mass.id,edge,base,roof-base,axes,f))
+                walls.append(ResolvedWall(mass.id,edge,base,roof-base,axes,f,visible))
+            walls.extend(w for w in zone_walls if w.visible_domains)
         area = exposures[mass.id].get("roof")
         area = area["exposed_area"] if area else Polygon()
         surfaces = []
         for part in ([area] if area.geom_type=="Polygon" else getattr(area,"geoms",())):
             if part.is_empty:
                 continue
-            coords = _ring(part)
+            coords = assembly_ring(part)
             n = front_normals[0]
             anchor = min(coords,key=lambda xy: np.dot(xy,-n))
-            surfaces.append(RoofSurface(coords,theta.roof.kind,mass.roof_z,theta.roof.slope_deg or 0,anchor,tuple(-n)))
+            surfaces.append(RoofSurface(coords,theta.roof.kind,mass.roof_z,theta.roof.slope_deg or 0,anchor,tuple(-n),holes=holes(part)))
         if surfaces:
             override=roof_overrides.get(mass.id)
+            if component and component.roof and not override:
+                override=RoofOverride(mass.id,component.roof.kind,component.roof.parapet_m,component.roof.slope_deg)
             selected_kind=override.kind if override and override.kind is not None else theta.roof.kind
-            _check(selected_kind in ("flat","corrugated","tile_shed"),"Invalid per-mass roof kind")
+            _check(selected_kind in ("flat","corrugated","tile_shed","gable"),"Invalid per-mass roof kind")
             selected_parapet=(override.parapet_m if override and override.parapet_m is not None else
-                              0. if override and override.kind=="tile_shed" else theta.roof.parapet_m)
+                              0. if mass.kind=='open' or override and override.kind in ("tile_shed","gable") else theta.roof.parapet_m)
             selected_slope=(override.slope_deg if override and override.slope_deg is not None else
-                            theta.roof.slope_deg if selected_kind==theta.roof.kind else 12.) if selected_kind=="tile_shed" else None
-            _check(not override or selected_kind=="tile_shed" or override.slope_deg is None,"Inactive per-mass slope")
-            _check(0<=selected_parapet<=2 and (selected_kind!="tile_shed" or selected_parapet==0),"Invalid per-mass parapet")
+                             theta.roof.slope_deg if selected_kind==theta.roof.kind else 12.) if selected_kind in ("tile_shed","gable") else None
+            selected_slope=selected_slope or (12. if selected_kind in ('tile_shed','gable') else None)
+            _check(not override or selected_kind in ("tile_shed","gable") or override.slope_deg is None,"Inactive per-mass slope")
+            _check(0<=selected_parapet<=2 and (selected_kind not in ("tile_shed","gable") or selected_parapet==0),"Invalid per-mass parapet")
             _check(selected_slope is None or 1<=selected_slope<=35,"Invalid per-mass slope")
-            surfaces=[replace(s,kind=selected_kind,slope_deg=selected_slope or 0.) for s in surfaces]
+            surfaces=[replace(s,kind=selected_kind,slope_deg=selected_slope or 0.,thickness_m=component.slab_m if component else s.thickness_m) for s in surfaces]
+            if component and selected_kind in ('gable','tile_shed'):
+                _,ct,cn,_=region_frame(context,component.region)
+                direction=ct if selected_kind=='gable' else cn
+                surfaces=[replace(s,inward_normal=tuple(direction),eave_point=min(s.polygon,key=lambda xy:np.dot(xy,direction))) for s in surfaces]
+            if selected_kind=='gable':
+                from modeling.roofscape import gable_surfaces
+                surfaces=[patch for s in surfaces for patch in gable_surfaces(s)]
             props=[]
             footprints=[]
             for prop in theta.roof.props:
@@ -477,7 +611,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         boundaries.append(ResolvedBoundary(tuple(b.line.coords),b.kind,b.height,b.gate_u,b.gate_width,b.garage_u,b.garage_width,b.is_street))
     if theta.site.runs is not None:
         boundaries=[]
-        built=unary_union([Polygon(m.footprint) for m in masses if m.base_z<.01])
+        built=unary_union([mass_polygon(m) for m in masses if m.base_z<.01 and m.kind=='enclosed'])
         occupied={}
         for run in theta.site.runs:
             _check(0<=run.edge<len(context.parcel),"Fence edge out of range")
@@ -511,6 +645,8 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     track(requested,asdict(theta))
     if theta.masses is not None:
         completed['height_m']=completed['floors']='derived/explicit_mass_levels'
+    elif theta.massing.components:
+        completed['height_m']=completed['floors']='derived/component_levels'
     detailed={}
     values=asdict(theta)
     for path,source in completed.items():
@@ -542,7 +678,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             path=f'facade.{field_name}'
             completed[path]='derived/family'
             detailed[path]={"value":{wall.facade.edge_id:[asdict(entity) for entity in getattr(wall.facade,field_name)]
-                                      for wall in walls if wall.facade.is_front},
+                                      for wall in walls if wall.facade.has_program},
                             "source":"derived/family","policy":"FAMILY_RULES"}
     for override in theta.facades:
         original=next(x for x in requested['facades'] if _mass_ref(x['mass_role'],masses)==override.mass_role and x['edge']==override.edge)
@@ -553,7 +689,14 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                 detailed[path]={"value":{wall.facade.edge_id:[asdict(entity) for entity in getattr(wall.facade,field_name)]
                                           for wall in walls if wall.mass_role==override.mass_role and wall.edge==override.edge},
                                 "source":completed[path],"policy":"FAMILY_RULES" if override.controls.mode=='repeat' else 'conservative-0.2'}
-    return ResolvedArchitecture("0.2",context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed)
+    structures=resolve_supports(context,theta.massing,masses) if theta.massing.components else ()
+    if theta.massing.components:
+        masses=tuple(replace(m,support_ids=tuple(sorted(
+            [s.id for s in structures if s.mass_id==m.id and s.semantic=='support_column']+
+            [b.id for b in masses if m.base_z>0 and abs(b.roof_z-m.base_z)<1e-6 and mass_polygon(b).intersection(mass_polygon(m)).area>1e-6]
+        ))) for m in masses)
+    zones=resolve_zones(context,theta.site,masses,structures) if theta.schema_version=='0.3' or theta.site.zones else ()
+    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones)
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
@@ -588,19 +731,43 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         original=templates[control.template]
         materials[control.slot]=replace(original,slot=control.slot,base_color_rgb=control.color or original.base_color_rgb)
     appearance=BuildingAppearance(tuple(materials.values()))
-    builder=MeshBuilder(parcel,appearance,envelope=street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)),budget=DetailBudget(config.detail))
+    tolerance=theta.massing.parcel_tolerance_m
+    builder=MeshBuilder(parcel.buffer(tolerance,join_style=2) if tolerance else parcel,appearance,envelope=street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance),budget=DetailBudget(config.detail))
     entrances=[]
+    zoned_edges={(w.mass_role,w.edge) for w in resolved.walls if '/zone' in w.facade.edge_id}
     for wall in resolved.walls:
         f=wall.facade
         ops=tuple(replace(op,curtain=float(_rng(nuisance.seed,f"{f.edge_id}/curtain/{i}").uniform(.15,.55)))
                   if nuisance.curtains and op.kind=="window" and op.prefab in ("slim_window","storefront","legacy") else op
                   for i,op in enumerate(f.openings))
-        facade(_BandBuilder(builder,wall.base_z),replace(f,openings=ops),wall.height_m)
+        local=_BandBuilder(builder,wall.base_z)
+        if wall.visible_domains and wall.visible_domains!=((0.,0.,f.width_m,wall.height_m),):
+            local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,wall.visible_domains)
+        facade(local,replace(f,openings=ops),wall.height_m)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
         for op in f.openings:
             if wall.base_z<.01 and op.kind in ("door","gate") and op.v_m<.6:
-                entrances.append(dict(origin=a+t*op.u_m,tangent=t,normal=np.asarray(f.normal_xy),width=op.width_m,base_z=op.v_m))
+                spans=[(op.u_m,op.width_m)]
+                if (wall.mass_role,wall.edge) in zoned_edges:
+                    spans=[(max(op.u_m,u0),min(op.u_m+op.width_m,u1)-max(op.u_m,u0))
+                           for u0,z0,u1,z1 in wall.visible_domains if z0<=op.v_m<z1]
+                for lo,width in spans:
+                    if width>1e-7:
+                        entrances.append(dict(origin=a+t*lo,tangent=t,normal=np.asarray(f.normal_xy),width=width,base_z=op.v_m))
+    for piece in resolved.structures:
+        with builder.assembly(piece.id):
+            builder.solid(Polygon(piece.polygon,piece.holes),piece.base_z,piece.top_z,'concrete',piece.semantic)
+    for zone in resolved.site_zones:
+        if zone.kind=='unclassified':continue
+        poly=Polygon(zone.polygon,zone.holes)
+        slope=np.tan(np.radians(zone.slope_deg))
+        def top(x,y,z=zone,s=slope):
+            return .025+s*max(0.,np.dot(np.array([x,y])-z.origin,z.inward))
+        with builder.assembly('site/zone/'+zone.id):
+            builder.solid(poly,0.,top,'soil' if zone.kind=='garden' else 'pavement','site_'+zone.kind)
+            if zone.kind=='garden':
+                plant_garden(builder,poly,Polygon(),[],[],_rng(nuisance.seed,zone.id))
     for roof in resolved.roofs:
         props=tuple(replace(prop,seed=int(_rng(nuisance.seed,f"roof/{roof.mass_id}/{prop.kind}/{prop.position}").integers(0,2**31))) for prop in roof.props)
         build_roof(builder,replace(roof,props=props),_rng(nuisance.seed,"roof/"+roof.mass_id))
@@ -617,8 +784,8 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     for i,entry in enumerate(entrances):
         with builder.assembly(f"site/entrance/{i}"):
             entrance_step(builder,entry,_rng(nuisance.seed,"entry"))
-    if theta.site.garden:
-        built=unary_union([Polygon(m.footprint) for m in resolved.masses])
+    if theta.site.garden and not theta.site.zones:
+        built=unary_union([mass_polygon(m) for m in resolved.masses if m.base_z<.01 and m.kind=='enclosed'])
         plant_garden(builder,parcel,built,boundaries,entrances,_rng(nuisance.seed,"garden"))
     return builder.finish()
 

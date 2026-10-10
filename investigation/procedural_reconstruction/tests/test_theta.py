@@ -94,7 +94,8 @@ def test_explicit_irregular_side_facade():
     t=replace(T,facades=(FacadeOverride('main',1,FacadeControls(mode='explicit',openings=ops)),))
     r=resolve_theta(P,t)
     wall=next(w for w in r.walls if w.edge==1)
-    assert wall.facade.openings==ops and wall.facade.is_front
+    assert wall.facade.openings==ops and wall.facade.has_program
+    assert not wall.facade.is_front  # explicit side program is not a street front
     mesh=generate_resolved(r)
     assert len(mesh.faces)>0
 

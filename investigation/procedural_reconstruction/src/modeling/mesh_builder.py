@@ -55,6 +55,7 @@ PROJECTING_SEMANTICS = frozenset({
     "floor_slab", "top_cornice", "floor_band", "plinth", "corner_pilaster",
     "cladding_joint", "cornice", "cornice_step", "cornice_drip", "sill_band",
     "pilaster", "pilaster_base", "pilaster_cap",
+    "pediment", "vertical_fin", "arched_frame",
     # opening trim
     "window_sill", "opening_surround", "opening_lintel", "threshold",
     "door_handle", "security_bar", "security_crossbar", "grille_diamond",
@@ -516,7 +517,7 @@ class MeshBuilder:
 
     def solid(self, shape, bottom, top, material="plaster", semantic="wall",
               *, facade_origin=None, facade_tangent=None, facade_normal=None,
-              uv_scale=None, clip="auto"):
+              uv_scale=None, clip="auto", allow_taper=False):
         """Extrude polygon between scalar or affine height fields.
 
         If facade_origin and facade_tangent are given, wall UVs are
@@ -543,7 +544,7 @@ class MeshBuilder:
             for piece in pieces:
                 self.solid(piece,bottom,top,material,semantic,
                            facade_origin=facade_origin,facade_tangent=facade_tangent,
-                           facade_normal=facade_normal,uv_scale=uv_scale,clip=clip)
+                            facade_normal=facade_normal,uv_scale=uv_scale,clip=clip,allow_taper=allow_taper)
             return
         auto = self._ensure_component(semantic)
         try:
@@ -552,8 +553,13 @@ class MeshBuilder:
 
             for poly in pieces:
                 coords = np.array(poly.exterior.coords)[:, :2]
-                if any(height(top, p) <= height(bottom, p) for p in coords):
+                thickness=np.array([height(top,p)-height(bottom,p) for p in coords])
+                invalid=(thickness.min() < -1e-7 or thickness.max()<=1e-9) if allow_taper else (thickness<=0).any()
+                if invalid:
                     raise ValueError("Solid must have positive thickness everywhere")
+                if allow_taper:
+                    original_top=top
+                    top=lambda x,y,f=original_top,b=bottom: height(b,(x,y)) if abs(height(f,(x,y))-height(b,(x,y)))<1e-7 else height(f,(x,y))
 
                 exterior = _clean_ring([tuple(p[:2]) for p in poly.exterior.coords])
                 hole_rings = [_clean_ring([tuple(p[:2]) for p in ring.coords])
@@ -907,7 +913,7 @@ class MeshBuilder:
         limit = self.limit_for(semantic, clip)
         footprint = Polygon([a+t*u+n*w for u,w in
                              ((u0,w1),(u1,w1),(u1,w2),(u0,w2))])
-        if not limit.buffer(1e-9).covers(footprint) and all(_is_rectilinear(p) for p in doms) and not (cuts_u or cuts_z or depth_fn):
+        if not limit.buffer(1e-9).covers(footprint) and not (cuts_u or cuts_z or depth_fn):
             # At oblique cadastral corners the old midpoint-line clip let the
             # back of the wall escape the parcel. Isolate only the affected
             # corner strips. The unaffected middle remains one sparse shell;
@@ -933,6 +939,32 @@ class MeshBuilder:
                         else:
                             slices.append(local)
             for domain in slices:
+                if not _is_rectilinear(domain):
+                    # Curved aperture polygons are piecewise linear. Triangular
+                    # (u,z) cells become XY strips with linear lower/upper Z
+                    # fields, so cadastral clipping is exact at BOTH depths.
+                    # Mid-depth clipping alone lets arched walls escape at
+                    # oblique parcel corners.
+                    for tri in triangles(domain):
+                        us=sorted(set(float(p[0]) for p in tri))
+                        for left,right in zip(us,us[1:]):
+                            if right-left<1e-8:continue
+                            mid=(left+right)/2; bounds=[]
+                            for pa,pb in zip(tri,np.roll(tri,-1,axis=0)):
+                                if min(pa[0],pb[0])<mid<max(pa[0],pb[0]):
+                                    slope=(pb[1]-pa[1])/(pb[0]-pa[0])
+                                    bounds.append((float(slope),float(pa[1]-slope*pa[0])))
+                            if len(bounds)!=2:continue
+                            bounds.sort(key=lambda pair:pair[0]*mid+pair[1])
+                            def field(pair):
+                                return lambda x,y,s=pair[0],c=pair[1]:s*float(np.dot(np.array([x,y])-a,t))+c
+                            shape=Polygon([a+t*u+n*w for u,w in ((left,w1),(right,w1),(right,w2),(left,w2))])
+                            for polygon in polygons(shapely.set_precision(shape.intersection(limit),VERTEX_QUANTUM_M)):
+                                with self.component(semantic,f'{identity}/curve{piece}',assembly_id):
+                                    self.solid(polygon,field(bounds[0]),field(bounds[1]),mat_fn('front',mid,sum(s*mid+c for s,c in bounds)/2,w2),semantic,
+                                        facade_origin=a,facade_tangent=t,facade_normal=n,clip=clip,allow_taper=True)
+                                piece+=1
+                    continue
                 heights=sorted({float(z) for ring in [domain.exterior,*domain.interiors] for _,z in ring.coords})
                 for low,high in zip(heights,heights[1:]):
                     line=LineString([(u0-1,(low+high)/2),(u1+1,(low+high)/2)])

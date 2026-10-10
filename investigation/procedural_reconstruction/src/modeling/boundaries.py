@@ -48,7 +48,8 @@ def generate_boundaries(
         return []
 
     parcel = Polygon(context.polygon)
-    masses = [Polygon(mass.footprint) for mass in site_plan.masses]
+    masses = [Polygon(mass.footprint,mass.footprint_holes) for mass in site_plan.masses
+              if mass.base_z<.01 and mass.kind=='enclosed']
     built = unary_union(masses) if masses else Polygon()
 
     coords = list(parcel.exterior.coords)
@@ -63,9 +64,9 @@ def generate_boundaries(
             if segment.length < MIN_BOUNDARY_LENGTH_M:
                 continue
             if index in street_edges:
-                gate_u = max(0.25, segment.length * 0.15)
+                gate_u = max(0.25, segment.length * 0.15) if segment.length>=GATE_WIDTH_M+.5 else None
                 garage_u = None
-                if segment.length > gate_u + GATE_WIDTH_M + GARAGE_WIDTH_M + 0.6:
+                if gate_u is not None and segment.length > gate_u + GATE_WIDTH_M + GARAGE_WIDTH_M + 0.6:
                     garage_u = gate_u + GATE_WIDTH_M + 0.4
                 boundaries.append(
                     BoundarySpec(
@@ -73,7 +74,7 @@ def generate_boundaries(
                         kind=fence_kind if fence_kind != "none" else "reja",
                         height=2.4 if fence_kind == "concreto" else 2.1,
                         gate_u=gate_u,
-                        gate_width=GATE_WIDTH_M,
+                        gate_width=GATE_WIDTH_M if gate_u is not None else 0.,
                         garage_u=garage_u,
                         garage_width=GARAGE_WIDTH_M if garage_u is not None else 0.0,
                         is_street=True,

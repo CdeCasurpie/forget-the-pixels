@@ -126,3 +126,19 @@ configuración visible más defendible con la gramática actual; anotar qué
 partes están ocultas y qué controles faltan. En 1135369 hay cinco fotos
 del edificio en demolición: usar esas vistas segmentadas, no inferir sin
 evidencia una supuesta fachada anterior. Nunca marcarlo como descartado.
+
+## Segunda pasada: gramática composicional 0.3
+
+- [x] Implementación P0/P1 y tests geométricos de cuerpos, huecos, exposición,
+  cercos, áreas libres, cubiertas parciales y estructuras abiertas.
+- [x] 19/19 lotes disponibles con `after/request.json`, GLB, θ resuelto,
+  validación de envolvente y 64/64 comparativas de vistas `present`.
+- [x] Revisión visual por lote y limitaciones restantes en
+  `../AFTER_REVIEW.md`; arquitectura y diagnóstico en
+  `../MASSING_REDESIGN.md`.
+- [ ] Ajuste multivista automático de parámetros por máscaras/rooflines:
+  futuro módulo de inferencia, fuera de esta iteración de gramática.
+
+`1138310`: cinco vistas `absent`, sin carpeta actual ni `after` evaluable.
+El checklist anterior describe el *before* en el momento de aquella pasada;
+no implica que exista actualmente su carpeta.

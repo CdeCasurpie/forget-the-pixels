@@ -315,6 +315,19 @@ def sign_box(mb, a, t, n, feature):
         sign_letters(mb, a, t, n, feature)
 
 
+def pediment(mb,a,t,n,feature):
+    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
+    shape=Polygon([(u,v),(u+w,v),(u+w/2,v+h)])
+    mb.panel(a,t,n,[shape],-.02,feature.depth_m,lambda *args:feature.material_slot,'pediment')
+
+
+def vertical_fins(mb,a,t,n,feature):
+    pitch=max(.15,feature.border_width_m)
+    for u in np.arange(feature.u_m,feature.u_m+feature.width_m-.04,pitch):
+        _add(mb,a,t,n,feature,u,min(u+.05,feature.u_m+feature.width_m),feature.v_m,
+             feature.v_m+feature.height_m,-.01,feature.depth_m,'vertical_fin')
+
+
 FACADE_PROJECTIONS = {
     "panel": panel,
     "frame": frame,
@@ -332,4 +345,6 @@ FACADE_PROJECTIONS = {
     "shutter": shutter,
     "downpipe": downpipe,
     "sign_box": sign_box,
+    "pediment": pediment,
+    "vertical_fins": vertical_fins,
 }

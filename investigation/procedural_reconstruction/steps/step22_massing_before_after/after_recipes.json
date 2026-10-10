@@ -1,0 +1,155 @@
+{
+  "1134299_casa_salmon_republicana": {
+    "note": "Retiro corto, cuerpo frontal de dos niveles y ala derecha más profunda; profundidades inferidas, no medidas.",
+    "components": [
+      {"id":"main","region":{"front_edge":1,"width_reference":"edge","u":[0,0.72],"depth_m":[1.4,15]},"levels_m":[0,3.5,7]},
+      {"id":"rear_wing","region":{"front_edge":1,"width_reference":"edge","u":[0.72,1],"depth_m":[5,15]},"levels_m":[0,3.5,7]}
+    ],
+    "layouts":{"main":{"front":{"count":3,"entrance_index":1,"door_width":1.1,"door_h":2.65,"arch_ground":true,"arch_indices":[0,1],"cornice":true}},"rear_wing":{"front":{"count":1,"balcony":true}}},
+    "site":{"fence":"concreto_bajo","zones":[{"id":"forecourt","kind":"garden"}]}
+  },
+  "1134486_restaurante_terraza": {
+    "note":"La máscara corresponde al restaurante blanco, no al Tambo magenta vecino. Cuerpo alto parcial y comedor abierto inferior; alcance lateral incierto.",
+    "components":[
+      {"id":"restaurant","region":{"front_edge":0,"width_reference":"edge","u":[0.3,1],"depth_m":[3,11]},"levels_m":[0,3.2]},
+      {"id":"upper","region":{"front_edge":0,"width_reference":"edge","u":[0.3,1],"depth_m":[0.6,11]},"levels_m":[3.2,6.4],"support":{"kind":"columns","spacing_m":4}},
+      {"id":"side","region":{"front_edge":0,"width_reference":"edge","u":[0,0.3],"depth_m":[0.6,11]},"levels_m":[0,3.2,6.4]}
+    ],
+    "layouts":{"restaurant":{"front":{"count":2,"ground":"open"}},"upper":{"front":{"count":3,"ground":"window","ratio":0.5}},"side":{"front":{"count":1,"ground":"door"}}},
+    "site":{"zones":[{"id":"dining","kind":"terrace"}]}
+  },
+  "1135369_esquina_demolicion": {
+    "note":"Cascarón en demolición: dos alas y hueco interior hipotético; no reconstruye escombros ni certifica profundidad de paredes supervivientes.",
+    "components":[
+      {"id":"shell","region":{"front_edge":0},"levels_m":[0,3.6,7.2],"cutouts":[{"front_edge":0,"u":[0.22,0.78],"depth":[0.25,0.76]}]}
+    ],
+    "layouts":{"shell":{"front":{"count":3,"arch_ground":true,"ground":"open","ratio":0.52},"right":{"count":3,"ground":"open","arch_ground":true}}},
+    "site":{"zones":[{"id":"void","kind":"patio"}]}
+  },
+  "1135370_edificio_crema_balcones": {
+    "note":"Dos plantas principales, retiro y paño estrecho más alto. Se corrige la hipótesis before de tres plantas completas.",
+    "components":[
+      {"id":"main","region":{"front_edge":3,"width_reference":"edge","u":[0.25,1],"depth_m":[1.2,16]},"levels_m":[0,3.5,7]},
+      {"id":"tower","region":{"front_edge":3,"width_reference":"edge","u":[0,0.25],"depth_m":[1.7,16]},"levels_m":[0,3.5,7.6]}
+    ],
+    "layouts":{"main":{"front":{"count":2,"arch_ground":true}},"tower":{"front":{"count":1,"ratio":0.55}}},
+    "site":{"fence":"concreto_bajo","zones":[{"id":"entry","kind":"garden"}]}
+  },
+  "1135382_casa_blanca_esquina": {
+    "note":"Una planta dominante y adición alta parcial retirada; volumen de azotea inferido por las vistas laterales.",
+    "components":[
+      {"id":"house","region":{"front_edge":1},"levels_m":[0,3.6]},
+      {"id":"upper","region":{"front_edge":1,"u":[0.58,0.96],"depth":[0.48,0.96]},"levels_m":[3.6,6.5]}
+    ],
+    "layouts":{"house":{"front":{"count":3,"arch_ground":true,"cornice":true},"right":{"count":3,"ground":"garage","cornice":true}},"upper":{"front":{"count":1,"ground":"window"}}}
+  },
+  "1135384_comercio_ladrillo_blanco": {
+    "note":"Casa de dos plantas con garaje frontal bajo y terraza sobre él; el edificio vecino alto no es parte del lote.",
+    "components":[
+      {"id":"garage","region":{"front_edge":1,"depth_m":[0,4]},"levels_m":[0,3.1]},
+      {"id":"house","region":{"front_edge":1,"depth_m":[4,15]},"levels_m":[0,3.1,6.7]}
+    ],
+    "layouts":{"garage":{"front":{"count":2,"ground":"garage","ratio":0.72,"arch_ground":true}},"house":{"front":{"count":2,"ground":"window","ratio":0.66}}},
+    "site":{"zones":[{"id":"rear","kind":"unclassified"}]}
+  },
+  "1135572_casa_ladrillo_balcon": {
+    "note":"Volumen frontal angosto y ala posterior de dos alturas; corredor lateral libre. Extensión interior incierta.",
+    "components":[
+      {"id":"front","region":{"front_edge":3,"width_reference":"edge","u":[0.22,0.68],"depth_m":[0,4]},"levels_m":[0,3.6]},
+      {"id":"rear","region":{"front_edge":3,"width_reference":"edge","depth_m":[4,9]},"levels_m":[0,3.3,6.9]}
+    ],
+    "layouts":{"front":{"front":{"count":1,"ground":"window","cornice":true}},"rear":{"front":{"count":2,"ground":"door"}}},
+    "site":{"fence":"reja","zones":[{"id":"passage","kind":"corridor"}]}
+  },
+  "1135847_local_comercial_bajo": {
+    "note":"Se conserva la masa before, razonable en las vistas; pantalla ahora perforada en vez de persiana opaca.",
+    "reuse_before":true,"prefab_map":{"louver":"screen"}
+  },
+  "1137173_grifo_marquesina": {
+    "note":"Marquesina abierta en cuatro apoyos principales y caseta posterior pequeña. Las tres fotos no son de la misma época.",
+    "components":[
+      {"id":"canopy","region":{"front_edge":1},"levels_m":[0,4.5],"kind":"open","slab_m":0.5,"support":{"kind":"columns","spacing_m":20,"column_width_m":0.35,"inset_m":1.5}},
+      {"id":"booth","region":{"front_edge":1,"u":[0.65,0.95],"depth":[0.65,0.95]},"levels_m":[0,2.7]}
+    ],
+    "layouts":{"booth":{"front":{"count":1}}},
+    "site":{"zones":[{"id":"forecourt","kind":"parking"}]}
+  },
+  "1137568_comercio_blanco_dos_plantas": {
+    "note":"Planta baja de local y terraza superior abierta cubierta parcialmente con chapa; sin ventanas altas inventadas.",
+    "components":[
+      {"id":"shop","region":{"front_edge":0,"width_reference":"edge","depth_m":[0,17]},"levels_m":[0,3.1]},
+      {"id":"terrace_roof","region":{"front_edge":0,"width_reference":"edge","u":[0.08,0.95],"depth_m":[1,9]},"levels_m":[3.1,6.3],"kind":"open","roof":{"kind":"corrugated","parapet_m":0},"support":{"kind":"columns","spacing_m":4,"column_width_m":0.12}}
+    ],
+    "layouts":{"shop":{"front":{"count":2,"arch_ground":true,"ground":"open"}}}
+  },
+  "1137619_banco_neoclasico": {
+    "note":"Banco gris con esquina ochavada; no se incorpora el vecino amarillo. Se conserva la masa baja y se corrige el orden monumental de fachadas.",
+    "components":[{"id":"bank","region":{},"levels_m":[0,5.4]}],
+    "layouts":{"bank":{"street":{"count":4,"minimum_pitch":3,"ground":"garage","door_h":3.3,"ratio":0.55,"sill":1.2,"window_h":2.5,"cornice":true,"pilasters":true}}}
+  },
+  "1138183_bloque_moderno_balcones": {
+    "note":"El solar grande muestra dos frentes con cuerpos diferentes: cuatro niveles al sur y tres en esquina norte. Patio interior no observado: prior, no huella medida.",
+    "components":[
+      {"id":"south","region":{"front_edge":6,"width_reference":"edge","depth_m":[3,22]},"levels_m":[0,3,6,9,12]},
+      {"id":"north","region":{"front_edge":10,"width_reference":"edge","depth_m":[1,18]},"levels_m":[0,3.3,6.6,9.9]},
+      {"id":"south_top","region":{"front_edge":6,"width_reference":"edge","u":[0.2,0.65],"depth_m":[7,18]},"levels_m":[12,15]}
+    ],
+    "layouts":{"south":{"front":{"count":4,"ratio":0.78,"balcony":true,"window_h":1.9}},"north":{"front":{"count":5,"ratio":0.78,"balcony":true},"right":{"count":2,"ratio":0.78,"balcony":true}},"south_top":{"front":{"count":2,"ground":"window"}}},
+    "site":{"zones":[{"id":"garden","kind":"garden","region":{"front_edge":6,"width_reference":"edge","depth_m":[0,3]}}]}
+  },
+  "1138209_casona_amarilla_galeria": {
+    "note":"Dos cuerpos: frente alto a la izquierda y ala retirada con galería parcial a la derecha. Gable aproxima roofline; buhardillas quedan pendientes.",
+    "components":[
+      {"id":"main","region":{"front_edge":4,"width_reference":"edge","u":[0,0.52],"depth_m":[0,16]},"levels_m":[0,3.6,7.2],"roof":{"kind":"gable","slope_deg":14,"parapet_m":0}},
+      {"id":"wing","region":{"front_edge":4,"width_reference":"edge","u":[0.52,1],"depth_m":[2.5,16]},"levels_m":[0,3.6,7.2],"roof":{"kind":"tile_shed","slope_deg":8,"parapet_m":0}}
+    ],
+    "layouts":{"main":{"front":{"count":2,"ratio":0.62,"window_h":2.2,"cornice":true,"pediment":true}},"wing":{"front":{"count":3,"gallery":true,"window_h":2}}},
+    "site":{"fence":"reja","zones":[{"id":"entry","kind":"patio"}]},
+    "materials":[{"slot":"metal","template":"metal","color":[0.86,0.86,0.81]},{"slot":"brick","template":"plaster","color":[0.88,0.86,0.8]},{"slot":"frame","template":"frame","color":[0.93,0.92,0.87]}]
+  },
+  "1138261_edificio_azul_cristal": {
+    "note":"Fachada estrecha en extremo oriental del solar compuesto. Se reduce la profundidad exagerada; masa posterior queda prior.",
+    "components":[
+      {"id":"office","region":{"front_edge":7,"width_reference":"edge","depth_m":[0.5,16]},"levels_m":[2,4.3,6.8,9.3],"support":{"kind":"columns","spacing_m":4}},
+      {"id":"core","region":{"front_edge":7,"width_reference":"edge","depth_m":[4,16]},"levels_m":[0,2]}
+    ],
+    "layouts":{"office":{"front":{"count":5,"ratio":0.5,"window_h":2.45,"sill":0.35,"fins":true,"ground":"garage"}}},
+    "site":{"zones":[{"id":"drive","kind":"driveway","region":{"front_edge":7,"width_reference":"edge","depth_m":[0,4]}}]}
+  },
+  "1138283_vivienda_verde_tres_pisos": {
+    "note":"Tres niveles detrás de cerco, patio frontal y alta de menor profundidad; escalera exterior no calibrada.",
+    "components":[
+      {"id":"house","region":{"front_edge":1,"width_reference":"edge","depth_m":[3,16]},"levels_m":[0,3,6]},
+      {"id":"upper","region":{"front_edge":1,"width_reference":"edge","depth_m":[4.5,16]},"levels_m":[6,9]}
+    ],
+    "layouts":{"house":{"front":{"count":2,"balcony":true}},"upper":{"front":{"count":2,"ground":"window","window_h":1.2}}},
+    "site":{"fence":"ladrillos","zones":[{"id":"patio","kind":"patio"}]}
+  },
+  "1138316_muro_local_bajo": {
+    "note":"Evidencia de muro perimetral y estacionamiento; caseta posterior es prior de baja confianza. No atribuir comercios vecinos al solar.",
+    "components":[{"id":"booth","region":{"front_edge":6,"u":[0.72,0.95],"depth":[0.65,0.9]},"levels_m":[0,3.7]}],
+    "layouts":{"booth":{"front":{"count":1}}},
+    "site":{"fence":"concreto","zones":[{"id":"parking","kind":"parking"}]}
+  },
+  "1138323_casona_amarilla_esquina": {
+    "note":"Envolvente baja monumental, portales y frontones grandes. Patio central inferido: la vista de calle no determina su profundidad.",
+    "components":[{"id":"hall","region":{"front_edge":4},"levels_m":[0,5.9],"cutouts":[{"front_edge":4,"u":[0.28,0.72],"depth":[0.3,0.7]}]}],
+    "layouts":{"hall":{"street":{"count":7,"minimum_pitch":4,"entrance_index":3,"door_width":2.5,"door_h":4.9,"ground":"door","arch_all":true,"segmental_windows":true,"ratio":0.45,"sill":1,"window_h":3.5,"cornice":true,"pilasters":true,"pediment":true}}},
+    "site":{"zones":[{"id":"courtyard","kind":"patio"}]}
+  },
+  "1138401_comercio_rojo_rejas": {
+    "note":"Local bajo rojo con gran portón y otro cuerpo más profundo; hueco frontal sin ventanas repetidas.",
+    "components":[{"id":"shop","region":{"front_edge":2,"width_reference":"edge","depth_m":[0.5,14]},"levels_m":[0,4.2],"roof":{"kind":"corrugated","parapet_m":0}}],
+    "layouts":{"shop":{"front":{"count":2,"ground":"garage","ground_all":true,"ratio":0.8,"window_h":3}}},
+    "site":{"zones":[{"id":"front","kind":"paved"}]}
+  },
+  "1138477_edificio_blanco_balcones": {
+    "note":"Casa blanca central: retiro de estacionamiento, dos plantas principales y terraza alta parcial, no todo el volumen del vecino derecho.",
+    "components":[
+      {"id":"house","region":{"front_edge":2,"width_reference":"edge","depth_m":[3.2,20]},"levels_m":[0,3.2,6.4]},
+      {"id":"upper","region":{"front_edge":2,"width_reference":"edge","u":[0.12,0.9],"depth_m":[5,17]},"levels_m":[6.4,9.6]}
+    ],
+    "layouts":{"house":{"front":{"count":3,"balcony":true,"ratio":0.55,"window_h":2}},"upper":{"front":{"count":4,"ground":"window","ratio":0.8}}},
+    "site":{"zones":[{"id":"parking","kind":"parking","region":{"front_edge":2,"width_reference":"edge","depth_m":[0,3.2]},"slope_deg":5}]}
+  }
+}

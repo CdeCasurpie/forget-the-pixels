@@ -107,6 +107,8 @@ class Opening:
     prefab: str = "legacy"  # slim_window | wood_panel | metal_gate | roller | storefront | louver
     curtain: float = 0.0  # fraction covered from the sides
     grille_pattern: str = "vertical"  # vertical | grid | diamond
+    shape: str = "rectangle"  # rectangle | arch
+    arch_rise_m: float | None = None
 
 
 @dataclass(frozen=True)
@@ -167,7 +169,7 @@ class FacadeSpecification:
     wall_color_rgb: tuple[int, int, int] = (200, 190, 170)
     openings: tuple[Opening, ...] = ()
     observed: bool = False
-    is_front: bool = False
+    is_front: bool = False  # orientation toward a declared street front
     assigned_views: tuple[str, ...] = ()
     cladding: str = "stucco"  # stucco | horizontal
     balcony_pattern: str = "vertical"  # vertical | diamond
@@ -179,6 +181,12 @@ class FacadeSpecification:
     projections: tuple[FacadeProjection, ...] = ()
     exterior_stairs: tuple[ExteriorStairSpecification, ...] = ()
     ornamented: bool = True
+    program_enabled: bool | None = None  # None preserves legacy is_front gating
+
+    @property
+    def has_program(self) -> bool:
+        """Architectural program activation, independent of street orientation."""
+        return self.is_front if self.program_enabled is None else self.program_enabled
 
 
 @dataclass(frozen=True)

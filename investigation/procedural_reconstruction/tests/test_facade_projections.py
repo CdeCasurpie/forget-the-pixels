@@ -61,6 +61,8 @@ REQUIRED = {
     "shutter": "shutter_slat",
     "downpipe": "downpipe",
     "sign_box": "sign_box",
+    "pediment": "pediment",
+    "vertical_fins": "vertical_fin",
 }
 
 

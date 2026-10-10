@@ -55,6 +55,9 @@ class MassSpec:
     roof_spec: Any
     parent_ids: tuple[str, ...] = ()
     support_ids: tuple[str, ...] = ()
+    footprint_holes: tuple[tuple[tuple[float, float], ...], ...] = ()
+    kind: str = "enclosed"
+    slab_m: float = 0.18
 
 @dataclass(frozen=True)
 class FacadeSpecV4:
@@ -92,6 +95,7 @@ class RoofSurface:
     eave_point: tuple[float, float] = (0.0, 0.0)
     inward_normal: tuple[float, float] = (0.0, 1.0)
     thickness_m: float = 0.14
+    holes: tuple[tuple[tuple[float, float], ...], ...] = ()
 
 
 @dataclass(frozen=True)

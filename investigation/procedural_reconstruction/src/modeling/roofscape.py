@@ -11,7 +11,9 @@ from __future__ import annotations
 
 import numpy as np
 from shapely.affinity import translate
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, LineString
+from shapely.ops import split
+from dataclasses import replace
 from shapely.ops import unary_union
 
 from domain.architecture import RoofPlan, RoofProp, RoofSurface
@@ -290,6 +292,26 @@ def _slope_fields(surface):
     return bottom, top
 
 
+def gable_surfaces(surface):
+    """Two planar patches meeting at a ridge, in the roof's street frame."""
+    polygon=Polygon(surface.polygon,surface.holes)
+    n=np.asarray(surface.inward_normal,float)
+    t=np.array([n[1],-n[0]])
+    points=np.asarray(polygon.exterior.coords)
+    ds=points@n; us=points@t
+    lo,hi=float(ds.min()),float(ds.max()); mid=(lo+hi)/2
+    cutter=LineString([t*(us.min()-1)+n*mid,t*(us.max()+1)+n*mid])
+    patches=[]
+    for part in split(polygon,cutter).geoms:
+        lower=np.dot(part.centroid.coords[0],n)<=mid
+        direction=n if lower else -n
+        anchor=n*(lo if lower else hi)
+        patches.append(replace(surface,polygon=tuple(part.exterior.coords)[:-1],
+            holes=tuple(tuple(r.coords)[:-1] for r in part.interiors),kind='tile_shed',
+            eave_point=tuple(anchor),inward_normal=tuple(direction)))
+    return patches
+
+
 def build_roof(mb, plan, rng):
     """Emit one mass's roof: surfaces, ridge closures, parapet and objects."""
     with mb.assembly(f"roof/{plan.mass_id}"):
@@ -300,7 +322,7 @@ def _build_roof_body(mb, plan, rng):
     tiles = []
     flats = []
     for surface in plan.surfaces:
-        polygon = Polygon(surface.polygon)
+        polygon = Polygon(surface.polygon,surface.holes)
         if polygon.is_empty:
             continue
         if surface.kind == "flat":
@@ -359,8 +381,7 @@ def _build_roof_body(mb, plan, rng):
             )
 
     if plan.parapet_height_m > 0 and flats:
-        field = largest_polygon(unary_union(flats))
-        if field is not None:
+        for field in polygons(unary_union(flats)):
             ring = field.difference(field.buffer(-0.14, join_style=2))
             for polygon, _ in tiles:
                 ring = ring.difference(polygon.buffer(0.06, join_style=2))

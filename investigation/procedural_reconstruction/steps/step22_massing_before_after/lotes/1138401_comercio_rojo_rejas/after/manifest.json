@@ -1,0 +1,47 @@
+{
+  "lot": 1138401,
+  "hypothesis": "Local bajo rojo con gran portón y otro cuerpo más profundo; hueco frontal sin ventanas repetidas.",
+  "before_request_sha256": "e3fa1eff60c3dcf92611abebf71e4b7159d6c40d69ecd82df8c1f555a34013fb",
+  "mass_count": 1,
+  "ground_occupancy_ratio": 0.4327849636137252,
+  "height_before_m": 4.2,
+  "height_after_m": 4.2,
+  "triangles": 1000,
+  "validation": {
+    "vertices": 640,
+    "triangles": 1000,
+    "parts": 74,
+    "semantic_types": [
+      "corrugated_roof",
+      "door_handle",
+      "door_leaf",
+      "entrance_step",
+      "gate_seam",
+      "opening_reveal",
+      "plinth",
+      "roof_slab",
+      "site_paved",
+      "slim_frame",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "gate_seam": 576,
+      "wall": 100,
+      "slim_frame": 64,
+      "plinth": 56,
+      "opening_reveal": 48,
+      "entrance_step": 48,
+      "site_paved": 28,
+      "door_leaf": 24,
+      "door_handle": 24,
+      "roof_slab": 16,
+      "corrugated_roof": 16
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 8.603151125524677e-10,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "a6810c5efef084b0079c3096268db38bee83f83692a5025bdc90f9d853da4a18",
+  "comparisons": 2
+}

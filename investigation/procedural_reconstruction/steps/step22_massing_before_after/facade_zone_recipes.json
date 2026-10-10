@@ -1,0 +1,63 @@
+{
+  "1137619_banco_neoclasico": {
+    "note": "Demostración FacadeZone: acceso en el primer 25% y tres ventanas en el 75% restante de cada arista front. Masa y programas de las demás caras conservados. No es ajuste fotográfico del acceso de esquina.",
+    "components": {
+      "bank": [
+        {
+          "face": "front",
+          "u": [0.0, 0.25],
+          "role": "access_demo",
+          "controls": {
+            "mode": "explicit",
+            "openings": [
+              {"kind": "gate", "u_m": 0.6, "v_m": 0.1, "width_m": 1.5, "height_m": 3.8, "prefab": "metal_gate"}
+            ],
+            "projections": []
+          }
+        },
+        {
+          "face": "front",
+          "u": [0.25, 1.0],
+          "role": "repeated_windows_demo",
+          "controls": {
+            "mode": "explicit",
+            "openings": [
+              {"kind": "window", "u_m": 0.5, "v_m": 1.3, "width_m": 1.2, "height_m": 2.8, "prefab": "slim_window", "grille": true},
+              {"kind": "window", "u_m": 3.5, "v_m": 1.3, "width_m": 1.2, "height_m": 2.8, "prefab": "slim_window", "grille": true},
+              {"kind": "window", "u_m": 6.5, "v_m": 1.3, "width_m": 1.2, "height_m": 2.8, "prefab": "slim_window", "grille": true}
+            ],
+            "projections": []
+          }
+        }
+      ]
+    }
+  },
+  "1138323_casona_amarilla_esquina": {
+    "note": "Demostración FacadeZone U/Z: alas repetitivas 0-30% y 70-100%; centro con un solo vano ancho 30-70%. Z=0.3-5.6; remate y zócalo usan el programa base. El vano central solo demuestra composición local, no implementa un portal monumental.",
+    "components": {
+      "hall": [
+        {
+          "face": "right",
+          "u": [0.0, 0.3],
+          "z_m": [0.3, 5.6],
+          "role": "left_wing_demo",
+          "controls": {"window_ratio": 0.42, "window_height_m": 3.5, "sill_m": 0.8, "balconies": false, "projections": [], "material_regions": []}
+        },
+        {
+          "face": "right",
+          "u": [0.3, 0.7],
+          "z_m": [0.3, 5.6],
+          "role": "central_opening_demo",
+          "controls": {"bay_count": 1, "window_ratio": 0.45, "window_height_m": 4.0, "sill_m": 0.2, "balconies": false, "projections": [], "material_regions": []}
+        },
+        {
+          "face": "right",
+          "u": [0.7, 1.0],
+          "z_m": [0.3, 5.6],
+          "role": "right_wing_demo",
+          "controls": {"window_ratio": 0.42, "window_height_m": 3.5, "sill_m": 0.8, "balconies": false, "projections": [], "material_regions": []}
+        }
+      ]
+    }
+  }
+}

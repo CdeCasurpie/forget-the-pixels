@@ -36,8 +36,8 @@ from modeling.exporters.glb_exporter import export_glb
 from modeling.theta import generate_from_theta
 from render import render
 from spatial.street_fronts import annotate_street_fronts
-from scripts.glb_incremental import append_glb
-from scripts.step1_select_block import clean_geometry, load_lots, plot_selection, select_block_lots
+from steps.step19_experimental.glb_incremental import append_glb
+from steps.step19_experimental.step1_select_block import clean_geometry, load_lots, plot_selection, select_block_lots
 
 
 CSV_FIELDS = (

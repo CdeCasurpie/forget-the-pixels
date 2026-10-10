@@ -176,12 +176,13 @@ def apply_edge_setbacks(parcel_poly: Polygon, specific_edges: list[LineString], 
     if distance <= 0: return parcel_poly
     if not specific_edges: return parcel_poly
     
-    merged_edges = linemerge(specific_edges)
-    lines = [merged_edges] if isinstance(merged_edges, LineString) else list(merged_edges.geoms)
-        
     footprint = parcel_poly
-    for line in lines:
-        mask = create_setback_mask(parcel_poly, line, distance)
-        footprint = footprint.difference(mask)
+    # Each straight edge owns a strip. Extending a merged, bent polyline
+    # creates a self-crossing mask on corner/concave parcels.
+    for line in specific_edges:
+        coords = list(line.coords)
+        for a, b in zip(coords, coords[1:]):
+            mask = create_setback_mask(parcel_poly, LineString([a, b]), distance)
+            footprint = footprint.difference(mask)
         
     return footprint
