@@ -1,0 +1,54 @@
+{
+  "1134299_casa_salmon_republicana": {
+    "baseline": "after", "source": "after",
+    "capabilities": ["MassComponent/PlanRegion asimétricos", "FacadeZone", "BayGroup", "OpeningProgram", "ArchitecturalOrder", "jardín y cerco existentes"],
+    "MISSING_CAPABILITY": ["Alineación declarativa del portón del cerco con el acceso de fachada en charts diferentes"],
+    "overrides": [{"mass_role":"main:0","edge":1,"zone":true,"controls":{
+      "bay_groups":[{"u":[0,0.35],"count":1},{"u":[0.35,0.62],"count":1},{"u":[0.62,1],"count":1}],
+      "balconies":false,"window_height_m":1.35,"sill_m":0.8,"material_regions":[],"projections":[],
+      "opening_programs":[{"group":0,"floor":0,"kind":"window","shape":"arch","height_m":1.5,"width_ratio":0.62,"sill_m":0.45,"grille":true},{"group":1,"floor":0,"kind":"door","shape":"arch","prefab":"wood_panel","height_m":2.55,"width_ratio":0.47,"sill_m":0.04},{"group":2,"floor":0,"kind":"window","shape":"rectangle","height_m":1.4,"width_ratio":0.53,"sill_m":0.65,"grille":true},{"group":0,"floor":1,"kind":"window","shape":"rectangle","height_m":1.05,"width_ratio":0.49,"sill_m":0.8,"grille":true},{"group":1,"floor":1,"kind":"window","shape":"rectangle","height_m":1.0,"width_ratio":0.43,"sill_m":0.8,"grille":true},{"group":2,"floor":1,"kind":"window","shape":"rectangle","height_m":1.1,"width_ratio":0.48,"sill_m":0.75,"grille":true}],
+      "order":{"cornice_height_m":0.16}
+    }}]
+  },
+  "1135370_edificio_crema_balcones": {
+    "baseline":"after","source":"after",
+    "capabilities":["MassComponent/PlanRegion asimétricos", "FacadeZone", "BayGroup", "OpeningProgram", "recess de openings existente"],
+    "MISSING_CAPABILITY":[],
+    "overrides":[{"mass_role":"main:0","edge":3,"zone":true,"controls":{
+      "bay_groups":[{"u":[0,0.7],"count":1},{"u":[0.7,1],"count":1}],"balconies":false,"projections":[],"window_height_m":1.5,"sill_m":0.8,
+      "opening_programs":[{"group":0,"floor":0,"kind":"gate","shape":"rectangle","prefab":"roller","width_ratio":0.85,"height_m":2.5,"sill_m":0.04},{"group":1,"floor":0,"kind":"door","shape":"rectangle","prefab":"wood_panel","width_ratio":0.65,"height_m":2.4,"sill_m":0.04},{"group":0,"floor":1,"shape":"rectangle","width_ratio":0.85,"height_m":1.7},{"group":1,"floor":1,"shape":"rectangle","width_ratio":0.6,"height_m":1.3}]
+    }},{"mass_role":"tower:0","edge":3,"controls":{"bay_groups":[{"u":[0,1],"count":1}],"balconies":false,"projections":[],"opening_programs":[{"group":0,"shape":"rectangle","kind":"window","width_ratio":0.65,"height_m":1.5,"sill_m":0.8}]}}]
+  },
+  "1137619_banco_neoclasico": {
+    "baseline":"after","source":"after",
+    "capabilities":["BayGroup de tres bays", "OpeningProgram", "ArchitecturalOrder"],
+    "MISSING_CAPABILITY":["Orden continuo que envuelva automáticamente las dos caras de una esquina"],
+    "overrides":[{"mass_role":"bank:0","edge":5,"controls":{
+      "bay_groups":[{"u":[0,0.36],"count":1},{"u":[0.36,0.64],"count":1,"ground_role":"entrance"},{"u":[0.64,1],"count":1}],"balconies":false,
+      "opening_programs":[{"group":0,"height_m":3.5,"width_ratio":0.65,"sill_m":0.9},{"group":1,"kind":"door","height_m":3.8,"width_ratio":0.65,"sill_m":0.04},{"group":2,"height_m":3.5,"width_ratio":0.65,"sill_m":0.9}],
+      "order":{"pilaster_mode":"bay_boundaries","pilaster_width_m":0.4,"paired_bays":[1],"plinth_height_m":0.45,"entablature_height_m":0.4,"cornice_height_m":0.3}
+    }}]
+  },
+  "1138209_casona_amarilla_galeria": {
+    "baseline":"after","source":"after",
+    "capabilities":["Cuerpos y gable existentes", "BayGroup", "OpeningProgram", "gallery prefab", "site existente"],
+    "MISSING_CAPABILITY":["Buhardillas/dormers como entidades de cubierta"],
+    "overrides":[{"mass_role":"main:0","edge":3,"controls":{
+      "bay_groups":[{"u":[0,0.6],"count":2},{"u":[0.6,1],"count":1}],"balconies":false,"window_height_m":2.2,"sill_m":0.7,
+      "opening_programs":[{"group":0,"width_ratio":0.60,"height_m":2.3},{"group":1,"floor":0,"kind":"door","height_m":2.6,"sill_m":0.04},{"group":1,"floor":1,"height_m":2.4,"width_ratio":0.7}]
+    }}]
+  },
+  "1138323_casona_amarilla_esquina": {
+    "baseline":"after","source":"after_architectural_order",
+    "capabilities":["BayGroup", "OpeningProgram arqueado", "monumental_portal", "CrownProfile en frente largo y esquina", "ArchitecturalOrder"],
+    "MISSING_CAPABILITY":["Coronación libre con curvas y ornamentos en lugar de triangular/stepped", "Remate y orden que envuelvan ambas fachadas de esquina sin componer cada chart independientemente"],
+    "overrides":[{"mass_role":"hall:0","edge":6,"merge":true,"controls":{
+      "opening_programs":[{"group":0,"shape":"arch","height_m":4.15,"width_ratio":0.66,"sill_m":0.7},{"group":1,"kind":"door","shape":"arch","height_m":4.6,"width_ratio":0.72,"sill_m":0.04},{"group":2,"shape":"arch","height_m":4.15,"width_ratio":0.66,"sill_m":0.7}],
+      "crowns":[{"u":[0.31,0.59],"kind":"stepped","height_m":2.7}],
+      "order":{"pilaster_mode":"bay_boundaries","pilaster_width_m":0.43,"pilaster_depth_m":0.22,"paired_bays":[3],"plinth_height_m":0.45,"belt_courses_m":[5.05],"entablature_height_m":0.4,"cornice_height_m":0.32}
+    }},{"mass_role":"hall:0","edge":5,"merge":true,"drop_existing_projections":true,"controls":{
+      "crowns":[{"u":[0.14,0.86],"kind":"stepped","height_m":2.9}],
+      "order":{"pilaster_mode":"explicit","pilaster_axes_u":[0.12,0.88],"pilaster_width_m":0.44,"pilaster_depth_m":0.22,"plinth_height_m":0.45,"entablature_height_m":0.42,"cornice_height_m":0.32}
+    }}]
+  }
+}

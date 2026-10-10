@@ -1,0 +1,161 @@
+{
+  "recipe": {
+    "baseline": "after",
+    "source": "after_architectural_order",
+    "capabilities": [
+      "BayGroup",
+      "OpeningProgram arqueado",
+      "monumental_portal",
+      "CrownProfile en frente largo y esquina",
+      "ArchitecturalOrder"
+    ],
+    "MISSING_CAPABILITY": [
+      "Coronaci\u00f3n libre con curvas y ornamentos en lugar de triangular/stepped",
+      "Remate y orden que envuelvan ambas fachadas de esquina sin componer cada chart independientemente"
+    ],
+    "overrides": [
+      {
+        "mass_role": "hall:0",
+        "edge": 6,
+        "merge": true,
+        "controls": {
+          "opening_programs": [
+            {
+              "group": 0,
+              "shape": "arch",
+              "height_m": 4.15,
+              "width_ratio": 0.66,
+              "sill_m": 0.7
+            },
+            {
+              "group": 1,
+              "kind": "door",
+              "shape": "arch",
+              "height_m": 4.6,
+              "width_ratio": 0.72,
+              "sill_m": 0.04
+            },
+            {
+              "group": 2,
+              "shape": "arch",
+              "height_m": 4.15,
+              "width_ratio": 0.66,
+              "sill_m": 0.7
+            }
+          ],
+          "crowns": [
+            {
+              "u": [
+                0.31,
+                0.59
+              ],
+              "kind": "stepped",
+              "height_m": 2.7
+            }
+          ],
+          "order": {
+            "pilaster_mode": "bay_boundaries",
+            "pilaster_width_m": 0.43,
+            "pilaster_depth_m": 0.22,
+            "paired_bays": [
+              3
+            ],
+            "plinth_height_m": 0.45,
+            "belt_courses_m": [
+              5.05
+            ],
+            "entablature_height_m": 0.4,
+            "cornice_height_m": 0.32
+          }
+        }
+      },
+      {
+        "mass_role": "hall:0",
+        "edge": 5,
+        "merge": true,
+        "drop_existing_projections": true,
+        "controls": {
+          "crowns": [
+            {
+              "u": [
+                0.14,
+                0.86
+              ],
+              "kind": "stepped",
+              "height_m": 2.9
+            }
+          ],
+          "order": {
+            "pilaster_mode": "explicit",
+            "pilaster_axes_u": [
+              0.12,
+              0.88
+            ],
+            "pilaster_width_m": 0.44,
+            "pilaster_depth_m": 0.22,
+            "plinth_height_m": 0.45,
+            "entablature_height_m": 0.42,
+            "cornice_height_m": 0.32
+          }
+        }
+      }
+    ]
+  },
+  "comparisons": 5,
+  "mesh_sha256": "78bd5147775a3670c7c36cf00a4adebfbdce0965e9a35ee219eff49a5b85224d",
+  "validation": {
+    "vertices": 13454,
+    "triangles": 24224,
+    "parts": 358,
+    "semantic_types": [
+      "arched_frame",
+      "cornice_drip",
+      "cornice_step",
+      "crown_stepped",
+      "door_panel",
+      "downpipe",
+      "downpipe_clamp",
+      "facade_projection_frame",
+      "facade_projection_panel",
+      "parapet",
+      "parapet_cap",
+      "pediment",
+      "pilaster",
+      "pilaster_base",
+      "pilaster_cap",
+      "plinth",
+      "roof_slab",
+      "security_bar",
+      "site_patio",
+      "wall",
+      "window_panel"
+    ],
+    "faces_by_semantic": {
+      "arched_frame": 7560,
+      "security_bar": 5228,
+      "wall": 4128,
+      "window_panel": 2600,
+      "door_panel": 1040,
+      "pilaster_cap": 980,
+      "pilaster_base": 588,
+      "pilaster": 588,
+      "cornice_step": 396,
+      "parapet_cap": 256,
+      "plinth": 192,
+      "cornice_drip": 132,
+      "parapet": 128,
+      "pediment": 72,
+      "crown_stepped": 72,
+      "roof_slab": 64,
+      "facade_projection_panel": 60,
+      "downpipe_clamp": 48,
+      "facade_projection_frame": 48,
+      "downpipe": 32,
+      "site_patio": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 1.066634216997456e-06,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  }
+}

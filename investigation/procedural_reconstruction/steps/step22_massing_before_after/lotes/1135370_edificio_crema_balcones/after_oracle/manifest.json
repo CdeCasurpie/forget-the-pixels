@@ -1,0 +1,185 @@
+{
+  "recipe": {
+    "baseline": "after",
+    "source": "after",
+    "capabilities": [
+      "MassComponent/PlanRegion asim\u00e9tricos",
+      "FacadeZone",
+      "BayGroup",
+      "OpeningProgram",
+      "recess de openings existente"
+    ],
+    "MISSING_CAPABILITY": [],
+    "overrides": [
+      {
+        "mass_role": "main:0",
+        "edge": 3,
+        "zone": true,
+        "controls": {
+          "bay_groups": [
+            {
+              "u": [
+                0,
+                0.7
+              ],
+              "count": 1
+            },
+            {
+              "u": [
+                0.7,
+                1
+              ],
+              "count": 1
+            }
+          ],
+          "balconies": false,
+          "projections": [],
+          "window_height_m": 1.5,
+          "sill_m": 0.8,
+          "opening_programs": [
+            {
+              "group": 0,
+              "floor": 0,
+              "kind": "gate",
+              "shape": "rectangle",
+              "prefab": "roller",
+              "width_ratio": 0.85,
+              "height_m": 2.5,
+              "sill_m": 0.04
+            },
+            {
+              "group": 1,
+              "floor": 0,
+              "kind": "door",
+              "shape": "rectangle",
+              "prefab": "wood_panel",
+              "width_ratio": 0.65,
+              "height_m": 2.4,
+              "sill_m": 0.04
+            },
+            {
+              "group": 0,
+              "floor": 1,
+              "shape": "rectangle",
+              "width_ratio": 0.85,
+              "height_m": 1.7
+            },
+            {
+              "group": 1,
+              "floor": 1,
+              "shape": "rectangle",
+              "width_ratio": 0.6,
+              "height_m": 1.3
+            }
+          ]
+        }
+      },
+      {
+        "mass_role": "tower:0",
+        "edge": 3,
+        "controls": {
+          "bay_groups": [
+            {
+              "u": [
+                0,
+                1
+              ],
+              "count": 1
+            }
+          ],
+          "balconies": false,
+          "projections": [],
+          "opening_programs": [
+            {
+              "group": 0,
+              "shape": "rectangle",
+              "kind": "window",
+              "width_ratio": 0.65,
+              "height_m": 1.5,
+              "sill_m": 0.8
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "comparisons": 3,
+  "mesh_sha256": "5e384bcc226978098f5ca4e9f676661bbcf641a7d423236dde3f09cf0c94b24f",
+  "validation": {
+    "vertices": 4668,
+    "triangles": 8356,
+    "parts": 264,
+    "semantic_types": [
+      "boundary_base",
+      "boundary_cap",
+      "boundary_post",
+      "curtain_fold",
+      "door_handle",
+      "door_leaf",
+      "door_raised_panel",
+      "entrance_step",
+      "fence_bar",
+      "fence_rail",
+      "floor_slab",
+      "gate_flute",
+      "glazing",
+      "interior_backing",
+      "material_coating",
+      "opening_reveal",
+      "parapet",
+      "parapet_cap",
+      "pedestrian_gate",
+      "planter",
+      "planting_soil",
+      "plinth",
+      "roller_slat",
+      "roof_slab",
+      "shrub",
+      "shutter_back",
+      "site_garden",
+      "slim_frame",
+      "slim_mullion",
+      "slim_transom",
+      "top_cornice",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "shrub": 2800,
+      "planter": 1288,
+      "planting_soil": 1288,
+      "fence_bar": 360,
+      "roller_slat": 336,
+      "wall": 316,
+      "slim_frame": 192,
+      "curtain_fold": 168,
+      "parapet_cap": 156,
+      "opening_reveal": 144,
+      "material_coating": 132,
+      "boundary_cap": 120,
+      "gate_flute": 108,
+      "top_cornice": 96,
+      "boundary_post": 96,
+      "plinth": 92,
+      "floor_slab": 84,
+      "parapet": 84,
+      "fence_rail": 72,
+      "glazing": 48,
+      "interior_backing": 48,
+      "slim_mullion": 48,
+      "slim_transom": 48,
+      "entrance_step": 48,
+      "roof_slab": 40,
+      "door_raised_panel": 36,
+      "site_garden": 36,
+      "boundary_base": 24,
+      "shutter_back": 12,
+      "door_leaf": 12,
+      "door_handle": 12,
+      "pedestrian_gate": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 1.6299711459518524e-09,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  }
+}

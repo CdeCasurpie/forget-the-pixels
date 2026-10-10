@@ -1,0 +1,161 @@
+{
+  "recipe": {
+    "baseline": "after",
+    "source": "after",
+    "capabilities": [
+      "BayGroup de tres bays",
+      "OpeningProgram",
+      "ArchitecturalOrder"
+    ],
+    "MISSING_CAPABILITY": [
+      "Orden continuo que envuelva autom\u00e1ticamente las dos caras de una esquina"
+    ],
+    "overrides": [
+      {
+        "mass_role": "bank:0",
+        "edge": 5,
+        "controls": {
+          "bay_groups": [
+            {
+              "u": [
+                0,
+                0.36
+              ],
+              "count": 1
+            },
+            {
+              "u": [
+                0.36,
+                0.64
+              ],
+              "count": 1,
+              "ground_role": "entrance"
+            },
+            {
+              "u": [
+                0.64,
+                1
+              ],
+              "count": 1
+            }
+          ],
+          "balconies": false,
+          "opening_programs": [
+            {
+              "group": 0,
+              "height_m": 3.5,
+              "width_ratio": 0.65,
+              "sill_m": 0.9
+            },
+            {
+              "group": 1,
+              "kind": "door",
+              "height_m": 3.8,
+              "width_ratio": 0.65,
+              "sill_m": 0.04
+            },
+            {
+              "group": 2,
+              "height_m": 3.5,
+              "width_ratio": 0.65,
+              "sill_m": 0.9
+            }
+          ],
+          "order": {
+            "pilaster_mode": "bay_boundaries",
+            "pilaster_width_m": 0.4,
+            "paired_bays": [
+              1
+            ],
+            "plinth_height_m": 0.45,
+            "entablature_height_m": 0.4,
+            "cornice_height_m": 0.3
+          }
+        }
+      }
+    ]
+  },
+  "comparisons": 5,
+  "mesh_sha256": "ef9bb605fe6e805ae1b60cef8314118c13947347079d044d9c57bc36f40effbe",
+  "validation": {
+    "vertices": 2934,
+    "triangles": 4716,
+    "parts": 307,
+    "semantic_types": [
+      "cornice_drip",
+      "cornice_step",
+      "curtain_fold",
+      "door_handle",
+      "door_leaf",
+      "door_raised_panel",
+      "downpipe",
+      "downpipe_clamp",
+      "facade_projection_panel",
+      "gate_seam",
+      "glazing",
+      "interior_backing",
+      "material_coating",
+      "mullion",
+      "opening_lintel",
+      "opening_reveal",
+      "opening_surround",
+      "parapet",
+      "parapet_cap",
+      "pilaster",
+      "pilaster_base",
+      "pilaster_cap",
+      "plinth",
+      "roof_slab",
+      "security_bar",
+      "security_crossbar",
+      "slim_frame",
+      "slim_mullion",
+      "slim_transom",
+      "transom",
+      "wall",
+      "window_frame",
+      "window_panel",
+      "window_sill"
+    ],
+    "faces_by_semantic": {
+      "security_bar": 848,
+      "wall": 452,
+      "gate_seam": 360,
+      "pilaster_cap": 340,
+      "slim_frame": 288,
+      "security_crossbar": 232,
+      "opening_reveal": 216,
+      "curtain_fold": 216,
+      "pilaster_base": 204,
+      "pilaster": 204,
+      "cornice_step": 144,
+      "parapet_cap": 136,
+      "plinth": 124,
+      "window_frame": 96,
+      "material_coating": 72,
+      "parapet": 72,
+      "glazing": 60,
+      "interior_backing": 60,
+      "slim_mullion": 60,
+      "slim_transom": 60,
+      "opening_surround": 48,
+      "door_leaf": 48,
+      "door_handle": 48,
+      "cornice_drip": 48,
+      "door_raised_panel": 36,
+      "downpipe_clamp": 36,
+      "downpipe": 32,
+      "roof_slab": 32,
+      "opening_lintel": 24,
+      "window_panel": 24,
+      "mullion": 24,
+      "transom": 24,
+      "window_sill": 24,
+      "facade_projection_panel": 24
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 5.019350954971503e-07,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  }
+}
