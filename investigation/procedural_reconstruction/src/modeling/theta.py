@@ -426,6 +426,9 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
+    from modeling.top_composition import expand_roof_bodies
+    roof_bodies=theta.roof_bodies
+    theta=expand_roof_bodies(theta)
     requested=asdict(theta)
     context = _context(decode(ReconstructionContext, asdict(context)))
     theta, completed = _complete(decode(ThetaCandidate, asdict(theta)), context)
@@ -443,6 +446,12 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
     masses = _masses(context, theta)
+    for body in roof_bodies:
+        parents=unary_union([mass_polygon(m) for m in masses if m.id.startswith(body.parent+':')])
+        for mass in masses:
+            if mass.id.startswith(body.id+':'):
+                _check(mass_polygon(mass).difference(parents.buffer(1e-7)).area<1e-6,
+                       'RoofBody must be supported by its named parent')
     if theta.masses is not None:
         theta=replace(theta,masses=tuple(ArchitecturalMass(m.role,m.footprint,m.floor_levels) for m in masses))
     default = _facade_controls(theta.facade, theta.family)

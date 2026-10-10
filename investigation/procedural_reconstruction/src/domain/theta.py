@@ -130,6 +130,17 @@ class MassComponent:
 
 
 @dataclass(frozen=True)
+class RoofBody:
+    """Local upper body anchored to a component roof, using cadastral regions."""
+    id: str
+    parent: str
+    region: PlanRegion
+    height_m: float = 2.4
+    roof: RoofControls | None = None
+    facade: FacadeControls | None = None
+
+
+@dataclass(frozen=True)
 class SiteZone:
     id: str
     kind: str  # garden | patio | terrace | parking | driveway | corridor | paved | unclassified
@@ -300,6 +311,7 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    roof_bodies: tuple[RoofBody, ...] = ()
     schema_version: str = "0.2"
     height_m: float | None = None
     floors: int | None = None
@@ -396,6 +408,7 @@ def canonical(value) -> str:
                     if not (isinstance(x,FacadeZone) and f.name=='offset_m' and x.offset_m==0.)
                     and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
                     and not (f.name=='section' and getattr(x,f.name) is None)
+                    and not (f.name=='roof_bodies' and not getattr(x,f.name))
                     and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
