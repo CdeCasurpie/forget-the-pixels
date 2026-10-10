@@ -11,6 +11,8 @@ La ampliación de masa `theta 0.3` y sus 19 resultados `after/` se explican en
 `MASSING_REDESIGN.md`, `AFTER_REVIEW.md`, `after_recipes.json` y `build_after.py`.
 La extensión horizontal de fachada y las dos demostraciones BCP/Metro están
 en `FACADE_ZONES.md`, `facade_zone_recipes.json` y `after_facade_zones/` de esos lotes.
+Los ritmos BayGroup y su relief compartido se documentan en `BAY_GROUPS.md`;
+`build_bay_groups.py` reproduce únicamente BCP y Metro en `after_bay_groups/`.
 `lotes/AUDITORIA_COMPARATIVAS.md` contiene el diagnóstico visual lote por
 lote, separando errores de elección de θ y límites reales de la gramática;
 `lotes/AREA_LIBRE_AUDIT.md` detalla las pruebas de retiro/cerco.

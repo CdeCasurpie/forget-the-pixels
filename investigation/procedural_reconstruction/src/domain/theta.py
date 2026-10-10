@@ -143,6 +143,19 @@ class OpeningEdit:
 
 
 @dataclass(frozen=True)
+class BayGroup:
+    """Ordered rhythm in the current facade/zone chart; gaps are blind.
+
+    entrance/garage require count=1. inherit never invents an entrance.
+    role is descriptive metadata, not a rule selector.
+    """
+    u: tuple[float, float]
+    count: int
+    ground_role: str = "inherit"
+    role: str | None = None
+
+
+@dataclass(frozen=True)
 class FacadeControls:
     mode: str = "repeat"  # explicit replaces ALL repeated entities on that edge
     bay_count: int | None = None
@@ -162,6 +175,7 @@ class FacadeControls:
     stairs: tuple[ExteriorStairSpecification, ...] | None = None
     opening_edits: tuple[OpeningEdit, ...] | None = None
     added_openings: tuple[Opening, ...] | None = None
+    bay_groups: tuple[BayGroup, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -316,7 +330,16 @@ def decode(cls, value, path="$ "):
 
 def canonical(value) -> str:
     normalized = decode(type(value), asdict(value))
-    return json.dumps(asdict(normalized), sort_keys=True, separators=(",", ":"), allow_nan=False)
+    def data(x):
+        if is_dataclass(x):
+            return {f.name:data(getattr(x,f.name)) for f in fields(x)
+                    if not (isinstance(x,FacadeControls) and f.name=='bay_groups' and not x.bay_groups)}
+        if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
+        if isinstance(x,(tuple,list)):return [data(v) for v in x]
+        return x
+    # Keep canonical legacy requests/resolved plans byte-identical when the
+    # additive field is empty, while serializing nonempty groups explicitly.
+    return json.dumps(data(normalized), sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
 def from_json(text: str) -> ReconstructionRequest:

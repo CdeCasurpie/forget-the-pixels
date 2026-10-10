@@ -23,7 +23,7 @@ from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import FAMILY_RULES
-from modeling.facade_composition import compose_facade
+from modeling.facade_composition import compose_facade, validate_bay_groups
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -278,6 +278,7 @@ def _mass_ref(value, masses):
 
 
 def _facade_controls(c, family):
+    validate_bay_groups(c)
     _check(c.mode in ("repeat", "explicit"), "Facade mode must be repeat or explicit")
     c=replace(c, cladding=c.cladding if c.cladding is not None else "stucco",
               services=c.services if c.services is not None else False,
@@ -322,6 +323,7 @@ def _facade_controls(c, family):
 
 
 def _facade_override_controls(local, global_controls, family):
+    validate_bay_groups(local)
     if local.mode == 'explicit':
         return _facade_controls(local,family)
     template=global_controls if global_controls.mode=='repeat' else _facade_controls(FacadeControls(),family)
@@ -331,6 +333,8 @@ def _facade_override_controls(local, global_controls, family):
         patch['bay_axes_m']=None
     if 'bay_axes_m' in patch:
         patch['bay_count']=None
+    if local.bay_groups:
+        patch['bay_count']=patch['bay_axes_m']=None
     if patch.get('balconies') is False:
         patch['balcony_depth_m']=None
     return _facade_controls(replace(template,**patch),family)
@@ -400,6 +404,13 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     requested=asdict(theta)
     context = _context(decode(ReconstructionContext, asdict(context)))
     theta, completed = _complete(decode(ThetaCandidate, asdict(theta)), context)
+    controls=[theta.facade,*[f.controls for f in theta.facades]]
+    for component in theta.massing.components:
+        if component.facade is not None:controls.append(component.facade)
+        controls.extend(f.controls for f in (*component.faces,*component.zones))
+    for control in controls:
+        _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
+        validate_bay_groups(control)
     for component in theta.massing.components:
         _validate_facade_zones(component,theta.family)
     masses = _masses(context, theta)
@@ -483,7 +494,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                     continue
                 base,roof=mass.base_z+low,mass.base_z+high
                 levels = tuple(sorted(set([0.,roof-base]+[z-base for z in mass.floor_levels if base<z<roof])))
-                if length<1.5 and control.mode=='repeat':
+                if length<1.5 and control.mode=='repeat' and not control.bay_groups:
                     control=_facade_controls(FacadeControls(mode='explicit',openings=()),theta.family)
                 axes, ops, projections, regions = compose_facade(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,

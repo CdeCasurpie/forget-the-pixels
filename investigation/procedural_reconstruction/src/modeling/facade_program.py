@@ -333,7 +333,18 @@ def compose_wall(length, floor_levels, *, is_front, family, program, rng,
 
 def _relief(length, levels, axes, pitch, openings, rules, band_height,
             is_ground_band, is_top_band, rng, dropped, budget):
-    """Applied mouldings, cantilevers and finish zones implied by the rhythm."""
+    """Legacy signature: axes/pitch were unused; keep callers compatible."""
+    return compose_relief(length, levels, openings, rules, band_height,
+                          is_ground_band, is_top_band, rng, dropped, budget)
+
+
+def compose_relief(length, levels, openings, rules, band_height,
+                   is_ground_band, is_top_band, rng, dropped, budget):
+    """One chart-wide pass; only balconies/shutters are opening-scoped.
+
+    Global bands, cornice, end pilasters, gallery, awning, sign, downpipe and
+    material regions depend on the whole chart, not on a fictitious pitch.
+    """
     projections, regions = [], []
 
     def add(kind, u, v, width, height, depth, material="stone", border=0.14,

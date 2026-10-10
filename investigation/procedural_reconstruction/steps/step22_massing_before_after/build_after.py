@@ -125,7 +125,7 @@ def make_request(before,recipe,folder):
     return from_json(json.dumps(request))
 
 
-def render_case(result,directory,lot,geom,poses,offset):
+def render_case(result,directory,lot,geom,poses,offset,after_label='AFTER COMPOSITION 0.3'):
     source=STEP/'edificios_a_probar'/str(lot)
     views=json.loads((source/'views.json').read_text())
     seg=json.loads((source/'segmentation.json').read_text())['images']
@@ -147,7 +147,7 @@ def render_case(result,directory,lot,geom,poses,offset):
         render_perspective(verts,result.mesh.faces,colors,eye,fw,right,up,focal,w,h,directory/f'render_{cam}.jpg')
         render=cv2.imread(str(directory/f'render_{cam}.jpg'))
         combined=cv2.copyMakeBorder(np.hstack([photo,render]),40,0,0,0,cv2.BORDER_CONSTANT,value=(24,28,34))
-        for label,x in [('FOTO STREET VIEW',30),('AFTER COMPOSITION 0.3',w+30)]:
+        for label,x in [('FOTO STREET VIEW',30),(after_label,w+30)]:
             cv2.putText(combined,label,(x,28),cv2.FONT_HERSHEY_SIMPLEX,.9,(230,230,230),2)
         cv2.imwrite(str(directory/f'compare_{cam}.jpg'),combined,[cv2.IMWRITE_JPEG_QUALITY,90])
         records.append({'camera_id':cam,'eye':eye.tolist(),'forward':fw.tolist(),'focal_px':float(focal),'width':w,'height':h})
@@ -155,7 +155,7 @@ def render_case(result,directory,lot,geom,poses,offset):
     return len(records)
 
 
-def write_zone_review(directory, baseline):
+def write_zone_review(directory, baseline, after_label='AFTER FACADE ZONES'):
     """All fixed-camera views: photo | original AFTER | zoned AFTER."""
     rows=[]
     for camera in json.loads((directory/'cameras.json').read_text()):
@@ -164,7 +164,7 @@ def write_zone_review(directory, baseline):
         old=cv2.imread(str(baseline/f'render_{key}.jpg'))
         new=cv2.imread(str(directory/f'render_{key}.jpg'))
         panels=[]
-        for label,image in [('STREET VIEW',photo),('AFTER 0.3 BASE',old),('AFTER FACADE ZONES',new)]:
+        for label,image in [('STREET VIEW',photo),('AFTER 0.3 BASE',old),(after_label,new)]:
             if image is None:
                 raise ValueError(f'Missing baseline render for zone review: {key}')
             resized=cv2.resize(image,(640,round(640*camera['height']/camera['width'])))

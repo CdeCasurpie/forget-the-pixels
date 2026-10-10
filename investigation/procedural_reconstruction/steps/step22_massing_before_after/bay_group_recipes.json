@@ -1,0 +1,36 @@
+{
+  "1137619_banco_neoclasico": {
+    "note": "Ritmo 3|1|4 en la arista lateral larga visible: acceso ancho en el grupo central y cornisa única. Demostración, no ajuste del acceso real de esquina.",
+    "mass_role": "bank:0",
+    "edge": 5,
+    "controls": {
+      "bay_groups": [
+        {"u": [0.0, 0.30], "count": 3, "role": "left_wing"},
+        {"u": [0.30, 0.52], "count": 1, "ground_role": "entrance", "role": "primary_entry"},
+        {"u": [0.52, 1.0], "count": 4, "role": "right_wing"}
+      ],
+      "window_ratio": 0.55,
+      "window_height_m": 3.3,
+      "sill_m": 1.1,
+      "material_regions": [],
+      "balconies": false
+    }
+  },
+  "1138323_casona_amarilla_esquina": {
+    "note": "Dos alas repetitivas y puerta central ancha; una cornisa continua para toda la arista. No implementa ornamentación monumental.",
+    "mass_role": "hall:0",
+    "edge": 6,
+    "controls": {
+      "bay_groups": [
+        {"u": [0.0, 0.35], "count": 3, "role": "left_wing"},
+        {"u": [0.35, 0.55], "count": 1, "ground_role": "entrance", "role": "primary_entry"},
+        {"u": [0.55, 1.0], "count": 4, "role": "right_wing"}
+      ],
+      "window_ratio": 0.48,
+      "window_height_m": 4.0,
+      "sill_m": 0.85,
+      "material_regions": [],
+      "balconies": false
+    }
+  }
+}
