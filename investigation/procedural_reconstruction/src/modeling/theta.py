@@ -22,7 +22,8 @@ from domain.models import FacadeSpecification, BuildingAppearance
 from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
-from modeling.facade_program import FAMILY_RULES, _relief
+from modeling.facade_program import FAMILY_RULES
+from modeling.facade_composition import compose_facade
 from modeling.grammar import facade, ZOffsetMeshBuilder, street_envelope
 from modeling.mesh_builder import MeshBuilder
 from modeling.materials import DEFAULT_MATERIALS, resolve_materials
@@ -335,62 +336,6 @@ def _facade_override_controls(local, global_controls, family):
     return _facade_controls(replace(template,**patch),family)
 
 
-def _composition(c, family, length, levels, height, ground, top, floor_indices=None):
-    if c.mode == "explicit":
-        return (), c.openings, c.projections or (), c.material_regions or ()
-    rules = dict(FAMILY_RULES[family])
-    count = c.bay_count or max(1, round((length-.64)/3.1))
-    axes = c.bay_axes_m if c.bay_axes_m is not None else tuple(.32+(i+.5)*(length-.64)/count for i in range(count))
-    _check(bool(axes) and tuple(sorted(set(axes))) == axes and axes[0] > .4 and axes[-1] < length-.4, "Invalid bay axes")
-    pitch = min([length-.64] + [b-a for a,b in zip(axes, axes[1:])] + [2*(axes[0]-.32), 2*(length-.32-axes[-1])])
-    ops = []
-    found=set()
-    edits={(e.floor,e.bay):e for e in c.opening_edits}
-    for local_floor, (z0,z1) in enumerate(zip(levels, levels[1:])):
-        floor=local_floor if floor_indices is None else floor_indices[local_floor]
-        for i, axis in enumerate(axes):
-            kind, prefab = "window", rules["prefab"]
-            width, sill, h = pitch*c.window_ratio, c.sill_m, c.window_height_m
-            if ground and local_floor == 0 and i == 0:
-                kind = "gate" if rules["ground"] == "garage" else "door"
-                prefab = "roller" if kind == "gate" else "wood_panel"
-                width, sill, h = min(pitch*.75, 3.2) if kind == "gate" else min(pitch*.42, 1.2), .04, min(2.3,z1-z0-.3)
-            elif ground and local_floor == 0 and rules["ground"] == "shopfront":
-                prefab, sill = "storefront", .15
-            if floor > 0 and c.balconies and i % 2 == 0:
-                kind, sill = "balcony_window", .18
-            h = min(h, z1-z0-sill-.2)
-            _check(h >= .5 and width >= .4, "Openings cannot fit: reduce bays or window dimensions")
-            opening=Opening(kind, axis-width/2, z0+sill, width,h,
-                               prefab=prefab, grille=rules["grille"],
-                               balcony_depth_m=c.balcony_depth_m or .75, curtain=0)
-            key=(floor,i)
-            found.add(key)
-            edit=edits.get(key)
-            if edit is None:
-                ops.append(opening)
-            elif edit.action=="replace":
-                ops.append(edit.opening)
-    _check(set(edits)<=found,"Sparse edit targets nonexistent floor/bay")
-    ops.extend(c.added_openings)
-    rectangles=[]
-    for op in ops:
-        _check(op.u_m>=.12 and op.v_m>=0 and op.width_m>0 and op.height_m>0 and
-               op.u_m+op.width_m<=length-.12 and op.v_m+op.height_m<=height-.1,
-               "Opening edit/add outside facade")
-        shape=rect(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)
-        _check(all(shape.intersection(other).area<1e-8 for other in rectangles),"Opening edit/add overlaps another opening")
-        rectangles.append(shape)
-    # Family relief is reused; its two random depths are always overwritten by
-    # resolved architectural controls. This RNG never sees xi.
-    projections, regions = _relief(length, levels, axes, pitch, ops, rules, height,
-                                  ground, top, np.random.default_rng(0), [], DetailBudget(2))
-    projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
-                        replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
-    ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
-    return axes, ops, projections if c.projections is None else c.projections, tuple(regions) if c.material_regions is None else c.material_regions
-
-
 def _validate_facade_zones(component, family):
     """Validate before exposure, including zones on completely hidden faces."""
     height=component.levels_m[-1]-component.levels_m[0]
@@ -426,7 +371,7 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
     # and upper-storey rules, even when its first local level is zero.
     floor_indices=tuple(next(i for i,(lo,hi) in enumerate(zip(mass.floor_levels,mass.floor_levels[1:]))
                              if lo<=base+(z0+z1)/2<hi) for z0,z1 in zip(levels,levels[1:]))
-    axes,ops,projections,regions=_composition(control,theta.family,width,levels,high-low,
+    axes,ops,projections,regions=compose_facade(control,theta.family,width,levels,high-low,
                                              base<.01,abs(roof-mass.roof_z)<.01,floor_indices)
     # User entities belong to their zone, not merely somewhere on the wall.
     # Generated relief may have small prefab overhangs; the domain clips them.
@@ -540,7 +485,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                 levels = tuple(sorted(set([0.,roof-base]+[z-base for z in mass.floor_levels if base<z<roof])))
                 if length<1.5 and control.mode=='repeat':
                     control=_facade_controls(FacadeControls(mode='explicit',openings=()),theta.family)
-                axes, ops, projections, regions = _composition(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
+                axes, ops, projections, regions = compose_facade(control,theta.family,length,levels,roof-base,base<.01,abs(roof-mass.roof_z)<.01)
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,
                                         openings=ops,is_front=is_front,program_enabled=program_enabled,
                                         wall_material="plaster" if is_front or component and key not in overrides else theta.side_material,
