@@ -318,6 +318,7 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    architectural_style: str | None = None
     roof_bodies: tuple[RoofBody, ...] = ()
     schema_version: str = "0.2"
     height_m: float | None = None

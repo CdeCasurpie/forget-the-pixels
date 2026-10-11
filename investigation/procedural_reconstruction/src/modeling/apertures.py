@@ -9,6 +9,11 @@ def opening_shape(op):
     if op.shape=='rectangle':
         if op.arch_rise_m is not None:raise ValueError('arch_rise_m inactive')
         return box(u,v,u+w,v+h)
+    if op.shape in ('circle','ellipse'):
+        if op.arch_rise_m is not None:raise ValueError('arch_rise_m inactive')
+        if op.shape=='circle' and abs(w-h)>1e-7:raise ValueError('Circle requires equal width and height')
+        return Polygon([(u+w/2+w/2*np.cos(q),v+h/2+h/2*np.sin(q))
+                        for q in np.linspace(0,2*np.pi,97)[:-1]])
     if op.shape!='arch':raise ValueError('Unknown opening shape')
     rise=op.arch_rise_m if op.arch_rise_m is not None else min(w/2,h/2)
     if not 0<rise<h:raise ValueError('Invalid arch rise')

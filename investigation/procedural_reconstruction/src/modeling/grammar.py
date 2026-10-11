@@ -85,6 +85,14 @@ def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
 
 
 def opening(mb, a, t, n, op, pattern):
+    if op.door is not None:
+        from .door_assembly import build_door
+        build_door(mb,a,t,n,op)
+        return
+    if op.frame_profile is not None:
+        from .window_assembly import build_window
+        build_window(mb,a,t,n,op)
+        return
     if op.shape!='rectangle' or op.prefab in ('open','screen'):
         from .apertures import shaped_opening
         shaped_opening(mb,a,t,n,op)
@@ -582,6 +590,16 @@ def _facade_body(mb, f, total_height):
         if any(rect.intersection(other).area > 1e-8 for other in rectangles):
             raise ValueError("Overlapping openings")
         rectangles.append(rect)
+    for op in ops:
+        if op.door is not None:
+            from modeling.door_assembly import portal_domain
+            portal = portal_domain(op)
+            if not portal.is_empty:
+                if not silhouette.buffer(1e-8).covers(portal):
+                    raise ValueError('Door portal outside facade')
+                if any(portal.intersection(opening_shape(other)).area>1e-8
+                       for other in ops if other is not op):
+                    raise ValueError('Door portal overlaps another opening')
     for region in regions:
         if region.width_m <= 0 or region.height_m <= 0:
             raise ValueError("Invalid facade material region")

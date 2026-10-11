@@ -88,6 +88,33 @@ class HeightEstimate:
 
 
 @dataclass(frozen=True)
+class DoorControls:
+    """Opt-in door/gateway assembly; dimensions refer to the parent opening."""
+    model: str = 'auto'
+    leaves: int = 0  # 0 chooses one/two from clear width
+    construction: str = 'auto'  # panelled | glazed | grille | boards | louvers
+    leaf_material: str = 'auto'
+    frame_material: str = 'auto'
+    portal_material: str = 'plaster'
+    metal_material: str = 'metal'
+    glass_material: str = 'glass'
+    threshold_material: str = 'stone'
+    portal: str = 'none'  # none | pilasters | columns
+    portal_width_m: float = .24
+    portal_gap_m: float = .10
+    portal_depth_m: float = .20
+    cornice: bool = False
+    transom_height_m: float = 0.
+    transom_infill: str = 'glass'  # glass | open
+    transom_grille: bool = False
+    grille_pattern: str = 'auto'
+    grille_spacing_m: float = .16
+    leaf_grille: bool = False
+    threshold: bool = True
+    opening_angles_deg: tuple[float, ...] = ()  # positive opens outward
+
+
+@dataclass(frozen=True)
 class Opening:
     kind: str  # window | door | gate | balcony_window
     u_m: float  # borde izquierdo, distancia desde vertex_a en metros
@@ -109,6 +136,12 @@ class Opening:
     grille_pattern: str = "vertical"  # vertical | grid | diamond
     shape: str = "rectangle"  # rectangle | arch
     arch_rise_m: float | None = None
+    frame_profile: str | None = None
+    frame_depth_m: float = .10
+    sill: bool = False
+    grid_spacing_m: float | None = None
+    grille_spacing_m: float = .14
+    door: DoorControls | None = None
 
 
 @dataclass(frozen=True)

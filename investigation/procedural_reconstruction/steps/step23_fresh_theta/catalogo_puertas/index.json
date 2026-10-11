@@ -1,0 +1,738 @@
+[
+  {
+    "name": "republicano_rectangle_puerta",
+    "validation": {
+      "vertices": 736,
+      "triangles": 1392,
+      "parts": 56,
+      "semantic_types": [
+        "door_capital",
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_pilaster",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 896,
+        "door_panel_moulding": 192,
+        "door_coffer": 72,
+        "door_capital": 48,
+        "door_portal_cornice": 36,
+        "door_reveal": 32,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_pilaster": 24,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0004800000000000004,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "republicano_rectangle_porton",
+    "validation": {
+      "vertices": 1024,
+      "triangles": 1912,
+      "parts": 81,
+      "semantic_types": [
+        "door_capital",
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_pilaster",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 896,
+        "door_panel_moulding": 512,
+        "door_coffer": 192,
+        "door_leaf_frame": 64,
+        "door_hinge": 48,
+        "door_capital": 48,
+        "door_portal_cornice": 36,
+        "door_reveal": 32,
+        "door_panel_back": 24,
+        "door_handle": 24,
+        "door_pilaster": 24,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0004800000000000004,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "republicano_arch_puerta",
+    "validation": {
+      "vertices": 4126,
+      "triangles": 8156,
+      "parts": 59,
+      "semantic_types": [
+        "door_capital",
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_pilaster",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_grille",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 6048,
+        "transom_grille": 1312,
+        "door_reveal": 216,
+        "door_panel_moulding": 192,
+        "transom_glass": 104,
+        "door_coffer": 72,
+        "door_capital": 48,
+        "door_portal_cornice": 36,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_pilaster": 24,
+        "transom_rail": 12,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 3.731832257648891e-07,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "republicano_arch_porton",
+    "validation": {
+      "vertices": 4944,
+      "triangles": 9736,
+      "parts": 76,
+      "semantic_types": [
+        "door_capital",
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_pilaster",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_grille",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 6048,
+        "transom_grille": 2356,
+        "door_panel_moulding": 456,
+        "door_reveal": 216,
+        "door_coffer": 184,
+        "door_leaf_frame": 152,
+        "door_panel_back": 64,
+        "transom_glass": 56,
+        "door_hinge": 48,
+        "door_capital": 48,
+        "door_portal_cornice": 36,
+        "door_handle": 24,
+        "door_pilaster": 24,
+        "transom_rail": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 6.546416776402372e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "barroco_rectangle_puerta",
+    "validation": {
+      "vertices": 1752,
+      "triangles": 3460,
+      "parts": 115,
+      "semantic_types": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 3072,
+        "door_panel_moulding": 192,
+        "door_coffer": 72,
+        "door_reveal": 32,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0004687499999999733,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "barroco_rectangle_porton",
+    "validation": {
+      "vertices": 2832,
+      "triangles": 5520,
+      "parts": 151,
+      "semantic_types": [
+        "door_coffer",
+        "door_column",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 3072,
+        "door_column": 1504,
+        "door_panel_moulding": 512,
+        "door_coffer": 192,
+        "door_leaf_frame": 64,
+        "door_hinge": 48,
+        "door_portal_cornice": 36,
+        "door_reveal": 32,
+        "door_panel_back": 24,
+        "door_handle": 24,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 9.287836952708305e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "barroco_arch_puerta",
+    "validation": {
+      "vertices": 12310,
+      "triangles": 24556,
+      "parts": 118,
+      "semantic_types": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_grille",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 20736,
+        "transom_grille": 3132,
+        "door_reveal": 216,
+        "door_panel_moulding": 192,
+        "transom_glass": 104,
+        "door_coffer": 72,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "transom_rail": 12,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 4.224147453638189e-09,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "barroco_arch_porton",
+    "validation": {
+      "vertices": 15002,
+      "triangles": 29856,
+      "parts": 146,
+      "semantic_types": [
+        "door_coffer",
+        "door_column",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_grille",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 20736,
+        "transom_grille": 6356,
+        "door_column": 1504,
+        "door_panel_moulding": 456,
+        "door_reveal": 216,
+        "door_coffer": 184,
+        "door_leaf_frame": 152,
+        "door_panel_back": 64,
+        "transom_glass": 56,
+        "door_hinge": 48,
+        "door_portal_cornice": 36,
+        "door_handle": 24,
+        "transom_rail": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 9.408274685849447e-10,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "clasico_rectangle_puerta",
+    "validation": {
+      "vertices": 536,
+      "triangles": 1028,
+      "parts": 39,
+      "semantic_types": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 640,
+        "door_panel_moulding": 192,
+        "door_coffer": 72,
+        "door_reveal": 32,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.00011875000000000007,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "clasico_rectangle_porton",
+    "validation": {
+      "vertices": 1616,
+      "triangles": 3088,
+      "parts": 75,
+      "semantic_types": [
+        "door_coffer",
+        "door_column",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_column": 1504,
+        "door_moulding": 640,
+        "door_panel_moulding": 512,
+        "door_coffer": 192,
+        "door_leaf_frame": 64,
+        "door_hinge": 48,
+        "door_portal_cornice": 36,
+        "door_reveal": 32,
+        "door_panel_back": 24,
+        "door_handle": 24,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 9.287836952708305e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "clasico_arch_puerta",
+    "validation": {
+      "vertices": 2530,
+      "triangles": 5008,
+      "parts": 41,
+      "semantic_types": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 4320,
+        "door_reveal": 216,
+        "door_panel_moulding": 192,
+        "transom_glass": 104,
+        "door_coffer": 72,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "transom_rail": 12,
+        "door_panel_back": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 7.763990341347701e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "clasico_arch_porton",
+    "validation": {
+      "vertices": 3610,
+      "triangles": 7084,
+      "parts": 69,
+      "semantic_types": [
+        "door_coffer",
+        "door_column",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 4320,
+        "door_column": 1504,
+        "door_panel_moulding": 456,
+        "door_reveal": 216,
+        "door_coffer": 184,
+        "door_leaf_frame": 152,
+        "door_panel_back": 64,
+        "transom_glass": 56,
+        "door_hinge": 48,
+        "door_portal_cornice": 36,
+        "door_handle": 24,
+        "transom_rail": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 9.287836952708305e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "madera_rectangle_puerta",
+    "validation": {
+      "vertices": 432,
+      "triangles": 824,
+      "parts": 32,
+      "semantic_types": [
+        "door_board",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 640,
+        "door_board": 72,
+        "door_reveal": 32,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.00011875000000000007,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "madera_rectangle_porton",
+    "validation": {
+      "vertices": 584,
+      "triangles": 1060,
+      "parts": 50,
+      "semantic_types": [
+        "door_board",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 640,
+        "door_board": 240,
+        "door_leaf_frame": 64,
+        "door_hinge": 48,
+        "door_reveal": 32,
+        "door_handle": 24,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.00038125000000000046,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "madera_arch_puerta",
+    "validation": {
+      "vertices": 2426,
+      "triangles": 4804,
+      "parts": 34,
+      "semantic_types": [
+        "door_board",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 4320,
+        "door_reveal": 216,
+        "transom_glass": 104,
+        "door_board": 72,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "transom_rail": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 7.763990341347701e-06,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "madera_arch_porton",
+    "validation": {
+      "vertices": 2618,
+      "triangles": 5120,
+      "parts": 52,
+      "semantic_types": [
+        "door_board",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 4320,
+        "door_board": 280,
+        "door_reveal": 216,
+        "door_leaf_frame": 152,
+        "transom_glass": 56,
+        "door_hinge": 48,
+        "door_handle": 24,
+        "transom_rail": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 2.493231176420134e-05,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "moderno_rectangle_puerta",
+    "validation": {
+      "vertices": 312,
+      "triangles": 548,
+      "parts": 29,
+      "semantic_types": [
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_louver",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 256,
+        "door_louver": 180,
+        "door_reveal": 32,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0004800000000000004,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "moderno_rectangle_porton",
+    "validation": {
+      "vertices": 248,
+      "triangles": 460,
+      "parts": 20,
+      "semantic_types": [
+        "door_glass",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 256,
+        "door_leaf_frame": 64,
+        "door_hinge": 48,
+        "door_reveal": 32,
+        "door_glass": 24,
+        "door_handle": 24,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0004800000000000004,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "moderno_arch_puerta",
+    "validation": {
+      "vertices": 1178,
+      "triangles": 2284,
+      "parts": 28,
+      "semantic_types": [
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_louver",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 1728,
+        "door_reveal": 216,
+        "door_louver": 144,
+        "transom_glass": 104,
+        "door_leaf_frame": 32,
+        "door_hinge": 24,
+        "transom_rail": 12,
+        "door_handle": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 7.96091173002837e-05,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "moderno_arch_porton",
+    "validation": {
+      "vertices": 1186,
+      "triangles": 2328,
+      "parts": 22,
+      "semantic_types": [
+        "door_glass",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold",
+        "transom_glass",
+        "transom_rail"
+      ],
+      "faces_by_semantic": {
+        "door_moulding": 1728,
+        "door_reveal": 216,
+        "door_leaf_frame": 160,
+        "door_glass": 72,
+        "transom_glass": 56,
+        "door_hinge": 48,
+        "door_handle": 24,
+        "transom_rail": 12,
+        "door_threshold": 12
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 2.7221716882151636e-05,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  }
+]

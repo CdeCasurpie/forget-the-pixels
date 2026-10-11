@@ -1,0 +1,44 @@
+[
+  {
+    "kind": "pilaster",
+    "u_m": 4.473512990630434,
+    "v_m": 0.0,
+    "width_m": 0.28,
+    "height_m": 2.79,
+    "depth_m": 0.25,
+    "material_slot": "frame",
+    "border_width_m": 0.18,
+    "source": "monumental_portal",
+    "score": 0.0,
+    "label": "",
+    "arch_rise_m": null
+  },
+  {
+    "kind": "pilaster",
+    "u_m": 6.106229304807456,
+    "v_m": 0.0,
+    "width_m": 0.28,
+    "height_m": 2.79,
+    "depth_m": 0.25,
+    "material_slot": "frame",
+    "border_width_m": 0.18,
+    "source": "monumental_portal",
+    "score": 0.0,
+    "label": "",
+    "arch_rise_m": null
+  },
+  {
+    "kind": "frame",
+    "u_m": 4.773512990630434,
+    "v_m": 0.05,
+    "width_m": 1.3127163141770222,
+    "height_m": 2.74,
+    "depth_m": 0.3,
+    "material_slot": "frame",
+    "border_width_m": 0.1,
+    "source": "monumental_portal",
+    "score": 0.0,
+    "label": "",
+    "arch_rise_m": null
+  }
+]

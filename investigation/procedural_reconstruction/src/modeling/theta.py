@@ -443,6 +443,9 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
+    from modeling.window_assembly import PROFILES
+    _check(theta.architectural_style is None or theta.architectural_style in PROFILES,
+           'Unknown architectural style')
     from modeling.top_composition import expand_roof_bodies
     roof_bodies=theta.roof_bodies
     theta=expand_roof_bodies(theta)
@@ -773,7 +776,26 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
                       vertex_b=tuple(np.asarray(f.vertex_b)+shift))
         ops=tuple(replace(op,curtain=float(_rng(nuisance.seed,f"{f.edge_id}/curtain/{i}").uniform(.15,.55)))
                   if nuisance.curtains and op.kind=="window" and op.prefab in ("slim_window","storefront","legacy") else op
-                  for i,op in enumerate(f.openings))
+                   for i,op in enumerate(f.openings))
+        if theta.architectural_style:
+            _check(all(op.frame_profile in (None,'auto',theta.architectural_style)
+                       for op in ops if op.kind=='window'), 'Window style conflicts with building style')
+            ops=tuple(replace(op,frame_profile=theta.architectural_style)
+                      if op.kind=='window' else op for op in ops)
+        from modeling.door_assembly import validate_door
+        door_ops=[]
+        for op in ops:
+            if op.door is not None:
+                model=op.door.model
+                if model=='auto':
+                    _check(theta.architectural_style is not None, 'Door auto model needs architectural_style')
+                    model=theta.architectural_style
+                _check(theta.architectural_style is None or model==theta.architectural_style,
+                       'Door style conflicts with building style')
+                op=replace(op,door=replace(op.door,model=model))
+                validate_door(op)
+            door_ops.append(op)
+        ops=tuple(door_ops)
         local=_BandBuilder(builder,wall.base_z)
         if wall.plane_offset_m:
             from modeling.facade_depth import DepthEnvelopeBuilder, emit_returns
