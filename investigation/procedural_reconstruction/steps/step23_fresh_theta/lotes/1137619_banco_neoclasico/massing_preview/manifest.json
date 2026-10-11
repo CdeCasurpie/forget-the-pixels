@@ -1,0 +1,30 @@
+{
+  "lot": 1137619,
+  "phase": "massing",
+  "comparisons": 5,
+  "triangles": 472,
+  "validation": {
+    "vertices": 276,
+    "triangles": 472,
+    "parts": 23,
+    "semantic_types": [
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "parapet_cap": 136,
+      "plinth": 124,
+      "wall": 108,
+      "parapet": 72,
+      "roof_slab": 32
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 5.019350954971503e-07,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "e876d5873a544a73a4db36c27397345e7130318526989b569d877ecb9c2e6054"
+}

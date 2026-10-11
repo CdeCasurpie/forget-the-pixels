@@ -1,0 +1,41 @@
+{
+  "lot": 1137568,
+  "hypothesis": "Planta baja de local y terraza superior abierta cubierta parcialmente con chapa; sin ventanas altas inventadas.",
+  "before_request_sha256": "eb8b5a8255462f3f0f475f4255ef74974f3922ef0715a0cad18e6fb43e502aa3",
+  "mass_count": 2,
+  "ground_occupancy_ratio": 0.6710409028486868,
+  "height_before_m": 6.3,
+  "height_after_m": 6.3,
+  "triangles": 1016,
+  "validation": {
+    "vertices": 548,
+    "triangles": 1016,
+    "parts": 27,
+    "semantic_types": [
+      "arched_frame",
+      "corrugated_roof",
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "support_column",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "arched_frame": 432,
+      "wall": 288,
+      "support_column": 108,
+      "parapet_cap": 64,
+      "plinth": 56,
+      "parapet": 32,
+      "roof_slab": 24,
+      "corrugated_roof": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 1.5674466586162745e-05,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "12f295b7331fb118d279c004c4da4d812d3e6937e64df0789425aa36dfc7035e",
+  "comparisons": 2
+}

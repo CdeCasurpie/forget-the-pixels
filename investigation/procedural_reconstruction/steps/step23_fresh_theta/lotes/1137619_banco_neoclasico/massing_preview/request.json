@@ -1,0 +1,256 @@
+{
+  "context": {
+    "parcel": [
+      [
+        6.455,
+        0.0
+      ],
+      [
+        0.0,
+        20.597
+      ],
+      [
+        23.003,
+        27.847
+      ],
+      [
+        26.805,
+        25.633
+      ],
+      [
+        28.542,
+        7.249
+      ],
+      [
+        28.554,
+        7.124
+      ],
+      [
+        9.474,
+        0.954
+      ],
+      [
+        8.455,
+        0.625
+      ]
+    ],
+    "fronts": [
+      1,
+      2,
+      3
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "roof_bodies": [],
+    "schema_version": "0.3",
+    "height_m": null,
+    "floors": null,
+    "family": "republicano",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null,
+      "components": [
+        {
+          "id": "bank",
+          "region": {
+            "front_edge": 7,
+            "u": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": null,
+            "fit": "parcel",
+            "width_reference": "parcel"
+          },
+          "levels_m": [
+            0.0,
+            5.25
+          ],
+          "kind": "enclosed",
+          "cutouts": [],
+          "support": {
+            "kind": "bearing",
+            "spacing_m": 4.0,
+            "column_width_m": 0.25,
+            "inset_m": 0.4,
+            "max_cantilever_m": 0.0
+          },
+          "facade": null,
+          "faces": [],
+          "roof": null,
+          "slab_m": 0.18,
+          "zones": []
+        }
+      ],
+      "parcel_tolerance_m": 0.0
+    },
+    "facade": {
+      "mode": "explicit",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": [],
+      "projections": [],
+      "material_regions": [],
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null,
+      "bay_groups": [],
+      "motifs": [],
+      "crowns": [],
+      "order": null,
+      "opening_programs": [],
+      "top_profile": null
+    },
+    "facades": [],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.06,
+      "slope_deg": null,
+      "props": []
+    },
+    "roofs": [],
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": [],
+      "zones": []
+    },
+    "primary_color": [
+      0.39,
+      0.41,
+      0.39
+    ],
+    "side_material": "plaster",
+    "masses": null,
+    "materials": [
+      {
+        "slot": "frame",
+        "template": "frame",
+        "color": [
+          0.7,
+          0.72,
+          0.68
+        ]
+      },
+      {
+        "slot": "stone",
+        "template": "stone",
+        "color": [
+          0.35,
+          0.37,
+          0.35
+        ]
+      },
+      {
+        "slot": "accent",
+        "template": "plaster",
+        "color": [
+          0.29,
+          0.31,
+          0.3
+        ]
+      },
+      {
+        "slot": "metal",
+        "template": "metal",
+        "color": [
+          0.51,
+          0.53,
+          0.52
+        ]
+      },
+      {
+        "slot": "glass",
+        "template": "glass",
+        "color": [
+          0.11,
+          0.17,
+          0.19
+        ]
+      },
+      {
+        "slot": "sign",
+        "template": "plaster",
+        "color": [
+          0.4,
+          0.43,
+          0.42
+        ]
+      }
+    ],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 3,
+    "curtains": false
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 3
+  },
+  "observations": [
+    {
+      "view_id": "4zrQmRDk-UToIqZg9wMKTw",
+      "image_path": "steps/step23_fresh_theta/lotes/1137619_banco_neoclasico/4zrQmRDk-UToIqZg9wMKTw_lot.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "AeUUEcVFrfoPL6CrYg1cnA",
+      "image_path": "steps/step23_fresh_theta/lotes/1137619_banco_neoclasico/AeUUEcVFrfoPL6CrYg1cnA_lot.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "HRx6puxjzXx-7VM1eq4x0Q",
+      "image_path": "steps/step23_fresh_theta/lotes/1137619_banco_neoclasico/HRx6puxjzXx-7VM1eq4x0Q_lot.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "Uzf1JkMgF_jm7gHnnfMrlw",
+      "image_path": "steps/step23_fresh_theta/lotes/1137619_banco_neoclasico/Uzf1JkMgF_jm7gHnnfMrlw_lot.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "qFcEPr9c2-KlfqA3Wi0cYw",
+      "image_path": "steps/step23_fresh_theta/lotes/1137619_banco_neoclasico/qFcEPr9c2-KlfqA3Wi0cYw_lot.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    }
+  ],
+  "evidence": {}
+}

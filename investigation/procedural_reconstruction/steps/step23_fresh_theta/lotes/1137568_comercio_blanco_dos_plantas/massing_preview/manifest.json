@@ -1,0 +1,34 @@
+{
+  "lot": 1137568,
+  "phase": "massing",
+  "comparisons": 2,
+  "triangles": 360,
+  "validation": {
+    "vertices": 224,
+    "triangles": 360,
+    "parts": 25,
+    "semantic_types": [
+      "corrugated_roof",
+      "parapet",
+      "parapet_cap",
+      "plinth",
+      "roof_slab",
+      "support_column",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "support_column": 108,
+      "wall": 64,
+      "parapet_cap": 64,
+      "plinth": 56,
+      "parapet": 32,
+      "roof_slab": 24,
+      "corrugated_roof": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 1.5674488987017286e-05,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  },
+  "mesh_sha256": "022b872c3b19a6bbc388c3a74329db425d54b82df91a6e537cdbb7e02c3561ce"
+}
