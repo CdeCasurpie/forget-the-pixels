@@ -151,7 +151,7 @@ class ProgrammeTests(unittest.TestCase):
         composition = compose(family="republicano", length=11.0)
         kinds = {p.kind for p in composition.projections}
         self.assertIn("pilaster", kinds)
-        self.assertIn("cornice", kinds)
+        self.assertIn("denticulated_cornice", kinds)
         self.assertIn("sill_band", kinds)
         self.assertIn("shutter", kinds)
 

@@ -2,15 +2,22 @@
   "recipe": {
     "baseline": "after",
     "source": "after",
+    "primary_color": [
+      0.88,
+      0.83,
+      0.68
+    ],
     "capabilities": [
       "Cuerpos y gable existentes",
       "BayGroup",
       "OpeningProgram",
-      "gallery prefab",
+      "gallery/balcony existentes",
+      "puerta abierta",
       "site existente"
     ],
     "MISSING_CAPABILITY": [
-      "Buhardillas/dormers como entidades de cubierta"
+      "Buhardillas/dormers como entidades de cubierta",
+      "Ventana triple como una sola entidad con parteluces finos"
     ],
     "overrides": [
       {
@@ -21,39 +28,125 @@
             {
               "u": [
                 0,
-                0.6
+                0.36
               ],
-              "count": 2
+              "count": 1
             },
             {
               "u": [
-                0.6,
-                1
+                0.36,
+                0.58
               ],
               "count": 1
+            },
+            {
+              "u": [
+                0.58,
+                1
+              ],
+              "count": 2
             }
           ],
-          "balconies": false,
-          "window_height_m": 2.2,
+          "balconies": true,
+          "window_height_m": 1.8,
           "sill_m": 0.7,
+          "projections": [],
+          "material_regions": [],
           "opening_programs": [
             {
               "group": 0,
-              "width_ratio": 0.6,
-              "height_m": 2.3
+              "floor": 0,
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 2.6,
+              "width_ratio": 0.78,
+              "sill_m": 0.6
             },
             {
               "group": 1,
               "floor": 0,
               "kind": "door",
-              "height_m": 2.6,
+              "shape": "rectangle",
+              "prefab": "open",
+              "height_m": 2.9,
+              "width_ratio": 0.55,
               "sill_m": 0.04
+            },
+            {
+              "group": 2,
+              "floor": 0,
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 2.4,
+              "width_ratio": 0.62,
+              "sill_m": 0.7
+            },
+            {
+              "group": 0,
+              "floor": 1,
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 1.8,
+              "width_ratio": 0.7,
+              "sill_m": 0.7
             },
             {
               "group": 1,
               "floor": 1,
-              "height_m": 2.4,
-              "width_ratio": 0.7
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 1.9,
+              "width_ratio": 0.6,
+              "sill_m": 0.7
+            },
+            {
+              "group": 2,
+              "floor": 1,
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 1.7,
+              "width_ratio": 0.6,
+              "sill_m": 0.7
+            }
+          ]
+        }
+      },
+      {
+        "mass_role": "wing:0",
+        "edge": 3,
+        "controls": {
+          "bay_groups": [
+            {
+              "u": [
+                0,
+                1
+              ],
+              "count": 3
+            }
+          ],
+          "balconies": true,
+          "window_height_m": 1.9,
+          "sill_m": 0.6,
+          "material_regions": [],
+          "opening_programs": [
+            {
+              "group": 0,
+              "floor": 0,
+              "kind": "door",
+              "shape": "rectangle",
+              "prefab": "open",
+              "height_m": 2.8,
+              "width_ratio": 0.6,
+              "sill_m": 0.04
+            },
+            {
+              "group": 0,
+              "floor": 1,
+              "kind": "window",
+              "shape": "rectangle",
+              "height_m": 1.9,
+              "width_ratio": 0.55,
+              "sill_m": 0.5
             }
           ]
         }
@@ -61,11 +154,11 @@
     ]
   },
   "comparisons": 2,
-  "mesh_sha256": "0a3ec5fe7bbaecdf3cca4fe15584a81c85e8ca8a478da5f0a6b273117ba99d70",
+  "mesh_sha256": "3501f87e1736ae5c28bf6b1e4e3850d7d89b96b33f073ef288b1445245cfb4c8",
   "validation": {
-    "vertices": 3558,
-    "triangles": 5588,
-    "parts": 406,
+    "vertices": 2986,
+    "triangles": 4720,
+    "parts": 336,
     "semantic_types": [
       "awning",
       "awning_arm",
@@ -78,9 +171,6 @@
       "cornice_drip",
       "cornice_step",
       "curtain_fold",
-      "door_handle",
-      "door_leaf",
-      "door_raised_panel",
       "downpipe",
       "downpipe_clamp",
       "eave_fascia",
@@ -97,7 +187,6 @@
       "gate_flute",
       "glazing",
       "interior_backing",
-      "material_coating",
       "mullion",
       "opening_lintel",
       "opening_reveal",
@@ -120,55 +209,51 @@
       "window_sill"
     ],
     "faces_by_semantic": {
-      "shutter_slat": 1032,
-      "baluster": 708,
-      "wall": 372,
-      "slim_frame": 288,
-      "curtain_fold": 240,
-      "opening_reveal": 216,
+      "shutter_slat": 864,
+      "window_frame": 432,
+      "wall": 412,
+      "baluster": 348,
       "fence_bar": 216,
-      "window_frame": 144,
+      "opening_surround": 168,
       "garage_slat": 132,
-      "gallery_post": 120,
-      "gallery_bracket": 120,
       "gate_flute": 108,
       "floor_slab": 104,
       "top_cornice": 104,
       "plinth": 96,
-      "glazing": 96,
-      "interior_backing": 96,
-      "slim_mullion": 96,
-      "slim_transom": 96,
+      "slim_frame": 96,
       "awning_arm": 88,
+      "opening_lintel": 84,
+      "window_panel": 84,
+      "mullion": 84,
+      "transom": 84,
+      "window_sill": 84,
       "tile_ridge": 84,
-      "material_coating": 72,
-      "opening_surround": 72,
+      "opening_reveal": 72,
+      "curtain_fold": 72,
       "shutter_leaf": 72,
+      "entrance_step": 72,
+      "gallery_post": 60,
+      "gallery_bracket": 60,
       "eave_fascia": 60,
       "boundary_cap": 60,
       "downpipe_clamp": 48,
-      "balustrade_cap": 40,
-      "opening_lintel": 36,
-      "window_panel": 36,
-      "mullion": 36,
-      "transom": 36,
-      "window_sill": 36,
+      "glazing": 36,
+      "interior_backing": 36,
+      "slim_mullion": 36,
+      "slim_transom": 36,
       "cornice_step": 36,
-      "door_raised_panel": 36,
       "site_patio": 36,
       "tile_roof": 36,
       "boundary_base": 36,
       "fence_rail": 36,
       "downpipe": 32,
-      "gallery_slab": 24,
-      "gallery_roof": 24,
-      "balustrade": 24,
-      "entrance_step": 24,
+      "balustrade_cap": 20,
       "cornice_drip": 12,
+      "gallery_slab": 12,
+      "gallery_roof": 12,
+      "balustrade": 12,
       "awning": 12,
       "awning_valance": 12,
-      "door_leaf": 12,
-      "door_handle": 12,
       "pedestrian_gate": 12,
       "garage_door": 12
     },

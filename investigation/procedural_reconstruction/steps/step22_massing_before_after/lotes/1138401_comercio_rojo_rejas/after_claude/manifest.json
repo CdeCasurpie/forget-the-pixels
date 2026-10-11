@@ -1,0 +1,51 @@
+{
+  "style": "gallery",
+  "baseline": "after",
+  "comparisons": 2,
+  "mesh_sha256": "42b94e6959d3b1766a726a323eb3e4b0b527e0cc1d3e2cd9351722d26b399a3c",
+  "validation": {
+    "vertices": 1312,
+    "triangles": 2056,
+    "parts": 152,
+    "semantic_types": [
+      "classical_cornice_course",
+      "classical_dentil",
+      "classical_modillion",
+      "corrugated_roof",
+      "door_handle",
+      "door_leaf",
+      "entrance_step",
+      "facade_projection_ledge",
+      "gate_seam",
+      "opening_reveal",
+      "plinth",
+      "roof_slab",
+      "site_paved",
+      "slim_frame",
+      "surround_moulding",
+      "wall"
+    ],
+    "faces_by_semantic": {
+      "classical_dentil": 636,
+      "gate_seam": 576,
+      "surround_moulding": 192,
+      "classical_modillion": 156,
+      "wall": 100,
+      "slim_frame": 64,
+      "classical_cornice_course": 60,
+      "plinth": 56,
+      "opening_reveal": 48,
+      "entrance_step": 48,
+      "site_paved": 28,
+      "door_leaf": 24,
+      "door_handle": 24,
+      "roof_slab": 16,
+      "corrugated_roof": 16,
+      "facade_projection_ledge": 12
+    },
+    "max_outside_triangle_area_m2": 0.0,
+    "min_triangle_area_m2": 8.603151125524677e-10,
+    "envelope_test": "passed",
+    "topology": "assembly of intersecting closed components; not Boolean-unioned"
+  }
+}

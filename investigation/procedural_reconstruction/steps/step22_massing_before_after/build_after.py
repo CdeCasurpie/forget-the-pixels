@@ -155,7 +155,7 @@ def render_case(result,directory,lot,geom,poses,offset,after_label='AFTER COMPOS
     return len(records)
 
 
-def write_zone_review(directory, baseline, after_label='AFTER FACADE ZONES'):
+def write_zone_review(directory, baseline, after_label='AFTER FACADE ZONES', baseline_label='AFTER 0.3 BASE'):
     """All fixed-camera views: photo | original AFTER | zoned AFTER."""
     rows=[]
     for camera in json.loads((directory/'cameras.json').read_text()):
@@ -164,7 +164,7 @@ def write_zone_review(directory, baseline, after_label='AFTER FACADE ZONES'):
         old=cv2.imread(str(baseline/f'render_{key}.jpg'))
         new=cv2.imread(str(directory/f'render_{key}.jpg'))
         panels=[]
-        for label,image in [('STREET VIEW',photo),('AFTER 0.3 BASE',old),(after_label,new)]:
+        for label,image in [('STREET VIEW',photo),(baseline_label,old),(after_label,new)]:
             if image is None:
                 raise ValueError(f'Missing baseline render for zone review: {key}')
             resized=cv2.resize(image,(640,round(640*camera['height']/camera['width'])))

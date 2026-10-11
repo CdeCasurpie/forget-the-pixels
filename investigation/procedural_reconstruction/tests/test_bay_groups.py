@@ -110,7 +110,9 @@ def test_bay_groups_do_not_duplicate_global_relief(family):
     assert [p for p in out.projections if p.kind in global_kinds]==[p for p in legacy.projections if p.kind in global_kinds]
     assert out.material_regions==legacy.material_regions
     counts=Counter(p.kind for p in out.projections)
-    assert counts['cornice']==1 and counts['downpipe']==1
+    cornice_kinds = {'cornice', 'denticulated_cornice', 'denticulated'}
+    assert sum(counts.get(k, 0) for k in cornice_kinds) == 1
+    assert counts['downpipe'] == 1
 
 
 def test_bay_groups_reject_overlap():

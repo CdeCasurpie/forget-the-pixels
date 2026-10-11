@@ -214,6 +214,8 @@ def opening(mb, a, t, n, op, pattern):
             "door_handle",
         )
         b(u - 0.04, u + w + 0.04, v, v + 0.035, -0.15, 0.12, "stone", "threshold")
+        if op.style == "ornate_gate":
+            _ornate_gate(mb, a, t, n, u, v, w, h, recess)
     else:
         b(
             u - 0.12,
@@ -356,6 +358,52 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
         "exterior_stair_landing",
     )
     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
+
+
+def _ornate_gate(mb, a, t, n, u, v, w, h, recess):
+    """Wrought-iron gate with scrollwork diamond pattern and spear finials."""
+    mid_z = (v + h) / 2
+    panels = 3
+    pw = w / panels
+    for pi in range(panels):
+        pu = u + pi * pw
+        # Diamond scroll pattern
+        for row in range(5):
+            z_base = v + 0.15 + row * (h - 0.30) / 5
+            for col in range(3):
+                du = pu + pw * 0.15 + col * pw * 0.28
+                dz = z_base + (0.07 if row % 2 else 0)
+                # Outer diamond frame
+                pts = [
+                    a + t * (du + pw * 0.10) + n * (0.03 + recess),
+                    a + t * (du + pw * 0.22) + n * (0.08 + recess),
+                    a + t * (du + pw * 0.28) + n * (0.03 + recess),
+                    a + t * (du + pw * 0.22) + n * (recess - 0.01),
+                ]
+                for (p1, p2) in [(pts[0], pts[1]), (pts[1], pts[2]),
+                                  (pts[2], pts[3]), (pts[3], pts[0])]:
+                    mb.beam((*p1, dz), (*p2, dz), 0.012,
+                            material="metal", semantic="gate_scroll")
+                # Central vertical bar
+                if col == 1:
+                    mb.beam(
+                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz - 0.04),
+                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz + 0.04),
+                        0.008, material="metal", semantic="gate_bar",
+                    )
+        # Spear finials at top corners
+        for corner_u in [u + 0.04, u + w - 0.04]:
+            finial_base = a + t * corner_u + n * (recess + 0.02)
+            mb.beam((*finial_base, v + h - 0.06),
+                    (*finial_base, v + h + 0.12), 0.018,
+                    material="metal", semantic="gate_finial")
+        # Horizontal rails
+        for z in [v + 0.20, mid_z, v + h - 0.20]:
+            mb.beam(
+                (*(a + t * (u + 0.05) + n * (recess + 0.03)), z),
+                (*(a + t * (u + w - 0.05) + n * (recess + 0.03)), z),
+                0.010, material="metal", semantic="gate_rail",
+            )
 
 
 def _frame_intervals(length, levels):

@@ -48,6 +48,7 @@
     "locked_height_m": null
   },
   "theta": {
+    "roof_bodies": [],
     "schema_version": "0.3",
     "height_m": null,
     "floors": null,
@@ -122,7 +123,8 @@
       "motifs": [],
       "crowns": [],
       "order": null,
-      "opening_programs": []
+      "opening_programs": [],
+      "top_profile": null
     },
     "facades": [
       {
@@ -151,7 +153,8 @@
           "motifs": [],
           "crowns": [],
           "order": null,
-          "opening_programs": []
+          "opening_programs": [],
+          "top_profile": null
         }
       },
       {
@@ -171,16 +174,16 @@
           "cladding": null,
           "services": null,
           "openings": null,
-          "projections": null,
-          "material_regions": null,
+          "projections": [],
+          "material_regions": [],
           "stairs": null,
           "opening_edits": null,
           "added_openings": null,
           "bay_groups": [
             {
               "u": [
-                0.0,
-                0.36
+                0.42,
+                0.66
               ],
               "count": 1,
               "ground_role": "inherit",
@@ -188,17 +191,8 @@
             },
             {
               "u": [
-                0.36,
-                0.64
-              ],
-              "count": 1,
-              "ground_role": "entrance",
-              "role": null
-            },
-            {
-              "u": [
-                0.64,
-                1.0
+                0.66,
+                0.9
               ],
               "count": 1,
               "ground_role": "inherit",
@@ -209,144 +203,105 @@
           "crowns": [],
           "order": {
             "pilaster_mode": "bay_boundaries",
-            "pilaster_width_m": 0.4,
-            "pilaster_depth_m": 0.16,
+            "pilaster_width_m": 0.35,
+            "pilaster_depth_m": 0.18,
             "pilaster_axes_u": [],
-            "paired_bays": [
-              1
-            ],
-            "plinth_height_m": 0.45,
+            "paired_bays": [],
+            "plinth_height_m": 0.9,
             "belt_courses_m": [],
-            "entablature_height_m": 0.4,
-            "cornice_height_m": 0.3
+            "entablature_height_m": 0.45,
+            "cornice_height_m": 0.32
           },
           "opening_programs": [
             {
               "group": 0,
               "floor": null,
-              "kind": null,
-              "shape": null,
-              "width_ratio": 0.65,
-              "height_m": 3.5,
-              "sill_m": 0.9,
-              "prefab": null,
-              "grille": null
+              "kind": "window",
+              "shape": "rectangle",
+              "width_ratio": 0.45,
+              "height_m": 3.0,
+              "sill_m": 1.1,
+              "prefab": "slim_window",
+              "grille": true
             },
             {
               "group": 1,
               "floor": null,
-              "kind": "door",
-              "shape": null,
-              "width_ratio": 0.65,
-              "height_m": 3.8,
-              "sill_m": 0.04,
-              "prefab": null,
-              "grille": null
-            },
-            {
-              "group": 2,
-              "floor": null,
-              "kind": null,
-              "shape": null,
-              "width_ratio": 0.65,
-              "height_m": 3.5,
-              "sill_m": 0.9,
-              "prefab": null,
-              "grille": null
+              "kind": "window",
+              "shape": "rectangle",
+              "width_ratio": 0.45,
+              "height_m": 3.0,
+              "sill_m": 1.1,
+              "prefab": "slim_window",
+              "grille": true
             }
-          ]
+          ],
+          "top_profile": null
         }
       },
       {
         "mass_role": "bank:0",
         "edge": 6,
         "controls": {
-          "mode": "explicit",
+          "mode": "repeat",
           "bay_count": null,
           "bay_axes_m": null,
           "window_ratio": null,
           "window_height_m": null,
           "sill_m": null,
-          "balconies": null,
+          "balconies": false,
           "balcony_depth_m": null,
           "gallery_depth_m": null,
           "awning_depth_m": null,
           "cladding": null,
           "services": null,
-          "openings": [
-            {
-              "kind": "gate",
-              "u_m": 1.1549232924828066,
-              "v_m": 0.05,
-              "width_m": 2.0898124927357493,
-              "height_m": 3.3,
-              "frame_width_m": 0.06,
-              "recess_m": 0.08,
-              "source": "assumed",
-              "view_id": null,
-              "score": 0.0,
-              "style": "sliding",
-              "grille": false,
-              "mullion_columns": 2,
-              "mullion_rows": 2,
-              "balcony_depth_m": 0.75,
-              "prefab": "metal_gate",
-              "curtain": 0.0,
-              "grille_pattern": "vertical",
-              "shape": "rectangle",
-              "arch_rise_m": null
-            }
-          ],
-          "projections": [
-            {
-              "kind": "cornice",
-              "u_m": 0.08,
-              "v_m": 5.050000000000001,
-              "width_m": 4.239659077701362,
-              "height_m": 0.3,
-              "depth_m": 0.23,
-              "material_slot": "frame",
-              "border_width_m": 0.18,
-              "source": "assumed",
-              "score": 0.0,
-              "label": ""
-            },
-            {
-              "kind": "pilaster",
-              "u_m": 0.08,
-              "v_m": 0.1,
-              "width_m": 0.25,
-              "height_m": 4.95,
-              "depth_m": 0.13,
-              "material_slot": "frame",
-              "border_width_m": 0.18,
-              "source": "assumed",
-              "score": 0.0,
-              "label": ""
-            },
-            {
-              "kind": "pilaster",
-              "u_m": 4.049659077701363,
-              "v_m": 0.1,
-              "width_m": 0.25,
-              "height_m": 4.95,
-              "depth_m": 0.13,
-              "material_slot": "frame",
-              "border_width_m": 0.18,
-              "source": "assumed",
-              "score": 0.0,
-              "label": ""
-            }
-          ],
+          "openings": null,
+          "projections": [],
           "material_regions": [],
           "stairs": null,
           "opening_edits": null,
           "added_openings": null,
-          "bay_groups": [],
+          "bay_groups": [
+            {
+              "u": [
+                0.0,
+                1.0
+              ],
+              "count": 1,
+              "ground_role": "entrance",
+              "role": null
+            }
+          ],
           "motifs": [],
           "crowns": [],
-          "order": null,
-          "opening_programs": []
+          "order": {
+            "pilaster_mode": "explicit",
+            "pilaster_width_m": 0.34,
+            "pilaster_depth_m": 0.2,
+            "pilaster_axes_u": [
+              0.07,
+              0.93
+            ],
+            "paired_bays": [],
+            "plinth_height_m": 0.9,
+            "belt_courses_m": [],
+            "entablature_height_m": 0.45,
+            "cornice_height_m": 0.32
+          },
+          "opening_programs": [
+            {
+              "group": 0,
+              "floor": null,
+              "kind": "door",
+              "shape": "rectangle",
+              "width_ratio": 0.62,
+              "height_m": 3.6,
+              "sill_m": 0.04,
+              "prefab": "storefront",
+              "grille": null
+            }
+          ],
+          "top_profile": null
         }
       },
       {
@@ -543,7 +498,8 @@
           "motifs": [],
           "crowns": [],
           "order": null,
-          "opening_programs": []
+          "opening_programs": [],
+          "top_profile": null
         }
       },
       {
@@ -705,7 +661,8 @@
           "motifs": [],
           "crowns": [],
           "order": null,
-          "opening_programs": []
+          "opening_programs": [],
+          "top_profile": null
         }
       }
     ],
@@ -723,9 +680,9 @@
       "zones": []
     },
     "primary_color": [
-      0.78,
-      0.79,
-      0.76
+      0.52,
+      0.55,
+      0.53
     ],
     "side_material": "plaster",
     "masses": null,

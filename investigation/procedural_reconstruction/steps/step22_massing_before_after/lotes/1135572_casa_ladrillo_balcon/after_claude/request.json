@@ -1,0 +1,686 @@
+{
+  "context": {
+    "parcel": [
+      [
+        7.52,
+        0.592
+      ],
+      [
+        0.745,
+        0.0
+      ],
+      [
+        0.0,
+        9.973
+      ],
+      [
+        6.775,
+        10.565
+      ]
+    ],
+    "fronts": [
+      1,
+      2
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "locked_height_m": null
+  },
+  "theta": {
+    "roof_bodies": [],
+    "schema_version": "0.3",
+    "height_m": null,
+    "floors": null,
+    "family": "republicano",
+    "massing": {
+      "pattern": null,
+      "front_setback_m": null,
+      "upper_setback_m": null,
+      "podium_floors": null,
+      "front_depth_m": null,
+      "low_floors": null,
+      "corner_reach_m": null,
+      "components": [
+        {
+          "id": "front",
+          "region": {
+            "front_edge": 3,
+            "u": [
+              0.22,
+              0.68
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": [
+              0.0,
+              4.0
+            ],
+            "fit": "parcel",
+            "width_reference": "edge"
+          },
+          "levels_m": [
+            0.0,
+            3.6
+          ],
+          "kind": "enclosed",
+          "cutouts": [],
+          "support": {
+            "kind": "bearing",
+            "spacing_m": 4.0,
+            "column_width_m": 0.25,
+            "inset_m": 0.4,
+            "max_cantilever_m": 0.0
+          },
+          "facade": null,
+          "faces": [],
+          "roof": null,
+          "slab_m": 0.18,
+          "zones": []
+        },
+        {
+          "id": "rear",
+          "region": {
+            "front_edge": 3,
+            "u": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": [
+              4.0,
+              9.0
+            ],
+            "fit": "parcel",
+            "width_reference": "edge"
+          },
+          "levels_m": [
+            0.0,
+            3.3,
+            6.9
+          ],
+          "kind": "enclosed",
+          "cutouts": [],
+          "support": {
+            "kind": "bearing",
+            "spacing_m": 4.0,
+            "column_width_m": 0.25,
+            "inset_m": 0.4,
+            "max_cantilever_m": 0.0
+          },
+          "facade": null,
+          "faces": [],
+          "roof": null,
+          "slab_m": 0.18,
+          "zones": []
+        }
+      ],
+      "parcel_tolerance_m": 0.0
+    },
+    "facade": {
+      "mode": "explicit",
+      "bay_count": null,
+      "bay_axes_m": null,
+      "window_ratio": null,
+      "window_height_m": null,
+      "sill_m": null,
+      "balconies": null,
+      "balcony_depth_m": null,
+      "gallery_depth_m": null,
+      "awning_depth_m": null,
+      "cladding": null,
+      "services": null,
+      "openings": [],
+      "projections": null,
+      "material_regions": null,
+      "stairs": null,
+      "opening_edits": null,
+      "added_openings": null,
+      "bay_groups": [],
+      "motifs": [],
+      "crowns": [],
+      "order": null,
+      "opening_programs": [],
+      "top_profile": null
+    },
+    "facades": [
+      {
+        "mass_role": "front:0",
+        "edge": 3,
+        "controls": {
+          "mode": "explicit",
+          "bay_count": null,
+          "bay_axes_m": null,
+          "window_ratio": null,
+          "window_height_m": null,
+          "sill_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "gallery_depth_m": null,
+          "awning_depth_m": null,
+          "cladding": null,
+          "services": null,
+          "openings": [
+            {
+              "kind": "window",
+              "u_m": 0.8688843854925679,
+              "v_m": 0.8,
+              "width_m": 1.3906062756484996,
+              "height_m": 1.65,
+              "frame_width_m": 0.06,
+              "recess_m": 0.22,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": true,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "slim_window",
+              "curtain": 0.0,
+              "grille_pattern": "diamond",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            }
+          ],
+          "projections": [
+            {
+              "kind": "moulded_surround",
+              "u_m": 0.6488843854925679,
+              "v_m": 0.5800000000000001,
+              "width_m": 1.8306062756484995,
+              "height_m": 2.09,
+              "depth_m": 0.28,
+              "material_slot": "frame",
+              "border_width_m": 0.22,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "frame",
+              "u_m": 0.8688843854925679,
+              "v_m": 0.35000000000000003,
+              "width_m": 1.3906062756484996,
+              "height_m": 0.3,
+              "depth_m": 0.09,
+              "material_slot": "frame",
+              "border_width_m": 0.055,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "classical_cornice",
+              "u_m": 0.04,
+              "v_m": 3.06,
+              "width_m": 3.0483750466336352,
+              "height_m": 0.52,
+              "depth_m": 0.46,
+              "material_slot": "frame",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "ledge",
+              "u_m": 0.04,
+              "v_m": 2.74,
+              "width_m": 3.0483750466336352,
+              "height_m": 0.16,
+              "depth_m": 0.22,
+              "material_slot": "frame",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "panel",
+              "u_m": 0.02,
+              "v_m": 0.0,
+              "width_m": 3.0883750466336353,
+              "height_m": 0.42,
+              "depth_m": 0.08,
+              "material_slot": "accent",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            }
+          ],
+          "material_regions": [],
+          "stairs": null,
+          "opening_edits": null,
+          "added_openings": null,
+          "bay_groups": [],
+          "motifs": [],
+          "crowns": [],
+          "order": null,
+          "opening_programs": [],
+          "top_profile": null
+        }
+      },
+      {
+        "mass_role": "rear:0",
+        "edge": 3,
+        "controls": {
+          "mode": "explicit",
+          "bay_count": null,
+          "bay_axes_m": null,
+          "window_ratio": null,
+          "window_height_m": null,
+          "sill_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "gallery_depth_m": null,
+          "awning_depth_m": null,
+          "cladding": null,
+          "services": null,
+          "openings": [
+            {
+              "kind": "door",
+              "u_m": 0.9919234608110595,
+              "v_m": 0.05,
+              "width_m": 1.691368459760368,
+              "height_m": 2.9,
+              "frame_width_m": 0.06,
+              "recess_m": 0.22,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": false,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "wood_panel",
+              "curtain": 0.0,
+              "grille_pattern": "diamond",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "window",
+              "u_m": 4.067138842193547,
+              "v_m": 0.8,
+              "width_m": 1.691368459760368,
+              "height_m": 1.65,
+              "frame_width_m": 0.06,
+              "recess_m": 0.22,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": true,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "slim_window",
+              "curtain": 0.0,
+              "grille_pattern": "diamond",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "window",
+              "u_m": 0.9919234608110595,
+              "v_m": 4.1,
+              "width_m": 1.691368459760368,
+              "height_m": 1.65,
+              "frame_width_m": 0.06,
+              "recess_m": 0.22,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": true,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "slim_window",
+              "curtain": 0.0,
+              "grille_pattern": "diamond",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "window",
+              "u_m": 4.067138842193547,
+              "v_m": 4.1,
+              "width_m": 1.691368459760368,
+              "height_m": 1.65,
+              "frame_width_m": 0.06,
+              "recess_m": 0.22,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": true,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "slim_window",
+              "curtain": 0.0,
+              "grille_pattern": "diamond",
+              "shape": "rectangle",
+              "arch_rise_m": null
+            }
+          ],
+          "projections": [
+            {
+              "kind": "moulded_surround",
+              "u_m": 0.7719234608110596,
+              "v_m": 0.0,
+              "width_m": 2.131368459760368,
+              "height_m": 3.17,
+              "depth_m": 0.28,
+              "material_slot": "frame",
+              "border_width_m": 0.22,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "moulded_surround",
+              "u_m": 3.8471388421935466,
+              "v_m": 0.5800000000000001,
+              "width_m": 2.131368459760368,
+              "height_m": 2.09,
+              "depth_m": 0.28,
+              "material_slot": "frame",
+              "border_width_m": 0.22,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "frame",
+              "u_m": 4.067138842193547,
+              "v_m": 0.35000000000000003,
+              "width_m": 1.691368459760368,
+              "height_m": 0.3,
+              "depth_m": 0.09,
+              "material_slot": "frame",
+              "border_width_m": 0.055,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "moulded_surround",
+              "u_m": 0.7719234608110596,
+              "v_m": 3.8799999999999994,
+              "width_m": 2.131368459760368,
+              "height_m": 2.09,
+              "depth_m": 0.28,
+              "material_slot": "frame",
+              "border_width_m": 0.22,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "frame",
+              "u_m": 0.9919234608110595,
+              "v_m": 3.6499999999999995,
+              "width_m": 1.691368459760368,
+              "height_m": 0.3,
+              "depth_m": 0.09,
+              "material_slot": "frame",
+              "border_width_m": 0.055,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "moulded_surround",
+              "u_m": 3.8471388421935466,
+              "v_m": 3.8799999999999994,
+              "width_m": 2.131368459760368,
+              "height_m": 2.09,
+              "depth_m": 0.28,
+              "material_slot": "frame",
+              "border_width_m": 0.22,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "frame",
+              "u_m": 4.067138842193547,
+              "v_m": 3.6499999999999995,
+              "width_m": 1.691368459760368,
+              "height_m": 0.3,
+              "depth_m": 0.09,
+              "material_slot": "frame",
+              "border_width_m": 0.055,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "classical_cornice",
+              "u_m": 0.04,
+              "v_m": 6.36,
+              "width_m": 6.6704307627649735,
+              "height_m": 0.52,
+              "depth_m": 0.46,
+              "material_slot": "frame",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "ledge",
+              "u_m": 0.04,
+              "v_m": 6.04,
+              "width_m": 6.6704307627649735,
+              "height_m": 0.16,
+              "depth_m": 0.22,
+              "material_slot": "frame",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "panel",
+              "u_m": 0.02,
+              "v_m": 0.0,
+              "width_m": 0.9719234608110595,
+              "height_m": 0.42,
+              "depth_m": 0.08,
+              "material_slot": "accent",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            },
+            {
+              "kind": "panel",
+              "u_m": 2.6832919205714276,
+              "v_m": 0.0,
+              "width_m": 4.047138842193546,
+              "height_m": 0.42,
+              "depth_m": 0.08,
+              "material_slot": "accent",
+              "border_width_m": 0.18,
+              "source": "assumed",
+              "score": 0.0,
+              "label": "",
+              "arch_rise_m": null
+            }
+          ],
+          "material_regions": [],
+          "stairs": null,
+          "opening_edits": null,
+          "added_openings": null,
+          "bay_groups": [],
+          "motifs": [],
+          "crowns": [],
+          "order": null,
+          "opening_programs": [],
+          "top_profile": null
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0.25,
+      "slope_deg": null,
+      "props": []
+    },
+    "roofs": [],
+    "site": {
+      "fence": "reja",
+      "garden": null,
+      "runs": null,
+      "zones": [
+        {
+          "id": "passage",
+          "kind": "corridor",
+          "region": {
+            "front_edge": null,
+            "u": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": null,
+            "fit": "parcel",
+            "width_reference": "parcel"
+          },
+          "slope_deg": 0.0
+        }
+      ]
+    },
+    "primary_color": [
+      0.64,
+      0.39,
+      0.31
+    ],
+    "side_material": "plaster",
+    "masses": null,
+    "materials": [
+      {
+        "slot": "frame",
+        "template": "plaster",
+        "color": [
+          0.69,
+          0.72,
+          0.69
+        ]
+      },
+      {
+        "slot": "stone",
+        "template": "plaster",
+        "color": [
+          0.52,
+          0.56,
+          0.53
+        ]
+      },
+      {
+        "slot": "accent",
+        "template": "accent",
+        "color": [
+          0.22,
+          0.26,
+          0.27
+        ]
+      },
+      {
+        "slot": "sign",
+        "template": "sign",
+        "color": [
+          0.37,
+          0.42,
+          0.4
+        ]
+      },
+      {
+        "slot": "roof",
+        "template": "roof",
+        "color": [
+          0.33,
+          0.29,
+          0.28
+        ]
+      },
+      {
+        "slot": "roof_tile",
+        "template": "roof_tile",
+        "color": [
+          0.34,
+          0.26,
+          0.24
+        ]
+      }
+    ],
+    "finish": null
+  },
+  "nuisance": {
+    "seed": 90,
+    "curtains": false
+  },
+  "config": {
+    "implementation": "theta-candidate-v0",
+    "grammar_reference": "grammar-v1.0",
+    "completion_policy": "conservative-0.2",
+    "detail": 2
+  },
+  "observations": [
+    {
+      "view_id": "8X64uLM6HlvJrpia1FU6gw",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1135572/01_8X64uLM6HlvJrpia1FU6gw.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "elYzWYdLrFSlYmAI-mC8bg",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1135572/02_elYzWYdLrFSlYmAI-mC8bg.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    },
+    {
+      "view_id": "iB0-B0rGgx9ra_tso1wkUw",
+      "image_path": "steps/step22_massing_before_after/edificios_a_probar/1135572/03_iB0-B0rGgx9ra_tso1wkUw.jpg",
+      "camera_xyz": null,
+      "heading_pitch_roll_deg": null,
+      "timestamp": null
+    }
+  ],
+  "evidence": {}
+}

@@ -37,6 +37,7 @@
               "group": 1,
               "kind": "door",
               "shape": "arch",
+              "prefab": "open",
               "height_m": 4.8,
               "width_ratio": 0.72,
               "sill_m": 0.04
@@ -204,11 +205,11 @@
     ]
   },
   "comparisons": 5,
-  "mesh_sha256": "42329b152b64ad26f231de320bc92a4fb6f80c84a0ea29bcbdc606e8b579891f",
+  "mesh_sha256": "0d79791916aefe5ad023851be88020c99c78969c3cd8814e0c6a7e6acc25e1f5",
   "validation": {
-    "vertices": 13494,
-    "triangles": 24364,
-    "parts": 350,
+    "vertices": 13440,
+    "triangles": 24260,
+    "parts": 349,
     "semantic_types": [
       "arched_frame",
       "cornice_drip",
@@ -238,7 +239,7 @@
       "security_bar": 5164,
       "wall": 4212,
       "window_panel": 2600,
-      "door_panel": 1040,
+      "door_panel": 936,
       "pilaster_cap": 836,
       "pilaster_base": 564,
       "pilaster": 564,

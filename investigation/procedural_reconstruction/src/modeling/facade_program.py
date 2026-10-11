@@ -64,25 +64,43 @@ FAMILY_RULES = {
         pitch=2.8, window_ratio=0.42, window_h=2.25, sill=0.75, grille=True,
         ground="entrance", upper="repetitive", cornice=0.42, sill_band=True,
         pilasters=True, shutters=True, balcony_every=3, balcony_style="balusters",
-        ground_material="stone", prefab="legacy",
+        ground_material="stone", prefab="legacy", arch_ground=True, arch_upper=True,
+        cornice_type="denticulated_cornice",
     ),
     "galeria_madera": dict(
         pitch=3.0, window_ratio=0.62, window_h=1.85, sill=0.25, grille=False,
         ground="shopfront", upper="gallery", cornice=0.20, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="balusters",
-        ground_material="wood", prefab="legacy", awning=True,
+        ground_material="wood", prefab="legacy", awning=True, arch_upper=True,
+        cornice_type="cornice",
     ),
     "esquina_comercial": dict(
         pitch=3.2, window_ratio=0.54, window_h=1.70, sill=0.80, grille=False,
         ground="shopfront", upper="balcony_column", cornice=0.30, sill_band=True,
         pilasters=True, shutters=False, balcony_every=2, balcony_style="solid",
         ground_material="stone", prefab="slim_window", awning=True, sign="LOCAL",
+        arch_ground=True, cornice_type="denticulated_cornice",
     ),
     "quinta": dict(
         pitch=2.7, window_ratio=0.50, window_h=1.40, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.16, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="bars",
-        ground_material=None, prefab="wood_panel",
+        ground_material=None, prefab="wood_panel", arch_upper=True,
+        cornice_type="cornice",
+    ),
+    "neoclasico": dict(
+        pitch=3.5, window_ratio=0.40, window_h=2.40, sill=0.90, grille=True,
+        ground="entrance", upper="repetitive", cornice=0.55, sill_band=True,
+        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        cornice_type="denticulated_cornice", sign="BCP",
+    ),
+    "neoclasico_esquina": dict(
+        pitch=3.2, window_ratio=0.45, window_h=2.30, sill=0.85, grille=True,
+        ground="entrance", upper="repetitive", cornice=0.60, sill_band=True,
+        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        cornice_type="denticulated_cornice",
     ),
 }
 
@@ -93,6 +111,8 @@ FAMILIES_BY_USE = {
     "commercial": ("mixed_use", "workshop", "esquina_comercial", "galeria_madera"),
     "mixed": ("mixed_use", "esquina_comercial", "galeria_madera",
               "balcony_apartments", "brick_courtyard"),
+    "bank": ("neoclasico", "neoclasico_esquina"),
+    "public": ("neoclasico", "neoclasico_esquina", "republicano"),
 }
 
 MARGIN_M = 0.32
@@ -113,7 +133,8 @@ def resolve_family(program, rng):
     named = getattr(program, "architectural_language", "auto")
     if named in FAMILY_RULES:
         return named
-    pool = FAMILIES_BY_USE.get(program.use, FAMILIES_BY_USE["residential"])
+    pool = FAMILIES_BY_USE.get(getattr(program, "use", "residential"),
+                               FAMILIES_BY_USE["residential"])
     return str(rng.choice(pool))
 
 
@@ -134,7 +155,12 @@ def bay_axes(length):
 
 
 def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
-             columns=2, rows=1, balcony_depth=0.75, curtain=0.0):
+             columns=2, rows=1, balcony_depth=0.75, curtain=0.0, arch_rise=None):
+    shape = "arch" if (arch_rise is not None or
+                       (rules.get("arch_ground") and kind in ("door", "gate")) or
+                       (rules.get("arch_upper") and kind == "window")) else "rectangle"
+    if arch_rise is None and shape == "arch":
+        arch_rise = min(width * 0.45, height * 0.40)
     return Opening(
         kind=kind,
         u_m=u,
@@ -143,7 +169,7 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
         height_m=height,
         frame_width_m=0.07,
         recess_m=0.12,
-        style="sliding",
+        style="sliding" if kind == "window" else "ornate_gate" if kind in ("door", "gate") and shape == "arch" else "legacy",
         grille=rules["grille"] if grille is None else grille,
         mullion_columns=max(1, columns),
         mullion_rows=max(1, rows),
@@ -152,6 +178,8 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
         curtain=curtain,
         grille_pattern="grid",
         source="family_rule",
+        shape=shape,
+        arch_rise_m=arch_rise,
     )
 
 
@@ -192,26 +220,30 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
         if u < 0.14 or u + width > length - 0.14:
             dropped.append(f"ground_bay_{index}_outside_wall")
             continue
+        arch_rise = None
+        if rules.get("arch_ground") and kind in ("door", "gate") and width > 0.6:
+            arch_rise = min(width * 0.48, height * 0.38)
         if kind == "window":
-            # One sill value, used for both the position and the remaining
-            # height. Clamping only the position let the height overrun the
-            # storey on a low band.
             sill = max(0.4, min(rules["sill"], z1 - z0 - height - 0.2))
             available = z1 - z0 - sill - 0.3
             if available < 0.5:
                 dropped.append(f"ground_bay_{index}_window_does_not_fit")
                 continue
+            arch_r = None
+            if rules.get("arch_upper") or rules.get("arch_ground"):
+                arch_r = min(width * 0.45, height * 0.40)
             openings.append(
                 _opening(kind, u, z0 + sill, width,
                          min(rules["window_h"], available),
                          rules, prefab=prefab, grille=grille,
-                         columns=max(2, int(width / 0.8)))
+                         columns=max(2, int(width / 0.8)), arch_rise=arch_r)
             )
         else:
             openings.append(
                 _opening(kind, u, z0 + 0.04, width, height, rules,
                          prefab=prefab, grille=grille,
-                         columns=max(1, int(width / 1.1)), rows=3)
+                         columns=max(1, int(width / 1.1)), rows=3,
+                         arch_rise=arch_rise)
             )
     return openings
 
@@ -254,12 +286,16 @@ def _upper_openings(axes, pitch, z0, z1, length, floor_index, rules, rng, droppe
         top = z0 + sill_used + (height + 0.5 if balcony else height)
         if top > z1 - 0.12:
             sill_used = max(0.12, z1 - 0.12 - z0 - height)
+        arch_r = None
+        if rules.get("arch_upper") and kind == "window":
+            arch_r = min(width * 0.45, height * 0.40)
         openings.append(
             _opening(kind, u, z0 + sill_used, width,
                      min(height + (0.5 if balcony else 0.0), z1 - z0 - sill_used - 0.15),
                      rules, columns=columns, rows=rows,
                      balcony_depth=float(rng.uniform(0.75, 1.05)),
-                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0)
+                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0,
+                     arch_rise=arch_r)
         )
     return openings
 
@@ -369,7 +405,8 @@ def compose_relief(length, levels, openings, rules, band_height,
 
     if is_top_band and rules["cornice"] > 0:
         depth = float(np.clip(rules["cornice"], 0.12, 0.42))
-        add("cornice", 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
+        cornice_kind = rules.get("cornice_type", "cornice")
+        add(cornice_kind, 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
             length - 0.08, rules["cornice"], depth)
 
     for opening in openings:

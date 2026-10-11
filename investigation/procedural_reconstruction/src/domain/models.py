@@ -99,7 +99,7 @@ class Opening:
     source: str = "assumed"
     view_id: str | None = None
     score: float = 0.0
-    style: str = "sliding"  # sliding | casement | transom | paneled
+    style: str = "sliding"  # sliding | casement | transom | paneled; open prefab also supports vestibule
     grille: bool = False
     mullion_columns: int = 2
     mullion_rows: int = 2
@@ -139,6 +139,7 @@ class FacadeProjection:
     source: str = "assumed"
     score: float = 0.0
     label: str = ""  # optional relief lettering for sign panels
+    arch_rise_m: float | None = None  # segmental surround follows its opening's arch
 
 
 @dataclass(frozen=True)
@@ -207,6 +208,9 @@ class FacadeSpecification:
     ornamented: bool = True
     program_enabled: bool | None = None  # None preserves legacy is_front gating
     top_profile: ResolvedTopProfile | None = None
+    has_window_subdivisions: bool = False
+    window_subdiv_type: str = "horizontal_bar"  # horizontal_bar | vertical_bar | grid | casement
+    window_style: str = "recessed"  # recessed | flush | projected
 
     @property
     def has_program(self) -> bool:

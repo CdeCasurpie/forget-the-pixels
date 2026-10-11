@@ -35,6 +35,7 @@ src/
 │   ├── materials.py
 │   ├── mesh_builder.py
 │   ├── migration.py
+│   ├── ornaments.py
 │   ├── prefabs.py
 │   ├── prefabs_facade.py
 │   ├── prefabs_roof.py
@@ -289,7 +290,7 @@ class BuildingSpecificationV4:
     seed: int
 
 ========================================================================
-FILE: domain/models.py (322 lineas)
+FILE: domain/models.py (326 lineas)
 ========================================================================
 """Typed, serializable contracts independent from CLI, plotting, and export."""
 
@@ -392,7 +393,7 @@ class Opening:
     source: str = "assumed"
     view_id: str | None = None
     score: float = 0.0
-    style: str = "sliding"  # sliding | casement | transom | paneled
+    style: str = "sliding"  # sliding | casement | transom | paneled; open prefab also supports vestibule
     grille: bool = False
     mullion_columns: int = 2
     mullion_rows: int = 2
@@ -432,6 +433,7 @@ class FacadeProjection:
     source: str = "assumed"
     score: float = 0.0
     label: str = ""  # optional relief lettering for sign panels
+    arch_rise_m: float | None = None  # segmental surround follows its opening's arch
 
 
 @dataclass(frozen=True)
@@ -500,6 +502,9 @@ class FacadeSpecification:
     ornamented: bool = True
     program_enabled: bool | None = None  # None preserves legacy is_front gating
     top_profile: ResolvedTopProfile | None = None
+    has_window_subdivisions: bool = False
+    window_subdiv_type: str = "horizontal_bar"  # horizontal_bar | vertical_bar | grid | casement
+    window_style: str = "recessed"  # recessed | flush | projected
 
     @property
     def has_program(self) -> bool:
@@ -1173,7 +1178,7 @@ __all__ = [
 ]
 
 ========================================================================
-FILE: modeling/apertures.py (39 lineas)
+FILE: modeling/apertures.py (87 lineas)
 ========================================================================
 """True curved apertures and open/perforated infills using existing panels."""
 import numpy as np
@@ -1193,18 +1198,66 @@ def opening_shape(op):
     return Polygon([(u,v),(u+w,v),*arc])
 
 
+def arch_components(u, v, w, h, rise, frame_f=0.07, impost_z=None):
+    """Return (ring_poly, keystone_poly, impost_polys) for a round arch.
+
+    * ring — the full arch profile (jamb-to-jamb + semicircle)
+    * keystone — the central voussoir, exaggerated ~25% taller
+    * impost_polys — horizontal bands at the springing line on each side
+    """
+    cx, top = u + w / 2, v + h
+    arc_pts = [(cx + (w / 2) * np.cos(t), top - rise + rise * np.sin(t))
+               for t in np.linspace(0, np.pi, 25)]
+    ring = Polygon([(u, v), (u + w, v), *arc_pts])
+    inner = ring.buffer(-frame_f, join_style=2)
+    ring = ring.difference(inner)
+
+    # Compact central block contained within the frame at the apex.
+    kw = min(w * 0.08, frame_f * 1.2)
+    kh = min(rise * 0.30, frame_f)
+    keystone = box(cx - kw, top - kh, cx + kw, top)
+
+    iz = impost_z if impost_z is not None else top - rise
+    ih = min(rise * 0.12, frame_f)
+    imp_l = box(u, iz, u + frame_f, iz + ih)
+    imp_r = box(u + w - frame_f, iz, u + w, iz + ih)
+    return ring, keystone, [imp_l, imp_r]
+
+
 def shaped_opening(mb,a,t,n,op):
     shape=opening_shape(op)
     inside=shape.buffer(-min(op.frame_width_m,op.width_m/5),join_style=2)
     def panel(p,back,front,mat,semantic):
         mb.panel(a,t,n,[p],back,front,lambda *args:mat,semantic)
     panel(shape.difference(inside),-op.recess_m,.035,'frame','arched_frame' if op.shape=='arch' else 'window_frame')
+    if op.shape == 'arch':
+        u, v, w, h = op.u_m, op.v_m, op.width_m, op.height_m
+        rise = op.arch_rise_m if op.arch_rise_m is not None else min(w / 2, h / 2)
+        ring_poly, keystone, imp_polys = arch_components(u, v, w, h, rise,
+                                                       min(op.frame_width_m, w/5))
+        panel(keystone, -op.recess_m + 0.008, 0.043,
+              'stone', 'keystone')
+        for imp in imp_polys:
+            panel(imp, -op.recess_m, 0.038,
+                  'stone', 'impost_band')
+        # Radial voussoir lines for a stone-blocked arch
+        cx, top = u + w / 2, v + h
+        n_blocks = 7
+        for i in range(n_blocks):
+            angle = np.pi * (i + 0.5) / n_blocks
+            ex = cx + (w / 2) * np.cos(angle)
+            ez = top - rise + rise * np.sin(angle)
+            mb.beam((*(np.asarray(a) + t * ex + n * (-op.recess_m)), ez),
+                    (*(np.asarray(a) + t * ex + n * 0.038), ez),
+                    0.012, material='stone', semantic='voussoir_joint')
     if op.prefab=='screen':
         perforations=[]; pitch=.3; bar=.06
         for u in np.arange(op.u_m,op.u_m+op.width_m,pitch):
             for v in np.arange(op.v_m,op.v_m+op.height_m,pitch):
                 perforations.append(box(u+bar,v+bar,u+pitch-bar,v+pitch-bar))
         panel(inside.difference(unary_union(perforations)),-op.recess_m,0.,'stone','perforated_screen')
+    elif op.prefab=='open' and op.style=='vestibule':
+        panel(inside,-op.recess_m-.82,-op.recess_m-.80,'interior','interior_backing')
     elif op.prefab!='open':
         mat='wood' if op.kind in ('door','gate') else 'glass'
         if op.prefab=='metal_gate':mat='metal'
@@ -2833,7 +2886,7 @@ def emit_section(builder,wall,zone):
                       assembly_id=f.edge_id,component_id=f.edge_id+'/'+semantic+str(i))
 
 ========================================================================
-FILE: modeling/facade_program.py (423 lineas)
+FILE: modeling/facade_program.py (460 lineas)
 ========================================================================
 """Composition of one wall: bay rhythm, opening programme and applied relief.
 
@@ -2901,25 +2954,43 @@ FAMILY_RULES = {
         pitch=2.8, window_ratio=0.42, window_h=2.25, sill=0.75, grille=True,
         ground="entrance", upper="repetitive", cornice=0.42, sill_band=True,
         pilasters=True, shutters=True, balcony_every=3, balcony_style="balusters",
-        ground_material="stone", prefab="legacy",
+        ground_material="stone", prefab="legacy", arch_ground=True, arch_upper=True,
+        cornice_type="denticulated_cornice",
     ),
     "galeria_madera": dict(
         pitch=3.0, window_ratio=0.62, window_h=1.85, sill=0.25, grille=False,
         ground="shopfront", upper="gallery", cornice=0.20, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="balusters",
-        ground_material="wood", prefab="legacy", awning=True,
+        ground_material="wood", prefab="legacy", awning=True, arch_upper=True,
+        cornice_type="cornice",
     ),
     "esquina_comercial": dict(
         pitch=3.2, window_ratio=0.54, window_h=1.70, sill=0.80, grille=False,
         ground="shopfront", upper="balcony_column", cornice=0.30, sill_band=True,
         pilasters=True, shutters=False, balcony_every=2, balcony_style="solid",
         ground_material="stone", prefab="slim_window", awning=True, sign="LOCAL",
+        arch_ground=True, cornice_type="denticulated_cornice",
     ),
     "quinta": dict(
         pitch=2.7, window_ratio=0.50, window_h=1.40, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.16, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="bars",
-        ground_material=None, prefab="wood_panel",
+        ground_material=None, prefab="wood_panel", arch_upper=True,
+        cornice_type="cornice",
+    ),
+    "neoclasico": dict(
+        pitch=3.5, window_ratio=0.40, window_h=2.40, sill=0.90, grille=True,
+        ground="entrance", upper="repetitive", cornice=0.55, sill_band=True,
+        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        cornice_type="denticulated_cornice", sign="BCP",
+    ),
+    "neoclasico_esquina": dict(
+        pitch=3.2, window_ratio=0.45, window_h=2.30, sill=0.85, grille=True,
+        ground="entrance", upper="repetitive", cornice=0.60, sill_band=True,
+        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        cornice_type="denticulated_cornice",
     ),
 }
 
@@ -2930,6 +3001,8 @@ FAMILIES_BY_USE = {
     "commercial": ("mixed_use", "workshop", "esquina_comercial", "galeria_madera"),
     "mixed": ("mixed_use", "esquina_comercial", "galeria_madera",
               "balcony_apartments", "brick_courtyard"),
+    "bank": ("neoclasico", "neoclasico_esquina"),
+    "public": ("neoclasico", "neoclasico_esquina", "republicano"),
 }
 
 MARGIN_M = 0.32
@@ -2950,7 +3023,8 @@ def resolve_family(program, rng):
     named = getattr(program, "architectural_language", "auto")
     if named in FAMILY_RULES:
         return named
-    pool = FAMILIES_BY_USE.get(program.use, FAMILIES_BY_USE["residential"])
+    pool = FAMILIES_BY_USE.get(getattr(program, "use", "residential"),
+                               FAMILIES_BY_USE["residential"])
     return str(rng.choice(pool))
 
 
@@ -2971,7 +3045,12 @@ def bay_axes(length):
 
 
 def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
-             columns=2, rows=1, balcony_depth=0.75, curtain=0.0):
+             columns=2, rows=1, balcony_depth=0.75, curtain=0.0, arch_rise=None):
+    shape = "arch" if (arch_rise is not None or
+                       (rules.get("arch_ground") and kind in ("door", "gate")) or
+                       (rules.get("arch_upper") and kind == "window")) else "rectangle"
+    if arch_rise is None and shape == "arch":
+        arch_rise = min(width * 0.45, height * 0.40)
     return Opening(
         kind=kind,
         u_m=u,
@@ -2980,7 +3059,7 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
         height_m=height,
         frame_width_m=0.07,
         recess_m=0.12,
-        style="sliding",
+        style="sliding" if kind == "window" else "ornate_gate" if kind in ("door", "gate") and shape == "arch" else "legacy",
         grille=rules["grille"] if grille is None else grille,
         mullion_columns=max(1, columns),
         mullion_rows=max(1, rows),
@@ -2989,6 +3068,8 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
         curtain=curtain,
         grille_pattern="grid",
         source="family_rule",
+        shape=shape,
+        arch_rise_m=arch_rise,
     )
 
 
@@ -3029,26 +3110,30 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
         if u < 0.14 or u + width > length - 0.14:
             dropped.append(f"ground_bay_{index}_outside_wall")
             continue
+        arch_rise = None
+        if rules.get("arch_ground") and kind in ("door", "gate") and width > 0.6:
+            arch_rise = min(width * 0.48, height * 0.38)
         if kind == "window":
-            # One sill value, used for both the position and the remaining
-            # height. Clamping only the position let the height overrun the
-            # storey on a low band.
             sill = max(0.4, min(rules["sill"], z1 - z0 - height - 0.2))
             available = z1 - z0 - sill - 0.3
             if available < 0.5:
                 dropped.append(f"ground_bay_{index}_window_does_not_fit")
                 continue
+            arch_r = None
+            if rules.get("arch_upper") or rules.get("arch_ground"):
+                arch_r = min(width * 0.45, height * 0.40)
             openings.append(
                 _opening(kind, u, z0 + sill, width,
                          min(rules["window_h"], available),
                          rules, prefab=prefab, grille=grille,
-                         columns=max(2, int(width / 0.8)))
+                         columns=max(2, int(width / 0.8)), arch_rise=arch_r)
             )
         else:
             openings.append(
                 _opening(kind, u, z0 + 0.04, width, height, rules,
                          prefab=prefab, grille=grille,
-                         columns=max(1, int(width / 1.1)), rows=3)
+                         columns=max(1, int(width / 1.1)), rows=3,
+                         arch_rise=arch_rise)
             )
     return openings
 
@@ -3091,12 +3176,16 @@ def _upper_openings(axes, pitch, z0, z1, length, floor_index, rules, rng, droppe
         top = z0 + sill_used + (height + 0.5 if balcony else height)
         if top > z1 - 0.12:
             sill_used = max(0.12, z1 - 0.12 - z0 - height)
+        arch_r = None
+        if rules.get("arch_upper") and kind == "window":
+            arch_r = min(width * 0.45, height * 0.40)
         openings.append(
             _opening(kind, u, z0 + sill_used, width,
                      min(height + (0.5 if balcony else 0.0), z1 - z0 - sill_used - 0.15),
                      rules, columns=columns, rows=rows,
                      balcony_depth=float(rng.uniform(0.75, 1.05)),
-                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0)
+                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0,
+                     arch_rise=arch_r)
         )
     return openings
 
@@ -3206,7 +3295,8 @@ def compose_relief(length, levels, openings, rules, band_height,
 
     if is_top_band and rules["cornice"] > 0:
         depth = float(np.clip(rules["cornice"], 0.12, 0.42))
-        add("cornice", 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
+        cornice_kind = rules.get("cornice_type", "cornice")
+        add(cornice_kind, 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
             length - 0.08, rules["cornice"], depth)
 
     for opening in openings:
@@ -3654,7 +3744,7 @@ def apply_edge_setbacks(parcel_poly: Polygon, specific_edges: list[LineString], 
     return footprint
 
 ========================================================================
-FILE: modeling/grammar.py (1369 lineas)
+FILE: modeling/grammar.py (1417 lineas)
 ========================================================================
 """Deterministic architectural assembly: facade grammar + roof + selected fences.
 
@@ -3872,6 +3962,8 @@ def opening(mb, a, t, n, op, pattern):
             "door_handle",
         )
         b(u - 0.04, u + w + 0.04, v, v + 0.035, -0.15, 0.12, "stone", "threshold")
+        if op.style == "ornate_gate":
+            _ornate_gate(mb, a, t, n, u, v, w, h, recess)
     else:
         b(
             u - 0.12,
@@ -4014,6 +4106,52 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
         "exterior_stair_landing",
     )
     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
+
+
+def _ornate_gate(mb, a, t, n, u, v, w, h, recess):
+    """Wrought-iron gate with scrollwork diamond pattern and spear finials."""
+    mid_z = (v + h) / 2
+    panels = 3
+    pw = w / panels
+    for pi in range(panels):
+        pu = u + pi * pw
+        # Diamond scroll pattern
+        for row in range(5):
+            z_base = v + 0.15 + row * (h - 0.30) / 5
+            for col in range(3):
+                du = pu + pw * 0.15 + col * pw * 0.28
+                dz = z_base + (0.07 if row % 2 else 0)
+                # Outer diamond frame
+                pts = [
+                    a + t * (du + pw * 0.10) + n * (0.03 + recess),
+                    a + t * (du + pw * 0.22) + n * (0.08 + recess),
+                    a + t * (du + pw * 0.28) + n * (0.03 + recess),
+                    a + t * (du + pw * 0.22) + n * (recess - 0.01),
+                ]
+                for (p1, p2) in [(pts[0], pts[1]), (pts[1], pts[2]),
+                                  (pts[2], pts[3]), (pts[3], pts[0])]:
+                    mb.beam((*p1, dz), (*p2, dz), 0.012,
+                            material="metal", semantic="gate_scroll")
+                # Central vertical bar
+                if col == 1:
+                    mb.beam(
+                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz - 0.04),
+                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz + 0.04),
+                        0.008, material="metal", semantic="gate_bar",
+                    )
+        # Spear finials at top corners
+        for corner_u in [u + 0.04, u + w - 0.04]:
+            finial_base = a + t * corner_u + n * (recess + 0.02)
+            mb.beam((*finial_base, v + h - 0.06),
+                    (*finial_base, v + h + 0.12), 0.018,
+                    material="metal", semantic="gate_finial")
+        # Horizontal rails
+        for z in [v + 0.20, mid_z, v + h - 0.20]:
+            mb.beam(
+                (*(a + t * (u + 0.05) + n * (recess + 0.03)), z),
+                (*(a + t * (u + w - 0.05) + n * (recess + 0.03)), z),
+                0.010, material="metal", semantic="gate_rail",
+            )
 
 
 def _frame_intervals(length, levels):
@@ -7046,7 +7184,122 @@ def migrate_to_v4(legacy: BuildingSpecification,
     )
 
 ========================================================================
-FILE: modeling/prefabs.py (101 lineas)
+FILE: modeling/ornaments.py (111 lineas)
+========================================================================
+"""Facade-local classical templates. Dimensions and materials come from the caller."""
+import numpy as np
+from shapely.geometry import LineString, Point, Polygon, box
+from shapely.affinity import scale
+from dataclasses import replace
+from .prefabs import sign_letters
+
+
+def _panel(mb, a, t, n, shape, back, front, material, semantic):
+    mb.panel(a, t, n, [shape], back, front, lambda *args: material, semantic, clip='envelope')
+
+
+def moulded_surround(mb, a, t, n, feature):
+    """Three nested, hollow mouldings; never place a panel across the aperture."""
+    u, v, w, h = feature.u_m, feature.v_m, feature.width_m, feature.height_m
+    border = min(feature.border_width_m, w / 5, h / 5)
+    inner = box(u + border, v + border, u + w - border, v + h - border)
+    if feature.kind == 'segmental_surround':
+        left, bottom, right, top = inner.bounds
+        rise = feature.arch_rise_m if feature.arch_rise_m is not None else min((right-left)*.28, (top-bottom)*.25, .9)
+        if not np.isfinite(rise) or not 0 < rise < top-bottom:
+            raise ValueError('Invalid surround arch rise')
+        arc = [(u+w/2+(right-left)/2*np.cos(angle), top-rise+rise*np.sin(angle))
+               for angle in np.linspace(0, np.pi, 25)]
+        inner = Polygon([(left,bottom),(right,bottom),*arc])
+    for i in range(3):
+        low, high = border*i/3, border*(i+1)/3
+        ring = inner.buffer(high, join_style=2).difference(inner.buffer(low, join_style=2))
+        _panel(mb,a,t,n,ring,-.015,feature.depth_m*(.5+.25*i),
+               feature.material_slot,'surround_moulding')
+    if feature.kind == 'segmental_surround':
+        cx, top = u+w/2, v+h-border
+        key = Polygon([(cx-border*.4,top-.03),(cx+border*.4,top-.03),
+                       (cx+border*.7,top+border),(cx-border*.7,top+border)])
+        _panel(mb,a,t,n,key,feature.depth_m*.6,feature.depth_m+.045,
+               feature.material_slot,'surround_keystone')
+
+
+def classical_pilaster(mb, a, t, n, feature):
+    """Fluted shaft, moulded base, echinus/abacus and optional composite capital."""
+    u, z, w, h, d = (feature.u_m,feature.v_m,feature.width_m,
+                      feature.height_m,feature.depth_m)
+    mat = feature.material_slot
+    composite = feature.kind == 'composite_pilaster'
+    base, cap = min(.48,h*.12), min(.55 if composite else .32,h*.14)
+    # Recessed longitudinal flutes, cut in the shaft cross-section.
+    section = box(u,-.02,u+w,d*.8)
+    radius = w/18
+    for x in np.linspace(u+w*.18,u+w*.82,5):
+        section = section.difference(Point(x,d*.81).buffer(radius,quad_segs=4))
+    for poly in [section] if section.geom_type=='Polygon' else section.geoms:
+        footprint = Polygon([np.asarray(a)+t*x+n*y for x,y in poly.exterior.coords])
+        mb.solid(footprint,z+base,z+h-cap,mat,'pilaster_fluted_shaft',clip='envelope')
+    for start, height, widths, semantic in (
+        (z,base,(1.0,.88,.96,.82),'pilaster_moulded_base'),
+        (z+h-cap,cap,(.85,1.0,1.13,1.0),'pilaster_moulded_capital')):
+        for i,scale in enumerate(widths):
+            half = w*scale/2
+            mb.box(a,t,n,u+w/2-half,u+w/2+half,start+height*i/4,
+                   start+height*(i+1)/4,-.02,d*(.8+.2*scale),mat,semantic,clip='envelope')
+    if composite:
+        for cx in (u+w*.16,u+w*.84):
+            r = w*.20
+            angles = np.linspace(0,2.6*np.pi,24)
+            curve = [(cx+r*(1-i/(len(angles)*1.12))*np.cos(angle),
+                      z+h-cap*.5+r*(1-i/(len(angles)*1.12))*np.sin(angle))
+                     for i,angle in enumerate(angles)]
+            _panel(mb,a,t,n,LineString(curve).buffer(w*.027,quad_segs=2),d,d+.065,mat,'capital_volute')
+        for cx in (u+w*.28,u+w*.5,u+w*.72):
+            leaf=Polygon([(cx-w*.09,z+h-cap),(cx-w*.10,z+h-cap*.55),
+                          (cx,z+h-cap*.25),(cx+w*.10,z+h-cap*.55)])
+            _panel(mb,a,t,n,leaf,d*.85,d+.04,mat,'capital_leaf')
+
+
+def classical_cornice(mb,a,t,n,feature):
+    """Projected corona above separated dentils and modestly spaced brackets."""
+    u,z,w,h,d=feature.u_m,feature.v_m,feature.width_m,feature.height_m,feature.depth_m
+    mat=feature.material_slot
+    for lo,hi,depth in ((0,.12,.36),(.12,.23,.5),(.62,.76,.83),(.76,.92,1.),(.92,1.,.92)):
+        mb.box(a,t,n,u,u+w,z+h*lo,z+h*hi,-.02,d*depth,mat,'classical_cornice_course',clip='envelope')
+    count=max(1,int(w/.22));pitch=w/count
+    for i in range(count):
+        x=u+(i+.5)*pitch
+        mb.box(a,t,n,x-pitch*.22,x+pitch*.22,z+h*.23,z+h*.46,
+               -.01,d*.68,mat,'classical_dentil',clip='envelope')
+    count=max(1,int(w/.85));pitch=w/count
+    for i in range(count):
+        x=u+(i+.5)*pitch;half=min(.10,pitch*.18)
+        mb.box(a,t,n,x-half,x+half,z+h*.43,z+h*.64,
+               -.01,d*.86,mat,'classical_modillion',clip='envelope')
+
+
+def turned_baluster(mb,a,t,n,u,z,width,height,depth,material='frame'):
+    """Extruded turned silhouette, with neck, belly and foot."""
+    profile=((0,.48),(.10,.48),(.14,.28),(.27,.20),(.40,.42),(.54,.48),
+             (.68,.30),(.80,.15),(.90,.20),(1.,.40))
+    points=[(u+width*r,z+height*v) for v,r in profile]
+    points += [(u-width*r,z+height*v) for v,r in reversed(profile)]
+    _panel(mb,a,t,n,Polygon(points),depth-width*.35,depth+width*.35,
+           material,'turned_baluster')
+
+
+def oval_sign(mb,a,t,n,feature):
+    cx,cz=feature.u_m+feature.width_m/2,feature.v_m+feature.height_m/2
+    oval=scale(Point(cx,cz).buffer(1,quad_segs=16),feature.width_m/2,
+               feature.height_m/2,origin=(cx,cz))
+    _panel(mb,a,t,n,oval,-.015,feature.depth_m,'sign','oval_sign')
+    _panel(mb,a,t,n,oval.difference(oval.buffer(-.065)),feature.depth_m,
+           feature.depth_m+.035,feature.material_slot,'sign_rim')
+    sign_letters(mb,a,t,n,replace(feature,u_m=feature.u_m+feature.width_m*.10,
+                                 width_m=feature.width_m*.80))
+
+========================================================================
+FILE: modeling/prefabs.py (135 lineas)
 ========================================================================
 """Small architectural assemblies in facade metres. No random choices here."""
 import numpy as np
@@ -7068,10 +7321,44 @@ def sign_letters(mb,a,t,n,feature):
         "N":["101","111","111","111","101"],
         "D":["110","101","101","101","110"],
         " ":["000"]*5,
+        "B":["110","101","110","101","110"],
+        "P":["111","101","111","100","100"],
+        "M":["101","111","111","111","101"],
+        "K":["101","110","100","110","101"],
+        "S":["011","100","011","001","110"],
+        "G":["011","100","101","101","011"],
+        "H":["101","101","111","101","101"],
+        "U":["101","101","101","101","111"],
+        "V":["101","101","101","101","010"],
+        "Z":["111","001","010","100","111"],
+        "J":["001","001","001","101","110"],
+        "F":["111","100","111","100","100"],
+        "Y":["101","101","010","010","010"],
+        "W":["101","101","101","101","010"],
+        "X":["101","101","010","101","101"],
+        "Q":["111","101","101","101","111"],
+        "0":["111","101","101","101","111"],
+        "1":["010","110","010","010","111"],
+        "2":["111","001","111","100","111"],
+        "3":["111","001","111","001","111"],
+        "4":["101","101","111","001","001"],
+        "5":["111","100","111","001","111"],
+        "6":["111","100","111","101","111"],
+        "7":["111","001","001","001","001"],
+        "8":["111","101","111","101","111"],
+        "9":["111","101","111","001","111"],
+        ".":["000","000","000","000","100"],
+        "-":["000","000","111","000","000"],
+        "/":["001","001","010","100","100"],
+        ":":["000","100","000","100","000"],
+        "(":["001","010","010","010","001"],
+        ")":["100","010","010","010","100"],
     }
-    label=feature.label.upper()
+    label=feature.label.upper() if feature.label else ""
+    if not label:
+        return
     if any(c not in glyphs for c in label):
-        raise ValueError("Sign glyph unavailable; supported: LOCAL TALLER TIENDA")
+        return
     unit=min(feature.width_m/(len(label)*4+2),feature.height_m/7)
     origin=feature.u_m+(feature.width_m-unit*(len(label)*4-1))/2
     for index,char in enumerate(label):
@@ -7151,7 +7438,7 @@ def build_opening(mb, a, t, n, op):
                         mb.beam(p(*start),p(*end),.005,semantic="grille_diamond")
 
 ========================================================================
-FILE: modeling/prefabs_facade.py (370 lineas)
+FILE: modeling/prefabs_facade.py (437 lineas)
 ========================================================================
 """Facade-attached masses, in facade-local metres. No random choices here.
 
@@ -7165,6 +7452,7 @@ from shapely.geometry import Polygon
 
 from .detail import DEFAULT_BUDGET
 from .prefabs import sign_letters
+from .ornaments import classical_pilaster, classical_cornice, moulded_surround, turned_baluster, oval_sign
 
 LEGACY_KINDS = ("panel", "frame", "ledge", "canopy", "curved_canopy")
 
@@ -7207,6 +7495,14 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
                    "plaster", "balustrade")
         mb.box(a, t, n, u1 - 0.03, u2 + 0.03, top - 0.08, top, -0.01, depth + 0.03,
                "stone", "balustrade_cap", chamfer=0.015)
+        return
+    if style == "turned":
+        for u in np.arange(u1 + .12, u2 - .06, max(.18, spacing * 1.4)):
+            turned_baluster(mb,a,t,n,u,z+.10,.13,.80,depth-.05)
+        for low,high in ((z,z+.10),(top-.12,top)):
+            mb.box(a,t,n,u1,u2,low,high,depth-.13,depth+.03,'frame','balustrade_cap')
+        for u in (u1,u2-.08):
+            mb.box(a,t,n,u,u+.08,z,top,0.,depth,'frame','balustrade_return')
         return
     if style == "balusters":
         mb.box(a, t, n, u1, u2, z, z + 0.10, depth - 0.10, depth, "stone",
@@ -7304,6 +7600,47 @@ def cornice(mb, a, t, n, feature):
          chamfer=CHAMFER_M)
 
 
+def denticulated_cornice(mb, a, t, n, feature):
+    """Classical denticulated cornice: modillions + corona + bed moulding.
+
+    The hallmark of neoclassical and Republican Lima facades (BCP, Metro, etc.).
+    """
+    u1, u2 = feature.u_m, feature.u_m + feature.width_m
+    base_z = feature.v_m
+    total_h = feature.height_m
+    out = feature.depth_m
+
+    # Bed moulding (cavetto + fillet strip)
+    _add(mb, a, t, n, feature, u1, u2, base_z, base_z + total_h * 0.18,
+         -0.02, out * 0.55, "cornice_step")
+    # Corona (flat face)
+    _add(mb, a, t, n, feature, u1 - 0.01, u2 + 0.01,
+         base_z + total_h * 0.18, base_z + total_h * 0.55,
+         -0.02, out, "cornice_step")
+    # Dentils: small square blocks under the corona
+    dentil_w = 0.06
+    dentil_h = 0.05
+    dentil_d = 0.05
+    dentil_z = base_z + total_h * 0.16
+    for du in np.arange(u1 + 0.04, u2 - 0.04, dentil_w * 1.6):
+        _add(mb, a, t, n, feature, du, du + dentil_w,
+             dentil_z, dentil_z + dentil_h,
+             out * 0.30, out * 0.30 + dentil_d, "dentil", "stone")
+    # Modillions (brackets) at regular intervals
+    mod_count = max(2, int((u2 - u1) / 1.2))
+    mod_w = (u2 - u1) * 0.08
+    mod_z_top = base_z + total_h * 0.50
+    for i in range(mod_count):
+        mu = u1 + (u2 - u1) * (i + 0.5) / mod_count - mod_w / 2
+        _add(mb, a, t, n, feature, mu, mu + mod_w,
+             base_z + total_h * 0.20, mod_z_top,
+             out * 0.15, out * 0.90, "modillion", "stone")
+    # Drip edge
+    _add(mb, a, t, n, feature, u1 - 0.04, u2 + 0.04,
+         base_z + total_h * 0.55, base_z + total_h * 0.60,
+         -0.02, out + 0.03, "cornice_drip", "stone", chamfer=CHAMFER_M)
+
+
 def sill_band(mb, a, t, n, feature):
     """Continuous sill course tying a row of openings together."""
     _add(mb, a, t, n, feature, feature.u_m, feature.u_m + feature.width_m,
@@ -7338,7 +7675,7 @@ def balcony(mb, a, t, n, feature):
          -0.02, depth, "balcony_slab", "concrete")
     _add(mb, a, t, n, feature, u1, u2, feature.v_m - 0.19, feature.v_m - 0.14,
          depth - 0.06, depth, "cornice_drip", "stone")
-    style = feature.label if feature.label in ("bars", "balusters", "solid") else "bars"
+    style = feature.label if feature.label in ("bars", "balusters", "solid", "turned") else "bars"
     _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth, style)
 
 
@@ -7358,9 +7695,17 @@ def gallery(mb, a, t, n, feature):
              depth - 0.14, depth - 0.02, "gallery_post", "wood")
         _add(mb, a, t, n, feature, u - 0.11, u + 0.11, top - 0.26, top - 0.10,
              depth - 0.19, depth - 0.02, "gallery_bracket", "wood")
+        # Doric-style capital: echinus + abacus
+        cap_h = 0.10
+        ech_h = 0.06
+        _add(mb, a, t, n, feature, u - 0.09, u + 0.09, top - cap_h, top - cap_h + ech_h,
+             depth - 0.16, depth - 0.02, "column_capital_echinus", "stone")
+        _add(mb, a, t, n, feature, u - 0.13, u + 0.13, top - cap_h + ech_h, top,
+             depth - 0.19, depth - 0.02, "column_capital_abacus", "stone")
     _add(mb, a, t, n, feature, u1, u2, top - 0.10, top, -0.02, depth + 0.10,
          "gallery_roof", "roof")
-    _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth, "balusters")
+    _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth,
+                "turned" if feature.label == "classical" else "balusters")
 
 
 def awning(mb, a, t, n, feature):
@@ -7502,12 +7847,21 @@ def vertical_fins(mb,a,t,n,feature):
 
 
 FACADE_PROJECTIONS = {
+    "oval_sign": oval_sign,
+    "classical_pilaster": classical_pilaster,
+    "composite_pilaster": classical_pilaster,
+    "classical_cornice": classical_cornice,
+    "moulded_surround": moulded_surround,
+    "segmental_surround": moulded_surround,
     "panel": panel,
     "frame": frame,
     "ledge": ledge,
     "canopy": canopy,
     "curved_canopy": curved_canopy,
     "cornice": cornice,
+    "denticulated_cornice": denticulated_cornice,
+    # alias so family rules and projection dispatch agree on one name
+    "denticulated": denticulated_cornice,
     "sill_band": sill_band,
     "pilaster": pilaster,
     "balcony": balcony,
@@ -8747,7 +9101,7 @@ class MaterialLibrary:
         self.image_cache.clear()
 
 ========================================================================
-FILE: modeling/theta.py (827 lineas)
+FILE: modeling/theta.py (829 lineas)
 ========================================================================
 """Resolve architectural decisions first; only then emit geometry.
 
@@ -9059,7 +9413,9 @@ def _facade_controls(c, family):
             _check(op.prefab in ('legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'), 'Invalid opening prefab')
             _check(op.frame_width_m>0 and op.recess_m>0 and op.mullion_columns>=1 and op.mullion_rows>=1, 'Invalid frame/recess/mullions')
             _check(op.curtain==0, 'Curtain coverage belongs to xi, not explicit theta openings')
-            _check(op.prefab=='legacy' or op.style=='sliding', 'style only controls legacy opening; inactive for this prefab')
+            _check(op.prefab=='legacy' or op.style=='sliding' or
+                   (op.prefab=='open' and op.style=='vestibule'),
+                   'style only controls legacy opening or open vestibule; inactive for this prefab')
         return c
     _check(c.openings is None, "openings require explicit mode")
     _check(len({(e.floor,e.bay) for e in c.opening_edits})==len(c.opening_edits),"Duplicate sparse opening edit")
@@ -11351,4 +11707,4 @@ def select_vertical(masks, x: float, half_width: int = 0):
                          "area_pixels": int(masks[i].sum())})
     return [e['index'] for e in evidence if e['selected']], evidence
 
-[dump] 68 archivos, 10996 lineas totales.
+[dump] 69 archivos, 11347 lineas totales.

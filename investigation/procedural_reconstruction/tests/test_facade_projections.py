@@ -45,12 +45,20 @@ FIXTURES = {
 
 # Semantics each kind must contribute, so a silent no-op cannot pass.
 REQUIRED = {
+    "classical_pilaster": "pilaster_fluted_shaft",
+    "composite_pilaster": "capital_volute",
+    "classical_cornice": "classical_dentil",
+    "moulded_surround": "surround_moulding",
+    "segmental_surround": "surround_keystone",
+    "oval_sign": "oval_sign",
     "panel": "facade_projection_panel",
     "frame": "facade_projection_frame",
     "ledge": "facade_projection_ledge",
     "canopy": "facade_projection_canopy",
     "curved_canopy": "facade_projection_curved_canopy",
     "cornice": "cornice_step",
+    "denticulated_cornice": "cornice_step",
+    "denticulated": "cornice_step",
     "sill_band": "sill_band",
     "pilaster": "pilaster",
     "balcony": "balcony_slab",

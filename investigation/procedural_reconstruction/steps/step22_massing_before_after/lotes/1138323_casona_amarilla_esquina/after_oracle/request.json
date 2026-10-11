@@ -1914,7 +1914,7 @@
               "width_ratio": 0.72,
               "height_m": 4.8,
               "sill_m": 0.04,
-              "prefab": null,
+              "prefab": "open",
               "grille": null
             },
             {

@@ -308,7 +308,9 @@ def _facade_controls(c, family):
             _check(op.prefab in ('legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'), 'Invalid opening prefab')
             _check(op.frame_width_m>0 and op.recess_m>0 and op.mullion_columns>=1 and op.mullion_rows>=1, 'Invalid frame/recess/mullions')
             _check(op.curtain==0, 'Curtain coverage belongs to xi, not explicit theta openings')
-            _check(op.prefab=='legacy' or op.style=='sliding', 'style only controls legacy opening; inactive for this prefab')
+            _check(op.prefab=='legacy' or op.style=='sliding' or
+                   (op.prefab=='open' and op.style=='vestibule'),
+                   'style only controls legacy opening or open vestibule; inactive for this prefab')
         return c
     _check(c.openings is None, "openings require explicit mode")
     _check(len({(e.floor,e.bay) for e in c.opening_edits})==len(c.opening_edits),"Duplicate sparse opening edit")

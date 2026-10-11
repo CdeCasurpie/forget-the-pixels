@@ -10,6 +10,7 @@ from shapely.geometry import Polygon
 
 from .detail import DEFAULT_BUDGET
 from .prefabs import sign_letters
+from .ornaments import classical_pilaster, classical_cornice, moulded_surround, turned_baluster, oval_sign
 
 LEGACY_KINDS = ("panel", "frame", "ledge", "canopy", "curved_canopy")
 
@@ -52,6 +53,14 @@ def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
                    "plaster", "balustrade")
         mb.box(a, t, n, u1 - 0.03, u2 + 0.03, top - 0.08, top, -0.01, depth + 0.03,
                "stone", "balustrade_cap", chamfer=0.015)
+        return
+    if style == "turned":
+        for u in np.arange(u1 + .12, u2 - .06, max(.18, spacing * 1.4)):
+            turned_baluster(mb,a,t,n,u,z+.10,.13,.80,depth-.05)
+        for low,high in ((z,z+.10),(top-.12,top)):
+            mb.box(a,t,n,u1,u2,low,high,depth-.13,depth+.03,'frame','balustrade_cap')
+        for u in (u1,u2-.08):
+            mb.box(a,t,n,u,u+.08,z,top,0.,depth,'frame','balustrade_return')
         return
     if style == "balusters":
         mb.box(a, t, n, u1, u2, z, z + 0.10, depth - 0.10, depth, "stone",
@@ -149,6 +158,47 @@ def cornice(mb, a, t, n, feature):
          chamfer=CHAMFER_M)
 
 
+def denticulated_cornice(mb, a, t, n, feature):
+    """Classical denticulated cornice: modillions + corona + bed moulding.
+
+    The hallmark of neoclassical and Republican Lima facades (BCP, Metro, etc.).
+    """
+    u1, u2 = feature.u_m, feature.u_m + feature.width_m
+    base_z = feature.v_m
+    total_h = feature.height_m
+    out = feature.depth_m
+
+    # Bed moulding (cavetto + fillet strip)
+    _add(mb, a, t, n, feature, u1, u2, base_z, base_z + total_h * 0.18,
+         -0.02, out * 0.55, "cornice_step")
+    # Corona (flat face)
+    _add(mb, a, t, n, feature, u1 - 0.01, u2 + 0.01,
+         base_z + total_h * 0.18, base_z + total_h * 0.55,
+         -0.02, out, "cornice_step")
+    # Dentils: small square blocks under the corona
+    dentil_w = 0.06
+    dentil_h = 0.05
+    dentil_d = 0.05
+    dentil_z = base_z + total_h * 0.16
+    for du in np.arange(u1 + 0.04, u2 - 0.04, dentil_w * 1.6):
+        _add(mb, a, t, n, feature, du, du + dentil_w,
+             dentil_z, dentil_z + dentil_h,
+             out * 0.30, out * 0.30 + dentil_d, "dentil", "stone")
+    # Modillions (brackets) at regular intervals
+    mod_count = max(2, int((u2 - u1) / 1.2))
+    mod_w = (u2 - u1) * 0.08
+    mod_z_top = base_z + total_h * 0.50
+    for i in range(mod_count):
+        mu = u1 + (u2 - u1) * (i + 0.5) / mod_count - mod_w / 2
+        _add(mb, a, t, n, feature, mu, mu + mod_w,
+             base_z + total_h * 0.20, mod_z_top,
+             out * 0.15, out * 0.90, "modillion", "stone")
+    # Drip edge
+    _add(mb, a, t, n, feature, u1 - 0.04, u2 + 0.04,
+         base_z + total_h * 0.55, base_z + total_h * 0.60,
+         -0.02, out + 0.03, "cornice_drip", "stone", chamfer=CHAMFER_M)
+
+
 def sill_band(mb, a, t, n, feature):
     """Continuous sill course tying a row of openings together."""
     _add(mb, a, t, n, feature, feature.u_m, feature.u_m + feature.width_m,
@@ -183,7 +233,7 @@ def balcony(mb, a, t, n, feature):
          -0.02, depth, "balcony_slab", "concrete")
     _add(mb, a, t, n, feature, u1, u2, feature.v_m - 0.19, feature.v_m - 0.14,
          depth - 0.06, depth, "cornice_drip", "stone")
-    style = feature.label if feature.label in ("bars", "balusters", "solid") else "bars"
+    style = feature.label if feature.label in ("bars", "balusters", "solid", "turned") else "bars"
     _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth, style)
 
 
@@ -203,9 +253,17 @@ def gallery(mb, a, t, n, feature):
              depth - 0.14, depth - 0.02, "gallery_post", "wood")
         _add(mb, a, t, n, feature, u - 0.11, u + 0.11, top - 0.26, top - 0.10,
              depth - 0.19, depth - 0.02, "gallery_bracket", "wood")
+        # Doric-style capital: echinus + abacus
+        cap_h = 0.10
+        ech_h = 0.06
+        _add(mb, a, t, n, feature, u - 0.09, u + 0.09, top - cap_h, top - cap_h + ech_h,
+             depth - 0.16, depth - 0.02, "column_capital_echinus", "stone")
+        _add(mb, a, t, n, feature, u - 0.13, u + 0.13, top - cap_h + ech_h, top,
+             depth - 0.19, depth - 0.02, "column_capital_abacus", "stone")
     _add(mb, a, t, n, feature, u1, u2, top - 0.10, top, -0.02, depth + 0.10,
          "gallery_roof", "roof")
-    _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth, "balusters")
+    _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth,
+                "turned" if feature.label == "classical" else "balusters")
 
 
 def awning(mb, a, t, n, feature):
@@ -347,12 +405,21 @@ def vertical_fins(mb,a,t,n,feature):
 
 
 FACADE_PROJECTIONS = {
+    "oval_sign": oval_sign,
+    "classical_pilaster": classical_pilaster,
+    "composite_pilaster": classical_pilaster,
+    "classical_cornice": classical_cornice,
+    "moulded_surround": moulded_surround,
+    "segmental_surround": moulded_surround,
     "panel": panel,
     "frame": frame,
     "ledge": ledge,
     "canopy": canopy,
     "curved_canopy": curved_canopy,
     "cornice": cornice,
+    "denticulated_cornice": denticulated_cornice,
+    # alias so family rules and projection dispatch agree on one name
+    "denticulated": denticulated_cornice,
     "sill_band": sill_band,
     "pilaster": pilaster,
     "balcony": balcony,

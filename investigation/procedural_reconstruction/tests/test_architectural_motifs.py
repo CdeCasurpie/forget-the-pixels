@@ -87,8 +87,9 @@ def test_motif_does_not_duplicate_global_relief():
     base=[p for p in old.projections if p.source!='monumental_portal']
     inherited=[p for p in new.projections if p.source!='monumental_portal']
     assert base==inherited
-    assert sum(p.kind=='cornice' and p.source=='family_rule' for p in new.projections)==1
-    assert sum(p.kind=='cornice' and p.source=='monumental_portal' for p in new.projections)==1
+    assert sum(p.kind in ('cornice','denticulated_cornice','denticulated')
+               and p.source=='family_rule' for p in new.projections)==1
+    assert sum(p.kind=='pediment' and p.source=='monumental_portal' for p in new.projections)==1
 
 
 def test_motif_replace_and_invalid_targets():
