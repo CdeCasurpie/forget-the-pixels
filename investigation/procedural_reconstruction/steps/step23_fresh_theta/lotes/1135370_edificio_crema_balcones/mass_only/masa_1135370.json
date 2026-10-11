@@ -1,0 +1,74 @@
+{
+  "components": [
+    {
+      "id": "main",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.5,
+        7.0
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          1.2,
+          16.0
+        ],
+        "fit": "parcel",
+        "front_edge": 3,
+        "u": [
+          0.0,
+          0.75
+        ],
+        "width_reference": "edge"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    },
+    {
+      "id": "tower",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.5,
+        7.6
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          1.7,
+          16.0
+        ],
+        "fit": "parcel",
+        "front_edge": 3,
+        "u": [
+          0.75,
+          1.0
+        ],
+        "width_reference": "edge"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    }
+  ]
+}

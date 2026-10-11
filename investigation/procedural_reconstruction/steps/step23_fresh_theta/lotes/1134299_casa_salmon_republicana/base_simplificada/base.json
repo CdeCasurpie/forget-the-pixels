@@ -1,0 +1,38 @@
+{
+  "floors": [
+    {
+      "height_m": 3.5,
+      "setbacks": [
+        {
+          "edge": 1,
+          "depth_m": 1.4
+        }
+      ],
+      "bites": [
+        {
+          "edge": 1,
+          "end": "end",
+          "width_m": 4.2086,
+          "depth_m": 5.0
+        }
+      ]
+    },
+    {
+      "height_m": 3.5,
+      "setbacks": [
+        {
+          "edge": 1,
+          "depth_m": 1.4
+        }
+      ],
+      "bites": [
+        {
+          "edge": 1,
+          "end": "end",
+          "width_m": 4.2086,
+          "depth_m": 5.0
+        }
+      ]
+    }
+  ]
+}

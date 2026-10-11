@@ -1,0 +1,72 @@
+{
+  "components": [
+    {
+      "id": "restaurant",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.2
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          2.2,
+          11.0
+        ],
+        "fit": "parcel",
+        "front_edge": 0,
+        "u": [
+          0.0,
+          0.68
+        ],
+        "width_reference": "edge"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    },
+    {
+      "id": "upper",
+      "kind": "enclosed",
+      "levels_m": [
+        3.2,
+        6.4
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          0.6,
+          11.0
+        ],
+        "fit": "parcel",
+        "front_edge": 0,
+        "u": [
+          0.0,
+          0.68
+        ],
+        "width_reference": "edge"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "columns",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    }
+  ]
+}

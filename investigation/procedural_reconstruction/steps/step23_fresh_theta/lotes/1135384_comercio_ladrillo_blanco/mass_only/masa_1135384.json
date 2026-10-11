@@ -1,0 +1,73 @@
+{
+  "components": [
+    {
+      "id": "garage",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.1
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          0.0,
+          4.0
+        ],
+        "fit": "parcel",
+        "front_edge": 1,
+        "u": [
+          0.0,
+          1.0
+        ],
+        "width_reference": "parcel"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    },
+    {
+      "id": "house",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.1,
+        6.7
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          4.0,
+          15.0
+        ],
+        "fit": "parcel",
+        "front_edge": 1,
+        "u": [
+          0.0,
+          1.0
+        ],
+        "width_reference": "parcel"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    }
+  ]
+}

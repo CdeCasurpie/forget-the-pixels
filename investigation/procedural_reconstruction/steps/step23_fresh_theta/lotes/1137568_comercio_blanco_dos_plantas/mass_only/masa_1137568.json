@@ -1,0 +1,77 @@
+{
+  "components": [
+    {
+      "id": "shop",
+      "kind": "enclosed",
+      "levels_m": [
+        0.0,
+        3.3
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          0.0,
+          9.0
+        ],
+        "fit": "parcel",
+        "front_edge": 0,
+        "u": [
+          0.0,
+          1.0
+        ],
+        "width_reference": "edge"
+      },
+      "roof": null,
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.25,
+        "inset_m": 0.4,
+        "kind": "bearing",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    },
+    {
+      "id": "terrace_roof",
+      "kind": "open",
+      "levels_m": [
+        3.3,
+        6.0
+      ],
+      "region": {
+        "depth": [
+          0.0,
+          1.0
+        ],
+        "depth_m": [
+          0.0,
+          8.5
+        ],
+        "fit": "parcel",
+        "front_edge": 0,
+        "u": [
+          0.0,
+          1.0
+        ],
+        "width_reference": "edge"
+      },
+      "roof": {
+        "kind": "corrugated",
+        "parapet_m": 0.0,
+        "props": null,
+        "slope_deg": null
+      },
+      "slab_m": 0.18,
+      "support": {
+        "column_width_m": 0.16,
+        "inset_m": 0.4,
+        "kind": "columns",
+        "max_cantilever_m": 0.0,
+        "spacing_m": 4.0
+      }
+    }
+  ]
+}
