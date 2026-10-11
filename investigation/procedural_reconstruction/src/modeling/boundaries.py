@@ -25,6 +25,12 @@ class BoundarySpec:
     garage_u: Optional[float] = None
     garage_width: float = 0.0
     is_street: bool = False
+    height_mode: str = 'high'
+    wall_material: str = 'plaster'
+    gate_mode: str = 'auto'
+    garage_mode: str = 'auto'
+    openness: float = .3
+    planters: bool = False
 
 
 def _segments(geometry):

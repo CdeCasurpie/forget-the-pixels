@@ -61,6 +61,12 @@ class ResolvedBoundary:
     garage_u: float | None
     garage_width: float
     is_street: bool
+    height_mode: str = 'high'
+    wall_material: str = 'plaster'
+    gate_mode: str = 'auto'
+    garage_mode: str = 'auto'
+    openness: float = .3
+    planters: bool = False
 
 
 @dataclass(frozen=True)
@@ -629,7 +635,12 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             a=np.asarray(context.parcel[run.edge]); b=np.asarray(context.parcel[(run.edge+1)%len(context.parcel)])
             length=float(np.linalg.norm(b-a)); tangent=(b-a)/length
             _check(0<=run.start_m<run.end_m<=length and .65<=run.height_m<=4,"Invalid fence extent/height")
-            _check(run.kind in ("reja","concreto","ladrillos","concreto_bajo"),"Invalid explicit fence kind")
+            _check(run.kind in ("reja","concreto","ladrillos","concreto_bajo","republicano","barroco","moderno","clasico","madera"),"Invalid explicit fence kind")
+            _check(run.height_mode in ('high','low'), 'Invalid fence height mode')
+            _check(run.wall_material in ('plaster','brick','stone','concrete'), 'Invalid fence wall material')
+            _check(run.gate_mode in ('auto','open') and run.garage_mode in ('auto','open'), 'Invalid fence access mode')
+            _check(.1<=run.openness<=.7, 'Fence openness must be in [.1,.7]')
+            _check(not run.planters or run.kind=='moderno', 'Planters require modern fence')
             _check(run.kind!="concreto_bajo" or (run.height_m==1.2 and run.garage_u is None),"Low fence has fixed height1.2 and no garage")
             gates=[]
             for u,w in ((run.gate_u,run.gate_width),(run.garage_u,run.garage_width)):
@@ -641,7 +652,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             occupied.setdefault(run.edge,[]).append((run.start_m,run.end_m))
             line=LineString([a+tangent*run.start_m,a+tangent*run.end_m])
             _check(line.intersection(built).length<1e-6,"Fence overlaps building")
-            boundaries.append(ResolvedBoundary(tuple(line.coords),run.kind,run.height_m,run.gate_u,run.gate_width,run.garage_u,run.garage_width,run.edge in context.fronts))
+            boundaries.append(ResolvedBoundary(tuple(line.coords),run.kind,run.height_m,run.gate_u,run.gate_width,run.garage_u,run.garage_width,run.edge in context.fronts,run.height_mode,run.wall_material,run.gate_mode,run.garage_mode,run.openness,run.planters))
     def track(old,new,path=''):
         if old is None and new is not None:
             completed.setdefault(path,'prior/completed')

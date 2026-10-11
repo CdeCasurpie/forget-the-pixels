@@ -23,6 +23,9 @@ MIN_GARDEN_AREA_M2 = 0.8
 
 def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="reja"):
     """One run of perimeter fence, interrupted by its gates."""
+    from modeling.fences import STYLES, build_fence
+    if boundary.kind in STYLES:
+        return build_fence(mb, a, t, n, length, boundary)
     budget = getattr(mb, "budget", DEFAULT_BUDGET)
     bar_pitch = budget.fence_bar_spacing_m
     height = boundary.height if style != "low" else 1.2

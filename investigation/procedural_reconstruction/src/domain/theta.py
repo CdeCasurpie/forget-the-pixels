@@ -293,6 +293,12 @@ class FenceRun:
     gate_width: float = 0.
     garage_u: float | None = None
     garage_width: float = 0.
+    height_mode: str = 'high'
+    wall_material: str = 'plaster'
+    gate_mode: str = 'auto'
+    garage_mode: str = 'auto'
+    openness: float = .3
+    planters: bool = False
 
 
 @dataclass(frozen=True)
