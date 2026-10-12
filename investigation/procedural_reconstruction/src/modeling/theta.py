@@ -36,6 +36,8 @@ from modeling.assembly import (compose_masses, mass_polygon, ring as assembly_ri
     holes, resolve_supports, resolve_zones, StructuralPiece, ResolvedSiteZone, region_frame)
 from modeling.exposure import wall_domains
 from modeling.visibility import VisibleFacadeBuilder, patch_domains
+from modeling.balcony_resolver import ResolvedBalcony, resolve_balconies
+from modeling.vertical_member_resolver import ResolvedMember, resolve_members
 from modeling.trim_resolver import (ResolvedTrim, mass_trim, resolve_trims, emit_trims,
                                     validate_plinth, plinth_pieces, lines)
 
@@ -88,6 +90,8 @@ class ResolvedArchitecture:
     structures: tuple[StructuralPiece, ...] = ()
     site_zones: tuple[ResolvedSiteZone, ...] = ()
     trims: tuple[ResolvedTrim, ...] = ()
+    balconies: tuple[ResolvedBalcony, ...] = ()
+    vertical_members: tuple[ResolvedMember, ...] = ()
 
 
 def _check(condition, message):
@@ -754,7 +758,9 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         for p in pieces:
             _check(envelope.buffer(1e-7).covers(sweep_domain(p.path,p.section,envelope)), f'Fence plinth outside envelope: {p.path}')
         trims+=tuple(pieces)
-    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims)
+    balconies=resolve_balconies(theta,masses,walls,envelope,materials)
+    members=resolve_members(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
+    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members)
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
@@ -803,6 +809,18 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     zoned_edges={(w.mass_role,w.edge) for w in resolved.walls if '/zone' in w.facade.edge_id}
     for wall in resolved.walls:
         f=wall.facade
+        from domain.vertical_members import MemberDesign
+        member_style=theta.architectural_style or 'republicano'
+        f=replace(f,projections=tuple(replace(feature,member=(
+            replace(feature.member,style=member_style) if feature.member and feature.member.style=='auto'
+            else feature.member or MemberDesign(style=member_style,section='rectangle',material=feature.material_slot)))
+            if feature.kind in ('pilaster','classical_pilaster','composite_pilaster') and
+               (theta.architectural_style or feature.member is not None) else feature for feature in f.projections))
+        stairs_replaced={b.controls.stair_index for b in resolved.balconies
+                         if b.controls.kind=='stair' and b.controls.mass_ref==wall.mass_role and b.controls.edge==wall.edge}
+        if stairs_replaced:
+            f=replace(f,exterior_stairs=tuple(replace(s,railing_enabled=False) if i in stairs_replaced else s
+                      for i,s in enumerate(f.exterior_stairs)))
         if wall.plane_offset_m:
             shift=np.asarray(f.normal_xy)*wall.plane_offset_m
             f=replace(f,vertex_a=tuple(np.asarray(f.vertex_a)+shift),
@@ -874,7 +892,20 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
                         entrances.append(dict(origin=a+t*lo,tangent=t,normal=np.asarray(f.normal_xy),width=width,base_z=op.v_m))
     for piece in resolved.structures:
         with builder.assembly(piece.id):
-            builder.solid(Polygon(piece.polygon,piece.holes),piece.base_z,piece.top_z,'concrete',piece.semantic)
+            if piece.semantic=='support_column':
+                from domain.vertical_members import MemberDesign
+                from modeling.vertical_member_assembly import build_member
+                component=next(c for c in theta.massing.components if piece.mass_id.startswith(c.id+':'))
+                design=component.support.member or MemberDesign(section='rounded',material='concrete')
+                if design.style=='auto':design=replace(design,style=theta.architectural_style or 'moderno')
+                points=np.asarray(piece.polygon)
+                direction=points[1]-points[0]; width=np.linalg.norm(direction); direction/=width
+                normal=np.array([-direction[1],direction[0]])
+                poly=Polygon(points)
+                build_member(builder,poly.centroid.coords[0],direction,normal,piece.base_z,width,width,
+                             piece.top_z-piece.base_z,design)
+            else:
+                builder.solid(Polygon(piece.polygon,piece.holes),piece.base_z,piece.top_z,'concrete',piece.semantic)
     for zone in resolved.site_zones:
         if zone.kind=='unclassified':continue
         poly=Polygon(zone.polygon,zone.holes)
@@ -909,6 +940,15 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     if theta.site.garden and not theta.site.zones:
         built=unary_union([mass_polygon(m) for m in resolved.masses if m.base_z<.01 and m.kind=='enclosed'])
         plant_garden(builder,parcel,built,boundaries,entrances,_rng(nuisance.seed,"garden"))
+    from modeling.balcony_assembly import build_balcony
+    for balcony in resolved.balconies:
+        build_balcony(builder,balcony,street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance))
+    from modeling.vertical_member_assembly import build_member
+    for member in resolved.vertical_members:
+        c=member.controls
+        with builder.assembly('vertical_member/'+c.id):
+            build_member(builder,member.center,member.tangent,member.normal,member.bottom,
+                         c.width_m,c.depth_m,c.height_m,c.design,c.placement)
     return builder.finish()
 
 

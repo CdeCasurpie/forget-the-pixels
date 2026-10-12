@@ -1,0 +1,26 @@
+{
+  "vertices": 49620,
+  "triangles": 95228,
+  "parts": 1003,
+  "semantic_types": [
+    "display_backing",
+    "member_base",
+    "member_capital",
+    "member_leaf",
+    "member_shaft",
+    "member_volute"
+  ],
+  "faces_by_semantic": {
+    "member_shaft": 33812,
+    "member_volute": 30080,
+    "member_base": 13700,
+    "member_capital": 12020,
+    "member_leaf": 5580,
+    "display_backing": 36
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 7.97298472726186e-06,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned",
+  "closed_member_parts": 1000
+}

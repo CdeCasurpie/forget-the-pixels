@@ -4,6 +4,7 @@ Visibility stays in the original chart: no reflow and no replacement mass.
 The existing facade materializer moves all openings and relief with the wall.
 """
 import numpy as np
+from dataclasses import replace
 from shapely.geometry import box
 from shapely.ops import unary_union
 from modeling.mesh_builder import polygons
@@ -58,6 +59,17 @@ def emit_section(builder,wall,zone):
     for i,(u0,u1,z0,z1,w0,w1,semantic) in enumerate(section_geometry(
             wall.section,start,end,lo,hi,wall.plane_offset_m)):
         shape=box(u0,z0,u1,z1).intersection(mask)
+        if semantic=='portico_column':
+            if shape.is_empty:continue
+            from domain.vertical_members import MemberDesign
+            from modeling.vertical_member_assembly import build_member
+            normal=np.asarray(f.normal_xy)
+            center=a+t*(u0+u1)/2+normal*(w0+w1)/2
+            design=wall.section.member or MemberDesign(section='rounded',material='concrete')
+            if design.style=='auto':design=replace(design,style='moderno')
+            with builder.assembly(f.edge_id+'/'+semantic+str(i)):
+                build_member(builder,center,t,normal,z0,u1-u0,w1-w0,z1-z0,design)
+            continue
         builder.panel(a,t,np.asarray(f.normal_xy),polygons(shape),w0,w1,
                       lambda *args:'concrete',semantic,clip='envelope',
                       assembly_id=f.edge_id,component_id=f.edge_id+'/'+semantic+str(i))

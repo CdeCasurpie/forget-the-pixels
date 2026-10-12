@@ -52,9 +52,9 @@ def test_portico_section(back_wall):
     zone=FacadeZone('front',controls,(.2,.8),(0.,3.),offset_m=-1.2,
                     section=FacadeSection(back_wall=back_wall))
     mesh=generate_resolved(solve(body((zone,))))
-    for name in ('portico_floor','portico_soffit','portico_column'):
+    for name in ('portico_floor','portico_soffit','member_shaft'):
         assert len(semantic_vertices(mesh,name))>0
-    columns=semantic_vertices(mesh,'portico_column')
+    columns=semantic_vertices(mesh,'member_shaft')
     assert columns[:,2].min()==pytest.approx(.2)
     assert columns[:,2].max()==pytest.approx(2.8)
     soffit=semantic_vertices(mesh,'portico_soffit')

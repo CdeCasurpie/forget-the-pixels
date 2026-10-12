@@ -1,0 +1,53 @@
+[
+  {
+    "controls": {
+      "id": "moderno_plain_cylinder",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 3.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.55,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "plain_cylinder",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      6.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  }
+]

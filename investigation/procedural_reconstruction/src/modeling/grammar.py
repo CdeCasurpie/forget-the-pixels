@@ -320,7 +320,7 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
                 "exterior_stair_step",
             )
         # Sloping rails and regularly spaced posts on both sides.
-        for side in (u0 + 0.06, u0 + stair.flight_width_m - 0.06):
+        for side in ((u0 + 0.06, u0 + stair.flight_width_m - 0.06) if stair.railing_enabled else ()):
             start_d, end_d = ((stair.run_m, 0.0) if reverse else (0.0, stair.run_m))
             mb.beam(
                 xyz(side, z0 + 0.92, start_d),
@@ -680,19 +680,9 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=()):
                 for z in f.floor_levels_m[1:]:
                     mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
             for u in [0.04, length - 0.16]:
-                mb.box(
-                    a,
-                    t,
-                    n,
-                    u,
-                    u + 0.12,
-                    0,
-                    total_height,
-                    -0.02,
-                    0.05,
-                    "stone",
-                    "corner_pilaster",
-                )
+                from modeling.vertical_member_assembly import facade_member
+                from domain.models import FacadeProjection
+                facade_member(mb,a,t,n,FacadeProjection('pilaster',u,0,.12,total_height,.05,'stone'))
 
     if f.has_program:
         if f.services and length > 3.5:
@@ -1202,6 +1192,13 @@ class ZOffsetMeshBuilder:
 
     def box(self, a, t, n, u1, u2, z1, z2, w1, w2, *args, **kwargs):
         return self._builder.box(a, t, n, u1, u2, z1 + self._z_offset, z2 + self._z_offset, w1, w2, *args, **kwargs)
+
+    def vert(self,point):
+        return self._builder.vert((point[0],point[1],point[2]+self._z_offset))
+
+    def member_mesh(self,vertices,faces,*args):
+        lifted=np.asarray(vertices).copy();lifted[:,2]+=self._z_offset
+        return self._builder.member_mesh(lifted,faces,*args)
 
     def beam(self, a, b, *args, **kwargs):
         a_shifted = (a[0], a[1], a[2] + self._z_offset)

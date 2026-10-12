@@ -6,6 +6,7 @@ a secondary mass hung on a wall: mouldings, balconies, galleries, awnings, bays.
 """
 
 import numpy as np
+from dataclasses import replace
 from shapely.geometry import Polygon
 
 from .detail import DEFAULT_BUDGET
@@ -210,17 +211,8 @@ def sill_band(mb, a, t, n, feature):
 
 
 def pilaster(mb, a, t, n, feature):
-    """Vertical order: base, shaft, capital."""
-    u1, u2 = feature.u_m, feature.u_m + feature.width_m
-    base_h = min(0.34, feature.height_m * 0.10)
-    cap_h = min(0.26, feature.height_m * 0.08)
-    top = feature.v_m + feature.height_m
-    _add(mb, a, t, n, feature, u1 - 0.04, u2 + 0.04, feature.v_m,
-         feature.v_m + base_h, -0.02, feature.depth_m + 0.035, "pilaster_base")
-    _add(mb, a, t, n, feature, u1, u2, feature.v_m + base_h, top - cap_h,
-         -0.02, feature.depth_m, "pilaster")
-    _add(mb, a, t, n, feature, u1 - 0.05, u2 + 0.05, top - cap_h, top,
-         -0.02, feature.depth_m + 0.045, "pilaster_cap", chamfer=CHAMFER_M)
+    from modeling.vertical_member_assembly import facade_member
+    facade_member(mb,a,t,n,feature)
 
 
 def balcony(mb, a, t, n, feature):
@@ -249,17 +241,12 @@ def gallery(mb, a, t, n, feature):
     top = feature.v_m + feature.height_m
     for index in range(posts + 1):
         u = u1 + (u2 - u1) * index / posts
-        _add(mb, a, t, n, feature, u - 0.06, u + 0.06, feature.v_m, top,
-             depth - 0.14, depth - 0.02, "gallery_post", "wood")
-        _add(mb, a, t, n, feature, u - 0.11, u + 0.11, top - 0.26, top - 0.10,
-             depth - 0.19, depth - 0.02, "gallery_bracket", "wood")
-        # Doric-style capital: echinus + abacus
-        cap_h = 0.10
-        ech_h = 0.06
-        _add(mb, a, t, n, feature, u - 0.09, u + 0.09, top - cap_h, top - cap_h + ech_h,
-             depth - 0.16, depth - 0.02, "column_capital_echinus", "stone")
-        _add(mb, a, t, n, feature, u - 0.13, u + 0.13, top - cap_h + ech_h, top,
-             depth - 0.19, depth - 0.02, "column_capital_abacus", "stone")
+        from domain.vertical_members import MemberDesign
+        from modeling.vertical_member_assembly import build_member
+        design=feature.member or MemberDesign(style='madera',variant='saddle_post',material='wood')
+        if design.style=='auto':design=replace(design,style='madera')
+        center=np.asarray(a)+t*u+n*(depth-.08)
+        build_member(mb,center,t,n,feature.v_m,.12,.12,feature.height_m,design)
     _add(mb, a, t, n, feature, u1, u2, top - 0.10, top, -0.02, depth + 0.10,
          "gallery_roof", "roof")
     _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth,

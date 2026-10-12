@@ -1,0 +1,31 @@
+{
+  "vertices": 3028,
+  "triangles": 5804,
+  "parts": 64,
+  "semantic_types": [
+    "balcony_baluster",
+    "balcony_handrail",
+    "balcony_lower_rail",
+    "balcony_post",
+    "balcony_post_cap",
+    "roof_slab",
+    "structural_beam",
+    "structural_column",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "balcony_baluster": 5184,
+    "structural_column": 228,
+    "wall": 96,
+    "balcony_lower_rail": 64,
+    "balcony_post": 60,
+    "balcony_post_cap": 60,
+    "structural_beam": 48,
+    "roof_slab": 44,
+    "balcony_handrail": 20
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 0.00018218037924671652,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

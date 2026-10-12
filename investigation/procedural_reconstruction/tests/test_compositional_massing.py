@@ -103,7 +103,7 @@ def test_open_canopy_has_columns_roof_and_no_facade_shells():
     assert all(s.semantic=='support_column' for s in r.structures)
     mesh=generate_resolved(r)
     assert len(semantic_vertices(mesh,'wall'))==0
-    assert len(semantic_vertices(mesh,'support_column'))>0
+    assert len(semantic_vertices(mesh,'member_shaft'))>0
     assert len(semantic_vertices(mesh,'roof_slab'))>0
     assert sum(Polygon(z.polygon,z.holes).area for z in r.site_zones)<240.
 
@@ -142,7 +142,7 @@ def test_partial_gallery_and_continuous_balcony_reuse_prefabs():
         FacadeProjection('balcony',5.5,3.,5.5,1.,.8)))
     r=solve(body(depth=(.1,1.),faces=(FaceBand('front',f),)))
     mesh=generate_resolved(r)
-    gallery=semantic_vertices(mesh,'gallery_post');balcony=semantic_vertices(mesh,'balcony_slab')
+    gallery=semantic_vertices(mesh,'member_shaft');balcony=semantic_vertices(mesh,'balcony_slab')
     assert len(gallery)>0 and len(balcony)>0
     assert gallery[:,0].max()<5.2
     assert balcony[:,0].min()==pytest.approx(5.5) and balcony[:,0].max()==pytest.approx(11.)

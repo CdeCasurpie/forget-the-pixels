@@ -1,0 +1,128 @@
+{
+  "context": {
+    "parcel": [
+      [
+        0,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        20,
+        20
+      ],
+      [
+        0,
+        20
+      ]
+    ],
+    "fronts": [
+      0,
+      1
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "architectural_style": "clasico",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "masses": [
+      {
+        "role": "lower",
+        "footprint": [
+          [
+            2,
+            1
+          ],
+          [
+            18,
+            1
+          ],
+          [
+            18,
+            18
+          ],
+          [
+            2,
+            18
+          ]
+        ],
+        "levels_m": [
+          0,
+          3
+        ]
+      },
+      {
+        "role": "upper",
+        "footprint": [
+          [
+            3,
+            3
+          ],
+          [
+            15,
+            3
+          ],
+          [
+            15,
+            15
+          ],
+          [
+            3,
+            15
+          ]
+        ],
+        "levels_m": [
+          3,
+          6
+        ]
+      }
+    ],
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "site": {
+      "fence": "none",
+      "runs": [],
+      "garden": false
+    },
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "balconies": [
+      {
+        "id": "sample",
+        "mass_ref": "upper:0",
+        "edge": 0,
+        "floor_m": 0,
+        "u_m": 0.5,
+        "width_m": 4.0,
+        "variant": "single_baluster",
+        "kind": "terrace",
+        "cover": false,
+        "brackets": false,
+        "slab": false,
+        "support_mass": "lower:0",
+        "sides": [
+          "front"
+        ]
+      }
+    ]
+  }
+}

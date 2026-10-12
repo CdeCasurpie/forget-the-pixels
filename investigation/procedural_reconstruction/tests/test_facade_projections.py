@@ -45,8 +45,8 @@ FIXTURES = {
 
 # Semantics each kind must contribute, so a silent no-op cannot pass.
 REQUIRED = {
-    "classical_pilaster": "pilaster_fluted_shaft",
-    "composite_pilaster": "capital_volute",
+    "classical_pilaster": "member_shaft",
+    "composite_pilaster": "member_volute",
     "classical_cornice": "classical_dentil",
     "moulded_surround": "surround_moulding",
     "segmental_surround": "surround_keystone",
@@ -60,9 +60,9 @@ REQUIRED = {
     "denticulated_cornice": "cornice_step",
     "denticulated": "cornice_step",
     "sill_band": "sill_band",
-    "pilaster": "pilaster",
+    "pilaster": "member_shaft",
     "balcony": "balcony_slab",
-    "gallery": "gallery_post",
+    "gallery": "member_shaft",
     "awning": "awning",
     "bay_window": "bay_window_wall",
     "eave": "rafter_tail",

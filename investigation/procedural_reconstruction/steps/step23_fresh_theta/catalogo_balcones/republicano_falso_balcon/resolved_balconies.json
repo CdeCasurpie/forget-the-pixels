@@ -1,0 +1,93 @@
+[
+  {
+    "controls": {
+      "id": "sample",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "floor_m": 3.0,
+      "u_m": 0.5,
+      "width_m": 2.0,
+      "enabled": true,
+      "style": "republicano",
+      "variant": "iron_rings",
+      "kind": "juliet",
+      "depth_m": 0.06,
+      "slab": false,
+      "slab_m": 0.18,
+      "slab_material": "plaster",
+      "brackets": false,
+      "cover": false,
+      "enclosure_height_m": 2.5,
+      "railing": {
+        "enabled": true,
+        "pattern": "rings",
+        "height_m": 1.05,
+        "spacing_m": 0.14,
+        "post_spacing_m": 1.6,
+        "post_width_m": 0.075,
+        "handrail": true,
+        "material": "metal",
+        "glass_material": "glass"
+      },
+      "sides": [
+        "front"
+      ],
+      "path": [],
+      "curved_front_m": 0.0,
+      "corner_return_m": 0.0,
+      "planters": false,
+      "fascia": true,
+      "opening_index": null,
+      "support_mass": null,
+      "stair_index": null
+    },
+    "origin": [
+      3.5,
+      3.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "floor_z": 3.0,
+    "platform": [
+      [
+        3.5,
+        3.0
+      ],
+      [
+        3.5,
+        2.94
+      ],
+      [
+        5.5,
+        2.94
+      ],
+      [
+        5.5,
+        3.0
+      ]
+    ],
+    "routes": [
+      [
+        [
+          3.5,
+          2.94,
+          3.0
+        ],
+        [
+          5.5,
+          2.94,
+          3.0
+        ]
+      ]
+    ],
+    "upper": "none",
+    "ornate": false,
+    "bracket_positions": []
+  }
+]

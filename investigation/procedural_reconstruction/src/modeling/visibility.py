@@ -37,6 +37,15 @@ class VisibleFacadeBuilder:
     def __getattr__(self,name):
         return getattr(self._builder,name)
 
+    def member_mesh(self,vertices,faces,*args):
+        from modeling.vertical_member_sweep import clip_member_mesh
+        for u0,z0,u1,z1 in self.domains:
+            a=self.a+self.t*u0;b=self.a+self.t*u1
+            planes=[((*a,0),(*self.t,0)),((*b,0),(*-self.t,0)),
+                    ((0,0,z0),(0,0,1)),((0,0,z1),(0,0,-1))]
+            vv,ff=clip_member_mesh(vertices,faces,planes)
+            if len(ff):self._builder.member_mesh(vv,ff,*args)
+
     def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
         clipped=[part for p in polys for part in polygons(p.intersection(self.mask))]
         return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)

@@ -173,14 +173,21 @@ def build_door(mb,a,t,n,op):
         for x in (op.u_m-d.portal_gap_m-d.portal_width_m/2,
                   op.u_m+op.width_m+d.portal_gap_m+d.portal_width_m/2):
             w=d.portal_width_m; bottom=op.v_m; top=op.v_m+op.height_m
-            if d.portal=='columns':
-                center=a+t*x+n*d.portal_depth_m/2
-                for lo,hi,r in ((bottom,bottom+.13,w*.55),(bottom+.13,top-.18,w*.38),
-                                (top-.18,top-.09,w*.48),(top-.09,top,w*.56)):
-                    mb.solid(Point(center).buffer(r,quad_segs=12),lo,hi,d.portal_material,'door_column')
-            else:
-                emit(box(x-w/2,bottom,x+w/2,top),0,d.portal_depth_m*.7,d.portal_material,'door_pilaster')
-                for z in (bottom,top-.12):emit(box(x-w*.58,z,x+w*.58,z+.12),0,d.portal_depth_m,d.portal_material,'door_capital')
+            from domain.vertical_members import MemberDesign
+            from modeling.vertical_member_assembly import build_member
+            variants={'republicano':'smooth_moulded','barroco':'scroll_pilaster',
+                      'clasico':'tuscan','madera':'chamfered_post','moderno':'plain_prism'}
+            model=d.model if d.model in variants else 'republicano'
+            if d.portal=='columns':variants.update(barroco='composite_column',madera='turned_post',moderno='plain_cylinder')
+            design=d.portal_member or MemberDesign(style=model,variant=variants[model],
+                section='circle' if d.portal=='columns' else 'rectangle',material=d.portal_material)
+            if design.style=='auto':design=replace(design,style=model)
+            # Keep the existing portal aperture clear even at the widest moulding.
+            depth=w if d.portal=='columns' else d.portal_depth_m*.8
+            if d.portal=='columns':design=replace(design,section='circle')
+            center=a+t*x+n*depth/2
+            build_member(mb,center,t,n,bottom,w*.78,depth*.78,top-bottom,
+                         design,'embedded' if d.portal=='columns' else 'attached')
     if d.cornice:
         bounds=portal_domain(op).bounds
         for i in range(3):

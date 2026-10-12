@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from domain.vertical_members import MemberDesign
 
 
 @dataclass(frozen=True)
@@ -100,6 +101,7 @@ class DoorControls:
     glass_material: str = 'glass'
     threshold_material: str = 'stone'
     portal: str = 'none'  # none | pilasters | columns
+    portal_member: MemberDesign | None = None
     portal_width_m: float = .24
     portal_gap_m: float = .10
     portal_depth_m: float = .20
@@ -173,6 +175,7 @@ class FacadeProjection:
     score: float = 0.0
     label: str = ""  # optional relief lettering for sign panels
     arch_rise_m: float | None = None  # segmental surround follows its opening's arch
+    member: MemberDesign | None = None
 
 
 @dataclass(frozen=True)
@@ -190,6 +193,7 @@ class ExteriorStairSpecification:
     railing_material_slot: str = "metal"
     source: str = "assumed"
     score: float = 0.0
+    railing_enabled: bool = True
 
 
 @dataclass(frozen=True)

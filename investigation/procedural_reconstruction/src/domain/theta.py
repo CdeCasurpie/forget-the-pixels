@@ -13,6 +13,8 @@ from dataclasses import asdict, dataclass, fields, is_dataclass, field
 from typing import Any, Union, get_args, get_origin, get_type_hints
 
 from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification, FacadeTopProfile
+from domain.balconies import BalconyControls, RailingControls
+from domain.vertical_members import MemberDesign, VerticalMemberControls
 
 
 @dataclass(frozen=True)
@@ -76,6 +78,7 @@ class SupportControls:
     column_width_m: float = 0.25
     inset_m: float = 0.4
     max_cantilever_m: float = 0.0
+    member: MemberDesign | None = None
 
 
 @dataclass(frozen=True)
@@ -92,6 +95,7 @@ class FacadeSection:
     column_axes_u: tuple[float, ...] = (0.08, 0.92)
     column_width_m: float = .25
     slab_m: float = .20
+    member: MemberDesign | None = None
 
 
 @dataclass(frozen=True)
@@ -356,6 +360,8 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    vertical_members: tuple[VerticalMemberControls, ...] = ()
+    balconies: tuple[BalconyControls, ...] = ()
     trim: TrimControls | None = None
     architectural_style: str | None = None
     roof_bodies: tuple[RoofBody, ...] = ()
@@ -456,13 +462,18 @@ def canonical(value) -> str:
                     and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
                     and not (f.name=='section' and getattr(x,f.name) is None)
                     and not (f.name=='roof_bodies' and not getattr(x,f.name))
+                    and not (f.name=='balconies' and isinstance(getattr(x,f.name),tuple) and not getattr(x,f.name))
+                    and not (f.name=='vertical_members' and not getattr(x,f.name))
+                    and not (f.name in ('member','portal_member','column_member') and getattr(x,f.name) is None)
+                    and not (isinstance(x,ExteriorStairSpecification) and f.name=='railing_enabled' and x.railing_enabled)
                     and not (f.name=='top_profile' and getattr(x,f.name) is None)
                     and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or
                              f.name=='order' and x.order is None or
                              f.name=='opening_programs' and not x.opening_programs))}
-        if isinstance(x,dict):return {k:data(v) for k,v in x.items()}
+        if isinstance(x,dict):return {k:data(v) for k,v in x.items()
+                                     if not (k in ('member','portal_member','column_member') and v is None)}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x
     # Keep canonical legacy requests/resolved plans byte-identical when the

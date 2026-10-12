@@ -425,6 +425,10 @@ class MeshBuilder:
             raise ValueError("UV scale must be finite and positive")
         return scale
 
+    def member_mesh(self,vertices,faces,material,semantic):
+        from modeling.vertical_member_sweep import emit_member_mesh
+        return emit_member_mesh(self,vertices,faces,material,semantic)
+
     def vert(self, point):
         """Position id shared by every corner built at this point inside the
         open component."""

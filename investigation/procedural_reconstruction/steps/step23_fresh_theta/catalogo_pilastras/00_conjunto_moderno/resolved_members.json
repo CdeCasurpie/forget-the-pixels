@@ -1,0 +1,257 @@
+[
+  {
+    "controls": {
+      "id": "moderno_plain_prism",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 1.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.28,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "plain_prism",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      4.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  },
+  {
+    "controls": {
+      "id": "moderno_plain_cylinder",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 3.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.55,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "plain_cylinder",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      6.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  },
+  {
+    "controls": {
+      "id": "moderno_oval_column",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 5.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.35,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "oval_column",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      8.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  },
+  {
+    "controls": {
+      "id": "moderno_grooved_pilaster",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 7.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.28,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "grooved_pilaster",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      10.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  },
+  {
+    "controls": {
+      "id": "moderno_tapered_column",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 9.4,
+      "bottom_m": 0.0,
+      "height_m": 3.2,
+      "width_m": 0.55,
+      "depth_m": 0.28,
+      "placement": "freestanding",
+      "offset_m": 0.9,
+      "embed_ratio": 0.5,
+      "enabled": true,
+      "design": {
+        "style": "moderno",
+        "variant": "tapered_column",
+        "section": "auto",
+        "base": null,
+        "capital": null,
+        "collar": true,
+        "abacus": true,
+        "base_profile": "auto",
+        "pedestal_m": 0.0,
+        "base_height_m": null,
+        "capital_height_m": null,
+        "taper": null,
+        "entasis": 0.025,
+        "turns": 1.5,
+        "flute_count": 12,
+        "ornament": true,
+        "detail": 2,
+        "material": "plaster",
+        "base_material": null,
+        "capital_material": null
+      }
+    },
+    "center": [
+      12.4,
+      2.1
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "bottom": 0.0
+  }
+]

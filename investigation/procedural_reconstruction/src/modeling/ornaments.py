@@ -37,39 +37,9 @@ def moulded_surround(mb, a, t, n, feature):
 
 
 def classical_pilaster(mb, a, t, n, feature):
-    """Fluted shaft, moulded base, echinus/abacus and optional composite capital."""
-    u, z, w, h, d = (feature.u_m,feature.v_m,feature.width_m,
-                      feature.height_m,feature.depth_m)
-    mat = feature.material_slot
-    composite = feature.kind == 'composite_pilaster'
-    base, cap = min(.48,h*.12), min(.55 if composite else .32,h*.14)
-    # Recessed longitudinal flutes, cut in the shaft cross-section.
-    section = box(u,-.02,u+w,d*.8)
-    radius = w/18
-    for x in np.linspace(u+w*.18,u+w*.82,5):
-        section = section.difference(Point(x,d*.81).buffer(radius,quad_segs=4))
-    for poly in [section] if section.geom_type=='Polygon' else section.geoms:
-        footprint = Polygon([np.asarray(a)+t*x+n*y for x,y in poly.exterior.coords])
-        mb.solid(footprint,z+base,z+h-cap,mat,'pilaster_fluted_shaft',clip='envelope')
-    for start, height, widths, semantic in (
-        (z,base,(1.0,.88,.96,.82),'pilaster_moulded_base'),
-        (z+h-cap,cap,(.85,1.0,1.13,1.0),'pilaster_moulded_capital')):
-        for i,scale in enumerate(widths):
-            half = w*scale/2
-            mb.box(a,t,n,u+w/2-half,u+w/2+half,start+height*i/4,
-                   start+height*(i+1)/4,-.02,d*(.8+.2*scale),mat,semantic,clip='envelope')
-    if composite:
-        for cx in (u+w*.16,u+w*.84):
-            r = w*.20
-            angles = np.linspace(0,2.6*np.pi,24)
-            curve = [(cx+r*(1-i/(len(angles)*1.12))*np.cos(angle),
-                      z+h-cap*.5+r*(1-i/(len(angles)*1.12))*np.sin(angle))
-                     for i,angle in enumerate(angles)]
-            _panel(mb,a,t,n,LineString(curve).buffer(w*.027,quad_segs=2),d,d+.065,mat,'capital_volute')
-        for cx in (u+w*.28,u+w*.5,u+w*.72):
-            leaf=Polygon([(cx-w*.09,z+h-cap),(cx-w*.10,z+h-cap*.55),
-                          (cx,z+h-cap*.25),(cx+w*.10,z+h-cap*.55)])
-            _panel(mb,a,t,n,leaf,d*.85,d+.04,mat,'capital_leaf')
+    from modeling.vertical_member_assembly import facade_member
+    facade_member(mb,a,t,n,feature,'scroll_pilaster' if feature.kind=='composite_pilaster'
+                  else 'restrained_fluted','barroco' if feature.kind=='composite_pilaster' else 'republicano')
 
 
 def classical_cornice(mb,a,t,n,feature):
