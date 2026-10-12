@@ -1,0 +1,10 @@
+{
+  "name": "compound_curve",
+  "triangles": 7092,
+  "parts": 30,
+  "crown_families": [
+    "compound_curve"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "b4c44e1f711f8b85948d62e54caa7b37f7877ec18fb127c8cd914524e6aa05f9"
+}

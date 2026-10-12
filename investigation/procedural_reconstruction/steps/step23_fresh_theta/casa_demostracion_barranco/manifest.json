@@ -1,0 +1,12 @@
+{
+  "name": "casa_demostracion_barranco",
+  "triangles": 108624,
+  "parts": 2687,
+  "crown_families": [
+    "stepped_segmental",
+    "triangular",
+    "segmental"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "dd141fa60404cdcde22b72845836091785628a806471a8773562be5a5e607664"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "rectangular_attic",
+  "triangles": 788,
+  "parts": 28,
+  "crown_families": [
+    "rectangular_attic"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "394933ae1f503dfd758d8ee377370201f12039446800e43b3720040fbf46805a"
+}

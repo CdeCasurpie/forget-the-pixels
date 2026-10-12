@@ -1,0 +1,53 @@
+[
+  {
+    "controls": {
+      "id": "coronamiento",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 4.7,
+      "width_m": 6.6,
+      "height_m": 2.6,
+      "design": {
+        "family": "curved_pointed",
+        "style": "republicano",
+        "silhouette": "pointed",
+        "stepped": false,
+        "concave_shoulders": false,
+        "central_block": false,
+        "open_center": false,
+        "thickness_m": 0.42,
+        "recess_m": 0.055,
+        "moulding_width_m": 0.17,
+        "projection_m": 0.22,
+        "base": true,
+        "ornament": "none",
+        "material": "plaster",
+        "moulding_material": "cornice",
+        "field_material": null,
+        "detail": 2
+      },
+      "anchor": "wall_top",
+      "opening_index": null,
+      "base_m": 0.0,
+      "enabled": true,
+      "aperture": "pointed",
+      "aperture_width_m": 0.8,
+      "aperture_height_m": 1.2,
+      "aperture_sill_m": 0.5
+    },
+    "origin": [
+      4.0,
+      5.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "base_z": 4.0,
+    "classification_reason": "two curved branches meeting at apex"
+  }
+]

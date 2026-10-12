@@ -1,0 +1,10 @@
+{
+  "name": "segmental",
+  "triangles": 2304,
+  "parts": 28,
+  "crown_families": [
+    "segmental"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "3b2d6cebdf596782ee75598901b13cb159f268c43b6cd54e4bf79c41594f0450"
+}

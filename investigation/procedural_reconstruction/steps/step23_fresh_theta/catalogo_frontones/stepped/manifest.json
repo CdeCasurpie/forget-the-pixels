@@ -1,0 +1,10 @@
+{
+  "name": "stepped",
+  "triangles": 1028,
+  "parts": 28,
+  "crown_families": [
+    "stepped"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "530a4f4cc5253799518b3cc3bf4f3485d3e37d516ee2cc7879574339655e686e"
+}

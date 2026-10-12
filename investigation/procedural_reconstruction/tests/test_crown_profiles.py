@@ -24,7 +24,7 @@ def plan(c,other=(),zone=False):
 
 
 def front_crown(mesh,kind):
-    return semantic_vertices(mesh,'crown_'+kind)
+    return semantic_vertices(mesh,'crown_body')
 
 
 def test_crown_empty_preserves_legacy():
@@ -40,9 +40,9 @@ def test_crown_extends_above_wall(kind):
     original=solve(body())
     assert resolved.masses==original.masses and resolved.roofs==original.roofs
     vertices=front_crown(generate_resolved(resolved),kind)
-    assert len(vertices)>0 and vertices[:,2].min()==pytest.approx(6.)
+    assert len(vertices)>0 and vertices[:,2].min()==pytest.approx(6.-.015)
     assert vertices[:,2].max()==pytest.approx(7.)
-    assert np.ptp(vertices[:,1])>=.20  # non-zero depth
+    assert np.ptp(vertices[:,1])>=.14  # .20 body including the separately emitted recessed rim
 
 
 def test_crown_horizontal_interval():

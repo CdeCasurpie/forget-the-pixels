@@ -361,27 +361,18 @@ def sign_box(mb, a, t, n, feature):
 
 
 def pediment(mb,a,t,n,feature):
-    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
-    shape=Polygon([(u,v),(u+w,v),(u+w/2,v+h)])
-    mb.panel(a,t,n,[shape],-.02,feature.depth_m,lambda *args:feature.material_slot,'pediment')
+    from modeling.crown_assembly import legacy_crown
+    legacy_crown(mb,a,t,n,feature,'triangular')
 
 
 def crown_triangular(mb,a,t,n,feature):
-    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
-    shape=Polygon([(u,v),(u+w,v),(u+w/2,v+h)])
-    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
-                   lambda *args:feature.material_slot,'crown_triangular')
+    from modeling.crown_assembly import legacy_crown
+    legacy_crown(mb,a,t,n,feature,'triangular')
 
 
 def crown_stepped(mb,a,t,n,feature):
-    u,v,w,h=feature.u_m,feature.v_m,feature.width_m,feature.height_m
-    # Three tiers share one continuous polygon and one closed extrusion.
-    shape=Polygon([(u,v),(u+w,v),(u+w,v+h/3),(u+5*w/6,v+h/3),
-                   (u+5*w/6,v+2*h/3),(u+2*w/3,v+2*h/3),
-                   (u+2*w/3,v+h),(u+w/3,v+h),(u+w/3,v+2*h/3),
-                   (u+w/6,v+2*h/3),(u+w/6,v+h/3),(u,v+h/3)])
-    getattr(mb,'crown_panel',mb.panel)(a,t,n,[shape],-.02,feature.depth_m,
-                   lambda *args:feature.material_slot,'crown_stepped')
+    from modeling.crown_assembly import legacy_crown
+    legacy_crown(mb,a,t,n,feature,'stepped')
 
 
 def vertical_fins(mb,a,t,n,feature):

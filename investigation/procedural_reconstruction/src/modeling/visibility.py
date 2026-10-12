@@ -46,6 +46,17 @@ class VisibleFacadeBuilder:
             vv,ff=clip_member_mesh(vertices,faces,planes)
             if len(ff):self._builder.member_mesh(vv,ff,*args)
 
+    def crown_member_mesh(self,vertices,faces,material,semantic,base,top):
+        extended=tuple(self.domains)+tuple((u0,z1,u1,top) for u0,z0,u1,z1 in self.domains
+                                          if abs(z1-base)<1e-6 and top>z1)
+        return VisibleFacadeBuilder(self._builder,self.a,self.t,extended).member_mesh(vertices,faces,material,semantic)
+
+    def crown_body_panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,*,base,top,**kwargs):
+        mask=self.mask.union(unary_union([box(u0,z1,u1,top) for u0,z0,u1,z1 in self.domains
+                                         if abs(z1-base)<1e-6 and top>z1]))
+        clipped=[part for p in polys for part in polygons(p.intersection(mask))]
+        return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)
+
     def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
         clipped=[part for p in polys for part in polygons(p.intersection(self.mask))]
         return self._builder.panel(a,t,n,clipped,w1,w2,mat_fn,semantic,**kwargs)

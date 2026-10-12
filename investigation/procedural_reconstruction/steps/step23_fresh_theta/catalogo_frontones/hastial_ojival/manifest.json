@@ -1,0 +1,10 @@
+{
+  "name": "hastial_ojival",
+  "triangles": 15168,
+  "parts": 97,
+  "crown_families": [
+    "curved_pointed"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "da658e53400e72c46aa2dd34005c3df1c63f2e86324480d5bd93a33a108ffced"
+}

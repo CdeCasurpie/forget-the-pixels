@@ -158,7 +158,9 @@ def resolve_trims(context,theta,masses,walls,roofs,materials,envelope):
             raise ValueError('Perimeter trim currently requires horizontal tops')
         # Recessed facade zones keep the outer cornice line; the portico
         # soffit and columns carry the overhang. Returns close the sides.
-        if c.cornice.enabled:
+        managed_entablature=any(e.enabled and e.anchor=='wall_top' and abs(e.top_m)<1e-7 and
+                               (not e.mass_refs or m.id in e.mass_refs) for e in theta.entablatures)
+        if c.cornice.enabled and not managed_entablature:
             a=c.cornice
             roof=next((r for r in roofs if r.mass_id==m.id),None)
             parapet=roof.parapet_height_m if roof else 0.

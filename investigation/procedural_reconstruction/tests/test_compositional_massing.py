@@ -176,7 +176,8 @@ def test_arch_real_hole_screen_and_pediment_geometry():
     mesh=generate_resolved(r)
     assert len(semantic_vertices(mesh,'arched_frame'))>0
     assert len(semantic_vertices(mesh,'perforated_screen'))>0
-    assert len(semantic_vertices(mesh,'pediment'))>0
+    assert len(semantic_vertices(mesh,'crown_body'))>0
+    assert len(semantic_vertices(mesh,'crown_moulding'))>0
     assert len(semantic_vertices(mesh,'door_panel'))==0
 
 

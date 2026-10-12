@@ -1,0 +1,194 @@
+{
+  "context": {
+    "parcel": [
+      [
+        0,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        24,
+        24
+      ],
+      [
+        0,
+        24
+      ]
+    ],
+    "fronts": [
+      0
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "architectural_style": "republicano",
+    "family": "republicano",
+    "massing": {
+      "components": [
+        {
+          "id": "house",
+          "region": {
+            "front_edge": 0,
+            "u": [
+              0.16666666666666666,
+              0.8333333333333334
+            ],
+            "depth_m": [
+              5,
+              18
+            ],
+            "width_reference": "edge"
+          },
+          "levels_m": [
+            0,
+            4
+          ]
+        }
+      ]
+    },
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "facades": [
+      {
+        "mass_role": "house:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "door",
+              "u_m": 7.2,
+              "v_m": 0.1,
+              "width_m": 1.6,
+              "height_m": 2.65,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": false,
+              "shape": "arch",
+              "arch_rise_m": 0.55,
+              "door": {
+                "model": "auto",
+                "construction": "panelled",
+                "portal": "pilasters"
+              }
+            }
+          ],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": []
+    },
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "primary_color": [
+      0.8,
+      0.64,
+      0.32
+    ],
+    "materials": [
+      {
+        "slot": "cornice",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      },
+      {
+        "slot": "frame",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      }
+    ],
+    "entablatures": [
+      {
+        "id": "entablamento",
+        "height_m": 0.48,
+        "projection_m": 0.22,
+        "scope": "exposed"
+      }
+    ],
+    "crowns": [
+      {
+        "id": "coronamiento",
+        "mass_ref": "house:0",
+        "edge": 0,
+        "u_m": 4.7,
+        "width_m": 6.6,
+        "height_m": 2.4,
+        "design": {
+          "concave_shoulders": true,
+          "thickness_m": 0.42,
+          "moulding_width_m": 0.17,
+          "projection_m": 0.22,
+          "ornament": "none"
+        },
+        "aperture": "oculus",
+        "aperture_width_m": 0.8,
+        "aperture_height_m": 1.2,
+        "aperture_sill_m": 0.5
+      }
+    ],
+    "roof_bodies": [
+      {
+        "id": "torre",
+        "parent": "house",
+        "region": {
+          "front_edge": 0,
+          "u": [
+            0.46,
+            0.54
+          ],
+          "depth_m": [
+            5.45,
+            8.5
+          ],
+          "width_reference": "edge"
+        },
+        "height_m": 3.4,
+        "facade": {
+          "mode": "explicit",
+          "openings": [],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 23,
+    "curtains": false
+  }
+}

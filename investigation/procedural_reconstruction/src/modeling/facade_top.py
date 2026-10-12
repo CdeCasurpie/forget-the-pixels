@@ -12,6 +12,8 @@ from modeling.mesh_builder import polygons
 
 def validate_top_profile(profile):
     if profile is None:return
+    from modeling.crown_catalog import STYLES
+    if profile.trim_profile is not None and profile.trim_profile not in STYLES:raise ValueError('Unknown top moulding profile')
     pts=profile.points
     if not 2<=len(pts)<=64 or not all(math.isfinite(v) for p in pts for v in p):
         raise ValueError('Top profile needs 2..64 finite (u,rise) points')
@@ -31,7 +33,7 @@ def resolve_top_profile(profile,width,height,start=0.,low=0.):
     if profile is None:return None
     validate_top_profile(profile)
     return ResolvedTopProfile(tuple((start+u*width,low+height+z) for u,z in profile.points),
-        low+height,profile.depth_m,profile.trim_width_m,profile.trim_depth_m,profile.trim_material_slot)
+        low+height,profile.depth_m,profile.trim_width_m,profile.trim_depth_m,profile.trim_material_slot,profile.trim_profile)
 
 
 def wall_domain(length,height,profile=None):
@@ -52,16 +54,11 @@ def visible_profile_domains(domains,profile):
 
 def emit_top_trim(mb,a,t,n,profile):
     if not profile.trim_width_m:return
-    pts=profile.points_m
-    # Trim follows the top edge, including slopes and sampled arcs. Both
-    # layers have real depth and a common continuous silhouette.
-    below=Polygon([(pts[0][0],profile.base_z_m-5),*pts,(pts[-1][0],profile.base_z_m-5)])
-    path=LineString(pts)
-    for width,depth,name in ((profile.trim_width_m,profile.trim_depth_m,'top_profile_moulding'),
-                             (profile.trim_width_m*.28,profile.trim_depth_m+.045,'top_profile_lip')):
-        band=path.buffer(width,cap_style=2,join_style=2).intersection(below)
-        mb.panel(a,t,n,polygons(band),-.015,depth,
-                 lambda *args:profile.trim_material_slot,name,clip='envelope')
+    from domain.crowns import CrownDesign
+    from modeling.crown_assembly import moulding_section
+    from modeling.elevation_sweep import emit_elevation_sweep
+    d=CrownDesign(style=profile.trim_profile or 'republicano',moulding_width_m=profile.trim_width_m,projection_m=profile.trim_depth_m)
+    emit_elevation_sweep(mb,a,t,n,profile.points_m,moulding_section(d),profile.trim_material_slot,'top_profile_moulding')
 
 
 def roof_aperture_clearance(facade,roof_z):

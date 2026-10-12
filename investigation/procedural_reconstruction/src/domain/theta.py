@@ -15,6 +15,7 @@ from typing import Any, Union, get_args, get_origin, get_type_hints
 from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, ExteriorStairSpecification, FacadeTopProfile
 from domain.balconies import BalconyControls, RailingControls
 from domain.vertical_members import MemberDesign, VerticalMemberControls
+from domain.crowns import CrownDesign, CrownControls, EntablatureControls
 
 
 @dataclass(frozen=True)
@@ -360,6 +361,8 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    crowns: tuple[CrownControls, ...] = ()
+    entablatures: tuple[EntablatureControls, ...] = ()
     vertical_members: tuple[VerticalMemberControls, ...] = ()
     balconies: tuple[BalconyControls, ...] = ()
     trim: TrimControls | None = None
@@ -464,6 +467,9 @@ def canonical(value) -> str:
                     and not (f.name=='roof_bodies' and not getattr(x,f.name))
                     and not (f.name=='balconies' and isinstance(getattr(x,f.name),tuple) and not getattr(x,f.name))
                     and not (f.name=='vertical_members' and not getattr(x,f.name))
+                    and not (f.name in ('crowns','entablatures') and not getattr(x,f.name))
+                    and not (f.name=='crown' and getattr(x,f.name) is None)
+                    and not (f.name=='trim_profile' and getattr(x,f.name) is None)
                     and not (f.name in ('member','portal_member','column_member') and getattr(x,f.name) is None)
                     and not (isinstance(x,ExteriorStairSpecification) and f.name=='railing_enabled' and x.railing_enabled)
                     and not (f.name=='top_profile' and getattr(x,f.name) is None)
@@ -473,7 +479,7 @@ def canonical(value) -> str:
                              f.name=='order' and x.order is None or
                              f.name=='opening_programs' and not x.opening_programs))}
         if isinstance(x,dict):return {k:data(v) for k,v in x.items()
-                                     if not (k in ('member','portal_member','column_member') and v is None)}
+                                     if not (k in ('member','portal_member','column_member','crown') and v is None)}
         if isinstance(x,(tuple,list)):return [data(v) for v in x]
         return x
     # Keep canonical legacy requests/resolved plans byte-identical when the

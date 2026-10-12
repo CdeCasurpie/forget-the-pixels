@@ -38,6 +38,8 @@ from modeling.exposure import wall_domains
 from modeling.visibility import VisibleFacadeBuilder, patch_domains
 from modeling.balcony_resolver import ResolvedBalcony, resolve_balconies
 from modeling.vertical_member_resolver import ResolvedMember, resolve_members
+from modeling.crown_resolver import ResolvedCrown, resolve_crowns
+from modeling.entablature_resolver import resolve_entablatures
 from modeling.trim_resolver import (ResolvedTrim, mass_trim, resolve_trims, emit_trims,
                                     validate_plinth, plinth_pieces, lines)
 
@@ -92,6 +94,7 @@ class ResolvedArchitecture:
     trims: tuple[ResolvedTrim, ...] = ()
     balconies: tuple[ResolvedBalcony, ...] = ()
     vertical_members: tuple[ResolvedMember, ...] = ()
+    crowns: tuple[ResolvedCrown, ...] = ()
 
 
 def _check(condition, message):
@@ -760,7 +763,9 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         trims+=tuple(pieces)
     balconies=resolve_balconies(theta,masses,walls,envelope,materials)
     members=resolve_members(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
-    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members)
+    crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
+    trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
+    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members,crowns)
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
@@ -809,8 +814,22 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     zoned_edges={(w.mass_role,w.edge) for w in resolved.walls if '/zone' in w.facade.edge_id}
     for wall in resolved.walls:
         f=wall.facade
+        # Horizontal order features have already been resolved into continuous
+        # sweeps; never emit their old panel/box geometry a second time.
+        f=replace(f,projections=tuple(p for p in f.projections if not (
+            p.source=='architectural_order' and p.kind in ('panel','cornice'))))
         from domain.vertical_members import MemberDesign
         member_style=theta.architectural_style or 'republicano'
+        if f.top_profile is not None and f.top_profile.trim_profile is None:
+            f=replace(f,top_profile=replace(f.top_profile,trim_profile=member_style))
+        from domain.crowns import CrownDesign
+        crown_kinds={'pediment':'triangular','crown_triangular':'triangular','crown_stepped':'stepped'}
+        f=replace(f,projections=tuple(replace(p,crown=(
+            replace(p.crown,style=member_style) if p.crown and p.crown.style=='auto' else p.crown or
+            CrownDesign(family=crown_kinds[p.kind],style=member_style,thickness_m=max(.12,p.depth_m),
+                material=p.material_slot,moulding_material=p.material_slot,
+                moulding_width_m=min(.12,p.height_m*.25,p.width_m*.07),projection_m=min(.16,max(.04,p.depth_m*.5)))))
+            if p.kind in crown_kinds else p for p in f.projections))
         f=replace(f,projections=tuple(replace(feature,member=(
             replace(feature.member,style=member_style) if feature.member and feature.member.style=='auto'
             else feature.member or MemberDesign(style=member_style,section='rectangle',material=feature.material_slot)))
@@ -949,6 +968,13 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         with builder.assembly('vertical_member/'+c.id):
             build_member(builder,member.center,member.tangent,member.normal,member.bottom,
                          c.width_m,c.depth_m,c.height_m,c.design,c.placement)
+    from modeling.crown_assembly import build_crown, aperture_shape
+    for crown in resolved.crowns:
+        c=crown.controls
+        hole=aperture_shape(c.aperture,c.aperture_width_m,c.aperture_height_m,c.aperture_sill_m,c.width_m/2)
+        with builder.assembly('crown/'+c.id):
+            build_crown(builder,crown.origin,crown.tangent,crown.normal,c.u_m,crown.base_z,
+                        c.width_m,c.height_m,c.design,hole)
     return builder.finish()
 
 

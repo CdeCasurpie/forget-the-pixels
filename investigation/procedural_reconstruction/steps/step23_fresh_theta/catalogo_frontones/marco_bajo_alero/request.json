@@ -1,0 +1,176 @@
+{
+  "context": {
+    "parcel": [
+      [
+        0,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        24,
+        24
+      ],
+      [
+        0,
+        24
+      ]
+    ],
+    "fronts": [
+      0
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "architectural_style": "republicano",
+    "family": "republicano",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "masses": [
+      {
+        "role": "house",
+        "footprint": [
+          [
+            4,
+            5
+          ],
+          [
+            20,
+            5
+          ],
+          [
+            20,
+            18
+          ],
+          [
+            4,
+            18
+          ]
+        ],
+        "levels_m": [
+          0,
+          4
+        ]
+      }
+    ],
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "facades": [
+      {
+        "mass_role": "house:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "window",
+              "u_m": 6.9,
+              "v_m": 0.6,
+              "width_m": 2.2,
+              "height_m": 2.4,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": true,
+              "shape": "arch",
+              "arch_rise_m": 0.8
+            }
+          ],
+          "projections": [
+            {
+              "kind": "eave",
+              "u_m": 5.8,
+              "v_m": 3.8,
+              "width_m": 4.4,
+              "height_m": 0.16,
+              "depth_m": 0.5,
+              "material_slot": "wood"
+            }
+          ],
+          "material_regions": []
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": []
+    },
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "primary_color": [
+      0.8,
+      0.64,
+      0.32
+    ],
+    "materials": [
+      {
+        "slot": "cornice",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      },
+      {
+        "slot": "frame",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      }
+    ],
+    "crowns": [
+      {
+        "id": "coronamiento",
+        "mass_ref": "house:0",
+        "edge": 0,
+        "u_m": 4.7,
+        "width_m": 2.7,
+        "height_m": 0.6,
+        "design": {
+          "silhouette": "curved",
+          "thickness_m": 0.42,
+          "moulding_width_m": 0.144,
+          "projection_m": 0.22,
+          "ornament": "keystone"
+        },
+        "aperture": "none",
+        "aperture_width_m": 0.8,
+        "aperture_height_m": 1.2,
+        "aperture_sill_m": 0.5,
+        "anchor": "opening_top",
+        "opening_index": 0,
+        "base_m": 0.08
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 23,
+    "curtains": false
+  }
+}

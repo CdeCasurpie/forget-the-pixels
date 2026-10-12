@@ -1,0 +1,10 @@
+{
+  "name": "hotel_arco",
+  "triangles": 13144,
+  "parts": 93,
+  "crown_families": [
+    "segmental"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "4d8e1325d85f5b6cb92658ac1854fa9c355f03775cf4551a94ef91e79eed2807"
+}

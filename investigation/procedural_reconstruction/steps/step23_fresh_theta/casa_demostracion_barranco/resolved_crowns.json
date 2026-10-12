@@ -1,0 +1,155 @@
+[
+  {
+    "controls": {
+      "id": "fronton_central",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "u_m": 5.1,
+      "width_m": 8.5,
+      "height_m": 2.0,
+      "design": {
+        "family": "stepped_segmental",
+        "style": "republicano",
+        "silhouette": "mixed",
+        "stepped": true,
+        "concave_shoulders": false,
+        "central_block": false,
+        "open_center": false,
+        "thickness_m": 0.42,
+        "recess_m": 0.055,
+        "moulding_width_m": 0.18,
+        "projection_m": 0.25,
+        "base": true,
+        "ornament": "keystone",
+        "material": "plaster",
+        "moulding_material": "cornice",
+        "field_material": null,
+        "detail": 2
+      },
+      "anchor": "wall_top",
+      "opening_index": null,
+      "base_m": 0.0,
+      "enabled": true,
+      "aperture": "oculus",
+      "aperture_width_m": 0.7,
+      "aperture_height_m": 0.7,
+      "aperture_sill_m": 0.65
+    },
+    "origin": [
+      3.0,
+      8.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "base_z": 7.2,
+    "classification_reason": "stepped shoulders and curved centre"
+  },
+  {
+    "controls": {
+      "id": "fronton_ala",
+      "mass_ref": "izquierda:0",
+      "edge": 0,
+      "u_m": 0.3,
+      "width_m": 4.4,
+      "height_m": 1.1,
+      "design": {
+        "family": "triangular",
+        "style": "republicano",
+        "silhouette": "angular",
+        "stepped": false,
+        "concave_shoulders": false,
+        "central_block": false,
+        "open_center": false,
+        "thickness_m": 0.34,
+        "recess_m": 0.055,
+        "moulding_width_m": 0.14,
+        "projection_m": 0.2,
+        "base": true,
+        "ornament": "cartouche",
+        "material": "plaster",
+        "moulding_material": "cornice",
+        "field_material": null,
+        "detail": 2
+      },
+      "anchor": "wall_top",
+      "opening_index": null,
+      "base_m": 0.0,
+      "enabled": true,
+      "aperture": "none",
+      "aperture_width_m": 0.55,
+      "aperture_height_m": 0.7,
+      "aperture_sill_m": 0.3
+    },
+    "origin": [
+      3.0,
+      3.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "base_z": 7.2,
+    "classification_reason": "explicit family override"
+  },
+  {
+    "controls": {
+      "id": "sobrepuerta",
+      "mass_ref": "izquierda:0",
+      "edge": 0,
+      "u_m": 0.25,
+      "width_m": 2.25,
+      "height_m": 0.48,
+      "design": {
+        "family": "segmental",
+        "style": "republicano",
+        "silhouette": "angular",
+        "stepped": false,
+        "concave_shoulders": false,
+        "central_block": false,
+        "open_center": false,
+        "thickness_m": 0.2,
+        "recess_m": 0.055,
+        "moulding_width_m": 0.09,
+        "projection_m": 0.12,
+        "base": true,
+        "ornament": "keystone",
+        "material": "plaster",
+        "moulding_material": "cornice",
+        "field_material": null,
+        "detail": 2
+      },
+      "anchor": "opening_top",
+      "opening_index": 0,
+      "base_m": 0.23,
+      "enabled": true,
+      "aperture": "none",
+      "aperture_width_m": 0.55,
+      "aperture_height_m": 0.7,
+      "aperture_sill_m": 0.3
+    },
+    "origin": [
+      3.0,
+      3.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "base_z": 2.85,
+    "classification_reason": "explicit family override"
+  }
+]

@@ -68,7 +68,7 @@ def test_monumental_portal_inside_facade_zone():
     assert wall.facade.openings==tuple(replace(o,u_m=o.u_m+8) for o in local.openings)
     assert wall.facade.projections==tuple(replace(f,u_m=f.u_m+8) for f in local.projections)
     mesh=generate_resolved(plan)
-    assert len(semantic_vertices(mesh,'pediment'))>0
+    assert len(semantic_vertices(mesh,'crown_moulding'))>0
 
 
 def test_monumental_portal_suppressed_opening_fails():

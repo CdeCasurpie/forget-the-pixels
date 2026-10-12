@@ -1,0 +1,33 @@
+{
+  "vertices": 3604,
+  "triangles": 7092,
+  "parts": 30,
+  "semantic_types": [
+    "crown_base_cornice",
+    "crown_body",
+    "crown_inner_bead",
+    "crown_moulding",
+    "crown_rim",
+    "crown_volute",
+    "roof_slab",
+    "structural_beam",
+    "structural_column",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "crown_volute": 2776,
+    "crown_moulding": 1628,
+    "crown_inner_bead": 1628,
+    "crown_rim": 472,
+    "crown_body": 268,
+    "structural_column": 180,
+    "wall": 48,
+    "crown_base_cornice": 44,
+    "structural_beam": 36,
+    "roof_slab": 12
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 1.5292130016443284e-07,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "controls": {
+      "id": "coronamiento",
+      "mass_ref": "house:0",
+      "edge": 0,
+      "u_m": 5.6,
+      "width_m": 4.8,
+      "height_m": 1.8,
+      "design": {
+        "family": "segmental",
+        "style": "republicano",
+        "silhouette": "angular",
+        "stepped": false,
+        "concave_shoulders": false,
+        "central_block": false,
+        "open_center": false,
+        "thickness_m": 0.36,
+        "recess_m": 0.055,
+        "moulding_width_m": 0.14,
+        "projection_m": 0.2,
+        "base": true,
+        "ornament": "none",
+        "material": "plaster",
+        "moulding_material": "cornice",
+        "field_material": null,
+        "detail": 2
+      },
+      "anchor": "wall_top",
+      "opening_index": null,
+      "base_m": 0.0,
+      "enabled": true,
+      "aperture": "none",
+      "aperture_width_m": 0.55,
+      "aperture_height_m": 0.7,
+      "aperture_sill_m": 0.3
+    },
+    "origin": [
+      4.0,
+      5.0
+    ],
+    "tangent": [
+      1.0,
+      0.0
+    ],
+    "normal": [
+      0.0,
+      -1.0
+    ],
+    "base_z": 4.0,
+    "classification_reason": "explicit family override"
+  }
+]

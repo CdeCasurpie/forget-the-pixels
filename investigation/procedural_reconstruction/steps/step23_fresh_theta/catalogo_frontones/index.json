@@ -1,0 +1,162 @@
+[
+  {
+    "name": "triangular",
+    "triangles": 504,
+    "parts": 28,
+    "crown_families": [
+      "triangular"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "d850bb3eb573ab309b787246c5adae3cb98b0badaacdb1109ba099e08fa405da"
+  },
+  {
+    "name": "segmental",
+    "triangles": 2304,
+    "parts": 28,
+    "crown_families": [
+      "segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "3b2d6cebdf596782ee75598901b13cb159f268c43b6cd54e4bf79c41594f0450"
+  },
+  {
+    "name": "semicircular",
+    "triangles": 2304,
+    "parts": 28,
+    "crown_families": [
+      "semicircular"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "4ffb25602a64b0d4417207b7143dae8f99885b64ce5022e80a317590a089ea84"
+  },
+  {
+    "name": "stepped",
+    "triangles": 1028,
+    "parts": 28,
+    "crown_families": [
+      "stepped"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "530a4f4cc5253799518b3cc3bf4f3485d3e37d516ee2cc7879574339655e686e"
+  },
+  {
+    "name": "stepped_segmental",
+    "triangles": 2768,
+    "parts": 28,
+    "crown_families": [
+      "stepped_segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "4d2c61227c8dd6c2dae71063b24e324fad18e7bd2b5eaaeb63970c8684af4c24"
+  },
+  {
+    "name": "curved_pointed",
+    "triangles": 4216,
+    "parts": 28,
+    "crown_families": [
+      "curved_pointed"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "b6ba92a6e5cf2a577dcb7efcaa62dc20d39034ecffe5ce7a34f432475c2fdb9f"
+  },
+  {
+    "name": "concave_shoulders",
+    "triangles": 4300,
+    "parts": 28,
+    "crown_families": [
+      "concave_shoulders"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "937c8a7746a7e7168efb37c62360f8a61dde730c234fed4c8c8a05d141a51a54"
+  },
+  {
+    "name": "compound_curve",
+    "triangles": 7092,
+    "parts": 30,
+    "crown_families": [
+      "compound_curve"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "b4c44e1f711f8b85948d62e54caa7b37f7877ec18fb127c8cd914524e6aa05f9"
+  },
+  {
+    "name": "broken",
+    "triangles": 620,
+    "parts": 33,
+    "crown_families": [
+      "broken"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "dffd75bc0621396c62e8b8363044db1a8c483e8042fcfda7a2dc1096943cf09d"
+  },
+  {
+    "name": "rectangular_attic",
+    "triangles": 788,
+    "parts": 28,
+    "crown_families": [
+      "rectangular_attic"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "394933ae1f503dfd758d8ee377370201f12039446800e43b3720040fbf46805a"
+  },
+  {
+    "name": "hotel_arco",
+    "triangles": 13144,
+    "parts": 93,
+    "crown_families": [
+      "segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "4d8e1325d85f5b6cb92658ac1854fa9c355f03775cf4551a94ef91e79eed2807"
+  },
+  {
+    "name": "mercado_escalonado",
+    "triangles": 12480,
+    "parts": 92,
+    "crown_families": [
+      "stepped_segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "a895087f9c775ed94a4910e62bad7bfb95e0ec6ce4af9b7e6eb823608943ac5a"
+  },
+  {
+    "name": "hastial_ojival",
+    "triangles": 15168,
+    "parts": 97,
+    "crown_families": [
+      "curved_pointed"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "da658e53400e72c46aa2dd34005c3df1c63f2e86324480d5bd93a33a108ffced"
+  },
+  {
+    "name": "hombros_bajo_torre",
+    "triangles": 16116,
+    "parts": 88,
+    "crown_families": [
+      "concave_shoulders"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "2ef506487836b327cdb5ac4835ad462e4d4151e6b344517392f87b0b36647db3"
+  },
+  {
+    "name": "portada_ornamentada",
+    "triangles": 46768,
+    "parts": 363,
+    "crown_families": [
+      "compound_curve"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "4164c6e84dcbeab84be6f99d5f099e4b13c46e49f6f9b4de00c3dc5f253730eb"
+  },
+  {
+    "name": "marco_bajo_alero",
+    "triangles": 9008,
+    "parts": 71,
+    "crown_families": [
+      "segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "685746e324ea020d8f7fa3a6ea5df7bc970d0249d5aaf6adc88b493ec3f1b883"
+  }
+]

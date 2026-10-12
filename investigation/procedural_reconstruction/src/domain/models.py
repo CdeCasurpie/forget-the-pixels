@@ -8,6 +8,7 @@ from typing import Any
 
 import numpy as np
 from domain.vertical_members import MemberDesign
+from domain.crowns import CrownDesign
 
 
 @dataclass(frozen=True)
@@ -176,6 +177,7 @@ class FacadeProjection:
     label: str = ""  # optional relief lettering for sign panels
     arch_rise_m: float | None = None  # segmental surround follows its opening's arch
     member: MemberDesign | None = None
+    crown: CrownDesign | None = None
 
 
 @dataclass(frozen=True)
@@ -208,6 +210,7 @@ class FacadeTopProfile:
     trim_width_m: float = .16
     trim_depth_m: float = .12
     trim_material_slot: str = 'frame'
+    trim_profile: str | None = None
 
 
 @dataclass(frozen=True)
@@ -218,6 +221,7 @@ class ResolvedTopProfile:
     trim_width_m: float
     trim_depth_m: float
     trim_material_slot: str
+    trim_profile: str | None = None
 
 
 @dataclass(frozen=True)

@@ -69,10 +69,10 @@ REQUIRED = {
     "shutter": "shutter_slat",
     "downpipe": "downpipe",
     "sign_box": "sign_box",
-    "pediment": "pediment",
+    "pediment": "crown_moulding",
     "vertical_fins": "vertical_fin",
-    "crown_triangular": "crown_triangular",
-    "crown_stepped": "crown_stepped",
+    "crown_triangular": "crown_body",
+    "crown_stepped": "crown_body",
 }
 
 

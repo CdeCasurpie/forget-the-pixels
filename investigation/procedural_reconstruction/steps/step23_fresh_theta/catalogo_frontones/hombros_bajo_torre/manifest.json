@@ -1,0 +1,10 @@
+{
+  "name": "hombros_bajo_torre",
+  "triangles": 16116,
+  "parts": 88,
+  "crown_families": [
+    "concave_shoulders"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "2ef506487836b327cdb5ac4835ad462e4d4151e6b344517392f87b0b36647db3"
+}
