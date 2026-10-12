@@ -9,6 +9,7 @@ from shapely.geometry import LineString, Polygon
 from shapely.ops import unary_union
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan
+from domain.theta import PlinthControls
 
 MIN_BOUNDARY_LENGTH_M = 0.8
 GATE_WIDTH_M = 1.1
@@ -31,6 +32,8 @@ class BoundarySpec:
     garage_mode: str = 'auto'
     openness: float = .3
     planters: bool = False
+    plinth: PlinthControls | None = None
+    base_height_m: float | None = None
 
 
 def _segments(geometry):

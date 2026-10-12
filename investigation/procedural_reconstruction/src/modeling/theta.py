@@ -18,7 +18,7 @@ from shapely.ops import unary_union
 
 from domain.theta import *
 from domain.architecture import MassSpec, ParcelContext, SitePlan, RoofSurface, RoofPlan, RoofProp, BuildingProgram
-from domain.models import FacadeSpecification, BuildingAppearance
+from domain.models import FacadeSpecification, BuildingAppearance, FacadeMaterialRegion
 from modeling.detail import DetailBudget
 from modeling.geometry_constraints import apply_edge_setbacks, front_lines, outward_normal
 from modeling.exposure import calculate_mass_exposures
@@ -36,6 +36,8 @@ from modeling.assembly import (compose_masses, mass_polygon, ring as assembly_ri
     holes, resolve_supports, resolve_zones, StructuralPiece, ResolvedSiteZone, region_frame)
 from modeling.exposure import wall_domains
 from modeling.visibility import VisibleFacadeBuilder, patch_domains
+from modeling.trim_resolver import (ResolvedTrim, mass_trim, resolve_trims, emit_trims,
+                                    validate_plinth, plinth_pieces, lines)
 
 
 @dataclass(frozen=True)
@@ -67,6 +69,8 @@ class ResolvedBoundary:
     garage_mode: str = 'auto'
     openness: float = .3
     planters: bool = False
+    plinth: PlinthControls | None = None
+    base_height_m: float | None = None
 
 
 @dataclass(frozen=True)
@@ -83,6 +87,7 @@ class ResolvedArchitecture:
     completion_details: dict[str, dict] = field(default_factory=dict)
     structures: tuple[StructuralPiece, ...] = ()
     site_zones: tuple[ResolvedSiteZone, ...] = ()
+    trims: tuple[ResolvedTrim, ...] = ()
 
 
 def _check(condition, message):
@@ -655,7 +660,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             occupied.setdefault(run.edge,[]).append((run.start_m,run.end_m))
             line=LineString([a+tangent*run.start_m,a+tangent*run.end_m])
             _check(line.intersection(built).length<1e-6,"Fence overlaps building")
-            boundaries.append(ResolvedBoundary(tuple(line.coords),run.kind,run.height_m,run.gate_u,run.gate_width,run.garage_u,run.garage_width,run.edge in context.fronts,run.height_mode,run.wall_material,run.gate_mode,run.garage_mode,run.openness,run.planters))
+            boundaries.append(ResolvedBoundary(tuple(line.coords),run.kind,run.height_m,run.gate_u,run.gate_width,run.garage_u,run.garage_width,run.edge in context.fronts,run.height_mode,run.wall_material,run.gate_mode,run.garage_mode,run.openness,run.planters,run.plinth,run.base_height_m))
     def track(old,new,path=''):
         if old is None and new is not None:
             completed.setdefault(path,'prior/completed')
@@ -721,7 +726,35 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             [b.id for b in masses if m.base_z>0 and abs(b.roof_z-m.base_z)<1e-6 and mass_polygon(b).intersection(mass_polygon(m)).area>1e-6]
         ))) for m in masses)
     zones=resolve_zones(context,theta.site,masses,structures) if theta.schema_version=='0.3' or theta.site.zones else ()
-    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones)
+    envelope=street_envelope(ParcelContext(context.parcel,explicit_fronts=context.fronts)).buffer(theta.massing.parcel_tolerance_m)
+    materials={m.slot for m in resolve_materials(BuildingAppearance())}
+    trims=resolve_trims(context,theta,masses,walls,roofs,materials,envelope)
+    fence_groups={}
+    for i,b in enumerate(boundaries):
+        base=b.base_height_m if b.base_height_m is not None else (.40 if b.height_mode=='high' else .24)
+        if b.base_height_m is not None:
+            _check(np.isfinite(base) and 0<base<b.height-.12,'Invalid fence base height')
+        if b.plinth is None:continue
+        _check(b.kind in ('republicano','barroco','clasico','moderno','madera'),'Fence plinth requires a linked fence style')
+        validate_plinth(b.plinth,materials)
+        if not b.plinth.enabled:continue
+        _check(b.kind!='madera','Wood picket fence has no masonry plinth substrate')
+        _check(b.plinth.height_m<=(b.height-.06 if b.kind=='clasico' else base), 'Fence plinth exceeds solid base')
+        line=LineString(b.line)
+        from shapely.ops import substring
+        cuts=sorted({0.,line.length,*[v for u,w in ((b.gate_u,b.gate_width),(b.garage_u,b.garage_width))
+                                    if u is not None for v in (u,u+w)]})
+        for lo,hi in zip(cuts,cuts[1:]):
+            if any(u is not None and u<=lo and hi<=u+w for u,w in ((b.gate_u,b.gate_width),(b.garage_u,b.garage_width))):continue
+            fence_groups.setdefault(b.plinth,[]).append(substring(line,lo,hi))
+    for c,paths in fence_groups.items():
+        merged=shapely.line_merge(unary_union(paths),directed=True)
+        pieces=plinth_pieces(lines(merged),c,('site/fence',),'trim/fence/'+str(len(trims)))
+        from modeling.trim_sweep import sweep_domain
+        for p in pieces:
+            _check(envelope.buffer(1e-7).covers(sweep_domain(p.path,p.section,envelope)), f'Fence plinth outside envelope: {p.path}')
+        trims+=tuple(pieces)
+    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims)
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
@@ -811,7 +844,23 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         if domains and domains!=((0.,0.,f.width_m,wall.height_m),):
             local=VisibleFacadeBuilder(local,f.vertex_a,(np.asarray(f.vertex_b)-f.vertex_a)/f.width_m,domains)
         if wall.section is None or wall.section.back_wall:
-            facade(local,replace(f,openings=ops),wall.height_m)
+            trim=mass_trim(theta,wall.mass_role)
+            regions=()
+            if trim is not None:
+                # ArchitecturalOrder and family-generated remates yield to trim.
+                projections=tuple(p for p in f.projections if not (
+                    p.source=='architectural_order' and (p.kind=='cornice' or p.kind=='panel' and p.v_m==0)
+                    or p.source=='family_rule' and p.kind in ('cornice','denticulated_cornice')))
+                f=replace(f,projections=projections)
+                c=trim.plinth
+                if c.enabled and wall.base_z<1e-6 and c.height_m>wall.base_z:
+                    from modeling.trim_resolver import perimeter_paths
+                    m=next(m for m in resolved.masses if m.id==wall.mass_role)
+                    paths=perimeter_paths(mass_polygon(m),c,Polygon(),p)
+                    wall_line=LineString([f.vertex_a,f.vertex_b])
+                    if any(wall_line.intersection(path.buffer(1e-6,cap_style=2)).length>1e-5 for path in paths):
+                        regions=(FacadeMaterialRegion(0.,0.,f.width_m,c.height_m,c.material,source='perimeter_trim'),)
+            facade(local,replace(f,openings=ops),wall.height_m,managed_trim=trim is not None,trim_regions=regions)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
         for op in f.openings:
@@ -838,17 +887,22 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
                 plant_garden(builder,poly,Polygon(),[],[],_rng(nuisance.seed,zone.id))
     for roof in resolved.roofs:
         props=tuple(replace(prop,seed=int(_rng(nuisance.seed,f"roof/{roof.mass_id}/{prop.kind}/{prop.position}").integers(0,2**31))) for prop in roof.props)
-        build_roof(builder,replace(roof,props=props),_rng(nuisance.seed,"roof/"+roof.mass_id))
+        trim=mass_trim(theta,roof.mass_id)
+        cap=roof.parapet_profile
+        if trim is not None and trim.cornice.enabled and trim.cornice.anchor=='parapet_top':cap='none'
+        build_roof(builder,replace(roof,props=props,parapet_profile=cap),_rng(nuisance.seed,"roof/"+roof.mass_id),
+                   slab_material='plaster' if trim is not None else 'concrete')
     boundaries=[]
     styles={"reja":("plaster","reja"),"ladrillos":("brick","solid"),"concreto":("plaster","solid"),"concreto_bajo":("plaster","low")}
     for i,record in enumerate(resolved.boundaries):
-        boundary=BoundarySpec(**{**asdict(record),"line":LineString(record.line)})
+        boundary=BoundarySpec(**{**asdict(record),"line":LineString(record.line),"plinth":record.plinth})
         boundaries.append(boundary)
         a,b=record.line[0],record.line[-1]
         t,n,length=outward_normal(parcel,a,b)
         material,style=styles.get(record.kind,("brick","wall"))
         with builder.assembly(f"site/fence/{i}"):
             draw_fence(builder,np.asarray(a),t,n,length,boundary,_rng(nuisance.seed,"fence"),material,style)
+    emit_trims(builder,resolved.trims,street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance))
     for i,entry in enumerate(entrances):
         with builder.assembly(f"site/entrance/{i}"):
             entrance_step(builder,entry,_rng(nuisance.seed,"entry"))

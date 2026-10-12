@@ -1,0 +1,21 @@
+{
+  "vertices": 132,
+  "triangles": 236,
+  "parts": 9,
+  "semantic_types": [
+    "parapet",
+    "roof_slab",
+    "trim_cornice",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "trim_cornice": 96,
+    "wall": 72,
+    "parapet": 48,
+    "roof_slab": 20
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 0.0810000000000004,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

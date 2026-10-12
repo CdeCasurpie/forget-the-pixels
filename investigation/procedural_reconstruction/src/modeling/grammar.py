@@ -487,7 +487,7 @@ def _brick_frame_polys(length, total_height, levels):
     return frame if frame.geom_type == "Polygon" else frame
 
 
-def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
+def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, managed_trim=False):
     """Sparse closed wall bands with real holes and independent local relief.
 
     Only a genuine 120 mm ground-floor recess divides the structural shell.
@@ -506,7 +506,7 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
     first = levels[1] if len(levels) > 1 else total_height
     brick_side = not f.has_program and f.wall_material == 'brick'
     bands = [(0., total_height, -.015 if brick_side else 0.)]
-    if f.has_program and len(levels) >= 4:
+    if not managed_trim and f.has_program and len(levels) >= 4:
         bands = [(0., first, -.12), (first, total_height, 0.)]
     if f.top_profile:
         bottom,_,depth=bands[-1]
@@ -545,15 +545,15 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
                  0.,'concrete','structural_beam',f'beam_{index}')
 
 
-def facade(mb, f, total_height):
+def facade(mb, f, total_height, *, managed_trim=False, trim_regions=()):
     """Assemble one facade inside its edge assembly; openings, projections
     and stairs open nested assemblies so every window/door keeps instance
     identity (frame + glazing + grille under one assembly)."""
     with mb.assembly(f.edge_id):
-        _facade_body(mb, f, total_height)
+        _facade_body(mb, f, total_height, managed_trim=managed_trim, trim_regions=trim_regions)
 
 
-def _facade_body(mb, f, total_height):
+def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=()):
     a, end = np.asarray(f.vertex_a), np.asarray(f.vertex_b)
     t = end - a
     length = np.linalg.norm(t)
@@ -561,6 +561,7 @@ def _facade_body(mb, f, total_height):
     n = np.array([t[1], -t[0]])
     ops = list(f.openings) if f.has_program else []
     regions = list(f.material_regions) if f.has_program else []
+    regions.extend(trim_regions)
     features = list(f.projections) if f.has_program else []
     stairs = list(f.exterior_stairs) if f.has_program else []
     from modeling.facade_top import wall_domain, emit_top_trim
@@ -622,7 +623,7 @@ def _facade_body(mb, f, total_height):
                 feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
-    _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions)
+    _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions,managed_trim=managed_trim)
     if f.top_profile:emit_top_trim(mb,a,t,n,f.top_profile)
     if f.has_program and f.cladding == "horizontal":
         pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m
@@ -658,7 +659,7 @@ def _facade_body(mb, f, total_height):
     # These are the exposed concrete floor slabs that protrude from every
     # inter-floor boundary. This is THE single biggest depth cue on any
     # Peruvian facade, regardless of style.
-    if f.has_program and len(f.floor_levels_m) > 2:
+    if not managed_trim and f.has_program and len(f.floor_levels_m) > 2:
         for z in f.floor_levels_m[1:-1]:  # Skip ground (0) and roof
             # Thick concrete slab band: 15cm tall, protrudes 15cm
             mb.box(a, t, n, -0.02, length + 0.02,
@@ -672,10 +673,12 @@ def _facade_body(mb, f, total_height):
 
     # ── Existing ornamentation (plinth, floor bands, pilasters) ──────────
     if f.style != "premium":
-        mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
+        if not managed_trim:
+            mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
         if f.has_program and f.ornamented:
-            for z in f.floor_levels_m[1:]:
-                mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
+            if not managed_trim:
+                for z in f.floor_levels_m[1:]:
+                    mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
             for u in [0.04, length - 0.16]:
                 mb.box(
                     a,

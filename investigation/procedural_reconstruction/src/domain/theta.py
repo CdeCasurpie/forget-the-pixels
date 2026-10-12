@@ -127,6 +127,7 @@ class MassComponent:
     roof: RoofControls | None = None
     slab_m: float = 0.18
     zones: tuple[FacadeZone, ...] = ()
+    trim: TrimControls | None = None
 
 
 @dataclass(frozen=True)
@@ -138,6 +139,7 @@ class RoofBody:
     height_m: float = 2.4
     roof: RoofControls | None = None
     facade: FacadeControls | None = None
+    trim: TrimControls | None = None
 
 
 @dataclass(frozen=True)
@@ -283,6 +285,40 @@ class RoofObject:
 
 
 @dataclass(frozen=True)
+class CorniceControls:
+    enabled: bool = True
+    profile: str = 'auto'
+    height_m: float = .24
+    projection_m: float = .18
+    anchor: str = 'wall_top'  # wall_top | parapet_top
+    offset_m: float = 0.
+    material: str = 'cornice'
+    scope: str = 'exposed'  # exposed | street
+    courtyards: bool = False
+
+
+@dataclass(frozen=True)
+class PlinthControls:
+    enabled: bool = True
+    design: str = 'smooth'  # smooth | horizontal_joints | stepped | blocks
+    height_m: float = .60
+    relief_m: float = .025
+    material: str = 'plinth'
+    course_height_m: float = .20
+    block_width_m: float = .50
+    joint_width_m: float = .012
+    scope: str = 'exposed'
+    courtyards: bool = False
+
+
+@dataclass(frozen=True)
+class TrimControls:
+    # A component override replaces the complete block; None inherits global.
+    cornice: CorniceControls = field(default_factory=CorniceControls)
+    plinth: PlinthControls = field(default_factory=PlinthControls)
+
+
+@dataclass(frozen=True)
 class FenceRun:
     edge: int  # canonical parcel edge
     start_m: float
@@ -299,6 +335,8 @@ class FenceRun:
     garage_mode: str = 'auto'
     openness: float = .3
     planters: bool = False
+    plinth: PlinthControls | None = None
+    base_height_m: float | None = None
 
 
 @dataclass(frozen=True)
@@ -318,6 +356,7 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    trim: TrimControls | None = None
     architectural_style: str | None = None
     roof_bodies: tuple[RoofBody, ...] = ()
     schema_version: str = "0.2"

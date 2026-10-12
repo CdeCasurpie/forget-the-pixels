@@ -1,0 +1,38 @@
+[
+  {
+    "mass": "base_1:0",
+    "edge": 1,
+    "projection": {
+      "kind": "denticulated_cornice",
+      "u_m": 0.05903104008316274,
+      "v_m": 3.0599999999999996,
+      "width_m": 10.741680215271565,
+      "height_m": 0.41999999999999993,
+      "depth_m": 0.38,
+      "material_slot": "frame",
+      "border_width_m": 0.18,
+      "source": "assumed",
+      "score": 0.0,
+      "label": "",
+      "arch_rise_m": null
+    }
+  },
+  {
+    "mass": "base_1:0",
+    "edge": 3,
+    "projection": {
+      "kind": "cornice",
+      "u_m": 0.040168803925054994,
+      "v_m": 3.1500000000000004,
+      "width_m": 3.82,
+      "height_m": 0.2999999999999998,
+      "depth_m": 0.23,
+      "material_slot": "frame",
+      "border_width_m": 0.18,
+      "source": "assumed",
+      "score": 0.0,
+      "label": "",
+      "arch_rise_m": null
+    }
+  }
+]

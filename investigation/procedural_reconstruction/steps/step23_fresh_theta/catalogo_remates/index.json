@@ -1,0 +1,340 @@
+[
+  {
+    "name": "cornisa_republicano",
+    "pieces": 1,
+    "validation": {
+      "vertices": 156,
+      "triangles": 284,
+      "parts": 9,
+      "semantic_types": [
+        "parapet",
+        "roof_slab",
+        "trim_cornice",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_cornice": 144,
+        "wall": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.032399999999999096,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "cornisa_clasico",
+    "pieces": 1,
+    "validation": {
+      "vertices": 156,
+      "triangles": 284,
+      "parts": 9,
+      "semantic_types": [
+        "parapet",
+        "roof_slab",
+        "trim_cornice",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_cornice": 144,
+        "wall": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.02699999999999969,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "cornisa_barroco",
+    "pieces": 1,
+    "validation": {
+      "vertices": 252,
+      "triangles": 476,
+      "parts": 9,
+      "semantic_types": [
+        "parapet",
+        "roof_slab",
+        "trim_cornice",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_cornice": 336,
+        "wall": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.008099999999999774,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "cornisa_madera",
+    "pieces": 1,
+    "validation": {
+      "vertices": 132,
+      "triangles": 236,
+      "parts": 9,
+      "semantic_types": [
+        "parapet",
+        "roof_slab",
+        "trim_cornice",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_cornice": 96,
+        "wall": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0810000000000004,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "cornisa_moderno",
+    "pieces": 1,
+    "validation": {
+      "vertices": 108,
+      "triangles": 188,
+      "parts": 9,
+      "semantic_types": [
+        "parapet",
+        "roof_slab",
+        "trim_cornice",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "wall": 72,
+        "parapet": 48,
+        "trim_cornice": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.12299999999999976,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "zocalo_smooth",
+    "pieces": 1,
+    "validation": {
+      "vertices": 204,
+      "triangles": 356,
+      "parts": 17,
+      "semantic_types": [
+        "material_coating",
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "trim_plinth",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "parapet_cap": 96,
+        "wall": 72,
+        "material_coating": 72,
+        "parapet": 48,
+        "trim_plinth": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0013999999999998458,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "zocalo_horizontal_joints",
+    "pieces": 5,
+    "validation": {
+      "vertices": 300,
+      "triangles": 548,
+      "parts": 21,
+      "semantic_types": [
+        "material_coating",
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "trim_plinth",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_plinth": 240,
+        "parapet_cap": 96,
+        "wall": 72,
+        "material_coating": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0013999999999998458,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "zocalo_stepped",
+    "pieces": 3,
+    "validation": {
+      "vertices": 252,
+      "triangles": 452,
+      "parts": 19,
+      "semantic_types": [
+        "material_coating",
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "trim_plinth",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_plinth": 144,
+        "parapet_cap": 96,
+        "wall": 72,
+        "material_coating": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0013999999999998458,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "zocalo_blocks",
+    "pieces": 259,
+    "validation": {
+      "vertices": 2308,
+      "triangles": 3532,
+      "parts": 275,
+      "semantic_types": [
+        "material_coating",
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "trim_plinth",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "trim_plinth": 3224,
+        "parapet_cap": 96,
+        "wall": 72,
+        "material_coating": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0012337499999999979,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "sin_remates",
+    "pieces": 0,
+    "validation": {
+      "vertices": 132,
+      "triangles": 236,
+      "parts": 10,
+      "semantic_types": [
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "parapet_cap": 96,
+        "wall": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.030000000000000027,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "zocalo_al_ras",
+    "pieces": 0,
+    "validation": {
+      "vertices": 180,
+      "triangles": 308,
+      "parts": 16,
+      "semantic_types": [
+        "material_coating",
+        "parapet",
+        "parapet_cap",
+        "roof_slab",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "parapet_cap": 96,
+        "wall": 72,
+        "material_coating": 72,
+        "parapet": 48,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 0.0013999999999998458,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  },
+  {
+    "name": "cerco_esquina",
+    "pieces": 7,
+    "validation": {
+      "vertices": 24970,
+      "triangles": 44272,
+      "parts": 1419,
+      "semantic_types": [
+        "boundary_base",
+        "boundary_post",
+        "fence_bar",
+        "fence_rail",
+        "fence_ring",
+        "gate_frame",
+        "gate_handle",
+        "gate_hinge",
+        "parapet",
+        "post_cap",
+        "roof_slab",
+        "trim_cornice",
+        "trim_plinth",
+        "wall"
+      ],
+      "faces_by_semantic": {
+        "fence_ring": 38400,
+        "fence_bar": 3840,
+        "fence_rail": 640,
+        "boundary_post": 312,
+        "post_cap": 260,
+        "boundary_base": 216,
+        "trim_cornice": 144,
+        "gate_frame": 128,
+        "trim_plinth": 96,
+        "wall": 72,
+        "gate_hinge": 64,
+        "parapet": 48,
+        "gate_handle": 32,
+        "roof_slab": 20
+      },
+      "max_outside_triangle_area_m2": 0.0,
+      "min_triangle_area_m2": 5.09116882454264e-05,
+      "envelope_test": "passed",
+      "topology": "assembly of intersecting closed components; not Boolean-unioned"
+    }
+  }
+]

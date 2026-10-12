@@ -22,6 +22,12 @@ def build_fence(mb, a, t, n, length, boundary):
         mb.beam(point(u,z), point(v,w), r, material=mat, semantic=name)
 
     def box(u,v,z,w,depth=.12,mat=wall,name='fence_panel'):
+        c=getattr(boundary,'plinth',None)
+        if c is not None and c.enabled and mat==wall and z<c.height_m and name in ('boundary_base','boundary_post','fence_wall'):
+            mid=min(w,c.height_m)
+            mb.box(a,t,n,u,v,z,mid,-depth,0,c.material,name)
+            if w>mid:mb.box(a,t,n,u,v,mid,w,-depth,0,mat,name)
+            return
         mb.box(a,t,n,u,v,z,w,-depth,0,mat,name,chamfer=min(.014,depth/6,(v-u)/6,(w-z)/6))
 
     def curve(points, name='fence_scroll'):
@@ -103,12 +109,13 @@ def build_fence(mb, a, t, n, length, boundary):
             for i in range(count):
                 left=lo+(hi-lo)*i/count; right=lo+(hi-lo)*(i+1)/count
                 posts.update((left,right))
-                base=.40 if high else .24
+                base=getattr(boundary,'base_height_m',None)
+                if base is None:base=.40 if high else .24
                 if style!='madera':box(left,right,0,base,.20,wall,'boundary_base')
                 infill(left+.08,right-.08,base if style!='madera' else .06,h-.04)
                 if style=='moderno':
                     # Recessed courses and a projecting cap on the masonry base.
-                    box(left+.02,right-.02,base-.07,base-.025,.24,wall,'modern_reveal')
+                    if getattr(boundary,'plinth',None) is None:box(left+.02,right-.02,base-.07,base-.025,.24,wall,'modern_reveal')
                     if boundary.planters and right-left>.8:
                         xy=lambda u,d: a+t*u+n*d
                         footprint=Polygon([xy(u,d) for u,d in

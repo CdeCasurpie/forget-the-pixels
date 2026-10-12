@@ -54,6 +54,8 @@ def resolve_materials(appearance: BuildingAppearance) -> tuple[MaterialSpecifica
         MaterialSpecification("sign", "paint", (.12, .29, .40), .65),
         MaterialSpecification("plastic", "plastic", (0.05, 0.05, 0.05), 0.50, texture_set=None, real_scale_m=1.0),
         MaterialSpecification("rebar", "rusted_metal", (0.20, 0.12, 0.08), 0.85, metallic=0.6, texture_set=None, real_scale_m=1.0),
+        MaterialSpecification("cornice", "stucco", (.88, .87, .83), .82, texture_set="stucco_smooth"),
+        MaterialSpecification("plinth", "stucco", (.65, .62, .57), .82, texture_set="stucco_smooth"),
     ):
         merged[material.slot] = material
     seen = set()

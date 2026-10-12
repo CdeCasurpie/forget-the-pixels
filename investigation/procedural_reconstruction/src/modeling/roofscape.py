@@ -312,13 +312,13 @@ def gable_surfaces(surface):
     return patches
 
 
-def build_roof(mb, plan, rng):
+def build_roof(mb, plan, rng, *, slab_material='concrete'):
     """Emit one mass's roof: surfaces, ridge closures, parapet and objects."""
     with mb.assembly(f"roof/{plan.mass_id}"):
-        _build_roof_body(mb, plan, rng)
+        _build_roof_body(mb, plan, rng, slab_material=slab_material)
 
 
-def _build_roof_body(mb, plan, rng):
+def _build_roof_body(mb, plan, rng, *, slab_material='concrete'):
     tiles = []
     flats = []
     for surface in plan.surfaces:
@@ -327,11 +327,11 @@ def _build_roof_body(mb, plan, rng):
             continue
         if surface.kind == "flat":
             mb.solid(polygon, surface.base_z - surface.thickness_m, surface.base_z,
-                     "concrete", "roof_slab")
+                     slab_material, "roof_slab")
             flats.append(polygon)
         elif surface.kind == "corrugated":
             mb.solid(polygon, surface.base_z - surface.thickness_m, surface.base_z,
-                     "concrete", "roof_slab")
+                     slab_material, "roof_slab")
             mb.solid(polygon, surface.base_z, surface.base_z + 0.05, "roof",
                      "corrugated_roof")
             flats.append(polygon)
