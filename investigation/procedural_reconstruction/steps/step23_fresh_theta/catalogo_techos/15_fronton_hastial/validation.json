@@ -1,7 +1,7 @@
 {
-  "vertices": 8026,
-  "triangles": 12780,
-  "parts": 856,
+  "vertices": 8002,
+  "triangles": 12744,
+  "parts": 853,
   "semantic_types": [
     "crown_base_cornice",
     "crown_body",
@@ -37,8 +37,8 @@
     "roof_rafter": 408,
     "roof_rafter_tip": 408,
     "door_panel_moulding": 192,
-    "structural_column": 108,
     "door_coffer": 72,
+    "structural_column": 72,
     "wall": 68,
     "crown_moulding": 68,
     "crown_inner_bead": 68,

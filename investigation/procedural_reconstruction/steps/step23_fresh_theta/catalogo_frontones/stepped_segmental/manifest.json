@@ -1,10 +1,10 @@
 {
   "name": "stepped_segmental",
-  "triangles": 2768,
-  "parts": 28,
+  "triangles": 2732,
+  "parts": 25,
   "crown_families": [
     "stepped_segmental"
   ],
   "envelope": "passed",
-  "mesh_sha256": "4d2c61227c8dd6c2dae71063b24e324fad18e7bd2b5eaaeb63970c8684af4c24"
+  "mesh_sha256": "4f552482eb332d484c7496389b7c3677132ed1c0dfc648d4b81e656594f5459e"
 }

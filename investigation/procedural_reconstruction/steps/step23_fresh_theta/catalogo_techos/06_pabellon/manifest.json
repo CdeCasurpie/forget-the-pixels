@@ -1,8 +1,8 @@
 {
   "name": "06_pabellon",
-  "triangles": 101242,
-  "parts": 1833,
+  "triangles": 101158,
+  "parts": 1826,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "a2a2bdf3f9ca0a75a37dbcac4ee903cbf53899452e367b99daef28fcb18b333d"
+  "mesh_sha256": "788a06a0d043dfd48982094b25655d6aaee41c56de53c9389cee59e11fe5a161"
 }

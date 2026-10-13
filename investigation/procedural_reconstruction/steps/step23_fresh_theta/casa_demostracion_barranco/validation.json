@@ -1,7 +1,7 @@
 {
-  "vertices": 58754,
-  "triangles": 108624,
-  "parts": 2687,
+  "vertices": 58642,
+  "triangles": 108456,
+  "parts": 2673,
   "semantic_types": [
     "balcony_bar",
     "balcony_cover",
@@ -92,7 +92,6 @@
     "entablature_architrave": 500,
     "entablature_cornice": 500,
     "window_grille": 492,
-    "structural_column": 456,
     "window_reveal": 416,
     "shrub": 400,
     "gate_frame": 384,
@@ -102,6 +101,7 @@
     "door_panel_moulding": 344,
     "balcony_panel_frame": 320,
     "balcony_bar": 320,
+    "structural_column": 288,
     "boundary_post": 288,
     "door_reveal": 280,
     "post_cap": 240,

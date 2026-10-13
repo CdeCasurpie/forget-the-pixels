@@ -1,7 +1,7 @@
 {
-  "vertices": 54287,
-  "triangles": 101242,
-  "parts": 1833,
+  "vertices": 54231,
+  "triangles": 101158,
+  "parts": 1826,
   "semantic_types": [
     "roof_fascia",
     "roof_gable_closure",
@@ -21,9 +21,9 @@
     "roof_ridge_tile": 900,
     "roof_gable_closure": 684,
     "roof_fascia": 288,
-    "structural_column": 168,
     "wall": 96,
     "roof_substrate": 88,
+    "structural_column": 84,
     "structural_beam": 84
   },
   "max_outside_triangle_area_m2": 0.0,

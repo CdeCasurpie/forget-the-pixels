@@ -1,7 +1,7 @@
 {
-  "vertices": 972,
-  "triangles": 1784,
-  "parts": 77,
+  "vertices": 948,
+  "triangles": 1748,
+  "parts": 74,
   "semantic_types": [
     "door_coffer",
     "door_handle",
@@ -23,7 +23,7 @@
   "faces_by_semantic": {
     "door_moulding": 896,
     "door_panel_moulding": 192,
-    "structural_column": 180,
+    "structural_column": 144,
     "entrance_side": 120,
     "door_coffer": 72,
     "wall": 68,

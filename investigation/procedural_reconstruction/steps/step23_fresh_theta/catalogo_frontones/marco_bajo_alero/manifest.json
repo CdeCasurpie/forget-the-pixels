@@ -1,10 +1,10 @@
 {
   "name": "marco_bajo_alero",
-  "triangles": 9008,
-  "parts": 71,
+  "triangles": 9056,
+  "parts": 75,
   "crown_families": [
     "segmental"
   ],
   "envelope": "passed",
-  "mesh_sha256": "685746e324ea020d8f7fa3a6ea5df7bc970d0249d5aaf6adc88b493ec3f1b883"
+  "mesh_sha256": "fe8f890dd94535dfb97c5f496e1b09b5dd943579457ae6d01543dfa29cc48706"
 }

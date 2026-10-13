@@ -487,11 +487,14 @@ def _brick_frame_polys(length, total_height, levels):
     return frame if frame.geom_type == "Polygon" else frame
 
 
-def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, managed_trim=False):
+def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, managed_trim=False, trim_start=False, trim_end=False):
     """Sparse closed wall bands with real holes and independent local relief.
 
     Only a genuine 120 mm ground-floor recess divides the structural shell.
     Paint and the 15 mm concrete frame never subdivide its back or base caps.
+    With trim_start/trim_end, the shell begins/ends buried inside the abutting
+    wall (butt joint): its caps are hidden instead of lying exactly on the
+    neighbour's face. The abutting wall runs full to the vertex.
     """
     from modeling.facade_top import wall_domain
     wall_rect = wall_domain(length,total_height,f.top_profile)
@@ -511,6 +514,24 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, man
     if f.top_profile:
         bottom,_,depth=bands[-1]
         bands[-1]=(bottom,wall_rect.bounds[3],depth)
+    start_u=end_u=0.
+    if trim_start or trim_end:
+        # Bury caps exactly one wall thickness (0.20 m) from the vertex: the
+        # neighbour's own cap ends where this face starts, so neither overlaps
+        # the other and no 5 mm sliver is left behind.
+        need=.20
+        if trim_start:
+            start_u=need
+            if ops:start_u=min(start_u,min(op.u_m for op in ops)-.005)
+        if trim_end:
+            end_u=need
+            if ops:end_u=min(end_u,length-max(op.u_m+op.width_m for op in ops)-.005)
+        # A cap buried inside the neighbour hides without flicker; a cap left
+        # exactly on its face, or an opening cut off, is worse than legacy.
+        if start_u<.005:start_u=0.
+        if end_u<.005:end_u=0.
+        if start_u+end_u>=length-.01:start_u=end_u=0.
+        if start_u or end_u:shape=shape.intersection(box(start_u,-1e6,length-end_u,1e6))
 
     def emit(domain, back, front, material, semantic, label):
         for index, poly in enumerate(polygons(domain)):
@@ -538,6 +559,9 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, man
         # Slabs own intersections, so column fronts do not coincide with them.
         horizontal=unary_union([box(0,z0,length,z1) for z0,z1 in slabs])
         for index,(u0,u1) in enumerate(columns):
+            # Corner columns are served by the abutting wall's own end
+            # column; a trimmed sliver here would read as a concrete nub.
+            if (start_u and u0<start_u-1e-9) or (end_u and u1>length-end_u+1e-9):continue
             emit(shape.intersection(box(u0,0,u1,total_height)).difference(horizontal),
                  -.015-SURFACE_EPSILON_M,0.,'concrete','structural_column',f'column_{index}')
         for index,(z0,z1) in enumerate(slabs):
@@ -545,15 +569,15 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, man
                  0.,'concrete','structural_beam',f'beam_{index}')
 
 
-def facade(mb, f, total_height, *, managed_trim=False, trim_regions=()):
+def facade(mb, f, total_height, *, managed_trim=False, trim_regions=(), trim_start=False, trim_end=False):
     """Assemble one facade inside its edge assembly; openings, projections
     and stairs open nested assemblies so every window/door keeps instance
     identity (frame + glazing + grille under one assembly)."""
     with mb.assembly(f.edge_id):
-        _facade_body(mb, f, total_height, managed_trim=managed_trim, trim_regions=trim_regions)
+        _facade_body(mb, f, total_height, managed_trim=managed_trim, trim_regions=trim_regions, trim_start=trim_start, trim_end=trim_end)
 
 
-def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=()):
+def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), trim_start=False, trim_end=False):
     a, end = np.asarray(f.vertex_a), np.asarray(f.vertex_b)
     t = end - a
     length = np.linalg.norm(t)
@@ -623,7 +647,7 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=()):
                 feature.v_m + feature.height_m > total_height + (3. if feature.kind=='pediment' else .5))
         ):
             raise ValueError(f"Projection outside facade {f.edge_id}")
-    _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions,managed_trim=managed_trim)
+    _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions,managed_trim=managed_trim,trim_start=trim_start,trim_end=trim_end)
     if f.top_profile:emit_top_trim(mb,a,t,n,f.top_profile)
     if f.has_program and f.cladding == "horizontal":
         pitch = getattr(mb, "budget", DEFAULT_BUDGET).cladding_joint_m

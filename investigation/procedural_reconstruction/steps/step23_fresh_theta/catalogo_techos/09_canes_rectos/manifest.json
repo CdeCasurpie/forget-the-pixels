@@ -1,8 +1,8 @@
 {
   "name": "09_canes_rectos",
-  "triangles": 2764,
-  "parts": 146,
+  "triangles": 2728,
+  "parts": 143,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "59efb6cef0224a4487aead84e4b7b3e8a600f48c1654d45d3abf1af2bce07286"
+  "mesh_sha256": "b1ce09a042aabd60aae1e9533b6c8dace21b2f3af51b465cf0a9ed0bc0a625be"
 }

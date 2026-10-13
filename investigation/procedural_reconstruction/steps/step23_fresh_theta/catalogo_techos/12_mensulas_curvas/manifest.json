@@ -1,8 +1,8 @@
 {
   "name": "12_mensulas_curvas",
-  "triangles": 2612,
-  "parts": 94,
+  "triangles": 2576,
+  "parts": 91,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "eb89f4d901155661efff9917992c36ce5d0494e30b9057e43c67754bb011cf42"
+  "mesh_sha256": "7a5c2ce61e778228af5ca6d76d296518fce9af7f22863a1c5fe2f67ae314aec5"
 }

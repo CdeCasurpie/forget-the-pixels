@@ -1,10 +1,10 @@
 {
   "name": "mercado_escalonado",
-  "triangles": 12480,
-  "parts": 92,
+  "triangles": 12444,
+  "parts": 89,
   "crown_families": [
     "stepped_segmental"
   ],
   "envelope": "passed",
-  "mesh_sha256": "a895087f9c775ed94a4910e62bad7bfb95e0ec6ce4af9b7e6eb823608943ac5a"
+  "mesh_sha256": "6a31944c8cff80f3db4722a4df544ee669ae2552a202628fb82317e742224d58"
 }

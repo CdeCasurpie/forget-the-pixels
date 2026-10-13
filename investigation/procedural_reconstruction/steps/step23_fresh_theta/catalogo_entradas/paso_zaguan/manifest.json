@@ -1,8 +1,8 @@
 {
   "name": "paso_zaguan",
-  "triangles": 1612,
-  "parts": 73,
+  "triangles": 1576,
+  "parts": 70,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "94be5268da8136faba659cd2a682051b01c92f4f42b1ea5dd0cab24b61219fe4"
+  "mesh_sha256": "21733f03ce9190626ddbcebdd0f26f122416563eba325d9cbd0c96bc2984cf3f"
 }

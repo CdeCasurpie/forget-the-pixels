@@ -1,10 +1,10 @@
 {
   "name": "triangular",
-  "triangles": 504,
-  "parts": 28,
+  "triangles": 468,
+  "parts": 25,
   "crown_families": [
     "triangular"
   ],
   "envelope": "passed",
-  "mesh_sha256": "d850bb3eb573ab309b787246c5adae3cb98b0badaacdb1109ba099e08fa405da"
+  "mesh_sha256": "01264fd45badf07a3ef549ea7eda026ed787ba9107df2b55920cb66f2cf5ad5d"
 }

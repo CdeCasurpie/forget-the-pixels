@@ -1,10 +1,10 @@
 {
   "name": "concave_shoulders",
-  "triangles": 4300,
-  "parts": 28,
+  "triangles": 4264,
+  "parts": 25,
   "crown_families": [
     "concave_shoulders"
   ],
   "envelope": "passed",
-  "mesh_sha256": "937c8a7746a7e7168efb37c62360f8a61dde730c234fed4c8c8a05d141a51a54"
+  "mesh_sha256": "b4f02a632329227144d829a1047e30a611fa1e5322fa26a6e4276e9f8e9b40fd"
 }

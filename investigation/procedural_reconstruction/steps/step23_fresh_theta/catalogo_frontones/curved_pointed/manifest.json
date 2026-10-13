@@ -1,10 +1,10 @@
 {
   "name": "curved_pointed",
-  "triangles": 4216,
-  "parts": 28,
+  "triangles": 4180,
+  "parts": 25,
   "crown_families": [
     "curved_pointed"
   ],
   "envelope": "passed",
-  "mesh_sha256": "b6ba92a6e5cf2a577dcb7efcaa62dc20d39034ecffe5ce7a34f432475c2fdb9f"
+  "mesh_sha256": "d2571c6492b294b6878e85edb75f08bb35156fef3f4f5924ae2a47de9fd0acdc"
 }

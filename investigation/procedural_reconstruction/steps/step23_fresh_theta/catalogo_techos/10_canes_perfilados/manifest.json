@@ -1,8 +1,8 @@
 {
   "name": "10_canes_perfilados",
-  "triangles": 20804,
-  "parts": 1368,
+  "triangles": 20768,
+  "parts": 1365,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "f78ebc7ae36a5087d7e149c0fc63e45888ebef5f6aee875437b61e99768f0219"
+  "mesh_sha256": "60bf1b585560772248f7ee693f478563d064b39e2bb48bdb26478465addd5f51"
 }

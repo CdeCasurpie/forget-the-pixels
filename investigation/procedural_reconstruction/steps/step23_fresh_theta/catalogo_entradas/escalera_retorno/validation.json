@@ -1,7 +1,7 @@
 {
-  "vertices": 1040,
-  "triangles": 1760,
-  "parts": 80,
+  "vertices": 1016,
+  "triangles": 1724,
+  "parts": 77,
   "semantic_types": [
     "exterior_stair_landing",
     "exterior_stair_step",
@@ -15,7 +15,7 @@
   "faces_by_semantic": {
     "stair_railing_post": 1152,
     "exterior_stair_step": 192,
-    "structural_column": 180,
+    "structural_column": 144,
     "stair_handrail": 128,
     "wall": 48,
     "structural_beam": 36,

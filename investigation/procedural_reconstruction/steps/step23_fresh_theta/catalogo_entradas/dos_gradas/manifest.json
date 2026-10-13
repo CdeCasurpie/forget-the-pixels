@@ -1,8 +1,8 @@
 {
   "name": "dos_gradas",
-  "triangles": 1624,
-  "parts": 73,
+  "triangles": 1588,
+  "parts": 70,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "89f8129d2b2ce0d01b08cbf0662284881a3c0b4a429023a0b74fe5bf3752be48"
+  "mesh_sha256": "47d266a4a14015b768e4f300e78947acede3e3937f1e7caa1e6fda71585211a5"
 }

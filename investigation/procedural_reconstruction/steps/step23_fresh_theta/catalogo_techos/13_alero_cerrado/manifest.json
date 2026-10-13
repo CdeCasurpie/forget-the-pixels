@@ -1,8 +1,8 @@
 {
   "name": "13_alero_cerrado",
-  "triangles": 18888,
-  "parts": 1097,
+  "triangles": 18852,
+  "parts": 1094,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "ac8afd1206c8522299361eb816eb4a329eeb159ddf369571f02679d5211fe24b"
+  "mesh_sha256": "151d501be5f95ed3bdc81a635a0204df2dd38fd5db0134a09a8469bb1a1d51f7"
 }

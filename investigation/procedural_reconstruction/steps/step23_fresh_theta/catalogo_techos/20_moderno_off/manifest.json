@@ -1,8 +1,8 @@
 {
   "name": "20_moderno_off",
-  "triangles": 1184,
-  "parts": 77,
+  "triangles": 1148,
+  "parts": 74,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "222700200d4c44ad833607c6e1ef349f26467c4c97402f9a2c05301ebefe3026"
+  "mesh_sha256": "0cc0e2fd60870d9bdd74deb303f99da0e4ba82419e6b5ade12c63bda256a9f3b"
 }

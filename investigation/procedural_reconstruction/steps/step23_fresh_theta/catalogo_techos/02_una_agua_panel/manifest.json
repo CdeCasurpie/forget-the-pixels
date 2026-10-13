@@ -1,8 +1,8 @@
 {
   "name": "02_una_agua_panel",
-  "triangles": 3388,
-  "parts": 198,
+  "triangles": 3352,
+  "parts": 195,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "460b75a3d3f5ec803115cda0881bd7e62fd057961e0ec7c9f29efeae33371040"
+  "mesh_sha256": "f076a449bba46c92fdcbe494d784c4bd4159ae5efc5c959c4e5c67ec26400670"
 }

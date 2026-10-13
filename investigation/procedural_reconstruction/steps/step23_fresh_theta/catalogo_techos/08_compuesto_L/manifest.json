@@ -1,8 +1,8 @@
 {
   "name": "08_compuesto_L",
-  "triangles": 84608,
-  "parts": 1394,
+  "triangles": 84560,
+  "parts": 1390,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "48d3cedc497a5d33937291a74812b8d9db288de98baffede119170208bb53bd2"
+  "mesh_sha256": "1a9c7c4ef40f4c3ebfcacc8e270ec133522a3e3b2bd60cbb196268ba6551a6a6"
 }

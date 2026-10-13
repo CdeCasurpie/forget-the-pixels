@@ -1,8 +1,8 @@
 {
   "name": "rampa_corta",
-  "triangles": 1600,
-  "parts": 71,
+  "triangles": 1564,
+  "parts": 68,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "92f494bcddecf968916be0f4aa780b94164331f4b5927f18c3dfaeebdda06f10"
+  "mesh_sha256": "57e3479b1d667a56915d5ced05181a93f7bd58cf8f370b214b4ed235d61bb66b"
 }

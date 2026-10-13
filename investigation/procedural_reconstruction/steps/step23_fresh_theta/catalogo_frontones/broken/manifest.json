@@ -1,10 +1,10 @@
 {
   "name": "broken",
-  "triangles": 620,
-  "parts": 33,
+  "triangles": 584,
+  "parts": 30,
   "crown_families": [
     "broken"
   ],
   "envelope": "passed",
-  "mesh_sha256": "dffd75bc0621396c62e8b8363044db1a8c483e8042fcfda7a2dc1096943cf09d"
+  "mesh_sha256": "f151f19b40916449567680f1ff460b2a6a3c8a8528daa2be102021c4790bcafa"
 }

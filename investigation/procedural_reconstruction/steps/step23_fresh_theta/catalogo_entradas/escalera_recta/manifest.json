@@ -1,8 +1,8 @@
 {
   "name": "escalera_recta",
-  "triangles": 916,
-  "parts": 53,
+  "triangles": 880,
+  "parts": 50,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "32ee5f2bf158b5c3d0b957198ac8fa1034d578ee5832b2d77cb4de48e7ed639c"
+  "mesh_sha256": "afb32afb9dd48e1ab21ae1174006c14700a32599814ab0b99fd5e7c84e740f64"
 }

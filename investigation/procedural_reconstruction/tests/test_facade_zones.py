@@ -77,7 +77,10 @@ def test_facade_zone_three_horizontal_regions():
             triangles.extend(mesh.vertices[mesh.faces[comp['face_start']:comp['face_start']+comp['face_count']]])
     exterior=[t for t in triangles if np.allclose(t[:,1],4.)]
     area=sum(abs(np.cross(t[1]-t[0],t[2]-t[0])[1])/2 for t in exterior)
-    assert area==pytest.approx(72.-3*1.5,abs=1e-5)
+    # Butt-jointed convex corners: the first 0.20 m of this edge's face is
+    # yielded to the abutting wall, whose own end cap covers x in [0, 0.2]
+    # at this plane (verified above: no hole, no overlap).
+    assert area==pytest.approx(72.-3*1.5-.2*6,abs=1e-5)
 
 
 def test_facade_zone_combines_u_and_z():

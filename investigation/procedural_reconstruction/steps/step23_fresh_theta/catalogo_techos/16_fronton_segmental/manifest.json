@@ -1,10 +1,10 @@
 {
   "name": "16_fronton_segmental",
-  "triangles": 54146,
-  "parts": 879,
+  "triangles": 54110,
+  "parts": 876,
   "crown_families": [
     "segmental"
   ],
   "envelope": "passed",
-  "mesh_sha256": "eb53455486b689c880849c25db3e92f33f1930ce77d3733ad1808c8874c2cb57"
+  "mesh_sha256": "eadb1de96c49abad134179ba1c06964b88eeacdacc866e252550fff53a7d0baa"
 }

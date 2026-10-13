@@ -1,7 +1,7 @@
 {
-  "vertices": 13064,
-  "triangles": 20804,
-  "parts": 1368,
+  "vertices": 13040,
+  "triangles": 20768,
+  "parts": 1365,
   "semantic_types": [
     "door_coffer",
     "door_handle",
@@ -32,9 +32,9 @@
     "door_moulding": 896,
     "roof_gable_closure": 432,
     "door_panel_moulding": 192,
-    "structural_column": 108,
     "roof_fascia": 96,
     "door_coffer": 72,
+    "structural_column": 72,
     "wall": 68,
     "roof_substrate": 40,
     "structural_beam": 36,

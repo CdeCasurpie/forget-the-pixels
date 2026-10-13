@@ -1,10 +1,10 @@
 {
   "name": "semicircular",
-  "triangles": 2304,
-  "parts": 28,
+  "triangles": 2268,
+  "parts": 25,
   "crown_families": [
     "semicircular"
   ],
   "envelope": "passed",
-  "mesh_sha256": "4ffb25602a64b0d4417207b7143dae8f99885b64ce5022e80a317590a089ea84"
+  "mesh_sha256": "6fe2d3df09d99e364af21386865e83592530718e2a03d29e69d454e4023201e7"
 }

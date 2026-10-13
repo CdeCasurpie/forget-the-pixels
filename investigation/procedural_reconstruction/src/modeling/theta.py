@@ -903,7 +903,26 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
                     wall_line=LineString([f.vertex_a,f.vertex_b])
                     if any(wall_line.intersection(path.buffer(1e-6,cap_style=2)).length>1e-5 for path in paths):
                         regions=(FacadeMaterialRegion(0.,0.,f.width_m,c.height_m,c.material,source='perimeter_trim'),)
-            facade(local,replace(f,openings=ops),wall.height_m,managed_trim=trim is not None,trim_regions=regions)
+            trim_start=trim_end=False
+            if not wall.plane_offset_m:
+                poly_mass=next(mm for mm in resolved.masses if mm.id==wall.mass_role)
+                ring=poly_mass.footprint
+                if wall.edge<len(ring):
+                    pa=np.asarray(ring[(wall.edge-1)%len(ring)]);va=np.asarray(ring[wall.edge]);vb=np.asarray(ring[(wall.edge+1)%len(ring)])
+                    tp=va-pa;tp/=np.linalg.norm(tp) or 1;tc=vb-va;tc/=np.linalg.norm(tc) or 1
+                    # The starting wall of a convex (left-turning) corner begins
+                    # buried in its neighbour; concave/straight joints keep legacy.
+                    trim_start=bool(tp[1]*tc[0]-tp[0]*tc[1]<0)
+                if not trim_end:
+                    # T-junction with another mass: bury the end cap in it.
+                    wa=np.asarray(f.vertex_a);tcur=(np.asarray(f.vertex_b)-wa)/f.width_m
+                    probe=tuple(wa+tcur*f.width_m-np.asarray(f.normal_xy)*.1)
+                    wtop=wall.base_z+wall.height_m
+                    trim_end=any(other.id!=wall.mass_role and other.kind=='enclosed'
+                                 and other.base_z<wtop-.01 and other.roof_z>wall.base_z+.01
+                                 and mass_polygon(other).buffer(1e-6).covers(Point(probe))
+                                 for other in resolved.masses)
+            facade(local,replace(f,openings=ops),wall.height_m,managed_trim=trim is not None,trim_regions=regions,trim_start=trim_start,trim_end=trim_end)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
         for opening_index,op in enumerate(f.openings):

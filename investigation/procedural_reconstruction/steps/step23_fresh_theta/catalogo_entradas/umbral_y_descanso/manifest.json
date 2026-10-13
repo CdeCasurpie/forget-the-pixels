@@ -1,8 +1,8 @@
 {
   "name": "umbral_y_descanso",
-  "triangles": 1588,
-  "parts": 71,
+  "triangles": 1552,
+  "parts": 68,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "354f7ccddef91b74beccc594f7f796fd108ead281f284ec13c4b0ad1ef6de783"
+  "mesh_sha256": "23bd44311f10da16e29a53b9624f6327fad1c21e90b36ca617df4a7ddbaf233e"
 }

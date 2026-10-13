@@ -1,8 +1,8 @@
 {
   "name": "03_una_agua_teja",
-  "triangles": 61596,
-  "parts": 1054,
+  "triangles": 61560,
+  "parts": 1051,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "319622c29cf3bd234ab9dc978eafedc62086136f23be6dbfc4943709e8ff71a6"
+  "mesh_sha256": "18dd584eb7b173c855460ca9262b9a9b8750bb151d4db91431e7a0623fa81301"
 }

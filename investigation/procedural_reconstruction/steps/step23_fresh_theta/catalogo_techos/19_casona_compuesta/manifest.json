@@ -1,10 +1,10 @@
 {
   "name": "19_casona_compuesta",
-  "triangles": 110248,
-  "parts": 1846,
+  "triangles": 110044,
+  "parts": 1829,
   "crown_families": [
     "triangular"
   ],
   "envelope": "passed",
-  "mesh_sha256": "098749ddd34bb77b7f6bff09e5e35eedbbfb8a94f80e9c42d9dc935d957ddd96"
+  "mesh_sha256": "9922aba3313402533ccbc11ebb86088a463b7730f34e34b474fd4bc67a1b7fe5"
 }

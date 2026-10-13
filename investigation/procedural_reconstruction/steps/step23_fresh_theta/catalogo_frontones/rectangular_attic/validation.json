@@ -1,7 +1,7 @@
 {
-  "vertices": 448,
-  "triangles": 788,
-  "parts": 28,
+  "vertices": 424,
+  "triangles": 752,
+  "parts": 25,
   "semantic_types": [
     "crown_base_cornice",
     "crown_body",
@@ -16,7 +16,7 @@
   "faces_by_semantic": {
     "crown_moulding": 188,
     "crown_inner_bead": 188,
-    "structural_column": 180,
+    "structural_column": 144,
     "crown_rim": 64,
     "wall": 48,
     "crown_base_cornice": 44,

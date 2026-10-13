@@ -1,7 +1,7 @@
 {
-  "vertices": 58514,
-  "triangles": 110248,
-  "parts": 1846,
+  "vertices": 58378,
+  "triangles": 110044,
+  "parts": 1829,
   "semantic_types": [
     "crown_base_cornice",
     "crown_body",
@@ -43,11 +43,11 @@
     "door_moulding": 896,
     "roof_rafter_tip": 768,
     "roof_curved_bracket": 384,
-    "structural_column": 360,
     "window_mullion": 304,
     "roof_brace": 240,
     "wall": 236,
     "roof_fascia": 168,
+    "structural_column": 156,
     "structural_beam": 144,
     "window_reveal": 128,
     "roof_board": 120,

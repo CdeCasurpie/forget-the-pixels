@@ -1,7 +1,7 @@
 {
-  "vertices": 6340,
-  "triangles": 12480,
-  "parts": 92,
+  "vertices": 6316,
+  "triangles": 12444,
+  "parts": 89,
   "semantic_types": [
     "crown_base_cornice",
     "crown_body",
@@ -41,10 +41,10 @@
     "crown_rim": 328,
     "door_leaf_frame": 224,
     "door_reveal": 216,
-    "structural_column": 180,
     "wall": 160,
     "crown_body": 160,
     "door_coffer": 152,
+    "structural_column": 144,
     "door_panel_back": 104,
     "entablature_architrave": 96,
     "entablature_cornice": 96,
