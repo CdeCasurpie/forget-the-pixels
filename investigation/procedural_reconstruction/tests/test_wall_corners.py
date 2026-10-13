@@ -120,9 +120,41 @@ def test_corner_opening_falls_back_without_breaking_wall():
                for f in mesh.faces[p['face_start']:p['face_start'] + p['face_count']])
     assert umin == pytest.approx(0.20)
     # A constrained start still covers the opening instead of cutting it off.
-    mesh = build((Opening('window', 0.12, 1., 1.5, 1.6),), trim_start=True, trim_end=True)
+    mesh = build((Opening('window', 0.12, 1., 1.5, 1.6),), trim_start=True, extend_end=True)
     assert any(p['name'] == 'wall' for p in mesh.parts)
     umin = min(mesh.vertices[f][:, 0].min()
                for p in mesh.parts if p['name'] == 'wall'
                for f in mesh.faces[p['face_start']:p['face_start'] + p['face_count']])
     assert umin == pytest.approx(0.115)
+    umax = max(mesh.vertices[f][:, 0].max()
+               for p in mesh.parts if p['name'] == 'wall'
+               for f in mesh.faces[p['face_start']:p['face_start'] + p['face_count']])
+    assert umax == pytest.approx(14.20)
+
+
+def test_t_junction_extends_into_neighbour_without_slot():
+    from collections import defaultdict
+    r = request()
+    t = r['theta']
+    t['crowns'] = []
+    t['masses'] = [dict(role='house', footprint=[[6, 8], [14, 8], [14, 14], [6, 14]], levels_m=[0, 3.6, 7.2]),
+                   dict(role='wing', footprint=[[6, 4], [10, 4], [10, 8], [6, 8]], levels_m=[0, 3.6, 6.0])]
+    t['facades'] = []
+    t['roof_assemblies'] = [dict(id='a', mass_ref='house:0', design=dict(form='hip', detail='light')),
+                            dict(id='b', mass_ref='wing:0', design=dict(form='gable', detail='light'))]
+    req = from_json(json.dumps(r))
+    resolved = resolve_theta(req.context, req.theta)
+    mesh = generate_resolved(resolved)
+    assert outer_face_overlap(mesh, resolved.walls) < 0.01
+    # The abutting wall continues past the vertex into the neighbouring solid.
+    for p, c in zip(mesh.parts, mesh.components):
+        if p['name'] == 'wall' and 'wing:0/edge1' in c['component_id']:
+            v = mesh.vertices[mesh.faces[p['face_start']:p['face_start'] + p['face_count']]]
+            assert v[:, :, 1].max() >= 8.15
+    # Fully closed shells: no open slot anywhere in the assembly.
+    counts = defaultdict(int)
+    for f in mesh.faces:
+        for a, b in ((f[0], f[1]), (f[1], f[2]), (f[2], f[0])):
+            key = tuple(sorted((tuple(np.round(mesh.vertices[a], 4)), tuple(np.round(mesh.vertices[b], 4)))))
+            counts[key] += 1
+    assert sum(1 for v in counts.values() if v == 1) == 0
