@@ -1,0 +1,11 @@
+{
+  "u_m": 6.0,
+  "base_z_m": 0.0,
+  "target_z_m": 2.88,
+  "flight_width_m": 1.15,
+  "run_m": 2.24,
+  "step_count": 16,
+  "switchback": true,
+  "tread_m": 0.28,
+  "riser_m": 0.18
+}

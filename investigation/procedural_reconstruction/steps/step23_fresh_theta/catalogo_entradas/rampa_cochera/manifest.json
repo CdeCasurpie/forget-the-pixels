@@ -1,0 +1,8 @@
+{
+  "name": "rampa_cochera",
+  "triangles": 2000,
+  "parts": 90,
+  "crown_families": [],
+  "envelope": "passed",
+  "mesh_sha256": "058e3181220f71c93835aeab53b8f042a34ef0027dca059ffd4dfc78f03d3126"
+}
