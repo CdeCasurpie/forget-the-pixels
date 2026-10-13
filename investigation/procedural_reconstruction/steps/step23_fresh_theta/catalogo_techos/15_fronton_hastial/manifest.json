@@ -1,0 +1,10 @@
+{
+  "name": "15_fronton_hastial",
+  "triangles": 12780,
+  "parts": 856,
+  "crown_families": [
+    "triangular"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "b214f056e8d4c48c0ae215788f09c2c84153ced1cb5bfec734d4955397446a97"
+}

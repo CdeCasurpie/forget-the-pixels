@@ -39,6 +39,8 @@ from modeling.visibility import VisibleFacadeBuilder, patch_domains
 from modeling.balcony_resolver import ResolvedBalcony, resolve_balconies
 from modeling.vertical_member_resolver import ResolvedMember, resolve_members
 from modeling.crown_resolver import ResolvedCrown, resolve_crowns
+from modeling.entrances import ResolvedEntrance, resolve_entrances, build_entrance
+from modeling.roof_detail_resolver import ResolvedRoofAssembly, resolve_roof_assemblies
 from modeling.entablature_resolver import resolve_entablatures
 from modeling.trim_resolver import (ResolvedTrim, mass_trim, resolve_trims, emit_trims,
                                     validate_plinth, plinth_pieces, lines)
@@ -95,6 +97,8 @@ class ResolvedArchitecture:
     balconies: tuple[ResolvedBalcony, ...] = ()
     vertical_members: tuple[ResolvedMember, ...] = ()
     crowns: tuple[ResolvedCrown, ...] = ()
+    entrances: tuple[ResolvedEntrance, ...] = ()
+    roof_assemblies: tuple[ResolvedRoofAssembly, ...] = ()
 
 
 def _check(condition, message):
@@ -765,7 +769,9 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     members=resolve_members(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
-    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members,crowns)
+    accesses=resolve_entrances(theta,walls,masses,envelope,materials|{c.slot for c in theta.materials})
+    detailed_roofs=resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials|{c.slot for c in theta.materials})
+    return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members,crowns,accesses,detailed_roofs)
 
 
 class _BandBuilder(ZOffsetMeshBuilder):
@@ -900,7 +906,9 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
             facade(local,replace(f,openings=ops),wall.height_m,managed_trim=trim is not None,trim_regions=regions)
         a,b=np.asarray(f.vertex_a),np.asarray(f.vertex_b)
         t=(b-a)/f.width_m
-        for op in f.openings:
+        for opening_index,op in enumerate(f.openings):
+            if any(e.controls.mass_ref==wall.mass_role and e.controls.edge==wall.edge and
+                   e.controls.opening_index==opening_index for e in resolved.entrances):continue
             if wall.base_z<.01 and op.kind in ("door","gate") and op.v_m<.6:
                 spans=[(op.u_m,op.width_m)]
                 if (wall.mass_role,wall.edge) in zoned_edges:
@@ -940,8 +948,14 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         trim=mass_trim(theta,roof.mass_id)
         cap=roof.parapet_profile
         if trim is not None and trim.cornice.enabled and trim.cornice.anchor=='parapet_top':cap='none'
-        build_roof(builder,replace(roof,props=props,parapet_profile=cap),_rng(nuisance.seed,"roof/"+roof.mass_id),
+        replacement=next((r for r in resolved.roof_assemblies if (r.mass_ref==roof.mass_id or roof.mass_id in r.source_masses) and not r.canopy),None)
+        if replacement is not None and replacement.props_mode!='preserve':props=replacement.props
+        build_roof(builder,replace(roof,props=props,parapet_profile=cap,
+                   surfaces=() if replacement else roof.surfaces),_rng(nuisance.seed,"roof/"+roof.mass_id),
                    slab_material='plaster' if trim is not None else 'concrete')
+    from modeling.roof_assembly import build_roof_assembly
+    for roof in resolved.roof_assemblies:
+        build_roof_assembly(builder,roof,street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance))
     boundaries=[]
     styles={"reja":("plaster","reja"),"ladrillos":("brick","solid"),"concreto":("plaster","solid"),"concreto_bajo":("plaster","low")}
     for i,record in enumerate(resolved.boundaries):
@@ -956,6 +970,8 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     for i,entry in enumerate(entrances):
         with builder.assembly(f"site/entrance/{i}"):
             entrance_step(builder,entry,_rng(nuisance.seed,"entry"))
+    for access in resolved.entrances:
+        build_entrance(builder,access)
     if theta.site.garden and not theta.site.zones:
         built=unary_union([mass_polygon(m) for m in resolved.masses if m.base_z<.01 and m.kind=='enclosed'])
         plant_garden(builder,parcel,built,boundaries,entrances,_rng(nuisance.seed,"garden"))

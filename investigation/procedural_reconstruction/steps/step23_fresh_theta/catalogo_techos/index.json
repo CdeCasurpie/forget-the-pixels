@@ -1,0 +1,212 @@
+[
+  {
+    "name": "01_azotea_tapa",
+    "triangles": 3004,
+    "parts": 180,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "a87a7e97afc2bea8a8434562d7df7a67c89d8394f439bd6c5d23b891d2ac894c",
+    "roof_form": "flat",
+    "covering": "none"
+  },
+  {
+    "name": "02_una_agua_panel",
+    "triangles": 3100,
+    "parts": 194,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "fe88927e94e7adcd7ba40c712d73681747495fd8b94574b7d3d3260339a861f1",
+    "roof_form": "shed",
+    "covering": "panel"
+  },
+  {
+    "name": "03_una_agua_teja",
+    "triangles": 61308,
+    "parts": 1050,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "192e90770064809cf9597bef588adfed858a01e483a57a913a462abbf9d6ccfb",
+    "roof_form": "shed",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "04_dos_aguas_teja_plana",
+    "triangles": 15484,
+    "parts": 1072,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "da8dc8dc329fa37c65fbb3da3365c80e240bb8720c103bfff976cf72c332cd4c",
+    "roof_form": "gable",
+    "covering": "flat_tile"
+  },
+  {
+    "name": "05_cuatro_aguas",
+    "triangles": 75944,
+    "parts": 1215,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "e9ba5f60d03011baccd16fb536dbf50de3ba502aa856a0d235c2a6556bb93354",
+    "roof_form": "hip",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "06_pabellon",
+    "triangles": 100782,
+    "parts": 1816,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "b0f5a2159a6068e961cda4282453570243120f24bf35a7a0931c9666ed7b6240",
+    "roof_form": "pavilion",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "07_banda_teja",
+    "triangles": 19152,
+    "parts": 421,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "08f71134da05126ddc71753ac63ce3a5367737e0d738cbbd32c53b02b7bb11e2",
+    "roof_form": "band",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "08_compuesto_L",
+    "triangles": 84156,
+    "parts": 1387,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "6ffa0765cbafbc8da6d95999670b8f74ef1529f407def1b93d4ce6f4198026c4",
+    "roof_form": "compound",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "09_canes_rectos",
+    "triangles": 2476,
+    "parts": 142,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "b965b79fbfbaae4b1eb5b0d38f3c1d269ecc3c386d8d833a9249f620955300cd",
+    "roof_form": "shed",
+    "covering": "panel"
+  },
+  {
+    "name": "10_canes_perfilados",
+    "triangles": 20468,
+    "parts": 1360,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "3d607e176351ea90c95d475557332a5d5e37c006a6b1fab48be73ec4225c5d34",
+    "roof_form": "hip",
+    "covering": "flat_tile"
+  },
+  {
+    "name": "11_tornapuntas",
+    "triangles": 1988,
+    "parts": 104,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "f131aacde7acfc633304c6fcbf6e72fd89ee2a9268b5516b3e6ad0d0bfb36763",
+    "roof_form": "shed",
+    "covering": "panel"
+  },
+  {
+    "name": "12_mensulas_curvas",
+    "triangles": 2612,
+    "parts": 94,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "eb89f4d901155661efff9917992c36ce5d0494e30b9057e43c67754bb011cf42",
+    "roof_form": "shed",
+    "covering": "panel"
+  },
+  {
+    "name": "13_alero_cerrado",
+    "triangles": 18552,
+    "parts": 1089,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "ad2fa2f45de02beb4f7daacec59877052d34d00a4c3a9c395d9d304d5017d600",
+    "roof_form": "hip",
+    "covering": "flat_tile"
+  },
+  {
+    "name": "14_sol_sombra",
+    "triangles": 4748,
+    "parts": 102,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "7877eab8103bf16259ba3a3597535ba711a00f0069215451732df322cfbb9ec3",
+    "roof_form": "flat",
+    "covering": "slats"
+  },
+  {
+    "name": "15_fronton_hastial",
+    "triangles": 12780,
+    "parts": 856,
+    "crown_families": [
+      "triangular"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "b214f056e8d4c48c0ae215788f09c2c84153ced1cb5bfec734d4955397446a97",
+    "roof_form": "gable",
+    "covering": "flat_tile"
+  },
+  {
+    "name": "16_fronton_segmental",
+    "triangles": 54146,
+    "parts": 879,
+    "crown_families": [
+      "segmental"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "7ce2b9be37c4dc851db8bc6db2884ac92d8c87ad2930b636ee5f6c4785516b15",
+    "roof_form": "shed",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "17_fronton_escalonado",
+    "triangles": 3356,
+    "parts": 159,
+    "crown_families": [
+      "stepped"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "7fc08faa6617a63cd61656a714f50745f14311208a9d1f0746301076f239d6fd",
+    "roof_form": "flat",
+    "covering": "none"
+  },
+  {
+    "name": "18_alero_interrumpido",
+    "triangles": 2740,
+    "parts": 146,
+    "crown_families": [
+      "triangular"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "c2fb8f2d58fb78ed6f9cf5ea77c6903df399af0f2070caf7a6aebe24a59a4ee2",
+    "roof_form": "shed",
+    "covering": "panel"
+  },
+  {
+    "name": "19_casona_compuesta",
+    "triangles": 109412,
+    "parts": 1835,
+    "crown_families": [
+      "triangular"
+    ],
+    "envelope": "passed",
+    "mesh_sha256": "46af21a0e7a638ed577e04900949a3131579d37718c84200ff573915488577b8",
+    "roof_form": "compound",
+    "covering": "curved_tile"
+  },
+  {
+    "name": "20_moderno_off",
+    "triangles": 1184,
+    "parts": 77,
+    "crown_families": [],
+    "envelope": "passed",
+    "mesh_sha256": "aa426c00b3849f0dd34cbd9012fadf06c215d5c01714e3d8793b1dbf8f5b2f45",
+    "roof_form": "gable",
+    "covering": "panel"
+  }
+]

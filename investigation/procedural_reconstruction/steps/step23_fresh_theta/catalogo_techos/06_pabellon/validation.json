@@ -1,0 +1,33 @@
+{
+  "vertices": 54023,
+  "triangles": 100782,
+  "parts": 1816,
+  "semantic_types": [
+    "roof_fascia",
+    "roof_gable_closure",
+    "roof_rafter",
+    "roof_rafter_tip",
+    "roof_ridge_tile",
+    "roof_substrate",
+    "roof_tile_piece",
+    "structural_beam",
+    "structural_column",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "roof_tile_piece": 94518,
+    "roof_rafter": 2208,
+    "roof_rafter_tip": 2208,
+    "roof_ridge_tile": 900,
+    "roof_fascia": 288,
+    "roof_gable_closure": 224,
+    "structural_column": 168,
+    "wall": 96,
+    "roof_substrate": 88,
+    "structural_beam": 84
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 1.5305341562239933e-10,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

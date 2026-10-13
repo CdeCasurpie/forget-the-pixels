@@ -1,0 +1,343 @@
+{
+  "context": {
+    "parcel": [
+      [
+        0,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        24,
+        24
+      ],
+      [
+        0,
+        24
+      ]
+    ],
+    "fronts": [
+      0
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "architectural_style": "republicano",
+    "family": "republicano",
+    "massing": {
+      "pattern": "explicit"
+    },
+    "masses": [
+      {
+        "role": "house",
+        "footprint": [
+          [
+            6,
+            8
+          ],
+          [
+            14,
+            8
+          ],
+          [
+            14,
+            14
+          ],
+          [
+            6,
+            14
+          ]
+        ],
+        "levels_m": [
+          0,
+          3.6,
+          7.2
+        ]
+      },
+      {
+        "role": "wing",
+        "footprint": [
+          [
+            6,
+            4
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "levels_m": [
+          0,
+          3.6,
+          6.0
+        ]
+      },
+      {
+        "role": "porch",
+        "footprint": [
+          [
+            12,
+            4
+          ],
+          [
+            14,
+            4
+          ],
+          [
+            14,
+            8
+          ],
+          [
+            12,
+            8
+          ]
+        ],
+        "levels_m": [
+          0,
+          3.6
+        ]
+      }
+    ],
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "facades": [
+      {
+        "mass_role": "house:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "door",
+              "u_m": 4.4,
+              "v_m": 0.12,
+              "width_m": 1.2,
+              "height_m": 2.7,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": false,
+              "door": {
+                "model": "auto"
+              }
+            },
+            {
+              "kind": "window",
+              "u_m": 4.4,
+              "v_m": 4.2,
+              "width_m": 1.2,
+              "height_m": 2.0,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": true
+            }
+          ],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "wing:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "window",
+              "u_m": 0.8,
+              "v_m": 0.8,
+              "width_m": 2.2,
+              "height_m": 1.8,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": true
+            },
+            {
+              "kind": "window",
+              "u_m": 0.8,
+              "v_m": 4.0,
+              "width_m": 2.2,
+              "height_m": 1.65,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": true
+            }
+          ],
+          "projections": [],
+          "material_regions": []
+        }
+      },
+      {
+        "mass_role": "porch:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "window",
+              "u_m": 0.4,
+              "v_m": 0.8,
+              "width_m": 1.2,
+              "height_m": 1.8,
+              "recess_m": 0.15,
+              "frame_width_m": 0.1,
+              "frame_depth_m": 0.12,
+              "frame_profile": "auto",
+              "mullion_columns": 2,
+              "mullion_rows": 3,
+              "sill": true
+            }
+          ],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": []
+    },
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "primary_color": [
+      0.8,
+      0.64,
+      0.32
+    ],
+    "materials": [
+      {
+        "slot": "cornice",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      },
+      {
+        "slot": "frame",
+        "template": "plaster",
+        "color": [
+          0.94,
+          0.92,
+          0.83
+        ]
+      }
+    ],
+    "roof_assemblies": [
+      {
+        "id": "principal",
+        "mass_ref": "house:0",
+        "design": {
+          "form": "hip",
+          "eave": {
+            "kind": "profiled",
+            "overhang_m": 0.25
+          }
+        }
+      },
+      {
+        "id": "ala",
+        "mass_ref": "wing:0",
+        "design": {
+          "form": "gable",
+          "eave": {
+            "overhang_m": 0
+          }
+        },
+        "crown_ref": "fronton",
+        "junction": "gable"
+      },
+      {
+        "id": "lateral",
+        "mass_ref": "porch:0",
+        "design": {
+          "form": "shed",
+          "rotation_deg": 90,
+          "slope_deg": 12,
+          "eave": {
+            "kind": "braces",
+            "overhang_m": 0.25
+          }
+        }
+      }
+    ],
+    "crowns": [
+      {
+        "id": "fronton",
+        "mass_ref": "wing:0",
+        "edge": 0,
+        "u_m": 0,
+        "width_m": 4.0,
+        "height_m": 1.0,
+        "design": {
+          "family": "triangular"
+        }
+      }
+    ],
+    "canopies": [
+      {
+        "id": "ingreso",
+        "mass_ref": "house:0",
+        "edge": 0,
+        "u_m": 4.2,
+        "width_m": 1.6,
+        "depth_m": 1.3,
+        "height_m": 3.25,
+        "design": {
+          "form": "shed",
+          "covering": "panel",
+          "eave": {
+            "kind": "curved",
+            "spacing_m": 1.5
+          }
+        }
+      }
+    ]
+  },
+  "nuisance": {
+    "seed": 23,
+    "curtains": false
+  }
+}

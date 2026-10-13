@@ -63,6 +63,10 @@ PROJECTING_SEMANTICS = frozenset({
     # eaves and awnings
     "eave", "eave_fascia", "rafter_tail", "awning", "awning_arm",
     "awning_valance", "tile_eave_course", "tile_roof", "tile_ridge",
+    "roof_substrate", "roof_cover", "roof_tile_piece", "roof_corrugation",
+    "roof_cut_tile", "roof_flat_tile", "roof_panel", "roof_slats", "roof_soffit",
+    "roof_abutment", "roof_parapet", "roof_parapet_cap", "roof_curved_bracket",
+    "roof_board",
     # bay windows
     "bay_window_wall", "bay_window_slab", "bay_window_roof", "glazing",
     # services

@@ -309,17 +309,9 @@ def bay_window(mb, a, t, n, feature):
 
 
 def eave(mb, a, t, n, feature):
-    """Overhanging roof edge with exposed rafter tails."""
-    u1, u2 = feature.u_m, feature.u_m + feature.width_m
-    _add(mb, a, t, n, feature, u1, u2, feature.v_m + feature.height_m * 0.55,
-         feature.v_m + feature.height_m, -0.02, feature.depth_m, "eave")
-    for u in np.arange(u1 + 0.18, u2 - 0.10, 0.52):
-        _add(mb, a, t, n, feature, u, u + 0.08, feature.v_m,
-             feature.v_m + feature.height_m * 0.55, 0.0, feature.depth_m - 0.05,
-             "rafter_tail", "wood")
-    _add(mb, a, t, n, feature, u1, u2, feature.v_m + feature.height_m * 0.30,
-         feature.v_m + feature.height_m * 0.62, feature.depth_m - 0.05,
-         feature.depth_m, "eave_fascia", "wood")
+    """Legacy placement adapter; geometry comes from the common roof assembly."""
+    from modeling.roof_assembly import legacy_eave
+    legacy_eave(mb,a,t,n,feature)
 
 
 def shutter(mb, a, t, n, feature):

@@ -16,6 +16,8 @@ from domain.models import Opening, FacadeProjection, FacadeMaterialRegion, Exter
 from domain.balconies import BalconyControls, RailingControls
 from domain.vertical_members import MemberDesign, VerticalMemberControls
 from domain.crowns import CrownDesign, CrownControls, EntablatureControls
+from domain.entrances import EntranceControls
+from domain.roof_details import RoofAssemblyControls, CanopyControls
 
 
 @dataclass(frozen=True)
@@ -361,6 +363,9 @@ class MaterialControl:
 
 @dataclass(frozen=True)
 class ThetaCandidate:
+    roof_assemblies: tuple[RoofAssemblyControls, ...] = ()
+    canopies: tuple[CanopyControls, ...] = ()
+    entrances: tuple[EntranceControls, ...] = ()
     crowns: tuple[CrownControls, ...] = ()
     entablatures: tuple[EntablatureControls, ...] = ()
     vertical_members: tuple[VerticalMemberControls, ...] = ()
@@ -467,7 +472,7 @@ def canonical(value) -> str:
                     and not (f.name=='roof_bodies' and not getattr(x,f.name))
                     and not (f.name=='balconies' and isinstance(getattr(x,f.name),tuple) and not getattr(x,f.name))
                     and not (f.name=='vertical_members' and not getattr(x,f.name))
-                    and not (f.name in ('crowns','entablatures') and not getattr(x,f.name))
+                    and not (f.name in ('crowns','entablatures','entrances','roof_assemblies','canopies') and not getattr(x,f.name))
                     and not (f.name=='crown' and getattr(x,f.name) is None)
                     and not (f.name=='trim_profile' and getattr(x,f.name) is None)
                     and not (f.name in ('member','portal_member','column_member') and getattr(x,f.name) is None)

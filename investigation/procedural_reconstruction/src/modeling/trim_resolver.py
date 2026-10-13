@@ -160,10 +160,13 @@ def resolve_trims(context,theta,masses,walls,roofs,materials,envelope):
         # soffit and columns carry the overhang. Returns close the sides.
         managed_entablature=any(e.enabled and e.anchor=='wall_top' and abs(e.top_m)<1e-7 and
                                (not e.mass_refs or m.id in e.mass_refs) for e in theta.entablatures)
-        if c.cornice.enabled and not managed_entablature:
+        detailed=next((r for r in theta.roof_assemblies if r.enabled and r.mass_ref==m.id),None)
+        managed_cap=detailed is not None and c.cornice.anchor=='parapet_top' and detailed.design.cap!='none'
+        if c.cornice.enabled and not managed_entablature and not managed_cap:
             a=c.cornice
             roof=next((r for r in roofs if r.mass_id==m.id),None)
             parapet=roof.parapet_height_m if roof else 0.
+            if detailed is not None:parapet=detailed.design.parapet_m
             if a.anchor=='parapet_top' and parapet<=0 and roof is not None:
                 raise ValueError('Cornice parapet anchor requires a parapet')
             z=m.roof_z+(parapet if a.anchor=='parapet_top' else 0)+a.offset_m

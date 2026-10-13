@@ -1,0 +1,222 @@
+[
+  {
+    "id": "cubierta",
+    "mass_ref": "house:0",
+    "design": {
+      "form": "gable",
+      "covering": "flat_tile",
+      "construction": "solid",
+      "style": "republicano",
+      "slope_deg": 21.80140948635181,
+      "rotation_deg": 0.0,
+      "ridge_fraction": 0.5,
+      "thickness_m": 0.14,
+      "band_depth_m": 2.4,
+      "tile_width_m": 0.22,
+      "tile_length_m": 0.4,
+      "overlap_m": 0.08,
+      "detail": "full",
+      "material": "roof_tile",
+      "substrate_material": "wood",
+      "eave": {
+        "kind": "profiled",
+        "overhang_m": 0,
+        "spacing_m": 0.55,
+        "beam_width_m": 0.08,
+        "beam_height_m": 0.14,
+        "fascia": true,
+        "soffit": false,
+        "material": "wood",
+        "fascia_material": "wood",
+        "gutter": false
+      },
+      "parapet_m": 0.0,
+      "cap": "none",
+      "cap_material": "stone",
+      "cap_drip": false
+    },
+    "faces": [
+      {
+        "polygon": [
+          [
+            10.000000000000002,
+            6.385
+          ],
+          [
+            10.000000000000002,
+            12.0
+          ],
+          [
+            6.0,
+            12.0
+          ],
+          [
+            6.0,
+            6.385
+          ]
+        ],
+        "holes": [],
+        "plane": [
+          0.4,
+          0.0,
+          1.5999999999999996
+        ]
+      },
+      {
+        "polygon": [
+          [
+            14.0,
+            12.0
+          ],
+          [
+            10.000000000000002,
+            12.0
+          ],
+          [
+            10.000000000000002,
+            6.385
+          ],
+          [
+            14.0,
+            6.385
+          ]
+        ],
+        "holes": [],
+        "plane": [
+          -0.4,
+          -0.0,
+          9.600000000000001
+        ]
+      }
+    ],
+    "support": [
+      [
+        6.0,
+        6.0
+      ],
+      [
+        14.0,
+        6.0
+      ],
+      [
+        14.0,
+        12.0
+      ],
+      [
+        6.0,
+        12.0
+      ]
+    ],
+    "base_z": 4.0,
+    "canopy": false,
+    "depth_m": 0.0,
+    "outward": [
+      0.0,
+      0.0
+    ],
+    "posts": false,
+    "crown_ref": "fronton",
+    "wall_joints": [
+      [
+        [
+          14.0,
+          6.385
+        ],
+        [
+          6.0,
+          6.385
+        ]
+      ]
+    ],
+    "source_masses": [],
+    "post_base_z": 0.0,
+    "props_mode": "preserve",
+    "props": [],
+    "wall_finishes": [
+      {
+        "polygon": [
+          [
+            6.0,
+            5.995
+          ],
+          [
+            14.0,
+            5.995
+          ],
+          [
+            14.0,
+            6.16
+          ],
+          [
+            6.0,
+            6.16
+          ]
+        ],
+        "material": "plaster"
+      },
+      {
+        "polygon": [
+          [
+            14.005,
+            6.0
+          ],
+          [
+            14.005,
+            12.0
+          ],
+          [
+            13.84,
+            12.0
+          ],
+          [
+            13.84,
+            6.0
+          ]
+        ],
+        "material": "brick"
+      },
+      {
+        "polygon": [
+          [
+            14.0,
+            12.005
+          ],
+          [
+            6.0,
+            12.005
+          ],
+          [
+            6.0,
+            11.84
+          ],
+          [
+            14.0,
+            11.84
+          ]
+        ],
+        "material": "brick"
+      },
+      {
+        "polygon": [
+          [
+            5.995,
+            12.0
+          ],
+          [
+            5.995,
+            6.0
+          ],
+          [
+            6.16,
+            6.0
+          ],
+          [
+            6.16,
+            12.0
+          ]
+        ],
+        "material": "brick"
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "name": "17_fronton_escalonado",
+  "triangles": 3356,
+  "parts": 159,
+  "crown_families": [
+    "stepped"
+  ],
+  "envelope": "passed",
+  "mesh_sha256": "7fc08faa6617a63cd61656a714f50745f14311208a9d1f0746301076f239d6fd"
+}

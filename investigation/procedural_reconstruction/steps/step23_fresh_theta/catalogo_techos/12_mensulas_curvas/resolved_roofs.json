@@ -1,0 +1,100 @@
+[
+  {
+    "id": "marquesina",
+    "mass_ref": "house:0",
+    "design": {
+      "form": "shed",
+      "covering": "panel",
+      "construction": "solid",
+      "style": "republicano",
+      "slope_deg": 22.0,
+      "rotation_deg": 90.0,
+      "ridge_fraction": 0.5,
+      "thickness_m": 0.14,
+      "band_depth_m": 2.4,
+      "tile_width_m": 0.22,
+      "tile_length_m": 0.4,
+      "overlap_m": 0.08,
+      "detail": "full",
+      "material": "roof_tile",
+      "substrate_material": "wood",
+      "eave": {
+        "kind": "curved",
+        "overhang_m": 0,
+        "spacing_m": 2.0,
+        "beam_width_m": 0.08,
+        "beam_height_m": 0.14,
+        "fascia": true,
+        "soffit": false,
+        "material": "wood",
+        "fascia_material": "wood",
+        "gutter": false
+      },
+      "parapet_m": 0.0,
+      "cap": "none",
+      "cap_material": "stone",
+      "cap_drip": false
+    },
+    "faces": [
+      {
+        "polygon": [
+          [
+            7.5,
+            6.0
+          ],
+          [
+            7.5,
+            4.5
+          ],
+          [
+            11.5,
+            4.5
+          ],
+          [
+            11.5,
+            6.0
+          ]
+        ],
+        "holes": [],
+        "plane": [
+          2.473947121203052e-17,
+          0.4040262258351568,
+          1.3818819837417942
+        ]
+      }
+    ],
+    "support": [
+      [
+        7.5,
+        6.0
+      ],
+      [
+        11.5,
+        6.0
+      ],
+      [
+        11.5,
+        4.5
+      ],
+      [
+        7.5,
+        4.5
+      ]
+    ],
+    "base_z": 3.2,
+    "canopy": true,
+    "depth_m": 1.5,
+    "outward": [
+      0.0,
+      -1.0
+    ],
+    "posts": false,
+    "crown_ref": null,
+    "wall_joints": [],
+    "source_masses": [],
+    "post_base_z": 0.0,
+    "props_mode": "preserve",
+    "props": [],
+    "wall_finishes": []
+  }
+]
