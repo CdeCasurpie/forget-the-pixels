@@ -1,8 +1,8 @@
 {
   "name": "07_banda_teja",
-  "triangles": 19152,
-  "parts": 421,
+  "triangles": 19296,
+  "parts": 423,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "08f71134da05126ddc71753ac63ce3a5367737e0d738cbbd32c53b02b7bb11e2"
+  "mesh_sha256": "d48d639cd54d835c1889655a6d3d909d7beeb825be38e234eaceeef0ea23c46e"
 }

@@ -1,7 +1,7 @@
 {
-  "vertices": 12880,
-  "triangles": 20468,
-  "parts": 1360,
+  "vertices": 13064,
+  "triangles": 20804,
+  "parts": 1368,
   "semantic_types": [
     "door_coffer",
     "door_handle",
@@ -30,9 +30,9 @@
     "roof_rafter": 1104,
     "roof_rafter_tip": 1104,
     "door_moulding": 896,
+    "roof_gable_closure": 432,
     "door_panel_moulding": 192,
     "structural_column": 108,
-    "roof_gable_closure": 96,
     "roof_fascia": 96,
     "door_coffer": 72,
     "wall": 68,
@@ -47,7 +47,7 @@
     "door_threshold": 12
   },
   "max_outside_triangle_area_m2": 0.0,
-  "min_triangle_area_m2": 5.392673713387737e-05,
+  "min_triangle_area_m2": 4.900854205370245e-06,
   "envelope_test": "passed",
   "topology": "assembly of intersecting closed components; not Boolean-unioned"
 }

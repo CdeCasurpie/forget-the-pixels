@@ -95,6 +95,7 @@
     "post_base_z": 0.0,
     "props_mode": "preserve",
     "props": [],
-    "wall_finishes": []
+    "wall_finishes": [],
+    "neighbor_polygons": []
   }
 ]

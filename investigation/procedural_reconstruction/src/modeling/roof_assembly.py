@@ -151,16 +151,25 @@ def build_roof_assembly(mb,r,envelope):
                                  lambda x,y,p=p:height(p,x,y)-d.thickness_m,'wood','roof_board')
             if not r.canopy:
                 support=Polygon(r.support)
-                strip=support.difference(support.buffer(-.14,join_style=2)).intersection(poly)
+                # Gable closure only laps the wall head: full-height duplication
+                # flickers against the wall face. The 10 mm proud lip keeps one
+                # visible plane; neighbors never receive another mass's closure.
+                strip=support.buffer(.01).difference(support.buffer(-.13)).intersection(poly)
+                for hole in r.neighbor_polygons:
+                    # 5 mm weathering gap: no ragged cut face ends coplanar
+                    # with the neighbor wall, and masses never touch directly.
+                    strip=strip.difference(Polygon(hole).buffer(.005))
                 finishes=[]
                 for finish in r.wall_finishes:
                     region=strip.intersection(Polygon(finish.polygon))
                     finishes.extend((part,finish.material) for part in polygons(region))
                     strip=strip.difference(region)
                 finishes.extend((part,'plaster') for part in polygons(strip))
+                bite=.005 if d.construction=='solid' and d.covering!='slats' else .01
+                bottom=r.base_z-.02
                 for part,material in finishes:
                     if max(height(p,*xy) for xy in part.exterior.coords)>r.base_z+.02:
-                        mb.solid(part,r.base_z-d.thickness_m,lambda x,y,p=p:max(r.base_z-d.thickness_m+.01,height(p,x,y)-d.thickness_m),material,'roof_gable_closure')
+                        mb.solid(part,bottom,lambda x,y,p=p,b=bottom:max(b+.01,height(p,x,y)-d.thickness_m+bite),material,'roof_gable_closure')
         if r.canopy and r.posts:
             from domain.vertical_members import MemberDesign
             from modeling.vertical_member_assembly import build_member

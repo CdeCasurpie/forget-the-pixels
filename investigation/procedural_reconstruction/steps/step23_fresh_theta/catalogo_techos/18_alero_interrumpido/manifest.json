@@ -1,10 +1,10 @@
 {
   "name": "18_alero_interrumpido",
-  "triangles": 2740,
-  "parts": 146,
+  "triangles": 3028,
+  "parts": 150,
   "crown_families": [
     "triangular"
   ],
   "envelope": "passed",
-  "mesh_sha256": "c2fb8f2d58fb78ed6f9cf5ea77c6903df399af0f2070caf7a6aebe24a59a4ee2"
+  "mesh_sha256": "412dd13ef23d62a226efb88e69a6071d496ee2f40870e401eb9a12d3345e6071"
 }

@@ -36,6 +36,7 @@ class ResolvedRoofAssembly:
     props_mode: str = 'preserve'
     props: tuple[RoofProp,...] = ()
     wall_finishes: tuple[RoofWallFinish,...] = ()
+    neighbor_polygons: tuple[tuple[tuple[float,float],...],...] = ()
 
 
 def wall_finishes(mass,walls):
@@ -50,12 +51,20 @@ def wall_finishes(mass,walls):
         cuts=sorted({0.,f.width_m,*[max(0.,min(f.width_m,u)) for r in regions for u in (r.u_m,r.u_m+r.width_m)]})
         first=f.floor_levels_m[1] if len(f.floor_levels_m)>1 else w.height_m
         base=f.ground_floor_material if f.ground_floor_material and top<first else f.wall_material
+        segments=[]
         for lo,hi in zip(cuts,cuts[1:]):
             material=base
             for region in regions:
                 if region.u_m<=(lo+hi)/2<=region.u_m+region.width_m:material=region.material_slot
-            # Wall strips overlap at corners; emission partitions their overlap.
-            poly=Polygon([a+t*u+n*d for u,d in ((lo, .005),(hi,.005),(hi,-.16),(lo,-.16))])
+            segments.append((lo,hi,material))
+        # Outer corner squares of the proud lip lie past both walls' end
+        # points; classify them with the adjoining end segment's material.
+        if segments:
+            segments.insert(0,(segments[0][0]-.16,segments[0][0],segments[0][2]))
+            segments.append((segments[-1][1],segments[-1][1]+.16,segments[-1][2]))
+        for lo,hi,material in segments:
+            # Outer lip covers the 10 mm proud gable closure, not just the wall face.
+            poly=Polygon([a+t*u+n*d for u,d in ((lo, .015),(hi,.015),(hi,-.16),(lo,-.16))])
             result.append(RoofWallFinish(tuple(poly.exterior.coords)[:-1],material))
     return tuple(result)
 
@@ -173,7 +182,12 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
                      'moderno':{'hvac':2,'skylight':2,'planter':2,'water_tank':1}}[d.style]
             seed=int.from_bytes(hashlib.sha256(c.id.encode()).digest()[:4],'little')
             props=scatter_props(available.intersection(support),weights,np.random.default_rng(seed),density=.04,limit=6)
-        result.append(ResolvedRoofAssembly(c.id,m.id,d,tuple(ff),tuple(support.exterior.coords)[:-1],m.roof_z,crown_ref=c.crown_ref,wall_joints=joints,props_mode=c.props_mode,props=props,wall_finishes=wall_finishes(m,walls)))
+        from modeling.mesh_builder import polygons as _polys
+        neighbors=tuple(tuple(p.exterior.coords)[:-1] for other in masses
+            if other.id!=m.id and other.kind=='enclosed' and other.base_z<m.roof_z+4 and other.roof_z>m.base_z
+            for p in _polys(mass_polygon(other).intersection(support.buffer(.02))) if p.area>1e-6)
+        result.append(ResolvedRoofAssembly(c.id,m.id,d,tuple(ff),tuple(support.exterior.coords)[:-1],m.roof_z,crown_ref=c.crown_ref,wall_joints=joints,props_mode=c.props_mode,props=props,wall_finishes=wall_finishes(m,walls),
+            neighbor_polygons=neighbors))
     groups={}
     for c in theta.roof_assemblies:
         if c.enabled and c.join_group:groups.setdefault(c.join_group,[]).append(c)
@@ -192,7 +206,8 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
         result=[r for r in result if r not in members]
         result.append(replace(first,id='joined_'+name,faces=combined,support=tuple(support.exterior.coords)[:-1],
                       source_masses=tuple(r.mass_ref for r in members),wall_joints=tuple(j for r in members for j in r.wall_joints),
-                      wall_finishes=tuple(f for r in members for f in r.wall_finishes)))
+                      wall_finishes=tuple(f for r in members for f in r.wall_finishes),
+                      neighbor_polygons=tuple(n for r in members for n in r.neighbor_polygons)))
     for c in theta.canopies:
         if not c.id or c.id in ids:raise ValueError('Duplicate canopy id')
         ids.add(c.id)

@@ -1,7 +1,7 @@
 {
-  "vertices": 58074,
-  "triangles": 109412,
-  "parts": 1835,
+  "vertices": 58514,
+  "triangles": 110248,
+  "parts": 1846,
   "semantic_types": [
     "crown_base_cornice",
     "crown_body",
@@ -38,13 +38,13 @@
     "roof_tile_piece": 92248,
     "roof_ridge_tile": 7900,
     "window_profile": 3584,
+    "roof_gable_closure": 1076,
     "roof_rafter": 1020,
     "door_moulding": 896,
     "roof_rafter_tip": 768,
     "roof_curved_bracket": 384,
     "structural_column": 360,
     "window_mullion": 304,
-    "roof_gable_closure": 240,
     "roof_brace": 240,
     "wall": 236,
     "roof_fascia": 168,
@@ -67,7 +67,7 @@
     "roof_cover": 12
   },
   "max_outside_triangle_area_m2": 0.0,
-  "min_triangle_area_m2": 1.2405382125914255e-07,
+  "min_triangle_area_m2": 3.607714086743886e-08,
   "envelope_test": "passed",
   "topology": "assembly of intersecting closed components; not Boolean-unioned"
 }

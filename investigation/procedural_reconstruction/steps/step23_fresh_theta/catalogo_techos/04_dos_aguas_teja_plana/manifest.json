@@ -1,8 +1,8 @@
 {
   "name": "04_dos_aguas_teja_plana",
-  "triangles": 15484,
-  "parts": 1072,
+  "triangles": 15772,
+  "parts": 1076,
   "crown_families": [],
   "envelope": "passed",
-  "mesh_sha256": "da8dc8dc329fa37c65fbb3da3365c80e240bb8720c103bfff976cf72c332cd4c"
+  "mesh_sha256": "b3ebf6f89d986975a112f4fcd9bdc5d5849a1ee63f1781350147e0ba28efd27f"
 }

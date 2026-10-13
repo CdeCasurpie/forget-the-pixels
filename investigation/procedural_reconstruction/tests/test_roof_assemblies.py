@@ -161,6 +161,28 @@ def test_roof_cannot_back_an_oculus():
     with pytest.raises(ValueError,match='aperture'):resolve_theta(req.context,req.theta)
 
 
+def test_gable_closure_laps_head_proud_and_avoids_neighbors():
+    from shapely.geometry import Point
+    r=request();t=r['theta'];t['crowns']=[]
+    t['masses']=[dict(role='house',footprint=[[6,8],[14,8],[14,14],[6,14]],levels_m=[0,3.6,7.2]),
+                 dict(role='wing',footprint=[[6,4],[10,4],[10,8],[6,8]],levels_m=[0,3.6,6.0])]
+    t['facades']=[]
+    t['roof_assemblies']=[dict(id='a',mass_ref='house:0',design=dict(form='hip',detail='light')),
+                          dict(id='b',mass_ref='wing:0',design=dict(form='gable',detail='light'))]
+    req=from_json(json.dumps(r));resolved=resolve_theta(req.context,req.theta)
+    mesh=generate_resolved(resolved)
+    house=Polygon([[6,8],[14,8],[14,14],[6,14]])
+    checked=zok=lipped=free=0
+    for p,c in zip(mesh.parts,mesh.components):
+        if p['name']!='roof_gable_closure' or 'roof_assembly/b' not in c['assembly_id']:continue
+        for f in mesh.faces[p['face_start']:p['face_start']+p['face_count']]:
+            tri=mesh.vertices[f];checked+=1
+            assert tri[:,2].min()>=6.0-.021;zok+=1
+            assert not house.buffer(-.02).covers(Point(tri.mean(axis=0)[:2]));free+=1
+            if not Polygon([[6,4],[10,4],[10,8],[6,8]]).covers(Point(tri.mean(axis=0)[:2])):lipped+=1
+    assert checked and zok==checked and free==checked and lipped>0
+
+
 def test_gable_closure_inherits_upper_wall_material():
     r=request();t=r['theta'];t['crowns']=[]
     t['facade']['material_regions']=[dict(u_m=0,v_m=3,width_m=14,height_m=1,material_slot='brick')]

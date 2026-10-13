@@ -176,7 +176,9 @@ No se transforma automáticamente una moldura curva en una cubierta curva.
 No hay unión booleana global: tejas, soporte, muro y molduras conservan sus
 componentes, con recortes y cierres controlados. Los cierres bajo cubierta
 (`roof_gable_closure`) continúan el acabado superior del muro que prolongan,
-incluidas sus regiones de material; no usan un enlucido fijo.
+incluidas sus regiones de material; no usan un enlucido fijo. El cierre solo
+traslapa 20 mm con la coronación del muro y vuela 10 mm sobre su cara, y se
+recorta 5 mm antes de cualquier masa vecina para no tocarla directamente.
 
 ## Parapetos y off
 

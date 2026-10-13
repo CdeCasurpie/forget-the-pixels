@@ -11,91 +11,91 @@
   },
   {
     "name": "02_una_agua_panel",
-    "triangles": 3100,
-    "parts": 194,
+    "triangles": 3388,
+    "parts": 198,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "fe88927e94e7adcd7ba40c712d73681747495fd8b94574b7d3d3260339a861f1",
+    "mesh_sha256": "460b75a3d3f5ec803115cda0881bd7e62fd057961e0ec7c9f29efeae33371040",
     "roof_form": "shed",
     "covering": "panel"
   },
   {
     "name": "03_una_agua_teja",
-    "triangles": 61308,
-    "parts": 1050,
+    "triangles": 61596,
+    "parts": 1054,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "192e90770064809cf9597bef588adfed858a01e483a57a913a462abbf9d6ccfb",
+    "mesh_sha256": "319622c29cf3bd234ab9dc978eafedc62086136f23be6dbfc4943709e8ff71a6",
     "roof_form": "shed",
     "covering": "curved_tile"
   },
   {
     "name": "04_dos_aguas_teja_plana",
-    "triangles": 15484,
-    "parts": 1072,
+    "triangles": 15772,
+    "parts": 1076,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "da8dc8dc329fa37c65fbb3da3365c80e240bb8720c103bfff976cf72c332cd4c",
+    "mesh_sha256": "b3ebf6f89d986975a112f4fcd9bdc5d5849a1ee63f1781350147e0ba28efd27f",
     "roof_form": "gable",
     "covering": "flat_tile"
   },
   {
     "name": "05_cuatro_aguas",
-    "triangles": 75944,
-    "parts": 1215,
+    "triangles": 76280,
+    "parts": 1223,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "e9ba5f60d03011baccd16fb536dbf50de3ba502aa856a0d235c2a6556bb93354",
+    "mesh_sha256": "84c7e7840a23851aca1fc48b3b48443db6e56c4481d8345e852a626042787f27",
     "roof_form": "hip",
     "covering": "curved_tile"
   },
   {
     "name": "06_pabellon",
-    "triangles": 100782,
-    "parts": 1816,
+    "triangles": 101242,
+    "parts": 1833,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "b0f5a2159a6068e961cda4282453570243120f24bf35a7a0931c9666ed7b6240",
+    "mesh_sha256": "a2a2bdf3f9ca0a75a37dbcac4ee903cbf53899452e367b99daef28fcb18b333d",
     "roof_form": "pavilion",
     "covering": "curved_tile"
   },
   {
     "name": "07_banda_teja",
-    "triangles": 19152,
-    "parts": 421,
+    "triangles": 19296,
+    "parts": 423,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "08f71134da05126ddc71753ac63ce3a5367737e0d738cbbd32c53b02b7bb11e2",
+    "mesh_sha256": "d48d639cd54d835c1889655a6d3d909d7beeb825be38e234eaceeef0ea23c46e",
     "roof_form": "band",
     "covering": "curved_tile"
   },
   {
     "name": "08_compuesto_L",
-    "triangles": 84156,
-    "parts": 1387,
+    "triangles": 84608,
+    "parts": 1394,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "6ffa0765cbafbc8da6d95999670b8f74ef1529f407def1b93d4ce6f4198026c4",
+    "mesh_sha256": "48d3cedc497a5d33937291a74812b8d9db288de98baffede119170208bb53bd2",
     "roof_form": "compound",
     "covering": "curved_tile"
   },
   {
     "name": "09_canes_rectos",
-    "triangles": 2476,
-    "parts": 142,
+    "triangles": 2764,
+    "parts": 146,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "b965b79fbfbaae4b1eb5b0d38f3c1d269ecc3c386d8d833a9249f620955300cd",
+    "mesh_sha256": "59efb6cef0224a4487aead84e4b7b3e8a600f48c1654d45d3abf1af2bce07286",
     "roof_form": "shed",
     "covering": "panel"
   },
   {
     "name": "10_canes_perfilados",
-    "triangles": 20468,
-    "parts": 1360,
+    "triangles": 20804,
+    "parts": 1368,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "3d607e176351ea90c95d475557332a5d5e37c006a6b1fab48be73ec4225c5d34",
+    "mesh_sha256": "f78ebc7ae36a5087d7e149c0fc63e45888ebef5f6aee875437b61e99768f0219",
     "roof_form": "hip",
     "covering": "flat_tile"
   },
@@ -121,11 +121,11 @@
   },
   {
     "name": "13_alero_cerrado",
-    "triangles": 18552,
-    "parts": 1089,
+    "triangles": 18888,
+    "parts": 1097,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "ad2fa2f45de02beb4f7daacec59877052d34d00a4c3a9c395d9d304d5017d600",
+    "mesh_sha256": "ac8afd1206c8522299361eb816eb4a329eeb159ddf369571f02679d5211fe24b",
     "roof_form": "hip",
     "covering": "flat_tile"
   },
@@ -147,7 +147,7 @@
       "triangular"
     ],
     "envelope": "passed",
-    "mesh_sha256": "b214f056e8d4c48c0ae215788f09c2c84153ced1cb5bfec734d4955397446a97",
+    "mesh_sha256": "4e70abf21c60f81bd6937dfc9aed1299311731fa0af6e3281fd4c600ffaa14ec",
     "roof_form": "gable",
     "covering": "flat_tile"
   },
@@ -159,7 +159,7 @@
       "segmental"
     ],
     "envelope": "passed",
-    "mesh_sha256": "7ce2b9be37c4dc851db8bc6db2884ac92d8c87ad2930b636ee5f6c4785516b15",
+    "mesh_sha256": "eb53455486b689c880849c25db3e92f33f1930ce77d3733ad1808c8874c2cb57",
     "roof_form": "shed",
     "covering": "curved_tile"
   },
@@ -177,25 +177,25 @@
   },
   {
     "name": "18_alero_interrumpido",
-    "triangles": 2740,
-    "parts": 146,
+    "triangles": 3028,
+    "parts": 150,
     "crown_families": [
       "triangular"
     ],
     "envelope": "passed",
-    "mesh_sha256": "c2fb8f2d58fb78ed6f9cf5ea77c6903df399af0f2070caf7a6aebe24a59a4ee2",
+    "mesh_sha256": "412dd13ef23d62a226efb88e69a6071d496ee2f40870e401eb9a12d3345e6071",
     "roof_form": "shed",
     "covering": "panel"
   },
   {
     "name": "19_casona_compuesta",
-    "triangles": 109412,
-    "parts": 1835,
+    "triangles": 110248,
+    "parts": 1846,
     "crown_families": [
       "triangular"
     ],
     "envelope": "passed",
-    "mesh_sha256": "46af21a0e7a638ed577e04900949a3131579d37718c84200ff573915488577b8",
+    "mesh_sha256": "098749ddd34bb77b7f6bff09e5e35eedbbfb8a94f80e9c42d9dc935d957ddd96",
     "roof_form": "compound",
     "covering": "curved_tile"
   },
@@ -205,7 +205,7 @@
     "parts": 77,
     "crown_families": [],
     "envelope": "passed",
-    "mesh_sha256": "aa426c00b3849f0dd34cbd9012fadf06c215d5c01714e3d8793b1dbf8f5b2f45",
+    "mesh_sha256": "222700200d4c44ad833607c6e1ef349f26467c4c97402f9a2c05301ebefe3026",
     "roof_form": "gable",
     "covering": "panel"
   }
