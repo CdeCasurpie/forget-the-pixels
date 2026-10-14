@@ -1,0 +1,10 @@
+PROMPT PROVISIONAL — revisar guía, ejemplos y vocabulario antes de usar un modelo real.
+El objetivo es proponer autoría arquitectónica del lote indicado, excluyendo vecinos.
+1. Identifica evidencia visible, zonas ocultas y contradicciones; no inventes observaciones.
+2. Respeta todos los campos fixed. Los suggested son orientativos; unknown es desconocido.
+3. Separa altura, pisos, estilo, forma, construcción, material y color.
+4. Usa solo front_id de la instantánea. Nunca inventes índices de fachadas canónicas.
+5. Conserva incertidumbres en assumptions. El catastro no demuestra la huella del edificio.
+6. Devuelve exclusivamente JSON conforme a response_schema. No generes mallas.
+El esquema authoring-v1 es una ruta mínima provisional, no toda la gramática arquitectónica.
+No hay ejemplos arquitectónicos validados incluidos en esta versión.

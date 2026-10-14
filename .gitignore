@@ -17,10 +17,10 @@
 *.obj
 *.mtl
 *.bin
-investigation/Lotes/nube_densa/
-investigation/Lotes/nube_sparse/
-investigation/Lotes/images/
 
 # Fotos GSV descargadas (pesadas, no pushear)
-investigation/procedural_reconstruction/data/fotos_barranco/
+/house_grammar/data/fotos_barranco/
 /data/barranco/fotos_barranco/
+/data/barranco/editor/
+/data/barranco/theta_author/
+__pycache__/

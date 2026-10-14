@@ -1,0 +1,2 @@
+-r ../cadastral_editor/requirements.txt
+pydantic>=2.6,<3
