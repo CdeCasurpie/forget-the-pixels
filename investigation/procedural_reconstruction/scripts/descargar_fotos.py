@@ -1,6 +1,6 @@
-"""Descarga fotos 360 de poses a data/fotos_barranco, marcando el JSON.
+"""Descarga fotos 360 a data/barranco/fotos_barranco en la raíz del repositorio.
 
-Lee data/poses_barranco/metadata.json y descarga todas o un subconjunto.
+Lee data/barranco/poses_barranco/metadata.json y descarga todas o un subconjunto.
 Cada pose descargada queda marcada (image_downloaded + image) con escritura
 atomica, asi que se puede interrumpir y retomar.
 
@@ -21,9 +21,9 @@ from pathlib import Path
 import streetlevel.streetview as sv
 from tqdm import tqdm
 
-ROOT = Path(__file__).resolve().parents[1]
-META = ROOT / "data" / "poses_barranco" / "metadata.json"
-FOTOS = ROOT / "data" / "fotos_barranco"
+DATA = Path(__file__).resolve().parents[3] / "data" / "barranco"
+META = DATA / "poses_barranco" / "metadata.json"
+FOTOS = DATA / "fotos_barranco"
 
 
 def main() -> None:

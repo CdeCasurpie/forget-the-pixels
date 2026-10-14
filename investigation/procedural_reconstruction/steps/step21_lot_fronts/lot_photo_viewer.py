@@ -21,7 +21,8 @@ from shapely.affinity import translate
 
 STEP = Path(__file__).resolve().parent
 ROOT = STEP.parent.parent
-OFFSET_PATH = ROOT/'data/cadastral_offset.json'
+DATA = ROOT.parents[1]/'data/barranco'
+OFFSET_PATH = DATA/'cadastral_offset.json'
 LOT_LIST_PATH = STEP/'seleccion/lotes.json'
 
 
@@ -79,7 +80,7 @@ def cylindrical_view(pid, meta, center, polygon, target, height, size):
                           top-(np.arange(h)+.5)/h*(top-bottom))
     world = np.stack([np.cos(lat)*np.sin(lon),np.cos(lat)*np.cos(lon),np.sin(lat)],axis=-1)
     local = world @ rotation
-    image = panorama(str(ROOT/'data/fotos_barranco'/f'{pid}.jpg'))
+    image = panorama(str(DATA/'fotos_barranco'/f'{pid}.jpg'))
     ih,iw = image.shape[:2]
     sx = ((np.arctan2(local[...,0],local[...,2])+np.pi)*iw/(2*np.pi)-.5)%iw
     sy = (np.pi/2-np.arctan2(-local[...,1],np.hypot(local[...,0],local[...,2])))*ih/np.pi-.5
@@ -105,7 +106,7 @@ def main():
     parser.add_argument('--smoke-test',action='store_true')
     args=parser.parse_args()
     if args.height<=0 or args.max_distance<=0: parser.error('Height and distance must be positive')
-    lots=gpd.read_file(ROOT/'data/lotes/BARRANCO_LM_geogpsperu.geojson').to_crs(32718)
+    lots=gpd.read_file(DATA/'lotes/BARRANCO_LM_geogpsperu.geojson').to_crs(32718)
     index=lots.sindex
     polygons=list(lots.geometry)
     outlines=[np.asarray(p.exterior.coords) for p in polygons]
@@ -114,8 +115,8 @@ def main():
         return translate(polygons[i],xoff=offset[0],yoff=offset[1])
     def query_lots(shape, **kwargs):
         return index.query(translate(shape,xoff=-offset[0],yoff=-offset[1]),**kwargs)
-    raw=json.loads((ROOT/'data/poses_barranco/metadata.json').read_text())['panoramas']
-    metas={p:m for p,m in raw.items() if (ROOT/'data/fotos_barranco'/f'{p}.jpg').is_file()
+    raw=json.loads((DATA/'poses_barranco/metadata.json').read_text())['panoramas']
+    metas={p:m for p,m in raw.items() if (DATA/'fotos_barranco'/f'{p}.jpg').is_file()
            and all(m.get(k) is not None for k in ('lat','lon','heading_deg','pitch_deg','roll_deg'))}
     ids=list(metas)
     if not ids: raise ValueError('No local panoramas with complete poses')
