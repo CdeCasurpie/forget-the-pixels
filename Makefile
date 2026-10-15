@@ -37,5 +37,6 @@ both:
 
 test:
 	$(PYTHON) -m pytest apps/theta_author/tests apps/cadastral_editor/tests -q
+	node --check apps/theta_author/static/shortcuts.js
 	node --check apps/theta_author/static/app.js
 	node --check packages/barranco_imaging/static/prism.js

@@ -257,3 +257,26 @@ def test_floor_sliders_autosave_and_progress_revision(setup):
                                    fronts={state['lots']['one']['fronts'][0]['id']:False})))
     assert 'one' not in client.get('/api/progress').json()
     assert client.post('/api/lots/one/autosave', json=form).status_code == 409
+
+
+def test_keyboard_shortcuts_are_consistent():
+    static = Path(__file__).resolve().parents[1]/'static'
+    dump = subprocess.run(['node', '-e',
+        "const m=require(process.argv[1]);console.log(JSON.stringify({keys:m.STYLE_KEYS,groups:m.SHORTCUT_GROUPS}))",
+        str(static/'shortcuts.js')], capture_output=True, text=True)
+    assert dump.returncode == 0, dump.stderr
+    data = json.loads(dump.stdout)
+    assert sorted(data['keys'].values()) == ['barroco', 'clasico', 'madera', 'moderno', 'republicano']
+    documented = [item['key'].lower() for group in data['groups'] for item in group['items']]
+    singles = [k for k in documented if len(k) == 1 and k not in '/?']
+    assert len(set(singles)) == len(singles), 'teclas duplicadas en el mapa'
+    app = (static/'app.js').read_text()
+    assert 'STYLE_KEYS[k]' in app, 'app.js debe resolver estilos vía STYLE_KEYS'
+    for k in singles:
+        if k in data['keys']:
+            continue  # estilo: se resuelve vía STYLE_KEYS, ya validado arriba
+        assert f"'{k}'" in app or f'{k}:' in app, f'la tecla {k} está documentada pero no manejada'
+    html = (static/'index.html').read_text()
+    assert '/static/shortcuts.js' in html
+    for element in ['floorsNumber', 'floorHeightNumber', 'firstHeightNumber', 'keysDialog', 'nextUnevaluated']:
+        assert element in html, f'falta {element} en la UI'

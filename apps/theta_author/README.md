@@ -22,6 +22,27 @@ Para pruebas aisladas, leyendo el mismo catastro:
 python3 -m apps.theta_author.server --port 8768 --workspace /tmp/opencode/theta-demo
 ```
 
+## Flujo con teclado (sin mouse)
+
+Bloque compacto QWERTY; cada letra aparece como insignia en su control.
+Los atajos no actúan mientras escribes ni con un diálogo abierto.
+
+| Teclas | Acción |
+|---|---|
+| `Q` `A` | Cantidad de pisos / altura por piso: enfoca el número y lo selecciona; escribe el valor exacto y `Tab` o `Enter` avanza |
+| `S` | Activa/desactiva «Primer piso diferente»; al activar salta a su altura |
+| `W` | Altura del primer piso (enciende la casilla si está apagada) |
+| `1` `2` `3` `4` `5` | Republicano, barroco, clásico, madera, moderno |
+| `D` `F` | Página anterior / siguiente de fotos |
+| `Z` `X` | Marcar la 1.ª / 2.ª foto visible |
+| `C` | Más fotos cercanas |
+| `V` | Notas |
+| `G` | Siguiente lote sin paquete (el más cercano; si no hay, retoma preparados sin generar) |
+| `Enter` | Preparar paquete / generar theta |
+| `/` | Buscar lote · `H` ayuda · `Esc` cerrar · `Retroceso` volver y ajustar |
+
+Ejemplo de ciclo: `G` → `Q 3 Tab 2.8 Tab R Enter Enter G`.
+
 ## Flujo rápido
 
 1. **Seleccionar lote** sobre el mapa a pantalla completa o buscar su ID. Aparecen

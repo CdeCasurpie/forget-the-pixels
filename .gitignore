@@ -19,8 +19,9 @@
 *.bin
 
 # Fotos GSV descargadas (pesadas, no pushear)
+# y recortes de evidencia de B (se regeneran con Preparar paquete)
 /house_grammar/data/fotos_barranco/
 /data/barranco/fotos_barranco/
 /data/barranco/editor/
-/data/barranco/theta_author/
+/data/barranco/theta_author/runs/*/evidence/
 __pycache__/

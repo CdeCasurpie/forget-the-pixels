@@ -2,39 +2,43 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>B · Autor ágil de thetas</title><link rel="stylesheet" href="/static/style.css"><link rel="stylesheet" href="/static/large-controls.css"></head>
 <body>
 <canvas id="map" aria-label="Mapa catastral: selecciona un lote"></canvas>
-<header><strong>B <span>Autor de thetas</span></strong><form id="searchForm"><input id="search" aria-label="Buscar lote" placeholder="Buscar lote…"><button title="Buscar">⌕</button></form><button id="all">Ver todo</button><span class="mock">MOCK temporal</span></header>
+<header><strong>B <span>Autor de thetas</span></strong><form id="searchForm"><input id="search" aria-label="Buscar lote" placeholder="Buscar lote…"><button title="Buscar">⌕</button></form><button id="all">Ver todo</button><button id="nextUnevaluated" title="Siguiente lote sin paquete (G)"><kbd class="key">G</kbd>Siguiente</button><button id="keysHelp" title="Atajos de teclado (H)">⌨</button><span class="mock">MOCK temporal</span></header>
 <div id="welcome">Selecciona un lote para empezar<span>Rueda para acercar · arrastra para mover el mapa</span></div>
 <div id="message" role="status"></div>
 <aside id="photoPanel" class="floating" hidden>
  <div class="panelHead"><div><strong>Fotografías</strong><small id="photoCount"></small></div><button id="fit" title="Encuadrar lote y cámaras">⤢</button></div>
  <div id="photos"></div>
- <div class="photoNav"><button id="prevPhotos" aria-label="Fotos anteriores">‹</button><span id="photoPage"></span><button id="nextPhotos" aria-label="Fotos siguientes">›</button><button id="morePhotos">+ Más fotos</button></div>
- <small class="photoHint">Ampliar: clic en foto · amarillo: cámara · marca para incluir</small>
+ <div class="photoNav"><button id="prevPhotos" aria-label="Fotos anteriores"><kbd class="key">D</kbd>‹</button><span id="photoPage"></span><button id="nextPhotos" aria-label="Fotos siguientes">›<kbd class="key">F</kbd></button><button id="morePhotos"><kbd class="key">C</kbd>+ Más fotos</button></div>
+ <small class="photoHint"><kbd class="key">Z</kbd>/<kbd class="key">X</kbd> marcan la 1.ª y 2.ª foto · clic para ampliar</small>
 </aside>
 <aside id="controlPanel" class="floating" hidden>
  <div class="panelHead"><div><small id="stepLabel">1 / 2 · Información sugerida</small><strong id="lotTitle"></strong></div><button id="closeLot" aria-label="Cerrar lote">×</button></div>
  <div id="editStep">
   <section class="heightControls">
-   <label for="floors">Cantidad de pisos <output id="floorsValue">3</output></label><input id="floors" type="range" min="1" max="20" step="1" value="3">
-   <label for="floorHeight">Altura por piso <output id="floorHeightValue">3.0 m</output></label><input id="floorHeight" type="range" min="2" max="6" step="0.1" value="3">
-   <label class="check"><input id="firstDifferent" type="checkbox"> Primer piso diferente</label>
-   <div id="firstControl" hidden><label for="firstHeight">Altura del primer piso <output id="firstHeightValue">4.0 m</output></label><input id="firstHeight" type="range" min="2" max="8" step="0.1" value="4"></div>
+   <div class="fieldRow"><label for="floorsNumber"><kbd class="key">Q</kbd>Cantidad de pisos</label><input id="floorsNumber" class="num" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" aria-label="Cantidad de pisos, valor exacto"></div>
+   <input id="floors" type="range" min="1" max="30" step="1" value="3" tabindex="-1" aria-label="Cantidad de pisos">
+   <div class="fieldRow"><label for="floorHeightNumber"><kbd class="key">A</kbd>Altura por piso</label><input id="floorHeightNumber" class="num" type="number" min="2" max="6" step="0.1" value="3" inputmode="decimal" aria-label="Altura por piso, valor exacto"></div>
+   <input id="floorHeight" type="range" min="2" max="6" step="0.1" value="3" tabindex="-1" aria-label="Altura por piso">
+   <div class="fieldHead"><label class="check" for="firstDifferent"><input id="firstDifferent" type="checkbox"> Primer piso diferente</label><kbd class="key" data-key="S" title="S · alternar">S</kbd></div>
+   <div class="field" id="firstControl" hidden><div class="fieldRow"><label for="firstHeightNumber"><kbd class="key">W</kbd>Altura del primer piso</label><input id="firstHeightNumber" class="num" type="number" min="2" max="8" step="0.1" value="4" inputmode="decimal" aria-label="Altura del primer piso, valor exacto"></div><input id="firstHeight" type="range" min="2" max="8" step="0.1" value="4" tabindex="-1" aria-label="Altura del primer piso"></div>
    <div class="total"><span>Altura total sugerida</span><strong id="totalHeight">9.0 m</strong></div>
+   <p class="hint"><kbd class="key">Tab</kbd> siguiente campo · <kbd class="key">Enter</kbd> también avanza</p>
   </section>
   <section><div class="sectionLabel">Estilo sugerido <small>Elige una referencia</small></div><div id="styles" role="radiogroup" aria-label="Estilo sugerido"></div><small class="illustrationNote">Ilustraciones orientativas, no ejemplos validados.</small></section>
-  <label class="notesLabel" for="notes">Notas opcionales</label><textarea id="notes" rows="2" maxlength="10000" placeholder="Detalles que debería considerar la IA…"></textarea>
-  <div class="footer"><small id="saveStatus">Guardado automático</small><button id="prepare" class="primary">Preparar paquete →</button></div>
+  <label class="notesLabel" for="notes"><kbd class="key">V</kbd>Notas opcionales</label><textarea id="notes" rows="2" maxlength="10000" placeholder="Detalles que debería considerar la IA…"></textarea>
+  <div class="footer"><small id="saveStatus">Guardado automático</small><button id="prepare" class="primary">Preparar paquete → <kbd class="key">Enter</kbd></button></div>
  </div>
  <div id="sendStep" hidden>
   <div class="stepIcon" id="stepIcon">✓</div><h2 id="runTitle">Información preparada</h2><p id="runSummary"></p><p id="runStatus"></p>
   <div class="notice">MOCK TEMPORAL<br><small>Simula la respuesta. No interpreta fotografías. Prompt y contrato provisionales.</small></div>
   <div id="resultInfo"></div>
-  <button id="generate" class="primary">Generar theta · MOCK →</button><button id="back">← Volver y ajustar</button>
-  <button id="nextLot" hidden>Listo · elegir otro lote</button><button id="details">Ver paquete / historial</button>
+  <button id="generate" class="primary">Generar theta · MOCK → <kbd class="key">Enter</kbd></button><button id="back">← Volver <kbd class="key">⌫</kbd></button>
+  <button id="nextLot" hidden><kbd class="key">G</kbd>Listo · elegir otro lote</button><button id="details">Ver paquete / historial</button>
  </div>
 </aside>
-<footer id="legend"><span><i class="neutral"></i>Sin paquete</span><span><i class="blue"></i>Preparado</span><span><i class="green"></i>Theta generado</span><span id="pendingLegend">• Cambios pendientes</span></footer>
+<footer id="legend"><span><i class="neutral"></i>Sin paquete</span><span><i class="blue"></i>Preparado</span><span><i class="green"></i>Theta generado</span><span id="pendingLegend">• Cambios pendientes</span><span class="legendKeys"><kbd class="key">G</kbd>siguiente · <kbd class="key">H</kbd>atajos</span></footer>
 <dialog id="lightbox"><button id="closeImage" class="dialogClose">Cerrar ×</button><div class="frame"><img alt="Foto ampliada"><canvas></canvas></div></dialog>
 <dialog id="detailsDialog"><div class="panelHead"><strong>Paquete e historial</strong><button id="closeDetails">Cerrar ×</button></div><div id="history"></div><a id="export" hidden>Descargar paquete ZIP</a><pre id="detailText"></pre></dialog>
-<script src="/shared/prism.js"></script><script src="/static/app.js"></script>
+<dialog id="keysDialog" aria-label="Atajos de teclado"><div class="panelHead"><strong>Atajos de teclado</strong><button id="closeKeys" class="dialogClose">Cerrar ×</button></div><div id="keysList"></div><p class="hint">Los atajos no actúan mientras escribes ni con un diálogo abierto.</p></dialog>
+<script src="/shared/prism.js"></script><script src="/static/shortcuts.js"></script><script src="/static/app.js"></script>
 </body></html>
