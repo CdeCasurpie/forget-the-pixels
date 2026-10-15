@@ -22,6 +22,8 @@
 # y recortes de evidencia de B (se regeneran con Preparar paquete)
 /house_grammar/data/fotos_barranco/
 /data/barranco/fotos_barranco/
-/data/barranco/editor/
+# El workspace del editor A se versiona (revisiones JSON completas);
+# solo se excluye su lock de instancia única.
+/data/barranco/editor/.lock
 /data/barranco/theta_author/runs/*/evidence/
 __pycache__/
