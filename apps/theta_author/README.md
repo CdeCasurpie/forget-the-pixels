@@ -1,5 +1,7 @@
 # B · Autor ágil de thetas
 
+**Experimento independiente con Claude:** [autoría incremental en 12 etapas](experiments/haiku_theta/README.md), sobre los paquetes humanos de B, con pisos fijos, prompts por etapa, validación y comparación desde las cámaras originales.
+
 Aplicación local con **MOCK TEMPORAL**. El mock no analiza fotografías: devuelve
 una propuesta determinista para comprobar el flujo. Prompt y contrato provisionales.
 
@@ -67,8 +69,9 @@ Ejemplo de ciclo: `G` → `Q 3 Tab 2.8 Tab R Enter Enter G`.
    pasar a otro lote mientras termina. Volver y editar no envía nada automáticamente.
 
 Mapa: **azul sutil = paquete completo**, **verde = theta generado y validado por el
-adaptador mínimo**, punto ámbar = cambios de formulario posteriores. Una revisión
-catastral distinta invalida los colores anteriores. El estado `preparing` usa un
+adaptador mínimo**, punto ámbar = cambios de formulario posteriores. Solo un corte/fusión
+(o cambio de frentes) invalida los colores anteriores; mover una manzana entera
+conserva el trabajo de sus lotes. El estado `preparing` usa un
 tono neutro; no se presenta un paquete incompleto como listo.
 
 El paquete idéntico se reutiliza mediante hash de formulario normalizado (incluye

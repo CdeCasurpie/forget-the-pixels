@@ -129,11 +129,22 @@ class Author:
     def prepare_quick(self, identifier, value):
         form, snapshot = self.validate_form(identifier, value)
         signature = self.fingerprint(form.model_dump())
+        current_geometry = snapshot['lot']['geometry']
         with self.lock:
             for r in reversed(list(self.run_index.values())):
                 if (r['lot_id'] == identifier and r.get('form_hash') == signature
                     and r['status'] in ('preparing', 'prepared', 'queued', 'running', 'succeeded')
                     and r.get('validation_status') != 'invalid'):
+                    # Misma forma no implica misma posición: una manzana movida
+                    # conserva geometry_revision pero cambia coordenadas. No
+                    # reutilizar un paquete con origen/evidencia antiguos.
+                    try:
+                        draft_path = self.directory/'drafts'/f"{r['draft_id']}.json"
+                        old = json.loads(draft_path.read_text())
+                        if old.get('snapshot', {}).get('lot', {}).get('geometry') != current_geometry:
+                            continue
+                    except (OSError, ValueError):
+                        pass
                     return dict(r, reused=True)
             draft = self.save_draft(identifier, value)
             record = self._new_run(draft, signature)

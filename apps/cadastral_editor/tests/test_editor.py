@@ -62,6 +62,22 @@ def test_block_movement_and_fronts(store):
         execute(store, type='translate_block', block_id='block', dx=30, dy=-3)
 
 
+def test_translate_preserves_lot_revisions_only_split_merge_invalidate(store):
+    state = execute(store, type='assign_block', ids=['a', 'b'], block_id='block')
+    rev_a, rev_b = state['lots']['a']['geometry_revision'], state['lots']['b']['geometry_revision']
+    fronts_a = [(f['id'], f['is_front']) for f in state['lots']['a']['fronts']]
+    moved = execute(store, type='translate_block', block_id='block', dx=2, dy=3)
+    assert moved['lots']['a']['geometry_revision'] == rev_a
+    assert moved['lots']['b']['geometry_revision'] == rev_b
+    assert moved['invalidated_lot_ids'] == []
+    assert moved['fronts_recomputed_ids'] == []
+    assert [(f['id'], f['is_front']) for f in moved['lots']['a']['fronts']] == fronts_a
+    assert shape(moved['lots']['a']['geometry']).area == pytest.approx(100)
+    undone = execute(store, type='undo')
+    assert undone['lots']['a']['geometry_revision'] == rev_a
+    assert undone['invalidated_lot_ids'] == []
+
+
 def test_conflicts_and_orphan_revision(store):
     revision = store.load()['revision']
     command = dict(type='assign_block', ids=['a'], revision=revision)

@@ -262,9 +262,17 @@ class Store:
             raise ValueError('Operación desconocida')
         recomputed = self.rebuild(state, affected, preserve_fronts=kind in ('edit_fronts', 'translate_block', 'undo'),
                                       narrow=kind in ('split', 'merge', 'undo'))
-        for i in affected:
-            state['lots'][i]['geometry_revision'] = state['revision']
-        state['invalidated_lot_ids'] = sorted(affected)
+        # Una traslación rígida de manzana conserva la forma intrínseca de sus
+        # lotes (misma área, mismos frentes relativos): no se bumpa
+        # geometry_revision ni se invalida trabajo en A/B. Solo split/merge
+        # (y reasignaciones que cambian el exterior) reinician los lotes.
+        # El bloque sí cambia de posición y su revision se actualiza en rebuild.
+        if kind == 'translate_block' or (kind == 'undo' and target['operation']['type'] == 'translate_block'):
+            state['invalidated_lot_ids'] = []
+        else:
+            for i in affected:
+                state['lots'][i]['geometry_revision'] = state['revision']
+            state['invalidated_lot_ids'] = sorted(affected)
         state['fronts_recomputed_ids'] = sorted(recomputed)
         state['operation'] = dict(type=kind, date=now(), parameters=command,
             affected=sorted(affected), result_ids=result_ids, operation_id=uid())

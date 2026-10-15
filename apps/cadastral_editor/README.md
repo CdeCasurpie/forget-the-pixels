@@ -109,7 +109,7 @@ python -m pytest apps/cadastral_editor/tests -q
 ```
 
 Cobertura: corte/fusión, ascendencia, deshacer, conservación de área, rechazo de
-fragmentos, manzanas, desplazamientos, solapamientos, frentes parciales, conflictos,
+fragmentos, manzanas, desplazamientos sin reiniciar lotes, solapamientos, frentes parciales, conflictos,
 revisiones no publicadas, convención de cámara, caché de imagen base, vistas
 compartidas y su invalidación por revisión, API e invalidación de instantáneas.
 

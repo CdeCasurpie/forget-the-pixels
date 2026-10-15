@@ -259,6 +259,29 @@ def test_floor_sliders_autosave_and_progress_revision(setup):
     assert client.post('/api/lots/one/autosave', json=form).status_code == 409
 
 
+def test_translate_block_preserves_work_but_freezes_new_position(setup):
+    client, author, store, form = setup
+    state = store.load()
+    store.commit(store.prepare(dict(type='assign_block', revision=state['revision'],
+                                    ids=['one', 'two'], block_id='B1')))
+    current = store.load()
+    form['geometry_revision'] = current['lots']['one']['geometry_revision']
+    run_id = client.post('/api/lots/one/prepare', json=form).json()['run_id']
+    assert not client.get(f'/api/runs/{run_id}').json()['stale']
+    # Mover la manzana entera no debe invalidar el trabajo de B.
+    assert client.post('/api/lots/one/autosave', json=form).status_code == 200
+    before = store.load()['lots']['one']['geometry']
+    store.commit(store.prepare(dict(type='translate_block', revision=store.load()['revision'],
+                                    block_id='B1', dx=5, dy=0)))
+    assert store.load()['lots']['one']['geometry'] != before
+    assert not client.get(f'/api/runs/{run_id}').json()['stale']
+    assert 'one' in client.get('/api/progress').json()
+    assert client.post('/api/lots/one/autosave', json=form).status_code == 200
+    # Misma forma con nueva posición: nuevo paquete, sin reutilizar el antiguo origen.
+    second = client.post('/api/lots/one/prepare', json=form).json()
+    assert second['run_id'] != run_id
+
+
 def test_keyboard_shortcuts_are_consistent():
     static = Path(__file__).resolve().parents[1]/'static'
     dump = subprocess.run(['node', '-e',
