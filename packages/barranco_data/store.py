@@ -260,16 +260,23 @@ class Store:
             affected.update(ids)
         else:
             raise ValueError('Operación desconocida')
-        self.rebuild(state, affected, preserve_fronts=kind in ('edit_fronts', 'translate_block', 'undo'))
+        recomputed = self.rebuild(state, affected, preserve_fronts=kind in ('edit_fronts', 'translate_block', 'undo'),
+                                      narrow=kind in ('split', 'merge', 'undo'))
         for i in affected:
             state['lots'][i]['geometry_revision'] = state['revision']
         state['invalidated_lot_ids'] = sorted(affected)
+        state['fronts_recomputed_ids'] = sorted(recomputed)
         state['operation'] = dict(type=kind, date=now(), parameters=command,
             affected=sorted(affected), result_ids=result_ids, operation_id=uid())
         return state
 
     @staticmethod
-    def rebuild(state, affected, preserve_fronts=False):
+    def rebuild(state, affected, preserve_fronts=False, narrow=False):
+        """Recompute block unions and fronts. With narrow=True (split/merge/undo,
+        which conserve the block exterior) only lots the operation touched get new
+        fronts; untouched neighbours keep theirs and stay out of `affected`, so
+        their geometry_revision — and B's work keyed to it — is preserved."""
+        recomputed = set()
         groups = {}
         for lot in state['lots'].values():
             if lot['status'] == 'active' and lot['block_id']:
@@ -287,16 +294,21 @@ class Store:
             polygons = list(union.geoms) if union.geom_type == 'MultiPolygon' else [union]
             exterior = unary_union([p.exterior for p in polygons])
             for lot in lots:
+                if narrow and lot['lot_id'] not in affected and lot['fronts']:
+                    continue
                 affected.add(lot['lot_id'])
                 if preserve_fronts and lot['fronts']:
                     continue
                 if any(f['origin'] == 'manual' for f in lot['fronts']):
                     lot['fronts_review'] = True
                 lot['fronts'] = fronts(shape(lot['geometry']), exterior)
+                recomputed.add(lot['lot_id'])
         for i in list(affected):
             lot = state['lots'][i]
             if lot['status'] == 'active' and not lot['block_id'] and not preserve_fronts:
                 lot['fronts'] = fronts(shape(lot['geometry']), None)
+                recomputed.add(i)
+        return recomputed
 
     def commit(self, prepared):
         with self.lock():

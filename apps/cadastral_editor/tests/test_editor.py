@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 
 import pytest
 from fastapi.testclient import TestClient
@@ -101,6 +102,21 @@ def test_partial_front_and_manual_override(tmp_path):
     front = next(f for f in fs if f['is_front'])
     edited = execute(store, type='edit_fronts', ids=['a'], fronts={front['id']: False})
     assert next(f for f in edited['lots']['a']['fronts'] if f['id'] == front['id'])['origin'] == 'manual'
+
+
+def test_split_keeps_neighbours_revision_and_manual_fronts(store):
+    state = execute(store, type='assign_block', ids=['a', 'b'], block_id='block')
+    front = next(f['id'] for f in state['lots']['b']['fronts'] if f['is_front'])
+    state = execute(store, type='edit_fronts', ids=['b'], fronts={front: False})
+    revision_b = state['lots']['b']['geometry_revision']
+    fronts_b = deepcopy(state['lots']['b']['fronts'])
+    split = execute(store, type='split', ids=['a'], line=[[5, -1], [5, 11]])
+    children = split['operation']['result_ids']
+    assert split['lots']['b']['geometry_revision'] == revision_b
+    assert split['lots']['b']['fronts'] == fronts_b
+    assert set(split['invalidated_lot_ids']) == {'a', *children}
+    assert 'b' not in split['fronts_recomputed_ids']
+    assert set(split['fronts_recomputed_ids']) >= set(children)
 
 
 def test_reassignment_invalidates_previous_block_members(store):
