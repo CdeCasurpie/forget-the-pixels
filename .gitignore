@@ -25,5 +25,7 @@
 # El workspace del editor A se versiona (revisiones JSON completas);
 # solo se excluye su lock de instancia única.
 /data/barranco/editor/.lock
+# Sugerencias IA huérfanas (el botón de IA se retiró; se regeneran)
+/data/barranco/theta_author/suggestions/
 /data/barranco/theta_author/runs/*/evidence/
 __pycache__/
