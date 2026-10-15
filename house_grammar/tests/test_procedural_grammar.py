@@ -149,7 +149,7 @@ class GrammarTests(unittest.TestCase):
         for angle in (17, 63, 127):
             parcel = rotate(shape, angle, origin=(0, 0))
             spec = propose_building(
-                parcel, setback_m=0.8, style="corner", boundary="fence"
+                parcel, setback_m=0.8, style="corner", boundary="republicano"
             )
             validate_mesh(generate_mesh(spec), parcel)
         parcel = box(0, 0, 6, 8)
@@ -243,7 +243,7 @@ class GrammarTests(unittest.TestCase):
     def test_fence_only_on_selected_edges_and_expected_detail(self):
         parcel = Polygon([(0, 0), (10, 0), (10, 12), (0, 12)])
         spec = propose_building(
-            parcel, style="corner", front_edges=(0,), boundary="fence", setback_m=1.5,
+            parcel, style="corner", front_edges=(0,), boundary="republicano", setback_m=1.5,
             architectural_family="legacy",
         )
         mesh = generate_mesh(spec)

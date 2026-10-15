@@ -185,6 +185,7 @@ def test_gable_closure_laps_head_proud_and_avoids_neighbors():
 
 def test_gable_closure_inherits_upper_wall_material():
     r=request();t=r['theta'];t['crowns']=[]
+    t['side_material']='brick'
     t['facade']['material_regions']=[dict(u_m=0,v_m=3,width_m=14,height_m=1,material_slot='brick')]
     t['roof_assemblies']=[dict(id='roof',mass_ref='house:0',design=dict(form='gable',detail='light'))]
     req=from_json(json.dumps(r));resolved=resolve_theta(req.context,req.theta)

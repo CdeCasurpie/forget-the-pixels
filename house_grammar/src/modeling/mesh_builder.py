@@ -317,6 +317,7 @@ class MeshBuilder:
         self._open = None
         self._assembly_stack = []
         self._counters = {}
+        self._wall_finish = None
 
     # ── Clipping envelope ────────────────────────────────────────────
 
@@ -360,6 +361,8 @@ class MeshBuilder:
         comp = self._open
         if comp is None:
             raise RuntimeError("No component is open")
+        if self._wall_finish is not None:
+            self._wall_finish.apply(self)
         self._open = None
         if not comp.faces:
             return None
@@ -399,6 +402,17 @@ class MeshBuilder:
         finally:
             if self._open is not None:
                 self.end_component()
+
+    @contextmanager
+    def wall_finish(self, a, tangent, regions):
+        """Finish wall components after geometric clipping, without overlays."""
+        from modeling.wall_finish import WallFinish
+        previous = self._wall_finish
+        self._wall_finish = WallFinish(a, tangent, regions) if regions else None
+        try:
+            yield
+        finally:
+            self._wall_finish = previous
 
     @contextmanager
     def assembly(self, assembly_id):

@@ -33,7 +33,7 @@ def semantic_vertices(mesh,name):
 
 def test_setback_garden_and_fence_are_distinct_geometry():
     c=replace(body(),region=PlanRegion(depth_m=(3.,16.)))
-    r=solve(c,site=SiteControls(fence='reja',zones=(SiteZone('front','garden',PlanRegion(depth_m=(0.,3.))),)))
+    r=solve(c,site=SiteControls(fence='republicano',zones=(SiteZone('front','garden',PlanRegion(depth_m=(0.,3.))),)))
     assert mass_polygon(r.masses[0]).bounds==(0.,3.,12.,16.)
     garden=next(z for z in r.site_zones if z.kind=='garden')
     assert Polygon(garden.polygon,garden.holes).area==pytest.approx(36.)

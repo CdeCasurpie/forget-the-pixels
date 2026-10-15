@@ -10,6 +10,7 @@ from shapely.ops import unary_union
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan
 from domain.theta import PlinthControls
+from domain.fence_catalog import validate_fence_style
 
 MIN_BOUNDARY_LENGTH_M = 0.8
 GATE_WIDTH_M = 1.1
@@ -19,7 +20,7 @@ GARAGE_WIDTH_M = 2.9
 @dataclass
 class BoundarySpec:
     line: LineString
-    kind: str  # reja | ladrillos | concreto | concreto_bajo | solid_wall
+    kind: str  # domain.fence_catalog.FENCE_STYLES
     height: float
     gate_u: Optional[float] = None
     gate_width: float = 0.0
@@ -53,7 +54,10 @@ def generate_boundaries(
     inferred by testing whether the segment lay near y = 0, which only held for
     lots that happened to be axis-aligned and centred on the origin.
     """
-    if not getattr(program, "has_fence", True):
+    fence_kind = program.fence_type
+    if fence_kind != "none":
+        validate_fence_style(fence_kind)
+    if not program.has_fence or fence_kind == "none":
         return []
 
     parcel = Polygon(context.polygon)
@@ -63,7 +67,6 @@ def generate_boundaries(
 
     coords = list(parcel.exterior.coords)
     street_edges = set(context.explicit_fronts)
-    fence_kind = getattr(program, "fence_type", "reja")
     boundaries: List[BoundarySpec] = []
 
     for index in range(len(coords) - 1):
@@ -80,8 +83,8 @@ def generate_boundaries(
                 boundaries.append(
                     BoundarySpec(
                         line=segment,
-                        kind=fence_kind if fence_kind != "none" else "reja",
-                        height=2.4 if fence_kind == "concreto" else 2.1,
+                        kind=fence_kind,
+                        height=2.1,
                         gate_u=gate_u,
                         gate_width=GATE_WIDTH_M if gate_u is not None else 0.,
                         garage_u=garage_u,
@@ -93,6 +96,7 @@ def generate_boundaries(
                 # A party edge with no building on it still needs a blind wall,
                 # otherwise the back yard opens straight into the neighbour.
                 boundaries.append(
-                    BoundarySpec(line=segment, kind="solid_wall", height=2.6)
+                    BoundarySpec(line=segment, kind="clasico", height=2.6,
+                                 wall_material="brick")
                 )
     return boundaries

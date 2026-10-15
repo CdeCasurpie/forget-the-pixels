@@ -1,0 +1,73 @@
+{
+  "component_count": 552,
+  "closed_components": 548,
+  "open_components": [],
+  "violations": [
+    {
+      "vertices": 808,
+      "faces": 1616,
+      "connected": 4,
+      "boundary_edges": 0,
+      "non_manifold_edges": 0,
+      "incoherent_edges": 0,
+      "duplicate_faces": 0,
+      "degenerate_faces": 0,
+      "unused_vertices": 0,
+      "min_area_m2": 1.4099013309562843e-06,
+      "semantic": "door_leaf_grille",
+      "component_id": "door_leaf_grille#0001",
+      "assembly_id": "principal:0/edge1/z0/opening_u3.60_v0.05",
+      "expectation": "violation"
+    },
+    {
+      "vertices": 72,
+      "faces": 108,
+      "connected": 9,
+      "boundary_edges": 0,
+      "non_manifold_edges": 0,
+      "incoherent_edges": 0,
+      "duplicate_faces": 0,
+      "degenerate_faces": 0,
+      "unused_vertices": 0,
+      "min_area_m2": 0.00027000000000001047,
+      "semantic": "window_grille",
+      "component_id": "window_grille#0001",
+      "assembly_id": "principal:0/edge1/z0/opening_u6.20_v0.90",
+      "expectation": "violation"
+    },
+    {
+      "vertices": 80,
+      "faces": 120,
+      "connected": 10,
+      "boundary_edges": 0,
+      "non_manifold_edges": 0,
+      "incoherent_edges": 0,
+      "duplicate_faces": 0,
+      "degenerate_faces": 0,
+      "unused_vertices": 0,
+      "min_area_m2": 0.0002699999999999889,
+      "semantic": "window_grille",
+      "component_id": "window_grille#0001",
+      "assembly_id": "principal:0/edge1/z0/opening_u2.60_v3.90",
+      "expectation": "violation"
+    },
+    {
+      "vertices": 80,
+      "faces": 120,
+      "connected": 10,
+      "boundary_edges": 0,
+      "non_manifold_edges": 0,
+      "incoherent_edges": 0,
+      "duplicate_faces": 0,
+      "degenerate_faces": 0,
+      "unused_vertices": 0,
+      "min_area_m2": 0.00027000000000001047,
+      "semantic": "window_grille",
+      "component_id": "window_grille#0001",
+      "assembly_id": "principal:0/edge1/z0/opening_u6.40_v3.90",
+      "expectation": "violation"
+    }
+  ],
+  "total_boundary_edges": 0,
+  "total_non_manifold_edges": 0
+}

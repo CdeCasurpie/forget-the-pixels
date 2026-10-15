@@ -13,6 +13,7 @@ from domain.architecture import BuildingProgram, MassSpec, ParcelContext, SitePl
 from modeling.boundaries import generate_boundaries
 from modeling.mesh_builder import MeshBuilder
 from modeling.site import build_site
+from domain.fence_catalog import FENCE_STYLES
 
 LOT = Polygon([(-5, -10), (5, -10), (5, 10), (-5, 10)])
 BUILT = Polygon([(-5, -6), (5, -6), (5, 10), (-5, 10)])  # set back 4 m from the street
@@ -25,7 +26,7 @@ def context_for(lot=LOT, fronts=(0,)):
     )
 
 
-def program_for(fence="reja", has_fence=True):
+def program_for(fence="republicano", has_fence=True):
     return BuildingProgram(
         use="residential",
         occupancy="medium",
@@ -111,11 +112,11 @@ class BoundaryTests(unittest.TestCase):
             for b in generate_boundaries(context_for(), program_for(), plan_for())
             if not b.is_street
         }
-        self.assertEqual(kinds, {"solid_wall"})
+        self.assertEqual(kinds, {"clasico"})
 
 
 class SiteBuildTests(unittest.TestCase):
-    def build(self, fence="reja", entrances=None):
+    def build(self, fence="republicano", entrances=None):
         builder = MeshBuilder(LOT, envelope=LOT.buffer(1.2))
         planted = build_site(
             builder, context_for(), program_for(fence), plan_for(),
@@ -129,11 +130,14 @@ class SiteBuildTests(unittest.TestCase):
         names = {part["name"] for part in mesh.parts}
         self.assertIn("boundary_base", names)
         self.assertIn("fence_bar", names)
-        self.assertIn("boundary_cap", names)
-        self.assertIn("pedestrian_gate", names)
+        self.assertIn("post_cap", names)
+        self.assertIn("gate_handle", names)
+        self.assertIn("fence_ring", names)
+        self.assertNotIn("pedestrian_gate", names)
+        self.assertNotIn("garage_door", names)
 
     def test_each_fence_style_builds(self):
-        for style in ("reja", "concreto_bajo", "ladrillos", "concreto"):
+        for style in FENCE_STYLES:
             with self.subTest(style=style):
                 mesh, _ = self.build(style)
                 self.assertGreater(len(mesh.faces), 0)

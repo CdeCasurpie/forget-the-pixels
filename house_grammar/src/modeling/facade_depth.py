@@ -32,9 +32,10 @@ def emit_returns(builder,wall):
     a=np.asarray(f.vertex_a)
     t=(np.asarray(f.vertex_b)-a)/f.width_m
     depth=wall.plane_offset_m
-    builder.panel(a,t,np.asarray(f.normal_xy),polygons(rim),min(0.,depth),max(0.,depth),
-                  lambda *args:f.wall_material,'facade_depth_return',clip='envelope',
-                  assembly_id=f.edge_id,component_id=f.edge_id+'/depth_returns')
+    with builder.wall_finish(a,t,f.material_regions):
+        builder.panel(a,t,np.asarray(f.normal_xy),polygons(rim),min(0.,depth),max(0.,depth),
+                      lambda *args:f.wall_material,'facade_depth_return',clip='envelope',
+                      assembly_id=f.edge_id,component_id=f.edge_id+'/depth_returns')
 
 
 def section_geometry(section,start,end,low,high,depth):

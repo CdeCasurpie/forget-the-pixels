@@ -257,6 +257,7 @@ class FacadeControls:
     order: ArchitecturalOrder | None = None
     opening_programs: tuple[OpeningProgram, ...] = ()
     top_profile: FacadeTopProfile | None = None
+    wall_material: str | None = None  # PBR slot; None inherits front/side material
 
 
 @dataclass(frozen=True)
@@ -330,7 +331,7 @@ class FenceRun:
     edge: int  # canonical parcel edge
     start_m: float
     end_m: float
-    kind: str
+    kind: str  # domain.fence_catalog.FENCE_STYLES
     height_m: float
     gate_u: float | None = None
     gate_width: float = 0.
@@ -348,7 +349,7 @@ class FenceRun:
 
 @dataclass(frozen=True)
 class SiteControls:
-    fence: str | None = None  # none | reja | concreto | ladrillos | concreto_bajo
+    fence: str | None = None  # none | domain.fence_catalog.FENCE_STYLES
     garden: bool | None = None
     runs: tuple[FenceRun, ...] | None = None  # explicit runs replace automatic fences
     zones: tuple[SiteZone, ...] = ()
@@ -478,6 +479,7 @@ def canonical(value) -> str:
                     and not (f.name in ('member','portal_member','column_member') and getattr(x,f.name) is None)
                     and not (isinstance(x,ExteriorStairSpecification) and f.name=='railing_enabled' and x.railing_enabled)
                     and not (f.name=='top_profile' and getattr(x,f.name) is None)
+                    and not (isinstance(x,FacadeControls) and f.name=='wall_material' and getattr(x,f.name) is None)
                     and not (isinstance(x,FacadeControls) and
                             (f.name=='bay_groups' and not x.bay_groups or
                              f.name=='motifs' and not x.motifs or f.name=='crowns' and not x.crowns or

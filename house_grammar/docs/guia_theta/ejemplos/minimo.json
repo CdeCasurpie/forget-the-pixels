@@ -1,0 +1,14 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "schema_version": "0.3",
+    "height_m": 6.4,
+    "floors": 2,
+    "family": "quiet_house",
+    "architectural_style": "moderno",
+    "massing": {"pattern": "single_block"},
+    "facade": {"bay_count": 3, "balconies": false, "projections": [], "material_regions": []},
+    "roof": {"kind": "flat", "parapet_m": 0.4, "props": []}
+  },
+  "nuisance": {"seed": 23, "curtains": false}
+}

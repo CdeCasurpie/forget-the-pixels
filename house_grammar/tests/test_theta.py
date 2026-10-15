@@ -135,7 +135,7 @@ def test_roof_props_are_theta_not_xi():
 
 
 def test_explicit_fence_and_gate():
-    run=FenceRun(0,0.,10.,'reja',1.8,gate_u=2.,gate_width=1.)
+    run=FenceRun(0,0.,10.,'republicano',1.8,gate_u=2.,gate_width=1.)
     t=replace(T,massing=MassingControls(front_setback_m=3.),site=SiteControls(runs=(run,)))
     r=resolve_theta(P,t)
     assert r.boundaries[0].height==1.8 and r.boundaries[0].gate_u==2.
@@ -230,7 +230,7 @@ def test_unknown_and_observed_absence_remain_distinct():
     assert 'roof.props' not in b.completed
     assert a.theta.facade.projections is None and b.theta.facade.projections==()
     assert all(not w.facade.projections for w in b.walls)
-    assert a.completion_details['side_material']['value']=='brick'
+    assert a.completion_details['side_material']['value']=='plaster'
 
 
 def test_roof_override_is_local_and_strict():

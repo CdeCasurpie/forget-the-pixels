@@ -31,7 +31,9 @@ from modeling.materials import DEFAULT_MATERIALS, resolve_materials
 from modeling.roofscape import build_roof, _prop_footprint
 from modeling.prefabs_roof import BUILDERS
 from modeling.boundaries import generate_boundaries, BoundarySpec
-from modeling.site import draw_fence, plant_garden, entrance_step
+from modeling.site import plant_garden, entrance_step
+from modeling.fences import build_fence
+from domain.fence_catalog import validate_fence_style
 from modeling.assembly import (compose_masses, mass_polygon, ring as assembly_ring,
     holes, resolve_supports, resolve_zones, StructuralPiece, ResolvedSiteZone, region_frame)
 from modeling.exposure import wall_domains
@@ -211,18 +213,21 @@ def _complete(theta, p):
     _check(slope is None or 1 <= slope <= 35, "Shed slope must be 1..35 degrees")
     site = replace(theta.site, fence=fill(theta.site.fence, "none", "site.fence"), garden=fill(theta.site.garden, False, "site.garden"))
     _check(site.runs is None or site.fence == "none", "Explicit fence runs replace automatic fence kind")
-    _check(site.fence in ("none", "reja", "concreto", "ladrillos", "concreto_bajo"), "Unsupported fence")
+    if site.fence != "none":
+        validate_fence_style(site.fence)
+    for run in site.runs or ():
+        validate_fence_style(run.kind)
     color = fill(theta.primary_color, (.78, .78, .72), "primary_color")
     _check(all(0 <= x <= 1 for x in color), "RGB must be within 0..1")
-    side_material = fill(theta.side_material, "brick", "side_material")
+    side_material = fill(theta.side_material, "plaster", "side_material")
     finish = fill(theta.finish, "standard", "finish")
-    _check(side_material in ("brick", "concrete", "plaster"), "Unsupported side material")
     _check(finish in ("standard","premium"),"Unsupported finish")
     catalog={m.slot:m for m in resolve_materials(BuildingAppearance())}
     _check(len({m.slot for m in theta.materials})==len(theta.materials),"Duplicate material override")
     for mat in theta.materials:
-        _check(mat.slot in catalog and mat.template in catalog,"Unknown material slot/template")
+        _check(bool(mat.slot.strip()) and mat.template in catalog,"Unknown material slot/template")
         _check(mat.color is None or all(0<=v<=1 for v in mat.color),"Invalid material color")
+    _check(side_material in catalog or side_material in {m.slot for m in theta.materials}, 'Unknown side_material slot')
     theta = replace(theta, height_m=height, floors=floors, family=family, massing=m,
                     roof=replace(roof,kind=kind,parapet_m=parapet,slope_deg=slope,
                                  props=fill(roof.props,(),"roof.props")), site=site, primary_color=color,
@@ -359,6 +364,11 @@ def _facade_controls(c, family):
     return c
 
 
+def _wall_material(control, theta, is_front):
+    return control.wall_material or (
+        (theta.facade.wall_material or 'plaster') if is_front else theta.side_material)
+
+
 def _facade_override_controls(local, global_controls, family):
     validate_bay_groups(local)
     if local.mode == 'explicit':
@@ -436,7 +446,8 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
     f=FacadeSpecification(f'{mass.id}/edge{edge}/zone{index}',a,b,length,tuple(normal),
                           tuple(z-mass.base_z for z in mass.floor_levels),
                           openings=shifted(ops),projections=shifted(projections),material_regions=shifted(regions),
-                          exterior_stairs=stairs,is_front=is_front,program_enabled=True,wall_material='plaster',
+                           exterior_stairs=stairs,is_front=is_front,program_enabled=True,
+                           wall_material=_wall_material(control,theta,is_front),
                           services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
                           top_profile=resolve_top_profile(control.top_profile,width,high-low,start,low))
     visible=patch_domains(domains,(start,low,end,high))
@@ -472,7 +483,15 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     for component in theta.massing.components:
         if component.facade is not None:controls.append(component.facade)
         controls.extend(f.controls for f in (*component.faces,*component.zones))
+    material_slots={m.slot for m in resolve_materials(BuildingAppearance())}|{m.slot for m in theta.materials}
     for control in controls:
+        _check(control.wall_material is None or control.wall_material in material_slots,
+               'Unknown facade wall_material slot')
+        for r in control.material_regions or ():
+            _check(r.material_slot in material_slots, 'Unknown facade region material slot')
+            _check(np.isfinite((r.u_m,r.v_m,r.width_m,r.height_m)).all() and
+                   min(r.u_m,r.v_m)>=0 and min(r.width_m,r.height_m)>0,
+                   'Invalid facade material region')
         _check(not control.bay_groups or theta.schema_version=='0.3','bay_groups require schema_version=0.3')
         _check(not control.motifs or theta.schema_version=='0.3','motifs require schema_version=0.3')
         _check(not control.crowns or theta.schema_version=='0.3','crowns require schema_version=0.3')
@@ -575,7 +594,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                 _check(control.top_profile is None or abs(roof-mass.roof_z)<1e-7,'Top profile requires the component top')
                 f = FacadeSpecification(f"{mass.id}/edge{edge}/z{base:g}", a,b,length,tuple(n),levels,
                                         openings=ops,is_front=is_front,program_enabled=program_enabled,
-                                        wall_material="plaster" if is_front or component and key not in overrides else theta.side_material,
+                                        wall_material=_wall_material(control,theta,is_front),
                                         projections=projections,material_regions=regions,exterior_stairs=control.stairs,
                                         services=control.services,cladding=control.cladding,ornamented=False,style=theta.finish,
                                         top_profile=resolve_top_profile(control.top_profile,length,roof-base))
@@ -642,9 +661,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     boundaries=[]
     for b in generate_boundaries(pctx, program, site):
         _check(b.gate_u is None or b.gate_u+b.gate_width<=b.line.length, "Fence run cannot fit default gate")
-        if b.kind == "concreto_bajo":
-            b = replace(b,height=1.2,garage_u=None,garage_width=0.)
-        boundaries.append(ResolvedBoundary(tuple(b.line.coords),b.kind,b.height,b.gate_u,b.gate_width,b.garage_u,b.garage_width,b.is_street))
+        boundaries.append(ResolvedBoundary(**{**asdict(b), "line": tuple(b.line.coords)}))
     if theta.site.runs is not None:
         boundaries=[]
         built=unary_union([mass_polygon(m) for m in masses if m.base_z<.01 and m.kind=='enclosed'])
@@ -654,13 +671,11 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             a=np.asarray(context.parcel[run.edge]); b=np.asarray(context.parcel[(run.edge+1)%len(context.parcel)])
             length=float(np.linalg.norm(b-a)); tangent=(b-a)/length
             _check(0<=run.start_m<run.end_m<=length and .65<=run.height_m<=4,"Invalid fence extent/height")
-            _check(run.kind in ("reja","concreto","ladrillos","concreto_bajo","republicano","barroco","moderno","clasico","madera"),"Invalid explicit fence kind")
             _check(run.height_mode in ('high','low'), 'Invalid fence height mode')
             _check(run.wall_material in ('plaster','brick','stone','concrete'), 'Invalid fence wall material')
             _check(run.gate_mode in ('auto','open') and run.garage_mode in ('auto','open'), 'Invalid fence access mode')
             _check(.1<=run.openness<=.7, 'Fence openness must be in [.1,.7]')
             _check(not run.planters or run.kind=='moderno', 'Planters require modern fence')
-            _check(run.kind!="concreto_bajo" or (run.height_m==1.2 and run.garage_u is None),"Low fence has fixed height1.2 and no garage")
             gates=[]
             for u,w in ((run.gate_u,run.gate_width),(run.garage_u,run.garage_width)):
                 _check((u is None and w==0) or (u is not None and u>=0 and w>0 and u+w<=run.end_m-run.start_m),"Invalid fence gate")
@@ -738,7 +753,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         ))) for m in masses)
     zones=resolve_zones(context,theta.site,masses,structures) if theta.schema_version=='0.3' or theta.site.zones else ()
     envelope=street_envelope(ParcelContext(context.parcel,explicit_fronts=context.fronts)).buffer(theta.massing.parcel_tolerance_m)
-    materials={m.slot for m in resolve_materials(BuildingAppearance())}
+    materials=material_slots
     trims=resolve_trims(context,theta,masses,walls,roofs,materials,envelope)
     fence_groups={}
     for i,b in enumerate(boundaries):
@@ -977,15 +992,13 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
     for roof in resolved.roof_assemblies:
         build_roof_assembly(builder,roof,street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance))
     boundaries=[]
-    styles={"reja":("plaster","reja"),"ladrillos":("brick","solid"),"concreto":("plaster","solid"),"concreto_bajo":("plaster","low")}
     for i,record in enumerate(resolved.boundaries):
         boundary=BoundarySpec(**{**asdict(record),"line":LineString(record.line),"plinth":record.plinth})
         boundaries.append(boundary)
         a,b=record.line[0],record.line[-1]
         t,n,length=outward_normal(parcel,a,b)
-        material,style=styles.get(record.kind,("brick","wall"))
         with builder.assembly(f"site/fence/{i}"):
-            draw_fence(builder,np.asarray(a),t,n,length,boundary,_rng(nuisance.seed,"fence"),material,style)
+            build_fence(builder,np.asarray(a),t,n,length,boundary)
     emit_trims(builder,resolved.trims,street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)).buffer(tolerance))
     for i,entry in enumerate(entrances):
         with builder.assembly(f"site/entrance/{i}"):

@@ -2,11 +2,13 @@
 import math
 import numpy as np
 from shapely.geometry import Polygon
+from domain.fence_catalog import FENCE_STYLES, validate_fence_style
 
-STYLES = ('republicano', 'barroco', 'moderno', 'clasico', 'madera')
+STYLES = FENCE_STYLES
 
 
 def build_fence(mb, a, t, n, length, boundary):
+    validate_fence_style(boundary.kind)
     h = boundary.height
     high = boundary.height_mode == 'high'
     style = boundary.kind

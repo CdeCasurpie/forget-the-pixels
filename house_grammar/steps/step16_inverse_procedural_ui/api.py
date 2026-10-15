@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT / "src"))
 
 from domain.architecture import ParcelContext, BuildingProgram, SitePlan, BuildingSpecificationV4
+from domain.fence_catalog import FENCE_STYLES
 from modeling.grammar import generate_v4_mesh
 from modeling.massing import generate_masses
 from modeling.exporters.glb_exporter import export_glb
@@ -296,7 +297,7 @@ def estimate_parameters(lot_idx: int, cameras: list):
         "placement": placement,
         "front_setback": front_setback,
         "has_fence": placement == "front_setback",
-        "fence_type": random.choice(["reja", "concreto_bajo", "ladrillos"]),
+        "fence_type": random.choice(FENCE_STYLES),
         "primary_color": random.choice(colors),
         "roof_z": roof_z,
         "floor_levels": floor_levels

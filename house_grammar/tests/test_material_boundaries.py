@@ -1,79 +1,99 @@
-"""Local material/relief boundaries without structural wall cuts."""
+"""Finishes partition a wall surface without adding solids or changing depth."""
+from dataclasses import replace
 import numpy as np
 import pytest
 from shapely.geometry import Polygon, box
 from shapely.ops import unary_union
-from domain.models import FacadeMaterialRegion, FacadeSpecification, Opening
-from modeling.grammar import facade, _brick_frame_polys
+from domain.models import FacadeMaterialRegion, FacadeSpecification, Opening, ResolvedTopProfile
+from modeling.grammar import facade
 from modeling.mesh_builder import MeshBuilder
 from modeling.validation import analyze_topology
-from modeling.geometry_constraints import SURFACE_EPSILON_M
+from modeling.apertures import opening_shape
 
 
-def build(*,front=False,regions=(),ops=()):
+def build(*, front=True, regions=(), ops=(), material='plaster', parcel=None, profile=None):
     spec=FacadeSpecification('edge_0',(0.,0.),(20.,0.),20.,(0.,-1.),(0.,3.,6.,10.),
-        openings=ops,is_front=front,wall_material='plaster' if front else 'brick',material_regions=regions)
-    mb=MeshBuilder(box(-2,-2,22,12))
-    facade(mb,spec,10.)
+        openings=ops,is_front=front,wall_material=material,material_regions=regions,
+        top_profile=profile,ornamented=False)
+    mb=MeshBuilder(parcel if parcel is not None else box(-2,-2,22,12))
+    facade(mb,spec,10.,managed_trim=True)
     return mb.finish()
 
 
-def caps(mesh,semantics,y):
-    result=[]
+def wall_triangles(mesh, material=None):
     for p in mesh.parts:
-        if p['name'] not in semantics: continue
-        for tri in mesh.vertices[mesh.faces[p['face_start']:p['face_start']+p['face_count']]]:
-            if np.allclose(tri[:,1],y,atol=1e-9,rtol=0): result.append(Polygon(tri[:,[0,2]]))
-    return unary_union(result)
+        if p['name'] != 'wall':continue
+        for i in range(p['face_start'],p['face_start']+p['face_count']):
+            if material is None or mesh.materials[int(mesh.face_materials[i])]['name']==material:
+                yield mesh.vertices[mesh.faces[i]]
 
 
-def test_side_frame_coverage_material_and_depth():
-    mesh=build()
+def front_area(mesh, material=None):
+    return unary_union([Polygon(t[:,[0,2]]) for t in wall_triangles(mesh,material)
+                        if np.allclose(t[:,1],0.,atol=1e-9,rtol=0)])
+
+
+def signed_volume(mesh):
+    return sum(np.dot(t[0],np.cross(t[1],t[2]))/6 for t in wall_triangles(mesh))
+
+
+@pytest.mark.parametrize('material',['plaster','brick','concrete'])
+def test_material_never_adds_structure_or_moves_wall(material):
+    baseline=build(front=False)
+    mesh=build(front=False,material=material)
+    assert np.array_equal(mesh.vertices,baseline.vertices)
+    assert np.array_equal(mesh.faces,baseline.faces)
+    assert {p['name'] for p in mesh.parts} == {'wall'}
+    assert front_area(mesh,material).area==pytest.approx(200.)
     assert not analyze_topology(mesh)['violations']
-    base=caps(mesh,{'wall'},.015)
-    frame=caps(mesh,{'structural_column','structural_beam'},0.)
-    expected=_brick_frame_polys(20,10,(0,3,6,10))
-    assert base.symmetric_difference(box(0,0,20,10)).area<1e-8
-    assert frame.symmetric_difference(expected).area<1e-8
-    assert base.difference(frame).area==pytest.approx(box(0,0,20,10).difference(expected).area)
-    assert sum(p['face_count'] for p in mesh.parts if p['name']=='wall')==12
-    for p in mesh.parts:
-        if p['name'] in {'wall','structural_column','structural_beam'}:
-            names={mesh.materials[int(i)]['name'] for i in mesh.face_materials[p['face_start']:p['face_start']+p['face_count']]}
-            assert names==({'brick'} if p['name']=='wall' else {'concrete'})
 
 
-def test_small_material_patch_costs_only_local_faces():
-    baseline=build(front=True)
-    mesh=build(front=True,regions=(FacadeMaterialRegion(2,4,2,1,'accent'),))
-    assert len(mesh.faces)-len(baseline.faces)==12
-    for m in (baseline,mesh): assert not analyze_topology(m)['violations']
-    def walls(m):
-        return [(p['face_count'],m.vertices[m.faces[p['face_start']:p['face_start']+p['face_count']]].tolist()) for p in m.parts if p['name']=='wall']
-    assert walls(mesh)==walls(baseline)
-    patch=caps(mesh,{'material_coating'},-SURFACE_EPSILON_M)
-    assert patch.symmetric_difference(box(2,4,4,5)).area<1e-8
-
-
-def test_coatings_preserve_holes_and_last_region_wins():
-    ops=(Opening('window',3,4,1,1),)
-    regions=(FacadeMaterialRegion(2,3,4,3,'accent'),FacadeMaterialRegion(4,3,3,3,'stone'))
-    mesh=build(front=True,regions=regions,ops=ops)
+@pytest.mark.parametrize('shape',['rectangle','arch','circle'])
+def test_paint_preserves_shell_holes_volume_and_exact_material_areas(shape):
+    opening=Opening('window',3,4,2,2,shape=shape)
+    ops=(opening,)
+    regions=(FacadeMaterialRegion(2,3,4,4,'accent'), FacadeMaterialRegion(4,3,3,4,'stone'))
+    baseline=build(ops=ops)
+    mesh=build(ops=ops,regions=regions)
     assert not analyze_topology(mesh)['violations']
-    patches=caps(mesh,{'material_coating'},-SURFACE_EPSILON_M)
-    assert patches.intersection(box(3,4,4,5)).area<1e-9
-    expected=box(2,3,7,6).difference(box(3,4,4,5))
-    assert patches.symmetric_difference(expected).area<1e-8
+    assert not any(p['name']=='material_coating' for p in mesh.parts)
+    assert np.allclose(mesh.vertices.min(axis=0),baseline.vertices.min(axis=0))
+    assert np.allclose(mesh.vertices.max(axis=0),baseline.vertices.max(axis=0))
+    assert signed_volume(mesh)==pytest.approx(signed_volume(baseline))
+    hole=opening_shape(opening)
+    expected=box(2,3,4,7).difference(hole)
+    assert front_area(mesh,'accent').symmetric_difference(expected).area<1e-8
+    assert front_area(mesh,'stone').symmetric_difference(box(4,3,7,7).difference(hole)).area<1e-8
+    # No overlapping visible triangles, including the underlying plaster.
+    triangles=[Polygon(t[:,[0,2]]) for t in wall_triangles(mesh) if np.allclose(t[:,1],0.)]
+    assert sum(p.area for p in triangles)==pytest.approx(unary_union(triangles).area)
+    assert front_area(mesh).intersection(hole).area<1e-8
 
 
-@pytest.mark.parametrize('axis,cut',[(0,2.),(2,1.8)])
-def test_explicit_legacy_material_cut_remains_supported(axis,cut):
-    mb=MeshBuilder(box(-2,-2,14,8))
-    mb.panel([0,0],[1,0],[0,-1],[box(0,0,10,5)],-.2,0.,
-        lambda kind,u,v,w:'concrete' if (u if axis==0 else v)<cut else 'brick',
-        'wall',cuts_u=(cut,) if axis==0 else (),cuts_z=(cut,) if axis==2 else ())
-    mesh=mb.finish()
+def test_regions_also_apply_to_blind_side_walls():
+    mesh=build(front=False,material='brick',regions=(FacadeMaterialRegion(0,0,20,3,'plaster'),))
+    assert front_area(mesh,'plaster').area==pytest.approx(60.)
+    assert front_area(mesh,'brick').area==pytest.approx(140.)
+
+
+def test_oblique_parcel_clipping_and_top_profile_keep_closed_shell():
+    parcel=Polygon([(0.,0.),(20.,0.),(19.,12.),(-1.,12.)])
+    profile=ResolvedTopProfile(((0.,10.),(10.,12.),(20.,10.)),10.,.3,0.,.1,'frame')
+    region=FacadeMaterialRegion(2.,4.,12.,3.,'stone')
+    ops=(Opening('window',3,4,2,2,shape='arch'),)
+    baseline=build(parcel=parcel,profile=profile,ops=ops)
+    mesh=build(parcel=parcel,profile=profile,ops=ops,regions=(region,))
     assert not analyze_topology(mesh)['violations']
-    assert len(mesh.faces)<40
-    for tri in mesh.vertices[mesh.faces]:
-        if np.ptp(tri[:,1])<1e-9: assert not tri[:,axis].min()<cut<tri[:,axis].max()
+    assert signed_volume(mesh)==pytest.approx(signed_volume(baseline))
+    assert parcel.buffer(1e-8).covers(Polygon(mesh.vertices[:,:2]).convex_hull)
+
+
+def test_material_uvs_remain_metric_after_partition():
+    mesh=build(regions=(FacadeMaterialRegion(2,4,2,1,'stone'),))
+    for part in mesh.parts:
+        if part['name']!='wall':continue
+        for i in range(part['face_start'],part['face_start']+part['face_count']):
+            tri=mesh.vertices[mesh.faces[i]]
+            if not np.allclose(tri[:,1],0.):continue
+            scale=mesh.materials[int(mesh.face_materials[i])]['real_scale_m']
+            assert np.allclose(mesh.corner_uv[i]*scale,tri[:,[0,2]])

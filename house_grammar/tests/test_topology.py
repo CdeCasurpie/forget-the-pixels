@@ -167,18 +167,17 @@ class AssemblyTopologyTests(unittest.TestCase):
     def test_fence_is_an_assembly_of_closed_pieces(self):
         from shapely.geometry import LineString
         from modeling.boundaries import BoundarySpec
-        from modeling.site import draw_fence
+        from modeling.fences import build_fence
 
         mb = MeshBuilder(box(-8, -8, 8, 8))
         a = np.array([-5.0, -5.0])
         t = np.array([1.0, 0.0])
         n = np.array([0.0, 1.0])
         with mb.assembly("site/fence_00"):
-            draw_fence(mb, a, t, n, 10.0,
+            build_fence(mb, a, t, n, 10.0,
                        BoundarySpec(line=LineString([(-5, -5), (5, -5)]),
-                                    kind="reja", height=2.1, gate_u=1.0,
-                                    gate_width=1.1),
-                       np.random.default_rng(7))
+                                     kind="republicano", height=2.1, gate_u=1.0,
+                                     gate_width=1.1))
         mesh = mb.finish()
         report = analyze_topology(mesh)
         self.assertGreater(report["component_count"], 10)
@@ -431,7 +430,7 @@ class ExportIdentityTests(unittest.TestCase):
                     architectural_language=family, finish_profile="standard",
                     maintenance="average", construction_state="completed",
                     front_setback=setback, primary_color=(0.85, 0.84, 0.80),
-                    seed=seed, has_fence=bool(setback), fence_type="reja")
+                    seed=seed, has_fence=bool(setback), fence_type="republicano")
                 masses = generate_masses(ctx, program, 8.4, 2.8)
                 spec = BuildingSpecificationV4(
                     context=ctx, program=program,

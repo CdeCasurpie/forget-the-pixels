@@ -34,10 +34,6 @@ class DetailBudget:
         return self._pick(0.65, 0.22, 0.10)
 
     @property
-    def fence_bar_spacing_m(self) -> float:
-        return self._pick(0.55, 0.22, 0.12)
-
-    @property
     def roof_prop_density(self) -> float:
         return self._pick(0.06, 0.16, 0.22)
 
@@ -61,7 +57,7 @@ class DetailBudget:
         """Microgeometry only; never reject a shell, opening or major prop."""
         return self.level != BLOCK or semantic not in {
             'curtain_fold', 'shutter_slat', 'sign_letter', 'door_flute',
-            'gate_flute', 'garage_slat', 'gate_seam', 'roller_slat',
+            'gate_seam', 'roller_slat',
             'louver_slat', 'door_raised_panel', 'condenser_louver',
             'hvac_louver', 'corrugation', 'mortar', 'cladding_joint',
             'downpipe_clamp', 'grille_diamond', 'balcony_ornament', 'tank_rib',

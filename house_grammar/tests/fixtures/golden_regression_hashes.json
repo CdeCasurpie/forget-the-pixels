@@ -1,6 +1,6 @@
 {
   "balcony_4f_premium": {
-    "mesh_hash": "672f83e9fc0c9ec053b16b8fc09b4eee311bdbfc05cfe74bc8bd7328473e783b",
+    "mesh_hash": "deef404de6902a216d213fbf525306e7aa50ba22f51fcfd88ea786622ba94cfd",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -28,7 +28,6 @@
       "laundry_base": 48,
       "laundry_line": 192,
       "laundry_post": 128,
-      "material_coating": 72,
       "opening_reveal": 288,
       "parapet": 32,
       "parapet_cap": 64,
@@ -40,20 +39,18 @@
       "slim_frame": 576,
       "slim_mullion": 132,
       "stair_bulkhead": 12,
-      "structural_beam": 144,
-      "structural_column": 768,
       "tank_base": 36,
       "tank_leg": 128,
       "tank_lid": 276,
       "tank_platform": 12,
       "tank_rib": 4180,
       "top_cornice": 12,
-      "wall": 564,
+      "wall": 584,
       "water_tank": 496
     }
   },
   "dense_6f": {
-    "mesh_hash": "666c184a36e55222861596a08ee6319cd314a1960d97edcdabd7c4cba1153b88",
+    "mesh_hash": "74ed3bee6f16a87dc9dfe73db68ccf7f9254165269b63668016314a4b542247a",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -89,20 +86,18 @@
       "slim_frame": 864,
       "slim_mullion": 384,
       "stair_bulkhead": 12,
-      "structural_beam": 216,
-      "structural_column": 1152,
       "tank_base": 36,
       "tank_leg": 128,
       "tank_lid": 276,
       "tank_platform": 12,
       "tank_rib": 4180,
       "top_cornice": 12,
-      "wall": 468,
+      "wall": 456,
       "water_tank": 496
     }
   },
   "heritage_3f": {
-    "mesh_hash": "304f74bc5b45f9ac4b178c7a64e8d2f2504a1ffb5a46a8da43938117026bb25a",
+    "mesh_hash": "9ecd2837a89fe1604da7d870fa6f71bc75fdb7f2f839e69a1acf68826c6d8a7b",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -138,20 +133,18 @@
       "slim_frame": 432,
       "slim_mullion": 168,
       "stair_bulkhead": 12,
-      "structural_beam": 108,
-      "structural_column": 576,
       "tank_base": 36,
       "tank_leg": 128,
       "tank_lid": 276,
       "tank_platform": 12,
       "tank_rib": 4180,
       "top_cornice": 12,
-      "wall": 288,
+      "wall": 276,
       "water_tank": 496
     }
   },
   "quiet_2f_standard": {
-    "mesh_hash": "8e1ce4631d14c66ffda836acaa9b9369af189b4bc314cb35d28cbd0a317a4e65",
+    "mesh_hash": "db47a85aa2ffb1b8da7fc6596c8d0c536a0eebb630c9be4cd7453b24de0351e8",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -189,8 +182,6 @@
       "slim_frame": 288,
       "slim_mullion": 60,
       "stair_bulkhead": 12,
-      "structural_beam": 72,
-      "structural_column": 384,
       "tank_base": 36,
       "tank_leg": 128,
       "tank_lid": 276,
@@ -202,7 +193,7 @@
     }
   },
   "square_lot": {
-    "mesh_hash": "a59425f29442ad24d4df1973d57f2b4a5af8854b39060908c06a30e56922ff1a",
+    "mesh_hash": "a2a5550e96e6a7516a2798782f3a9a16962248aff59b2827da8e441f02705a80",
     "semantic_summary": {
       "antenna_boom": 96,
       "antenna_element": 672,
@@ -228,7 +219,6 @@
       "laundry_base": 48,
       "laundry_line": 192,
       "laundry_post": 128,
-      "material_coating": 72,
       "opening_reveal": 216,
       "parapet": 32,
       "parapet_cap": 64,
@@ -239,15 +229,13 @@
       "roof_slab": 12,
       "slim_frame": 432,
       "slim_mullion": 96,
-      "structural_beam": 108,
-      "structural_column": 432,
       "tank_base": 12,
       "tank_leg": 128,
       "tank_lid": 92,
       "tank_platform": 12,
       "tank_rib": 1900,
       "top_cornice": 12,
-      "wall": 432,
+      "wall": 452,
       "water_tank": 248
     }
   }

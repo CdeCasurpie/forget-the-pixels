@@ -56,7 +56,6 @@ class BudgetTests(unittest.TestCase):
     def test_levels_are_ordered_from_coarse_to_fine(self):
         coarse, near = DetailBudget(BLOCK), DetailBudget(CLOSE_UP)
         self.assertGreater(coarse.balustrade_spacing_m, near.balustrade_spacing_m)
-        self.assertGreater(coarse.fence_bar_spacing_m, near.fence_bar_spacing_m)
         self.assertGreater(coarse.grille_spacing_m, near.grille_spacing_m)
         self.assertLess(coarse.roof_prop_density, near.roof_prop_density)
         self.assertLess(coarse.roof_prop_limit, near.roof_prop_limit)

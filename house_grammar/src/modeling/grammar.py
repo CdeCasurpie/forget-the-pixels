@@ -16,7 +16,6 @@ from modeling.detail import DEFAULT_BUDGET, DetailBudget
 from modeling.exposure import calculate_mass_exposures
 from modeling.facade_program import compose_wall, resolve_family
 from modeling.geometry_constraints import (
-    SURFACE_EPSILON_M,
     front_lines,
     outward_normal,
     parcel_polygon,
@@ -414,84 +413,10 @@ def _ornate_gate(mb, a, t, n, u, v, w, h, recess):
             )
 
 
-def _frame_intervals(length, levels):
-    """Column/slab intervals of the concrete frame, shared by the finish
-    predicate and the grid cuts so both agree bit-exactly."""
-    columns = [(0.0, 0.25), (length - 0.25, length)]
-    for inter_u in np.arange(4.0, length - 0.5, 4.0):
-        columns.append((inter_u - 0.125, inter_u + 0.125))
-    slabs = [(fl - 0.20, fl) for fl in levels[1:]]
-    return columns, slabs
-
-
-def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
-    """Legacy per-cell finish, verbatim: material slot and outer depth."""
-    first_floor_top = (
-        f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
-    )
-    wall_material = (
-        f.ground_floor_material
-        if f.ground_floor_material and z_mid < first_floor_top
-        else f.wall_material
-    )
-    midpoint = Point(u_mid, z_mid)
-    for region in regions:
-        area = box(
-            region.u_m,
-            region.v_m,
-            region.u_m + region.width_m,
-            region.v_m + region.height_m,
-        )
-        if area.covers(midpoint):
-            wall_material = region.material_slot
-
-    depth_outer = 0
-    if not f.has_program:
-        if f.wall_material == "brick":
-            columns, slabs = _frame_intervals(length, f.floor_levels_m)
-            # Exact strip tests (no halo): grid cuts run on the same edges,
-            # so no face centroid ever lands in a 1 mm no-man's-land.
-            is_concrete = (
-                any(c0 - 1e-9 <= u_mid <= c1 + 1e-9 for c0, c1 in columns)
-                or any(s0 - 1e-9 <= z_mid <= s1 + 1e-9 for s0, s1 in slabs)
-            )
-            if is_concrete:
-                wall_material = "concrete"
-                depth_outer = 0.0  # Flush with lot boundary
-            else:
-                depth_outer = -0.015  # Brick inset slightly to show concrete frame
-        else:
-            # Muro premium tarrajeado: completamente plano y continuo
-            depth_outer = 0.0
-    else:
-        # ── PHASE B: Recessed ground floor ───────────────────────
-        # On programmed walls of 3+ story buildings, the ground floor is
-        # pushed back ~12cm to create a shadow / entrance effect.
-        first_floor_z = f.floor_levels_m[1] if len(f.floor_levels_m) > 1 else total_height
-        if len(f.floor_levels_m) >= 4 and z_mid < first_floor_z:
-            depth_outer = -0.12  # Recessed ground floor
-        else:
-            depth_outer = 0.0
-    return wall_material, depth_outer
-
-
-def _brick_frame_polys(length, total_height, levels):
-    """Exact concrete-frame strips for a brick side wall (columns + slabs).
-    Single source of the frame geometry: cuts, finish and tests agree."""
-    columns, slabs = _frame_intervals(length, levels)
-    strips = ([box(c0, 0, c1, total_height) for c0, c1 in columns]
-              + [box(0, s0, length, s1) for s0, s1 in slabs])
-    frame = unary_union(strips)
-    if frame.is_empty:
-        return None
-    return frame if frame.geom_type == "Polygon" else frame
-
-
 def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, managed_trim=False, trim_start=False, extend_end=False):
-    """Sparse closed wall bands with real holes and independent local relief.
+    """One structural surface with exact, zero-thickness finish regions.
 
-    Only a genuine 120 mm ground-floor recess divides the structural shell.
-    Paint and the 15 mm concrete frame never subdivide its back or base caps.
+    Neither material selection nor floor count changes the wall geometry.
     With trim_start, the shell begins buried inside the abutting wall (butt
     joint): its start cap is hidden instead of lying exactly on the
     neighbour's face. With extend_end, the shell continues 0.20 m past its
@@ -509,13 +434,6 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, man
 
     levels = f.floor_levels_m
     first = levels[1] if len(levels) > 1 else total_height
-    brick_side = not f.has_program and f.wall_material == 'brick'
-    bands = [(0., total_height, -.015 if brick_side else 0.)]
-    if not managed_trim and f.has_program and len(levels) >= 4:
-        bands = [(0., first, -.12), (first, total_height, 0.)]
-    if f.top_profile:
-        bottom,_,depth=bands[-1]
-        bands[-1]=(bottom,wall_rect.bounds[3],depth)
     start_u=0.
     if trim_start:
         # Bury the start cap exactly one wall thickness (0.20 m) from the
@@ -535,40 +453,21 @@ def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, man
         # original span, so the added tip stays plain wall material.
         shape=unary_union([shape,box(length,wall_rect.bounds[1],span,wall_rect.bounds[3])])
 
-    def emit(domain, back, front, material, semantic, label):
-        for index, poly in enumerate(polygons(domain)):
-            mb.panel(a,t,n,[poly],back,front,lambda *args:material,semantic,
-                     component_id=f'{f.edge_id}/{label}_{index}',assembly_id=f.edge_id,
-                     clip='envelope' if semantic=='material_coating' and f.has_program else 'parcel')
-
-    # Last material region wins, as in the old finish predicate. Subtract only
-    # overlapping local coatings, never propagate their edges through the wall.
-    coatings=[]
+    # Normalize the historical ground-floor shorthand into the same finish
+    # input. Explicit regions (and perimeter trim) take precedence in order.
+    finishes=[]
     if f.ground_floor_material:
-        coatings.append((box(0,0,length,first),f.ground_floor_material))
-    coatings.extend((box(r.u_m,r.v_m,r.u_m+r.width_m,r.v_m+r.height_m),r.material_slot) for r in regions)
-    for bi,(bottom,top,depth) in enumerate(bands):
-        band=shape.intersection(box(0,bottom,span,top))
-        emit(band,-f.top_profile.depth_m if f.top_profile else -.20,depth,f.wall_material,'wall',f'wall_{bi}')
-        for ci,(region,material) in enumerate(coatings):
-            patch=band.intersection(region)
-            for later,_ in coatings[ci+1:]: patch=patch.difference(later)
-            emit(patch,depth-SURFACE_EPSILON_M,depth+SURFACE_EPSILON_M,
-                 material,'material_coating',f'coating_{bi}_{ci}')
-
-    if brick_side:
-        columns,slabs=_frame_intervals(length,levels)
-        # Slabs own intersections, so column fronts do not coincide with them.
-        horizontal=unary_union([box(0,z0,length,z1) for z0,z1 in slabs])
-        for index,(u0,u1) in enumerate(columns):
-            # Corner columns are served by the abutting wall's own end
-            # column; a trimmed sliver here would read as a concrete nub.
-            if start_u and u0<start_u-1e-9:continue
-            emit(shape.intersection(box(u0,0,u1,total_height)).difference(horizontal),
-                 -.015-SURFACE_EPSILON_M,0.,'concrete','structural_column',f'column_{index}')
-        for index,(z0,z1) in enumerate(slabs):
-            emit(shape.intersection(box(0,z0,span,z1)),-.015-SURFACE_EPSILON_M,
-                 0.,'concrete','structural_beam',f'beam_{index}')
+        from domain.models import FacadeMaterialRegion
+        finishes.append(FacadeMaterialRegion(0.,0.,length,first,f.ground_floor_material))
+    finishes.extend(regions)
+    mb.mat_index(f.wall_material)
+    for region in finishes:
+        mb.mat_index(region.material_slot)
+    with mb.wall_finish(a,t,finishes):
+        for index, poly in enumerate(polygons(shape)):
+            mb.panel(a,t,n,[poly],-f.top_profile.depth_m if f.top_profile else -.20,0.,
+                     lambda *args:f.wall_material,'wall',
+                     component_id=f'{f.edge_id}/wall_0_{index}',assembly_id=f.edge_id,clip='parcel')
 
 
 def facade(mb, f, total_height, *, managed_trim=False, trim_regions=(), trim_start=False, extend_end=False):
@@ -586,7 +485,7 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
     t /= length
     n = np.array([t[1], -t[0]])
     ops = list(f.openings) if f.has_program else []
-    regions = list(f.material_regions) if f.has_program else []
+    regions = list(f.material_regions)
     regions.extend(trim_regions)
     features = list(f.projections) if f.has_program else []
     stairs = list(f.exterior_stairs) if f.has_program else []
@@ -628,7 +527,7 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
                        for other in ops if other is not op):
                     raise ValueError('Door portal overlaps another opening')
     for region in regions:
-        if region.width_m <= 0 or region.height_m <= 0:
+        if not np.isfinite((region.u_m,region.v_m,region.width_m,region.height_m)).all() or region.width_m <= 0 or region.height_m <= 0:
             raise ValueError("Invalid facade material region")
         if (
             region.u_m < 0
@@ -896,8 +795,16 @@ def boundary_and_garden(mb, spec, poly, rng):
 
 
 def _boundary_and_garden_body(mb, spec, poly, rng):
+    from domain.fence_catalog import validate_fence_style
+    from modeling.boundaries import BoundarySpec
+    from modeling.fences import build_fence
+
     s = spec.setback
-    if s is None or not s.edge_indices:
+    if s is None:
+        return
+    if s.boundary != "open":
+        validate_fence_style(s.boundary)
+    if not s.edge_indices:
         return
     coords = list(mb.parcel.exterior.coords)
     garden = mb.parcel.difference(poly).buffer(-0.12)
@@ -926,113 +833,15 @@ def _boundary_and_garden_body(mb, spec, poly, rng):
         t /= width
         n = np.array([t[1], -t[0]])
 
-        def block(u1, u2, z1, z2, w1, w2, mat, kind):
-            mb.box(a, t, n, u1, u2, z1, z2, w1, w2, mat, kind)
-
         gate = min(s.gate_width_m, width * 0.48)
         if s.boundary != "open" and width > 2:
-            block(
-                0.10,
-                width - gate - 0.12,
-                0,
-                0.45,
-                -0.18,
-                -0.02,
-                "stone",
-                "boundary_base",
+            boundary = BoundarySpec(
+                line=LineString([a, b]), kind=s.boundary,
+                height=s.boundary_height_m,
+                gate_u=width-gate if gate > 0 else None,
+                gate_width=gate, is_street=True,
             )
-            for u in np.arange(0.12, width, 2.4):
-                if u > width - gate - 0.25:
-                    continue
-                block(
-                    u,
-                    u + 0.16,
-                    0,
-                    s.boundary_height_m + 0.08,
-                    -0.23,
-                    -0.015,
-                    "stone",
-                    "boundary_post",
-                )
-            if s.boundary == "wall":
-                block(
-                    0.10,
-                    width - gate - 0.12,
-                    0.45,
-                    s.boundary_height_m,
-                    -0.16,
-                    -0.04,
-                    "brick",
-                    "boundary_wall",
-                )
-                # Staggered visible mortar joints, only on designated street edge.
-                for row, z in enumerate(np.arange(0.48, s.boundary_height_m, 0.13)):
-                    block(
-                        0.12,
-                        width - gate - 0.14,
-                        z,
-                        z + 0.009,
-                        -0.04,
-                        -0.03,
-                        "stone",
-                        "mortar",
-                    )
-                    for u in np.arange(
-                        0.14 + (row % 2) * 0.14, width - gate - 0.18, 0.28
-                    ):
-                        block(
-                            u,
-                            u + 0.009,
-                            z,
-                            min(z + 0.13, s.boundary_height_m),
-                            -0.04,
-                            -0.03,
-                            "stone",
-                            "mortar",
-                        )
-            else:
-                for u in np.arange(0.15, width - gate - 0.12, 0.13):
-                    block(
-                        u,
-                        u + 0.018,
-                        0.45,
-                        s.boundary_height_m,
-                        -0.09,
-                        -0.065,
-                        "metal",
-                        "fence_bar",
-                    )
-            block(
-                0.10,
-                width - gate - 0.10,
-                s.boundary_height_m,
-                s.boundary_height_m + 0.06,
-                -0.20,
-                -0.015,
-                "stone",
-                "boundary_cap",
-            )
-            block(
-                width - gate,
-                width - 0.1,
-                0.08,
-                s.boundary_height_m,
-                -0.14,
-                -0.09,
-                "wood",
-                "gate",
-            )
-            for u in np.arange(width - gate + 0.06, width - 0.1, 0.12):
-                block(
-                    u,
-                    u + 0.02,
-                    0.12,
-                    s.boundary_height_m - 0.04,
-                    -0.09,
-                    -0.065,
-                    "metal",
-                    "gate_flute",
-                )
+            build_fence(mb, a, t, n, width, boundary)
         if s.surface == "garden":
             for u in np.arange(0.65, width - gate - 0.4, 1.1):
                 xy = a + t * u - n * 0.65

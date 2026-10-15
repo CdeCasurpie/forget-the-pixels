@@ -10,6 +10,7 @@ from shapely.geometry import Polygon
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 from domain.architecture import BuildingProgram, ParcelContext, MassSpec, SitePlan, BuildingSpecificationV4
+from domain.fence_catalog import FENCE_STYLES
 from modeling import generate_v4_mesh, export_glb
 
 def generate_random_houses(count: int, output_dir: Path):
@@ -22,7 +23,7 @@ def generate_random_houses(count: int, output_dir: Path):
     
     uses = ["residential", "commercial_podium"]
     finishes = ["raw", "painted", "standard", "premium"]
-    fences = ["none", "reja", "ladrillos", "concreto"]
+    fences = ["none", *FENCE_STYLES]
     
     print(f"Generating {count} procedural houses...")
     for i in range(count):

@@ -1,0 +1,35 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "schema_version": "0.3",
+    "architectural_style": "republicano",
+    "family": "quiet_house",
+    "massing": {
+      "components": [{
+        "id": "principal",
+        "region": {"front_edge": 0, "u": [0,1], "depth_m": [3,13]},
+        "levels_m": [0,3.1,5.8],
+        "faces": [{
+          "face": "front",
+          "controls": {
+            "mode": "explicit",
+            "openings": [
+              {"kind":"door", "u_m":1.0, "v_m":0.12, "width_m":1.2, "height_m":2.4,
+               "door":{"model":"auto", "construction":"panelled"}},
+              {"kind":"window", "u_m":4.0, "v_m":0.9, "width_m":1.5, "height_m":1.6,
+               "prefab":"slim_window", "grille":true, "sill":true},
+              {"kind":"window", "u_m":4.0, "v_m":3.9, "width_m":1.5, "height_m":1.6,
+               "prefab":"slim_window", "sill":true}
+            ],
+            "projections": [],
+            "material_regions": []
+          }
+        }]
+      }]
+    },
+    "roof": {"kind":"flat", "parapet_m":0, "props":[]},
+    "trim": {"cornice":{"enabled":false}, "plinth":{"enabled":false}},
+    "site": {"fence":"none", "zones":[{"id":"patio_frontal", "kind":"patio", "region":{"depth_m":[0,3]}}]}
+  },
+  "nuisance": {"seed":23, "curtains":false}
+}

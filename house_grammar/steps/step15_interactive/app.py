@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 sys.path.insert(0, '.')
 
 from domain.architecture import BuildingProgram, ParcelContext, SitePlan, MassSpec, BuildingSpecificationV4
+from domain.fence_catalog import FENCE_STYLES
 from modeling.grammar import generate_v4_mesh
 from steps.step12_city_generation.render import render
 from modeling.exporters.glb_exporter import export_glb
@@ -142,7 +143,7 @@ with gr.Blocks(title="Generador Procedural Lima") as demo:
             
             gr.Markdown("### Cerco Frontal (Requiere Retranqueo >= 1.0m)")
             has_fence_ui = gr.Checkbox(value=True, label="Generar Cercado")
-            fence_type_ui = gr.Dropdown(["reja", "ladrillos", "concreto", "concreto_bajo"], value="reja", label="Tipo de Cerco")
+            fence_type_ui = gr.Dropdown(list(FENCE_STYLES), value="republicano", label="Cerco del catálogo")
 
             gr.Markdown("### Estilo")
             use = gr.Dropdown(["residential", "commercial", "mixed"], value="residential", label="Uso")

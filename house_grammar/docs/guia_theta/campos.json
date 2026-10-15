@@ -1,0 +1,3565 @@
+{
+  "ReconstructionRequest": {
+    "source": "src/domain/theta.py",
+    "line": 409,
+    "fields": {
+      "context": {
+        "type": "ReconstructionContext",
+        "required": true,
+        "default": null,
+        "description": "Contexto catastral métrico inmutable de la solicitud."
+      },
+      "theta": {
+        "type": "ThetaCandidate",
+        "required": true,
+        "default": null,
+        "description": "Decisiones arquitectónicas solicitadas."
+      },
+      "nuisance": {
+        "type": "NuisanceParameters",
+        "required": false,
+        "default": {
+          "seed": 0,
+          "curtains": true
+        },
+        "description": "Variación secundaria separada de la arquitectura."
+      },
+      "config": {
+        "type": "GrammarConfig",
+        "required": false,
+        "default": {
+          "implementation": "theta-candidate-v0",
+          "grammar_reference": "grammar-v1.0",
+          "completion_policy": "conservative-0.2",
+          "detail": 2
+        },
+        "description": "Versiones/política del generador y nivel de detalle."
+      },
+      "observations": {
+        "type": "tuple[Observation, ...]",
+        "required": false,
+        "default": [],
+        "description": "Referencias de evidencia visual; no se interpretan automáticamente."
+      },
+      "evidence": {
+        "type": "dict[str, Evidence]",
+        "required": false,
+        "default": {},
+        "description": "Mapa de rutas theta a procedencia/confianza."
+      }
+    }
+  },
+  "ReconstructionContext": {
+    "source": "src/domain/theta.py",
+    "line": 24,
+    "fields": {
+      "parcel": {
+        "type": "tuple[tuple[float, float], ...]",
+        "required": true,
+        "default": null,
+        "description": "Vértices XY de la parcela en metros."
+      },
+      "fronts": {
+        "type": "tuple[int, ...]",
+        "required": true,
+        "default": null,
+        "description": "Índices de aristas declaradas como frente a calle."
+      },
+      "crs": {
+        "type": "str",
+        "required": false,
+        "default": "EPSG:32718",
+        "description": "Identificador del sistema de referencia."
+      },
+      "metric_origin": {
+        "type": "tuple[float, float, float]",
+        "required": false,
+        "default": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "description": "Origen métrico registrado; no aplica una traslación automática."
+      },
+      "locked_height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura exterior conocida que debe coincidir con la de las masas."
+      }
+    }
+  },
+  "ThetaCandidate": {
+    "source": "src/domain/theta.py",
+    "line": 366,
+    "fields": {
+      "roof_assemblies": {
+        "type": "tuple[RoofAssemblyControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "Cubiertas detalladas que reemplazan superficies básicas."
+      },
+      "canopies": {
+        "type": "tuple[CanopyControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "Marquesinas/coberturas ligadas a fachada."
+      },
+      "entrances": {
+        "type": "tuple[EntranceControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "Accesos ligados a puertas ya existentes."
+      },
+      "crowns": {
+        "type": "tuple[CrownControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "En theta: frontones completos. En fachada: perfiles simples."
+      },
+      "entablatures": {
+        "type": "tuple[EntablatureControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "Entablamentos continuos."
+      },
+      "vertical_members": {
+        "type": "tuple[VerticalMemberControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "Columnas/pilastras/postes anclados independientes."
+      },
+      "balconies": {
+        "type": "tuple[BalconyControls, ...]",
+        "required": false,
+        "default": [],
+        "description": "En ThetaCandidate: ensambles. En FacadeControls: booleano de repetición."
+      },
+      "trim": {
+        "type": "TrimControls | None",
+        "required": false,
+        "default": null,
+        "description": "Cornisa/zócalo; override de componente sustituye el bloque completo."
+      },
+      "architectural_style": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Lenguaje de piezas: cinco estilos del catálogo."
+      },
+      "roof_bodies": {
+        "type": "tuple[RoofBody, ...]",
+        "required": false,
+        "default": [],
+        "description": "Cuerpos elevados apoyados en un componente padre."
+      },
+      "schema_version": {
+        "type": "str",
+        "required": false,
+        "default": "0.2",
+        "description": "Versión del contrato theta; pedir 0.3 para composición extendida."
+      },
+      "height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "floors": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Cantidad de pisos; puede derivarse de levels_m."
+      },
+      "family": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Familia de composición; en CrownDesign es familia geométrica del frontón."
+      },
+      "massing": {
+        "type": "MassingControls",
+        "required": false,
+        "default": {
+          "pattern": null,
+          "front_setback_m": null,
+          "upper_setback_m": null,
+          "podium_floors": null,
+          "front_depth_m": null,
+          "low_floors": null,
+          "corner_reach_m": null,
+          "components": [],
+          "parcel_tolerance_m": 0.0
+        },
+        "description": "Patrón volumétrico o composición por componentes."
+      },
+      "facade": {
+        "type": "FacadeControls",
+        "required": false,
+        "default": {
+          "mode": "repeat",
+          "bay_count": null,
+          "bay_axes_m": null,
+          "window_ratio": null,
+          "window_height_m": null,
+          "sill_m": null,
+          "balconies": null,
+          "balcony_depth_m": null,
+          "gallery_depth_m": null,
+          "awning_depth_m": null,
+          "cladding": null,
+          "services": null,
+          "openings": null,
+          "projections": null,
+          "material_regions": null,
+          "stairs": null,
+          "opening_edits": null,
+          "added_openings": null,
+          "bay_groups": [],
+          "motifs": [],
+          "crowns": [],
+          "order": null,
+          "opening_programs": [],
+          "top_profile": null,
+          "wall_material": null
+        },
+        "description": "Programa base de fachada; null de componente significa ciega."
+      },
+      "facades": {
+        "type": "tuple[FacadeOverride, ...]",
+        "required": false,
+        "default": [],
+        "description": "Overrides por masa y arista."
+      },
+      "roof": {
+        "type": "RoofControls",
+        "required": false,
+        "default": {
+          "kind": null,
+          "parapet_m": null,
+          "slope_deg": null,
+          "props": null
+        },
+        "description": "Techo básico; en componente, override local."
+      },
+      "roofs": {
+        "type": "tuple[RoofOverride, ...]",
+        "required": false,
+        "default": [],
+        "description": "Overrides de techo básico por masa."
+      },
+      "site": {
+        "type": "SiteControls",
+        "required": false,
+        "default": {
+          "fence": null,
+          "garden": null,
+          "runs": null,
+          "zones": []
+        },
+        "description": "Cercos, jardín y zonas libres."
+      },
+      "primary_color": {
+        "type": "tuple[float, float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "RGB 0–1 del revoque principal."
+      },
+      "side_material": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Material base de laterales/fondo: slot existente o declarado en theta.materials; default plaster."
+      },
+      "masses": {
+        "type": "tuple[ArchitecturalMass, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Masas explícitas con huella y niveles; sustituyen altura/pisos."
+      },
+      "materials": {
+        "type": "tuple[MaterialControl, ...]",
+        "required": false,
+        "default": [],
+        "description": "Overrides de slots físicos/de textura y color."
+      },
+      "finish": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Acabado de fachada standard/premium; no estilo arquitectónico."
+      }
+    }
+  },
+  "RoofAssemblyControls": {
+    "source": "src/domain/roof_details.py",
+    "line": 44,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "design": {
+        "type": "RoofDesign",
+        "required": false,
+        "default": {
+          "form": "gable",
+          "covering": "curved_tile",
+          "construction": "solid",
+          "style": "auto",
+          "slope_deg": 22.0,
+          "rotation_deg": 0.0,
+          "ridge_fraction": 0.5,
+          "thickness_m": 0.14,
+          "band_depth_m": 2.4,
+          "tile_width_m": 0.22,
+          "tile_length_m": 0.4,
+          "overlap_m": 0.08,
+          "detail": "full",
+          "material": "roof_tile",
+          "substrate_material": "wood",
+          "eave": {
+            "kind": "auto",
+            "overhang_m": 0.35,
+            "spacing_m": 0.55,
+            "beam_width_m": 0.08,
+            "beam_height_m": 0.14,
+            "fascia": true,
+            "soffit": false,
+            "material": "wood",
+            "fascia_material": "wood",
+            "gutter": false
+          },
+          "parapet_m": 0.0,
+          "cap": "none",
+          "cap_material": "stone",
+          "cap_drip": false
+        },
+        "description": "Diseño de pieza; en PlinthControls es un nombre de patrón."
+      },
+      "regions": {
+        "type": "tuple[tuple[tuple[float, float], ...], ...]",
+        "required": false,
+        "default": [],
+        "description": "Lóbulos rectangulares XY de cubierta compound."
+      },
+      "crown_ref": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "ID de frontón con el que se encuentra la cubierta."
+      },
+      "junction": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "none/behind/gable para encuentro cubierta-frontón."
+      },
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "join_group": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Grupo de cubiertas contiguas a igual cota y acabado compatible."
+      },
+      "props_mode": {
+        "type": "str",
+        "required": false,
+        "default": "preserve",
+        "description": "preserve/auto/off en objetos de techo detallado."
+      }
+    }
+  },
+  "RoofDesign": {
+    "source": "src/domain/roof_details.py",
+    "line": 20,
+    "fields": {
+      "form": {
+        "type": "str",
+        "required": false,
+        "default": "gable",
+        "description": "Forma geométrica de cubierta detallada."
+      },
+      "covering": {
+        "type": "str",
+        "required": false,
+        "default": "curved_tile",
+        "description": "Acabado modular de cubierta."
+      },
+      "construction": {
+        "type": "str",
+        "required": false,
+        "default": "solid",
+        "description": "Construcción de puerta o cubierta, según contrato."
+      },
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "slope_deg": {
+        "type": "float",
+        "required": false,
+        "default": 22.0,
+        "description": "Inclinación en grados."
+      },
+      "rotation_deg": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Giro en planta en grados."
+      },
+      "ridge_fraction": {
+        "type": "float",
+        "required": false,
+        "default": 0.5,
+        "description": "Fracción de ubicación de cumbrera en cubierta a dos aguas."
+      },
+      "thickness_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.14,
+        "description": "Espesor de cuerpo de frontón/cubierta."
+      },
+      "band_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 2.4,
+        "description": "Profundidad de banda inclinada, dejando resto plano."
+      },
+      "tile_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.22,
+        "description": "Ancho de módulo de teja/recubrimiento."
+      },
+      "tile_length_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.4,
+        "description": "Longitud de módulo de teja."
+      },
+      "overlap_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.08,
+        "description": "Solape longitudinal de módulos."
+      },
+      "detail": {
+        "type": "str",
+        "required": false,
+        "default": "full",
+        "description": "Resolución local/global; techo usa light/medium/full, otros entero 1–3."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "roof_tile",
+        "description": "Slot de material principal."
+      },
+      "substrate_material": {
+        "type": "str",
+        "required": false,
+        "default": "wood",
+        "description": "Material del soporte continuo de cubierta."
+      },
+      "eave": {
+        "type": "EaveDesign",
+        "required": false,
+        "default": {
+          "kind": "auto",
+          "overhang_m": 0.35,
+          "spacing_m": 0.55,
+          "beam_width_m": 0.08,
+          "beam_height_m": 0.14,
+          "fascia": true,
+          "soffit": false,
+          "material": "wood",
+          "fascia_material": "wood",
+          "gutter": false
+        },
+        "description": "Diseño del alero."
+      },
+      "parapet_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura de parapeto sobre techo."
+      },
+      "cap": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "Perfil de tapa de parapeto."
+      },
+      "cap_material": {
+        "type": "str",
+        "required": false,
+        "default": "stone",
+        "description": "Material de tapa de parapeto."
+      },
+      "cap_drip": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Pliegue goterón de tapa metálica."
+      }
+    }
+  },
+  "EaveDesign": {
+    "source": "src/domain/roof_details.py",
+    "line": 6,
+    "fields": {
+      "kind": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "overhang_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.35,
+        "description": "Vuelo del alero."
+      },
+      "spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.55,
+        "description": "Separación métrica de elementos repetidos."
+      },
+      "beam_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.08,
+        "description": "Ancho de viga/can."
+      },
+      "beam_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.14,
+        "description": "Canto de viga/can."
+      },
+      "fascia": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Tabla/frente de borde de losa o alero."
+      },
+      "soffit": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Cierre inferior del alero."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "wood",
+        "description": "Slot de material principal."
+      },
+      "fascia_material": {
+        "type": "str",
+        "required": false,
+        "default": "wood",
+        "description": "Material de tabla frontal."
+      },
+      "gutter": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Añadir canaleta en bordes compatibles."
+      }
+    }
+  },
+  "CanopyControls": {
+    "source": "src/domain/roof_details.py",
+    "line": 58,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "design": {
+        "type": "RoofDesign",
+        "required": false,
+        "default": {
+          "form": "shed",
+          "covering": "panel",
+          "construction": "solid",
+          "style": "auto",
+          "slope_deg": 22.0,
+          "rotation_deg": 0.0,
+          "ridge_fraction": 0.5,
+          "thickness_m": 0.14,
+          "band_depth_m": 2.4,
+          "tile_width_m": 0.22,
+          "tile_length_m": 0.4,
+          "overlap_m": 0.08,
+          "detail": "full",
+          "material": "roof_tile",
+          "substrate_material": "wood",
+          "eave": {
+            "kind": "auto",
+            "overhang_m": 0.35,
+            "spacing_m": 0.55,
+            "beam_width_m": 0.08,
+            "beam_height_m": 0.14,
+            "fascia": true,
+            "soffit": false,
+            "material": "wood",
+            "fascia_material": "wood",
+            "gutter": false
+          },
+          "parapet_m": 0.0,
+          "cap": "none",
+          "cap_material": "stone",
+          "cap_drip": false
+        },
+        "description": "Diseño de pieza; en PlinthControls es un nombre de patrón."
+      },
+      "opening_index": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Índice del vano de anclaje en la fachada resuelta."
+      },
+      "posts": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Columnas de apoyo para marquesina."
+      }
+    }
+  },
+  "EntranceControls": {
+    "source": "src/domain/entrances.py",
+    "line": 6,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "opening_index": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice del vano de anclaje en la fachada resuelta."
+      },
+      "kind": {
+        "type": "str",
+        "required": false,
+        "default": "steps",
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "ground_z_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Cota absoluta local del suelo de acceso."
+      },
+      "width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "landing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.9,
+        "description": "Profundidad de rellano."
+      },
+      "tread_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Huella de peldaño."
+      },
+      "max_riser_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Contrahuella máxima; deriva número de escalones."
+      },
+      "run_m": {
+        "type": "float",
+        "required": false,
+        "default": 3.0,
+        "description": "Desarrollo horizontal de escalera/acceso."
+      },
+      "transition_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.4,
+        "description": "Longitud de transición de rampa."
+      },
+      "nosing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.025,
+        "description": "Vuelo de nariz de peldaño."
+      },
+      "slab_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.12,
+        "description": "Espesor de losa/plataforma."
+      },
+      "cheek_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura de laterales de acceso."
+      },
+      "side_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.12,
+        "description": "Espesor/ancho de laterales de acceso."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "stone",
+        "description": "Slot de material principal."
+      },
+      "side_material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Material base de laterales/fondo: slot existente o declarado en theta.materials; default plaster."
+      }
+    }
+  },
+  "CrownControls": {
+    "source": "src/domain/crowns.py",
+    "line": 27,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "design": {
+        "type": "CrownDesign",
+        "required": false,
+        "default": {
+          "family": "auto",
+          "style": "auto",
+          "silhouette": "angular",
+          "stepped": false,
+          "concave_shoulders": false,
+          "central_block": false,
+          "open_center": false,
+          "thickness_m": 0.3,
+          "recess_m": 0.055,
+          "moulding_width_m": 0.16,
+          "projection_m": 0.16,
+          "base": true,
+          "ornament": "none",
+          "material": "plaster",
+          "moulding_material": "cornice",
+          "field_material": null,
+          "detail": 2
+        },
+        "description": "Diseño de pieza; en PlinthControls es un nombre de patrón."
+      },
+      "anchor": {
+        "type": "str",
+        "required": false,
+        "default": "wall_top",
+        "description": "Referencia de cota: valores dependen del tipo de ensamble."
+      },
+      "opening_index": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Índice del vano de anclaje en la fachada resuelta."
+      },
+      "base_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Cota relativa o desplazamiento desde el anclaje del frontón."
+      },
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "aperture": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "Perforación none/oculus/roundhead/pointed del frontón."
+      },
+      "aperture_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.55,
+        "description": "Ancho de perforación del frontón."
+      },
+      "aperture_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.7,
+        "description": "Altura de perforación del frontón."
+      },
+      "aperture_sill_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Base de perforación relativa al frontón."
+      }
+    }
+  },
+  "CrownDesign": {
+    "source": "src/domain/crowns.py",
+    "line": 6,
+    "fields": {
+      "family": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Familia de composición; en CrownDesign es familia geométrica del frontón."
+      },
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "silhouette": {
+        "type": "str",
+        "required": false,
+        "default": "angular",
+        "description": "Atributo angular/curved/pointed/mixed para clasificar frontón."
+      },
+      "stepped": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Solicitar hombros escalonados en clasificación automática."
+      },
+      "concave_shoulders": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Solicitar hombros cóncavos."
+      },
+      "central_block": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Solicitar ático central elevado."
+      },
+      "open_center": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Solicitar frontón partido."
+      },
+      "thickness_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Espesor de cuerpo de frontón/cubierta."
+      },
+      "recess_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.055,
+        "description": "Rehundimiento del relleno/campo."
+      },
+      "moulding_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.16,
+        "description": "Ancho de moldura del frontón."
+      },
+      "projection_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.16,
+        "description": "Vuelo exterior de moldura/entablamento."
+      },
+      "base": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Base del miembro o cornisa inferior de frontón."
+      },
+      "ornament": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "Booleano de ornato en miembro; nombre de ornato en frontón/entablamento."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Slot de material principal."
+      },
+      "moulding_material": {
+        "type": "str",
+        "required": false,
+        "default": "cornice",
+        "description": "Slot de molduras del frontón."
+      },
+      "field_material": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Material opcional del campo rehundido."
+      },
+      "detail": {
+        "type": "int",
+        "required": false,
+        "default": 2,
+        "description": "Resolución local/global; techo usa light/medium/full, otros entero 1–3."
+      }
+    }
+  },
+  "EntablatureControls": {
+    "source": "src/domain/crowns.py",
+    "line": 46,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_refs": {
+        "type": "tuple[str, ...]",
+        "required": false,
+        "default": [],
+        "description": "IDs de masas; en entablamento vacío selecciona todas las cerradas."
+      },
+      "anchor": {
+        "type": "str",
+        "required": false,
+        "default": "wall_top",
+        "description": "Referencia de cota: valores dependen del tipo de ensamble."
+      },
+      "top_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Cota absoluta o desplazamiento superior del entablamento."
+      },
+      "height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.55,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "projection_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Vuelo exterior de moldura/entablamento."
+      },
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "cornice",
+        "description": "Slot de material principal."
+      },
+      "frieze_material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Material del friso."
+      },
+      "scope": {
+        "type": "str",
+        "required": false,
+        "default": "street",
+        "description": "exposed o street para recorridos perimetrales."
+      },
+      "ornament": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "Booleano de ornato en miembro; nombre de ornato en frontón/entablamento."
+      },
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      }
+    }
+  },
+  "VerticalMemberControls": {
+    "source": "src/domain/vertical_members.py",
+    "line": 30,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "bottom_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Cota inferior de miembro respecto a base de masa."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.45,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "placement": {
+        "type": "str",
+        "required": false,
+        "default": "attached",
+        "description": "attached/embedded/freestanding/corner."
+      },
+      "offset_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Desplazamiento del anclaje/plano; en zona, positivo exterior."
+      },
+      "embed_ratio": {
+        "type": "float",
+        "required": false,
+        "default": 0.5,
+        "description": "Fracción de profundidad embebida en la pared."
+      },
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "design": {
+        "type": "MemberDesign",
+        "required": false,
+        "default": {
+          "style": "auto",
+          "variant": "auto",
+          "section": "auto",
+          "base": null,
+          "capital": null,
+          "collar": true,
+          "abacus": true,
+          "base_profile": "auto",
+          "pedestal_m": 0.0,
+          "base_height_m": null,
+          "capital_height_m": null,
+          "taper": null,
+          "entasis": 0.025,
+          "turns": 1.5,
+          "flute_count": 12,
+          "ornament": true,
+          "detail": 2,
+          "material": "plaster",
+          "base_material": null,
+          "capital_material": null
+        },
+        "description": "Diseño de pieza; en PlinthControls es un nombre de patrón."
+      }
+    }
+  },
+  "MemberDesign": {
+    "source": "src/domain/vertical_members.py",
+    "line": 6,
+    "fields": {
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "moderno",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "variant": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Variante del catálogo del estilo; auto elige primera entrada."
+      },
+      "section": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "En zona: sección espacial; en miembro: forma de sección transversal."
+      },
+      "base": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "Base del miembro o cornisa inferior de frontón."
+      },
+      "capital": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "Activar capitel; null usa preset."
+      },
+      "collar": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activar collarín del capitel."
+      },
+      "abacus": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activar ábaco superior del capitel."
+      },
+      "base_profile": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Perfil de basa: auto/attic/simple/minimal."
+      },
+      "pedestal_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura del pedestal bajo la basa."
+      },
+      "base_height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de base maciza de cerco o base de miembro según contrato."
+      },
+      "capital_height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura explícita de capitel; null usa proporciones."
+      },
+      "taper": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Fracción de estrechamiento del fuste."
+      },
+      "entasis": {
+        "type": "float",
+        "required": false,
+        "default": 0.025,
+        "description": "Abombamiento del fuste."
+      },
+      "turns": {
+        "type": "float",
+        "required": false,
+        "default": 1.5,
+        "description": "Vueltas de fuste torsionado."
+      },
+      "flute_count": {
+        "type": "int",
+        "required": false,
+        "default": 12,
+        "description": "Cantidad de acanaladuras."
+      },
+      "ornament": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Booleano de ornato en miembro; nombre de ornato en frontón/entablamento."
+      },
+      "detail": {
+        "type": "int",
+        "required": false,
+        "default": 2,
+        "description": "Resolución local/global; techo usa light/medium/full, otros entero 1–3."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Slot de material principal."
+      },
+      "base_material": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Material opcional de basa."
+      },
+      "capital_material": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Material opcional de capitel."
+      }
+    }
+  },
+  "BalconyControls": {
+    "source": "src/domain/balconies.py",
+    "line": 20,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "floor_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Cota del balcón respecto a base de masa; debe coincidir con un nivel."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "variant": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Variante del catálogo del estilo; auto elige primera entrada."
+      },
+      "kind": {
+        "type": "str",
+        "required": false,
+        "default": "projecting",
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.85,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "slab": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Crear plataforma nueva; false para terrace/juliet/stair."
+      },
+      "slab_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Espesor de losa/plataforma."
+      },
+      "slab_material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Material de plataforma."
+      },
+      "brackets": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Ménsulas inferiores de balcón."
+      },
+      "cover": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Crear cubierta del balcón/galería."
+      },
+      "enclosure_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 2.5,
+        "description": "Altura desde plataforma hasta cubierta/cierre superior."
+      },
+      "railing": {
+        "type": "RailingControls",
+        "required": false,
+        "default": {
+          "enabled": true,
+          "pattern": "auto",
+          "height_m": 1.05,
+          "spacing_m": 0.14,
+          "post_spacing_m": 1.6,
+          "post_width_m": 0.075,
+          "handrail": true,
+          "material": "auto",
+          "glass_material": "glass"
+        },
+        "description": "Controles de baranda."
+      },
+      "sides": {
+        "type": "tuple[str, ...]",
+        "required": false,
+        "default": [
+          "left",
+          "front",
+          "right"
+        ],
+        "description": "Lados de baranda: left/front/right."
+      },
+      "path": {
+        "type": "tuple[tuple[float, float, float], ...]",
+        "required": false,
+        "default": [],
+        "description": "Ruta de baranda (u, profundidad exterior, delta Z)."
+      },
+      "curved_front_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Abombamiento en planta del frente de balcón."
+      },
+      "corner_return_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Longitud de vuelta por la siguiente arista ortogonal."
+      },
+      "planters": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Añadir jardineras en balcón o cerco compatible."
+      },
+      "fascia": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Tabla/frente de borde de losa o alero."
+      },
+      "opening_index": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Índice del vano de anclaje en la fachada resuelta."
+      },
+      "support_mass": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Masa cuyo techo soporta una baranda sin plataforma."
+      },
+      "stair_index": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Índice de escalera existente para derivar su baranda."
+      },
+      "column_member": {
+        "type": "MemberDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño de postes/columnas de galería."
+      }
+    }
+  },
+  "RailingControls": {
+    "source": "src/domain/balconies.py",
+    "line": 7,
+    "fields": {
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "pattern": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Selector de patrón; consultar catálogo del contrato correspondiente."
+      },
+      "height_m": {
+        "type": "float",
+        "required": false,
+        "default": 1.05,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.14,
+        "description": "Separación métrica de elementos repetidos."
+      },
+      "post_spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 1.6,
+        "description": "Paso máximo entre postes de baranda."
+      },
+      "post_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.075,
+        "description": "Ancho de poste de baranda."
+      },
+      "handrail": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activar pasamanos superior."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Slot de material principal."
+      },
+      "glass_material": {
+        "type": "str",
+        "required": false,
+        "default": "glass",
+        "description": "Material del vidrio."
+      }
+    }
+  },
+  "TrimControls": {
+    "source": "src/domain/theta.py",
+    "line": 323,
+    "fields": {
+      "cornice": {
+        "type": "CorniceControls",
+        "required": false,
+        "default": {
+          "enabled": true,
+          "profile": "auto",
+          "height_m": 0.24,
+          "projection_m": 0.18,
+          "anchor": "wall_top",
+          "offset_m": 0.0,
+          "material": "cornice",
+          "scope": "exposed",
+          "courtyards": false
+        },
+        "description": "En puerta: activar remate; en TrimControls: controles de cornisa."
+      },
+      "plinth": {
+        "type": "PlinthControls",
+        "required": false,
+        "default": {
+          "enabled": true,
+          "design": "smooth",
+          "height_m": 0.6,
+          "relief_m": 0.025,
+          "material": "plinth",
+          "course_height_m": 0.2,
+          "block_width_m": 0.5,
+          "joint_width_m": 0.012,
+          "scope": "exposed",
+          "courtyards": false
+        },
+        "description": "Controles de zócalo."
+      }
+    }
+  },
+  "CorniceControls": {
+    "source": "src/domain/theta.py",
+    "line": 296,
+    "fields": {
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "profile": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Nombre de perfil de cornisa, o auto."
+      },
+      "height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.24,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "projection_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Vuelo exterior de moldura/entablamento."
+      },
+      "anchor": {
+        "type": "str",
+        "required": false,
+        "default": "wall_top",
+        "description": "Referencia de cota: valores dependen del tipo de ensamble."
+      },
+      "offset_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Desplazamiento del anclaje/plano; en zona, positivo exterior."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "cornice",
+        "description": "Slot de material principal."
+      },
+      "scope": {
+        "type": "str",
+        "required": false,
+        "default": "exposed",
+        "description": "exposed o street para recorridos perimetrales."
+      },
+      "courtyards": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Incluir perímetros de patios/huecos interiores."
+      }
+    }
+  },
+  "PlinthControls": {
+    "source": "src/domain/theta.py",
+    "line": 309,
+    "fields": {
+      "enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activación de la pieza/control."
+      },
+      "design": {
+        "type": "str",
+        "required": false,
+        "default": "smooth",
+        "description": "Diseño de pieza; en PlinthControls es un nombre de patrón."
+      },
+      "height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.6,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "relief_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.025,
+        "description": "Espesor de relieve del zócalo."
+      },
+      "material": {
+        "type": "str",
+        "required": false,
+        "default": "plinth",
+        "description": "Slot de material principal."
+      },
+      "course_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.2,
+        "description": "Altura de cada hilada de zócalo."
+      },
+      "block_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.5,
+        "description": "Ancho de bloques de zócalo."
+      },
+      "joint_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.012,
+        "description": "Ancho de juntas de zócalo."
+      },
+      "scope": {
+        "type": "str",
+        "required": false,
+        "default": "exposed",
+        "description": "exposed o street para recorridos perimetrales."
+      },
+      "courtyards": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Incluir perímetros de patios/huecos interiores."
+      }
+    }
+  },
+  "RoofBody": {
+    "source": "src/domain/theta.py",
+    "line": 141,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "parent": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID del componente padre de un cuerpo sobre azotea."
+      },
+      "region": {
+        "type": "PlanRegion",
+        "required": true,
+        "default": null,
+        "description": "Región relativa a un frente de parcela."
+      },
+      "height_m": {
+        "type": "float",
+        "required": false,
+        "default": 2.4,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "roof": {
+        "type": "RoofControls | None",
+        "required": false,
+        "default": null,
+        "description": "Techo básico; en componente, override local."
+      },
+      "facade": {
+        "type": "FacadeControls | None",
+        "required": false,
+        "default": null,
+        "description": "Programa base de fachada; null de componente significa ciega."
+      },
+      "trim": {
+        "type": "TrimControls | None",
+        "required": false,
+        "default": null,
+        "description": "Cornisa/zócalo; override de componente sustituye el bloque completo."
+      }
+    }
+  },
+  "PlanRegion": {
+    "source": "src/domain/theta.py",
+    "line": 62,
+    "fields": {
+      "front_edge": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Arista del anillo canónico usada como marco; null elige frente más largo."
+      },
+      "u": {
+        "type": "tuple[float, float]",
+        "required": false,
+        "default": [
+          0.0,
+          1.0
+        ],
+        "description": "Intervalo normalizado de 0 a 1."
+      },
+      "depth": {
+        "type": "tuple[float, float]",
+        "required": false,
+        "default": [
+          0.0,
+          1.0
+        ],
+        "description": "Intervalo fraccional de profundidad de parcela."
+      },
+      "depth_m": {
+        "type": "tuple[float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "fit": {
+        "type": "str",
+        "required": false,
+        "default": "parcel",
+        "description": "parcel recorta la región; rectangle conserva y valida el rectángulo."
+      },
+      "width_reference": {
+        "type": "str",
+        "required": false,
+        "default": "parcel",
+        "description": "Referencia horizontal: proyección de parcela o longitud de arista."
+      }
+    }
+  },
+  "RoofControls": {
+    "source": "src/domain/theta.py",
+    "line": 271,
+    "fields": {
+      "kind": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "parapet_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de parapeto sobre techo."
+      },
+      "slope_deg": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Inclinación en grados."
+      },
+      "props": {
+        "type": "tuple[RoofObject, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Objetos de azotea explícitos."
+      }
+    }
+  },
+  "RoofObject": {
+    "source": "src/domain/theta.py",
+    "line": 287,
+    "fields": {
+      "mass_role": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Referencia de masa; preferir ID canónico rol:índice."
+      },
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "xy": {
+        "type": "tuple[float, float]",
+        "required": true,
+        "default": null,
+        "description": "Punto XY local de ubicación de objeto de techo."
+      },
+      "rotation_deg": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Giro en planta en grados."
+      },
+      "scale": {
+        "type": "float",
+        "required": false,
+        "default": 1.0,
+        "description": "Escala uniforme de objeto de azotea."
+      }
+    }
+  },
+  "FacadeControls": {
+    "source": "src/domain/theta.py",
+    "line": 235,
+    "fields": {
+      "mode": {
+        "type": "str",
+        "required": false,
+        "default": "repeat",
+        "description": "repeat genera por ritmo; explicit usa entidades suministradas."
+      },
+      "bay_count": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Número de crujías/ejes repetidos."
+      },
+      "bay_axes_m": {
+        "type": "tuple[float, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Centros métricos de ejes; alternativo a cantidad/grupos."
+      },
+      "window_ratio": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Ancho de vano como fracción del paso entre ejes."
+      },
+      "window_height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura solicitada de ventana repetida."
+      },
+      "sill_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de antepecho dentro del piso."
+      },
+      "balconies": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "En ThetaCandidate: ensambles. En FacadeControls: booleano de repetición."
+      },
+      "balcony_depth_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Vuelo del balcón tradicional asociado al vano."
+      },
+      "gallery_depth_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Vuelo de galería de familia compatible."
+      },
+      "awning_depth_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Vuelo del toldo de familia compatible."
+      },
+      "cladding": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "stucco o juntas horizontal."
+      },
+      "services": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "Añadir servicios visibles como condensadora/bajante."
+      },
+      "openings": {
+        "type": "tuple[Opening, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Lista completa de aberturas en modo explicit."
+      },
+      "projections": {
+        "type": "tuple[FacadeProjection, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Relieves/objetos sobre pared; [] anula los derivados de familia."
+      },
+      "material_regions": {
+        "type": "tuple[FacadeMaterialRegion, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Rectángulos de acabado en coordenadas de fachada."
+      },
+      "stairs": {
+        "type": "tuple[ExteriorStairSpecification, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Escaleras exteriores ancladas a fachada."
+      },
+      "opening_edits": {
+        "type": "tuple[OpeningEdit, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Ediciones puntuales por piso/crujía."
+      },
+      "added_openings": {
+        "type": "tuple[Opening, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Vanos adicionales al programa repetitivo."
+      },
+      "bay_groups": {
+        "type": "tuple[BayGroup, ...]",
+        "required": false,
+        "default": [],
+        "description": "Grupos ordenados de crujías dentro de intervalos u."
+      },
+      "motifs": {
+        "type": "tuple[ArchitecturalMotif, ...]",
+        "required": false,
+        "default": [],
+        "description": "Decoración opt-in de vanos ya existentes."
+      },
+      "crowns": {
+        "type": "tuple[CrownProfile, ...]",
+        "required": false,
+        "default": [],
+        "description": "En theta: frontones completos. En fachada: perfiles simples."
+      },
+      "order": {
+        "type": "ArchitecturalOrder | None",
+        "required": false,
+        "default": null,
+        "description": "Orden arquitectónico: pilastras y bandas horizontales."
+      },
+      "opening_programs": {
+        "type": "tuple[OpeningProgram, ...]",
+        "required": false,
+        "default": [],
+        "description": "Programa por grupo/piso de tipo, forma y proporciones de vano."
+      },
+      "top_profile": {
+        "type": "FacadeTopProfile | None",
+        "required": false,
+        "default": null,
+        "description": "Silueta continua de pared sobre la cota superior."
+      },
+      "wall_material": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Slot de material base de fachada, o del tramo macizo del cerco según contrato."
+      }
+    }
+  },
+  "Opening": {
+    "source": "src/domain/models.py",
+    "line": 121,
+    "fields": {
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "v_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Base vertical relativa a la pared/banda actual."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "frame_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.06,
+        "description": "Ancho de moldura/marco dentro del contorno del vano."
+      },
+      "recess_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.08,
+        "description": "Rehundimiento del relleno/campo."
+      },
+      "source": {
+        "type": "str",
+        "required": false,
+        "default": "assumed",
+        "description": "Procedencia descriptiva de la entidad; algunas rutas internas la usan."
+      },
+      "view_id": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "ID de una vista de evidencia."
+      },
+      "score": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Puntuación de evidencia asociada al elemento."
+      },
+      "style": {
+        "type": "str",
+        "required": false,
+        "default": "sliding",
+        "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+      },
+      "grille": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Protección con reja en la ventana."
+      },
+      "mullion_columns": {
+        "type": "int",
+        "required": false,
+        "default": 2,
+        "description": "Número de subdivisiones horizontales del vidrio."
+      },
+      "mullion_rows": {
+        "type": "int",
+        "required": false,
+        "default": 2,
+        "description": "Número de subdivisiones verticales del vidrio."
+      },
+      "balcony_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.75,
+        "description": "Vuelo del balcón tradicional asociado al vano."
+      },
+      "prefab": {
+        "type": "str",
+        "required": false,
+        "default": "legacy",
+        "description": "Relleno/constructor de vano."
+      },
+      "curtain": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Cobertura lateral de cortina; theta explícito exige 0 y delega a nuisance."
+      },
+      "grille_pattern": {
+        "type": "str",
+        "required": false,
+        "default": "vertical",
+        "description": "Patrón de reja; vocabulario distinto en puertas y ventanas."
+      },
+      "shape": {
+        "type": "str",
+        "required": false,
+        "default": "rectangle",
+        "description": "Contorno del hueco; consultar restricciones según ruta."
+      },
+      "arch_rise_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Flecha de arco sobre arranque; solo shape=arch."
+      },
+      "frame_profile": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Perfil vinculado de ventana; cinco estilos o auto resuelto globalmente."
+      },
+      "frame_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.1,
+        "description": "Profundidad/relieve de marco."
+      },
+      "sill": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Añadir alféizar vinculado al contorno inferior."
+      },
+      "grid_spacing_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Separación adaptativa de montantes; null usa columnas/filas."
+      },
+      "grille_spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.14,
+        "description": "Separación de barras de seguridad."
+      },
+      "door": {
+        "type": "DoorControls | None",
+        "required": false,
+        "default": null,
+        "description": "Ensamble de puerta/portón vinculado a este vano."
+      }
+    }
+  },
+  "DoorControls": {
+    "source": "src/domain/models.py",
+    "line": 93,
+    "fields": {
+      "model": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Estilo del ensamble de puerta, o auto con estilo global."
+      },
+      "leaves": {
+        "type": "int",
+        "required": false,
+        "default": 0,
+        "description": "0 automático, 1 o 2 hojas."
+      },
+      "construction": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Construcción de puerta o cubierta, según contrato."
+      },
+      "leaf_material": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Slot de material de hoja; auto hereda del modelo."
+      },
+      "frame_material": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Slot de marco de puerta; auto según modelo."
+      },
+      "portal_material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Material de soportes/portal."
+      },
+      "metal_material": {
+        "type": "str",
+        "required": false,
+        "default": "metal",
+        "description": "Material de herrajes/reja."
+      },
+      "glass_material": {
+        "type": "str",
+        "required": false,
+        "default": "glass",
+        "description": "Material del vidrio."
+      },
+      "threshold_material": {
+        "type": "str",
+        "required": false,
+        "default": "stone",
+        "description": "Material del umbral."
+      },
+      "portal": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "none/pilasters/columns alrededor de la puerta."
+      },
+      "portal_member": {
+        "type": "MemberDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño personalizado de los soportes del portal."
+      },
+      "portal_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.24,
+        "description": "Ancho de soportes del portal."
+      },
+      "portal_gap_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.1,
+        "description": "Separación del vano al soporte."
+      },
+      "portal_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.2,
+        "description": "Relieve/profundidad del portal."
+      },
+      "cornice": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "En puerta: activar remate; en TrimControls: controles de cornisa."
+      },
+      "transom_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura de sobreluz dentro del vano."
+      },
+      "transom_infill": {
+        "type": "str",
+        "required": false,
+        "default": "glass",
+        "description": "glass u open en la sobreluz."
+      },
+      "transom_grille": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Activar reja de sobreluz."
+      },
+      "grille_pattern": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "Patrón de reja; vocabulario distinto en puertas y ventanas."
+      },
+      "grille_spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.16,
+        "description": "Separación de barras de seguridad."
+      },
+      "leaf_grille": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Reja adicional en hoja vidriada/calado."
+      },
+      "threshold": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activar umbral de puerta."
+      },
+      "opening_angles_deg": {
+        "type": "tuple[float, ...]",
+        "required": false,
+        "default": [],
+        "description": "Ángulo exterior por hoja, entre 0 y 110 grados."
+      }
+    }
+  },
+  "FacadeProjection": {
+    "source": "src/domain/models.py",
+    "line": 164,
+    "fields": {
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "v_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Base vertical relativa a la pared/banda actual."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "material_slot": {
+        "type": "str",
+        "required": false,
+        "default": "accent",
+        "description": "Slot de material del elemento/zona."
+      },
+      "border_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Ancho del borde de marco aplicado."
+      },
+      "source": {
+        "type": "str",
+        "required": false,
+        "default": "assumed",
+        "description": "Procedencia descriptiva de la entidad; algunas rutas internas la usan."
+      },
+      "score": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Puntuación de evidencia asociada al elemento."
+      },
+      "label": {
+        "type": "str",
+        "required": false,
+        "default": "",
+        "description": "Texto de relieve; alfabeto limitado."
+      },
+      "arch_rise_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Flecha de arco sobre arranque; solo shape=arch."
+      },
+      "member": {
+        "type": "MemberDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño común de columna/pilastra en este elemento."
+      },
+      "crown": {
+        "type": "CrownDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño volumétrico de frontón reutilizado por una proyección."
+      }
+    }
+  },
+  "FacadeMaterialRegion": {
+    "source": "src/domain/models.py",
+    "line": 151,
+    "fields": {
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "v_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Base vertical relativa a la pared/banda actual."
+      },
+      "width_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Ancho métrico; cero puede heredar en controles que lo explicitan."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "material_slot": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Slot de material del elemento/zona."
+      },
+      "source": {
+        "type": "str",
+        "required": false,
+        "default": "assumed",
+        "description": "Procedencia descriptiva de la entidad; algunas rutas internas la usan."
+      },
+      "score": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Puntuación de evidencia asociada al elemento."
+      }
+    }
+  },
+  "ExteriorStairSpecification": {
+    "source": "src/domain/models.py",
+    "line": 184,
+    "fields": {
+      "u_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Posición horizontal métrica; borde izquierdo salvo miembro vertical (eje)."
+      },
+      "base_z_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Cota inferior de escalera respecto a su pared."
+      },
+      "target_z_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Cota superior de escalera respecto a su pared."
+      },
+      "flight_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 1.15,
+        "description": "Ancho de un tramo de escalera."
+      },
+      "run_m": {
+        "type": "float",
+        "required": false,
+        "default": 3.0,
+        "description": "Desarrollo horizontal de escalera/acceso."
+      },
+      "step_count": {
+        "type": "int",
+        "required": false,
+        "default": 18,
+        "description": "Cantidad de escalones."
+      },
+      "switchback": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Dos tramos con retorno en vez de un tramo recto."
+      },
+      "material_slot": {
+        "type": "str",
+        "required": false,
+        "default": "accent",
+        "description": "Slot de material del elemento/zona."
+      },
+      "railing_material_slot": {
+        "type": "str",
+        "required": false,
+        "default": "metal",
+        "description": "Slot para baranda de escalera tradicional."
+      },
+      "source": {
+        "type": "str",
+        "required": false,
+        "default": "assumed",
+        "description": "Procedencia descriptiva de la entidad; algunas rutas internas la usan."
+      },
+      "score": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Puntuación de evidencia asociada al elemento."
+      },
+      "railing_enabled": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Activar baranda tradicional de escalera."
+      }
+    }
+  },
+  "OpeningEdit": {
+    "source": "src/domain/theta.py",
+    "line": 168,
+    "fields": {
+      "floor": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de piso desde 0; null en OpeningProgram abarca los pisos del grupo."
+      },
+      "bay": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de crujía desde 0."
+      },
+      "action": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "suppress elimina; replace sustituye con opening."
+      },
+      "opening": {
+        "type": "Opening | None",
+        "required": false,
+        "default": null,
+        "description": "Abertura de reemplazo; necesaria solo para replace."
+      }
+    }
+  },
+  "BayGroup": {
+    "source": "src/domain/theta.py",
+    "line": 177,
+    "fields": {
+      "u": {
+        "type": "tuple[float, float]",
+        "required": true,
+        "default": null,
+        "description": "Intervalo normalizado de 0 a 1."
+      },
+      "count": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Cantidad de crujías en el grupo."
+      },
+      "ground_role": {
+        "type": "str",
+        "required": false,
+        "default": "inherit",
+        "description": "Programa en planta baja: inherit/entrance/garage/shopfront/blind."
+      },
+      "role": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Rol descriptivo; en masa explícita también origina su referencia."
+      }
+    }
+  },
+  "ArchitecturalMotif": {
+    "source": "src/domain/theta.py",
+    "line": 190,
+    "fields": {
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "bay": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de crujía desde 0."
+      },
+      "floor": {
+        "type": "int",
+        "required": false,
+        "default": 0,
+        "description": "Índice de piso desde 0; null en OpeningProgram abarca los pisos del grupo."
+      },
+      "opening_shape": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Cambio opcional a arch para motivo monumental."
+      },
+      "pediment": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Añadir frontón al motivo de portada."
+      }
+    }
+  },
+  "CrownProfile": {
+    "source": "src/domain/theta.py",
+    "line": 200,
+    "fields": {
+      "u": {
+        "type": "tuple[float, float]",
+        "required": true,
+        "default": null,
+        "description": "Intervalo normalizado de 0 a 1."
+      },
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.2,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      }
+    }
+  },
+  "ArchitecturalOrder": {
+    "source": "src/domain/theta.py",
+    "line": 222,
+    "fields": {
+      "pilaster_mode": {
+        "type": "str",
+        "required": false,
+        "default": "none",
+        "description": "Ubicación de pilastras por bordes de grupos/crujías o ejes explícitos."
+      },
+      "pilaster_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Ancho de pilastra del orden."
+      },
+      "pilaster_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.16,
+        "description": "Relieve de pilastra del orden."
+      },
+      "pilaster_axes_u": {
+        "type": "tuple[float, ...]",
+        "required": false,
+        "default": [],
+        "description": "Ejes normalizados para pilastras explícitas."
+      },
+      "paired_bays": {
+        "type": "tuple[int, ...]",
+        "required": false,
+        "default": [],
+        "description": "Crujías a flanquear con pilastras pareadas."
+      },
+      "plinth_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura del zócalo del orden."
+      },
+      "belt_courses_m": {
+        "type": "tuple[float, ...]",
+        "required": false,
+        "default": [],
+        "description": "Cotas de bandas horizontales."
+      },
+      "entablature_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura reservada al entablamento del orden."
+      },
+      "cornice_height_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Altura reservada a cornisa del orden."
+      }
+    }
+  },
+  "OpeningProgram": {
+    "source": "src/domain/theta.py",
+    "line": 209,
+    "fields": {
+      "group": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de BayGroup desde 0."
+      },
+      "floor": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Índice de piso desde 0; null en OpeningProgram abarca los pisos del grupo."
+      },
+      "kind": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "shape": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Contorno del hueco; consultar restricciones según ruta."
+      },
+      "width_ratio": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Ancho del vano respecto al paso del grupo."
+      },
+      "height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "sill_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de antepecho dentro del piso."
+      },
+      "prefab": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Relleno/constructor de vano."
+      },
+      "grille": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "Protección con reja en la ventana."
+      }
+    }
+  },
+  "FacadeTopProfile": {
+    "source": "src/domain/models.py",
+    "line": 202,
+    "fields": {
+      "points": {
+        "type": "tuple[tuple[float, float], ...]",
+        "required": true,
+        "default": null,
+        "description": "Puntos ordenados (u normalizado, elevación métrica) de la silueta."
+      },
+      "depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Profundidad métrica; en PlanRegion es un intervalo."
+      },
+      "trim_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.16,
+        "description": "Ancho de moldura sobre silueta."
+      },
+      "trim_depth_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.12,
+        "description": "Relieve de moldura sobre silueta."
+      },
+      "trim_material_slot": {
+        "type": "str",
+        "required": false,
+        "default": "frame",
+        "description": "Material de moldura sobre silueta."
+      },
+      "trim_profile": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Estilo de perfil para la moldura superior."
+      }
+    }
+  },
+  "MassingControls": {
+    "source": "src/domain/theta.py",
+    "line": 49,
+    "fields": {
+      "pattern": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Selector de patrón; consultar catálogo del contrato correspondiente."
+      },
+      "front_setback_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Retiro desde los frentes."
+      },
+      "upper_setback_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Retiro adicional del cuerpo superior."
+      },
+      "podium_floors": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Pisos del podio, menor que el total."
+      },
+      "front_depth_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Profundidad de la franja frontal."
+      },
+      "low_floors": {
+        "type": "int | None",
+        "required": false,
+        "default": null,
+        "description": "Pisos del cuerpo bajo en una división frente/fondo."
+      },
+      "corner_reach_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Alcance de las bandas que definen el acento de esquina."
+      },
+      "components": {
+        "type": "tuple[MassComponent, ...]",
+        "required": false,
+        "default": [],
+        "description": "Componentes en regiones del catastro."
+      },
+      "parcel_tolerance_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Tolerancia exterior de composición (0–2 m)."
+      }
+    }
+  },
+  "MassComponent": {
+    "source": "src/domain/theta.py",
+    "line": 125,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "region": {
+        "type": "PlanRegion",
+        "required": true,
+        "default": null,
+        "description": "Región relativa a un frente de parcela."
+      },
+      "levels_m": {
+        "type": "tuple[float, ...]",
+        "required": true,
+        "default": null,
+        "description": "Cotas de base, entrepisos y techo; no alturas individuales."
+      },
+      "kind": {
+        "type": "str",
+        "required": false,
+        "default": "enclosed",
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "cutouts": {
+        "type": "tuple[PlanRegion, ...]",
+        "required": false,
+        "default": [],
+        "description": "Regiones a sustraer de la huella del componente."
+      },
+      "support": {
+        "type": "SupportControls",
+        "required": false,
+        "default": {
+          "kind": "bearing",
+          "spacing_m": 4.0,
+          "column_width_m": 0.25,
+          "inset_m": 0.4,
+          "max_cantilever_m": 0.0,
+          "member": null
+        },
+        "description": "Reglas de apoyo geométrico del componente."
+      },
+      "facade": {
+        "type": "FacadeControls | None",
+        "required": false,
+        "default": null,
+        "description": "Programa base de fachada; null de componente significa ciega."
+      },
+      "faces": {
+        "type": "tuple[FaceBand, ...]",
+        "required": false,
+        "default": [],
+        "description": "Bandas por orientación de cara."
+      },
+      "roof": {
+        "type": "RoofControls | None",
+        "required": false,
+        "default": null,
+        "description": "Techo básico; en componente, override local."
+      },
+      "slab_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.18,
+        "description": "Espesor de losa/plataforma."
+      },
+      "zones": {
+        "type": "tuple[FacadeZone, ...]",
+        "required": false,
+        "default": [],
+        "description": "Zonas independientes: fachada o suelo según contrato."
+      },
+      "trim": {
+        "type": "TrimControls | None",
+        "required": false,
+        "default": null,
+        "description": "Cornisa/zócalo; override de componente sustituye el bloque completo."
+      }
+    }
+  },
+  "SupportControls": {
+    "source": "src/domain/theta.py",
+    "line": 78,
+    "fields": {
+      "kind": {
+        "type": "str",
+        "required": false,
+        "default": "bearing",
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "spacing_m": {
+        "type": "float",
+        "required": false,
+        "default": 4.0,
+        "description": "Separación métrica de elementos repetidos."
+      },
+      "column_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.25,
+        "description": "Ancho de columnas de apoyo/sección."
+      },
+      "inset_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.4,
+        "description": "Separación de apoyos respecto al borde."
+      },
+      "max_cantilever_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Vuelo máximo permitido respecto a apoyo inferior."
+      },
+      "member": {
+        "type": "MemberDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño común de columna/pilastra en este elemento."
+      }
+    }
+  },
+  "FaceBand": {
+    "source": "src/domain/theta.py",
+    "line": 88,
+    "fields": {
+      "face": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Orientación local: front/back/left/right/all."
+      },
+      "controls": {
+        "type": "FacadeControls",
+        "required": true,
+        "default": null,
+        "description": "Programa de fachada de la banda/zona."
+      },
+      "z_m": {
+        "type": "tuple[float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Intervalo vertical relativo a la base del componente."
+      }
+    }
+  },
+  "FacadeZone": {
+    "source": "src/domain/theta.py",
+    "line": 105,
+    "fields": {
+      "face": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Orientación local: front/back/left/right/all."
+      },
+      "controls": {
+        "type": "FacadeControls",
+        "required": true,
+        "default": null,
+        "description": "Programa de fachada de la banda/zona."
+      },
+      "u": {
+        "type": "tuple[float, float]",
+        "required": false,
+        "default": [
+          0.0,
+          1.0
+        ],
+        "description": "Intervalo normalizado de 0 a 1."
+      },
+      "z_m": {
+        "type": "tuple[float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Intervalo vertical relativo a la base del componente."
+      },
+      "role": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Rol descriptivo; en masa explícita también origina su referencia."
+      },
+      "offset_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Desplazamiento del anclaje/plano; en zona, positivo exterior."
+      },
+      "section": {
+        "type": "FacadeSection | None",
+        "required": false,
+        "default": null,
+        "description": "En zona: sección espacial; en miembro: forma de sección transversal."
+      }
+    }
+  },
+  "FacadeSection": {
+    "source": "src/domain/theta.py",
+    "line": 95,
+    "fields": {
+      "back_wall": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Conservar pared al fondo de un espacio retranqueado."
+      },
+      "column_axes_u": {
+        "type": "tuple[float, ...]",
+        "required": false,
+        "default": [
+          0.08,
+          0.92
+        ],
+        "description": "Ejes normalizados de columnas de la sección."
+      },
+      "column_width_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.25,
+        "description": "Ancho de columnas de apoyo/sección."
+      },
+      "slab_m": {
+        "type": "float",
+        "required": false,
+        "default": 0.2,
+        "description": "Espesor de losa/plataforma."
+      },
+      "member": {
+        "type": "MemberDesign | None",
+        "required": false,
+        "default": null,
+        "description": "Diseño común de columna/pilastra en este elemento."
+      }
+    }
+  },
+  "FacadeOverride": {
+    "source": "src/domain/theta.py",
+    "line": 264,
+    "fields": {
+      "mass_role": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Referencia de masa; preferir ID canónico rol:índice."
+      },
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "controls": {
+        "type": "FacadeControls",
+        "required": true,
+        "default": null,
+        "description": "Programa de fachada de la banda/zona."
+      }
+    }
+  },
+  "RoofOverride": {
+    "source": "src/domain/theta.py",
+    "line": 279,
+    "fields": {
+      "mass_ref": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID canónico de masa resuelta."
+      },
+      "kind": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "parapet_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de parapeto sobre techo."
+      },
+      "slope_deg": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Inclinación en grados."
+      }
+    }
+  },
+  "SiteControls": {
+    "source": "src/domain/theta.py",
+    "line": 351,
+    "fields": {
+      "fence": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Tipo de cerco automático."
+      },
+      "garden": {
+        "type": "bool | None",
+        "required": false,
+        "default": null,
+        "description": "Plantar espacio libre automáticamente si no hay zonas explícitas."
+      },
+      "runs": {
+        "type": "tuple[FenceRun, ...] | None",
+        "required": false,
+        "default": null,
+        "description": "Tramos explícitos de cerco; sustituyen cercos automáticos."
+      },
+      "zones": {
+        "type": "tuple[SiteZone, ...]",
+        "required": false,
+        "default": [],
+        "description": "Zonas independientes: fachada o suelo según contrato."
+      }
+    }
+  },
+  "FenceRun": {
+    "source": "src/domain/theta.py",
+    "line": 330,
+    "fields": {
+      "edge": {
+        "type": "int",
+        "required": true,
+        "default": null,
+        "description": "Índice de arista canónica de la masa/parcela según contexto."
+      },
+      "start_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Comienzo del cerco sobre la arista de parcela."
+      },
+      "end_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Final del cerco sobre la arista de parcela."
+      },
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "height_m": {
+        "type": "float",
+        "required": true,
+        "default": null,
+        "description": "Altura en metros de la entidad; en theta, coronación de masas."
+      },
+      "gate_u": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Distancia métrica de puerta desde inicio del tramo, no fracción."
+      },
+      "gate_width": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Ancho métrico de acceso peatonal."
+      },
+      "garage_u": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Distancia métrica de cochera desde inicio del tramo."
+      },
+      "garage_width": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Ancho métrico de acceso vehicular."
+      },
+      "height_mode": {
+        "type": "str",
+        "required": false,
+        "default": "high",
+        "description": "high/low modifica base y remates del cerco."
+      },
+      "wall_material": {
+        "type": "str",
+        "required": false,
+        "default": "plaster",
+        "description": "Slot de material base de fachada, o del tramo macizo del cerco según contrato."
+      },
+      "gate_mode": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "auto dibuja hojas; open deja acceso vacío."
+      },
+      "garage_mode": {
+        "type": "str",
+        "required": false,
+        "default": "auto",
+        "description": "auto dibuja hojas; open deja acceso vacío."
+      },
+      "openness": {
+        "type": "float",
+        "required": false,
+        "default": 0.3,
+        "description": "Fracción de huecos en lamas/estacas compatibles."
+      },
+      "planters": {
+        "type": "bool",
+        "required": false,
+        "default": false,
+        "description": "Añadir jardineras en balcón o cerco compatible."
+      },
+      "plinth": {
+        "type": "PlinthControls | None",
+        "required": false,
+        "default": null,
+        "description": "Controles de zócalo."
+      },
+      "base_height_m": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Altura de base maciza de cerco o base de miembro según contrato."
+      }
+    }
+  },
+  "SiteZone": {
+    "source": "src/domain/theta.py",
+    "line": 153,
+    "fields": {
+      "id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre estable y único dentro de la colección."
+      },
+      "kind": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Selector de tipo; su vocabulario depende del contrato."
+      },
+      "region": {
+        "type": "PlanRegion",
+        "required": false,
+        "default": {
+          "front_edge": null,
+          "u": [
+            0.0,
+            1.0
+          ],
+          "depth": [
+            0.0,
+            1.0
+          ],
+          "depth_m": null,
+          "fit": "parcel",
+          "width_reference": "parcel"
+        },
+        "description": "Región relativa a un frente de parcela."
+      },
+      "slope_deg": {
+        "type": "float",
+        "required": false,
+        "default": 0.0,
+        "description": "Inclinación en grados."
+      }
+    }
+  },
+  "ArchitecturalMass": {
+    "source": "src/domain/theta.py",
+    "line": 161,
+    "fields": {
+      "role": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Rol descriptivo; en masa explícita también origina su referencia."
+      },
+      "footprint": {
+        "type": "tuple[tuple[float, float], ...]",
+        "required": true,
+        "default": null,
+        "description": "Vértices XY explícitos de una masa."
+      },
+      "levels_m": {
+        "type": "tuple[float, ...]",
+        "required": true,
+        "default": null,
+        "description": "Cotas de base, entrepisos y techo; no alturas individuales."
+      }
+    }
+  },
+  "MaterialControl": {
+    "source": "src/domain/theta.py",
+    "line": 359,
+    "fields": {
+      "slot": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Nombre de slot existente a reemplazar o nombre nuevo derivado de una plantilla."
+      },
+      "template": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Slot existente del que copiar propiedades PBR/textura."
+      },
+      "color": {
+        "type": "tuple[float, float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Tinte RGB normalizado 0–1."
+      }
+    }
+  },
+  "NuisanceParameters": {
+    "source": "src/domain/theta.py",
+    "line": 395,
+    "fields": {
+      "seed": {
+        "type": "int",
+        "required": false,
+        "default": 0,
+        "description": "Semilla determinista de variación secundaria."
+      },
+      "curtains": {
+        "type": "bool",
+        "required": false,
+        "default": true,
+        "description": "Solicitar variación de cortinas donde el constructor la admite."
+      }
+    }
+  },
+  "GrammarConfig": {
+    "source": "src/domain/theta.py",
+    "line": 401,
+    "fields": {
+      "implementation": {
+        "type": "str",
+        "required": false,
+        "default": "theta-candidate-v0",
+        "description": "Identificador de implementación admitida."
+      },
+      "grammar_reference": {
+        "type": "str",
+        "required": false,
+        "default": "grammar-v1.0",
+        "description": "Referencia histórica de gramática, independiente del materializador."
+      },
+      "completion_policy": {
+        "type": "str",
+        "required": false,
+        "default": "conservative-0.2",
+        "description": "Política de completado admitida."
+      },
+      "detail": {
+        "type": "int",
+        "required": false,
+        "default": 2,
+        "description": "Resolución local/global; techo usa light/medium/full, otros entero 1–3."
+      }
+    }
+  },
+  "Observation": {
+    "source": "src/domain/theta.py",
+    "line": 33,
+    "fields": {
+      "view_id": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "ID de una vista de evidencia."
+      },
+      "image_path": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "Ruta de imagen de observación; no ejecuta visión al reconstruir."
+      },
+      "camera_xyz": {
+        "type": "tuple[float, float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Posición métrica opcional de cámara."
+      },
+      "heading_pitch_roll_deg": {
+        "type": "tuple[float, float, float] | None",
+        "required": false,
+        "default": null,
+        "description": "Orientación opcional de cámara en grados."
+      },
+      "timestamp": {
+        "type": "str | None",
+        "required": false,
+        "default": null,
+        "description": "Marca temporal de observación."
+      }
+    }
+  },
+  "Evidence": {
+    "source": "src/domain/theta.py",
+    "line": 42,
+    "fields": {
+      "state": {
+        "type": "str",
+        "required": true,
+        "default": null,
+        "description": "observed/inferred/prior/unknown/externally_known."
+      },
+      "confidence": {
+        "type": "float | None",
+        "required": false,
+        "default": null,
+        "description": "Confianza nula o de 0 a 1."
+      },
+      "view_ids": {
+        "type": "tuple[str, ...]",
+        "required": false,
+        "default": [],
+        "description": "IDs de observaciones que respaldan el valor."
+      }
+    }
+  }
+}

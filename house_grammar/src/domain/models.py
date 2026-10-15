@@ -149,7 +149,7 @@ class Opening:
 
 @dataclass(frozen=True)
 class FacadeMaterialRegion:
-    """Rectangular finish zone in facade-local metres, behind any openings."""
+    """Zero-thickness material assignment on the wall, excluding its openings."""
 
     u_m: float
     v_m: float
@@ -263,7 +263,7 @@ class FacadeSpecification:
 class SetbackSpecification:
     depth_m: float = 0.0
     surface: str = "pavement"
-    boundary: str = "open"
+    boundary: str = "open"  # open | domain.fence_catalog.FENCE_STYLES
     boundary_height_m: float = 1.8
     source: str = "assumed"
     edge_indices: tuple[int, ...] = ()  # parcel exterior after CCW normalization

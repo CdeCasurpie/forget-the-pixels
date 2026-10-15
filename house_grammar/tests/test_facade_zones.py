@@ -159,10 +159,10 @@ def test_facade_zone_backwards_compatible():
         record['facade']['is_front']=wall.facade.has_program
         legacy.append(record)
     digest=hashlib.sha256(json.dumps(legacy,sort_keys=True).encode()).hexdigest()
-    assert digest=='d1e7b295c0599d3d3f81f543feb86d80da03725dfe2545a3d94f6b012ba51067'
+    assert digest=='828dce8ed30d6f1b99ca343ca8e3b6868c1d07ccc0a43ee29fef8b437f318b1e'
     mesh=generate_resolved(plan,NuisanceParameters(curtains=False))
-    assert hashlib.sha256(mesh.vertices.tobytes()).hexdigest()=='dda933b82fe5a2b74bf053100c05703d0c3f63e0698990fac548e628bd3bbb2a'
-    assert hashlib.sha256(mesh.faces.tobytes()).hexdigest()=='ee74e5d6a538e1c9b586bebf8a228083dc2361474a8502301634a290920c6bce'
+    assert hashlib.sha256(mesh.vertices.tobytes()).hexdigest()=='9ddf2b2273bf731279844654e69382604dff0c745845ec95396d7211d38c27e0'
+    assert hashlib.sha256(mesh.faces.tobytes()).hexdigest()=='4162c07a96e6dde27f5751cf8fa1e2d62ef7949a8a952461b1995efac6d57d09'
     request=json.loads(canonical(ReconstructionRequest(P,plan.theta)))
     del request['theta']['massing']['components'][0]['zones']
     assert from_json(json.dumps(request)).theta.massing.components[0].zones==()

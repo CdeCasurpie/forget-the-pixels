@@ -1,5 +1,7 @@
 # Source Code Architecture
 
+**Guía actual de autoría theta (en español):** [cómo se forma, catálogos, campos y recorrido archivo por archivo](../docs/guia_theta/README.md). Incluye la reproducción de la casa de demostración. El mapa histórico de abajo conserva nombres de carpetas anteriores a la reorganización; para las rutas actuales consultar la guía.
+
 The `src/` directory contains the core engine of the `forget-the-pixels` project. It is strictly divided into two distinct hemispheres, as defined in `ARCHITECTURE.md`.
 
 ## 1. Perception & Reconstruction Pipeline (Computer Vision)

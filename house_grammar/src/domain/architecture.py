@@ -24,7 +24,7 @@ class BuildingProgram:
     primary_color: tuple[float, float, float] = (0.8, 0.8, 0.8)
     side_wall_finish: str = "raw"
     has_fence: bool = True
-    fence_type: str = "reja"
+    fence_type: str = "republicano"  # domain.fence_catalog.FENCE_STYLES | none
     is_corner: bool = False
 
 @dataclass(frozen=True)

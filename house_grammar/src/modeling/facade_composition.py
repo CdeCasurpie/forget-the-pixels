@@ -328,14 +328,14 @@ def _finish(c, rules, length, levels, height, ground, top, axes, ops, motif_feat
     if c.order is not None and c.order.cornice_height_m and top:relief_rules['cornice']=0
     if c.order is not None and (c.order.pilaster_mode!='none' or c.order.paired_bays):
         relief_rules['pilasters']=False
-    projections,regions=compose_relief(length,levels,ops,relief_rules,height,ground,top,
+    projections,_=compose_relief(length,levels,ops,relief_rules,height,ground,top,
                                        np.random.default_rng(0),[],DetailBudget(2))
     projections=tuple(replace(x,depth_m=c.gallery_depth_m) if x.kind=='gallery' else
                       replace(x,depth_m=c.awning_depth_m) if x.kind=='awning' else x for x in projections)
     ops=tuple(replace(x,kind='window') if x.kind=='balcony_window' else x for x in ops)
     return FacadeComposition(axes,ops,(projections if c.projections is None else c.projections)+motif_features+order_features+
                              _crown_projections(c,length,height),
-                             tuple(regions) if c.material_regions is None else c.material_regions)
+                              c.material_regions or ())
 
 
 def compose_facade(c: FacadeControls, family, length, levels, height, ground, top,
@@ -405,11 +405,13 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     order_features=_order_projections(c,length,height,axes)
     if c.order is not None and c.order.cornice_height_m and top:rules['cornice']=0
     if c.order is not None and (c.order.pilaster_mode!='none' or c.order.paired_bays):rules['pilasters']=False
-    projections, regions = compose_relief(length, levels, ops, rules, height,
+    # Family ornament does not silently repaint the wall. Finishes are authored
+    # through wall_material/material_regions, in repeat and explicit modes alike.
+    projections, _ = compose_relief(length, levels, ops, rules, height,
                                   ground, top, np.random.default_rng(0), [], DetailBudget(2))
     projections = tuple(replace(x, depth_m=c.gallery_depth_m) if x.kind == "gallery" else
                         replace(x, depth_m=c.awning_depth_m) if x.kind == "awning" else x for x in projections)
     ops = tuple(replace(x, kind="window") if x.kind == "balcony_window" else x for x in ops)
     return FacadeComposition(axes, ops, (projections if c.projections is None else c.projections)+motif_features+order_features+
                              _crown_projections(c,length,height),
-                             tuple(regions) if c.material_regions is None else c.material_regions)
+                              c.material_regions or ())

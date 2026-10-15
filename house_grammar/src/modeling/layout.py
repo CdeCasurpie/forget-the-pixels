@@ -17,6 +17,7 @@ from domain.models import (
 )
 from .materials import appearance_for_style
 from .composition import compose_facade
+from domain.fence_catalog import validate_fence_style
 
 
 def propose_building(
@@ -29,7 +30,7 @@ def propose_building(
     style="courtyard",
     seed=0,
     setback_m=2.0,
-    boundary="wall",
+    boundary="clasico",
     roof_kind="flat",
     objectid=None,
     detail_level="composed",
@@ -39,7 +40,9 @@ def propose_building(
         raise ValueError("detail_level must be basic or composed")
     if style not in ("narrow", "courtyard", "corner"):
         raise ValueError("Unknown grammar style")
-    if boundary not in ("open", "wall", "fence") or roof_kind not in (
+    if boundary != "open":
+        validate_fence_style(boundary)
+    if roof_kind not in (
         "flat",
         "shed",
         "gable",

@@ -1,0 +1,87 @@
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "schema_version": "0.3",
+    "family": "quiet_house",
+    "architectural_style": "republicano",
+    "massing": {"pattern": "explicit"},
+    "masses": [
+      {"role": "principal", "footprint": [[1,6],[11,6],[11,15],[1,15]], "levels_m": [0,3.1,6.2]},
+      {"role": "anexo", "footprint": [[8,2],[11,2],[11,6],[8,6]], "levels_m": [0,2.8]}
+    ],
+    "facade": {"mode": "explicit", "openings": [], "projections": [], "material_regions": []},
+    "facades": [
+      {
+        "mass_role": "principal:0", "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {"kind": "window", "u_m": 1.0, "v_m": 0.8, "width_m": 1.5, "height_m": 1.8, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true, "grille": true},
+            {"kind": "door", "u_m": 4.4, "v_m": 0.12, "width_m": 1.2, "height_m": 2.5, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "sill": false, "door": {"model": "auto", "leaves": 1, "construction": "panelled", "portal": "pilasters", "leaf_material": "wood"}},
+            {"kind": "window", "u_m": 7.5, "v_m": 0.8, "width_m": 1.5, "height_m": 1.8, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true, "grille": true},
+            {"kind": "window", "u_m": 1.0, "v_m": 3.9, "width_m": 1.5, "height_m": 1.7, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true},
+            {"kind": "door", "u_m": 4.4, "v_m": 3.22, "width_m": 1.2, "height_m": 2.3, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "sill": false, "door": {"model": "auto", "leaves": 1, "construction": "glazed", "leaf_material": "wood"}},
+            {"kind": "window", "u_m": 7.5, "v_m": 3.9, "width_m": 1.5, "height_m": 1.7, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true}
+          ],
+          "projections": [], "material_regions": []
+        }
+      },
+      {
+        "mass_role": "anexo:0", "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {"kind": "window", "u_m": 0.6, "v_m": 0.8, "width_m": 1.2, "height_m": 1.2, "recess_m": 0.1, "frame_width_m": 0.08, "frame_depth_m": 0.1, "frame_profile": "auto", "sill": true, "grille": true}
+          ],
+          "projections": [], "material_regions": []
+        }
+      }
+    ],
+    "roof": {"kind": "flat", "parapet_m": 0.4, "props": []},
+    "site": {
+      "fence": "none",
+      "runs": [
+        {"edge": 0, "start_m": 0.5, "end_m": 11.5, "kind": "republicano", "height_m": 1.6, "height_mode": "high", "gate_u": 4.6, "gate_width": 1.4, "base_height_m": 0.4, "wall_material": "plaster"}
+      ],
+      "zones": [
+        {"id": "jardin", "kind": "garden", "region": {"front_edge": 0, "u": [0.05, 0.3], "depth_m": [0.6, 2.4], "width_reference": "edge"}},
+        {"id": "patio", "kind": "patio", "region": {"front_edge": 0, "u": [0.35, 0.7], "depth_m": [0.5, 5.8], "width_reference": "edge"}}
+      ]
+    },
+    "trim": {
+      "cornice": {"enabled": false},
+      "plinth": {"design": "horizontal_joints", "height_m": 0.5, "relief_m": 0.025, "material": "stone"}
+    },
+    "primary_color": [0.85, 0.7, 0.45],
+    "materials": [
+      {"slot": "frame", "template": "plaster", "color": [0.95, 0.92, 0.83]},
+      {"slot": "wood", "template": "wood", "color": [0.55, 0.38, 0.22]},
+      {"slot": "metal", "template": "metal", "color": [0.12, 0.25, 0.23]},
+      {"slot": "glass", "template": "glass", "color": [0.31, 0.44, 0.43]},
+      {"slot": "stone", "template": "stone", "color": [0.5, 0.5, 0.48]}
+    ],
+    "entablatures": [
+      {"id": "coronacion", "mass_refs": ["principal:0"], "height_m": 0.4, "projection_m": 0.2, "scope": "exposed", "ornament": "dentils"},
+      {"id": "cinturon", "mass_refs": ["principal:0"], "anchor": "absolute", "top_m": 3.1, "height_m": 0.2, "projection_m": 0.1, "scope": "exposed"}
+    ],
+    "crowns": [
+      {
+        "id": "fronton", "mass_ref": "principal:0", "edge": 0, "u_m": 2.5, "width_m": 5.0, "height_m": 1.2,
+        "design": {"family": "triangular", "thickness_m": 0.32, "moulding_width_m": 0.14, "projection_m": 0.18, "ornament": "keystone"},
+        "aperture": "oculus", "aperture_width_m": 0.5, "aperture_height_m": 0.5, "aperture_sill_m": 0.35
+      }
+    ],
+    "balconies": [
+      {
+        "id": "balcon", "mass_ref": "principal:0", "edge": 0, "floor_m": 3.1, "u_m": 3.4, "width_m": 3.2, "depth_m": 0.9,
+        "kind": "projecting", "variant": "iron_rings", "brackets": true, "slab_material": "stone",
+        "railing": {"pattern": "rings", "material": "metal", "height_m": 1.0}
+      }
+    ],
+    "vertical_members": [
+      {"id": "pilastra_0", "mass_ref": "principal:0", "edge": 0, "u_m": 0.3, "bottom_m": 0.3, "height_m": 5.4, "width_m": 0.3, "depth_m": 0.12, "design": {"style": "auto", "variant": "recessed_panel", "material": "frame"}},
+      {"id": "pilastra_1", "mass_ref": "principal:0", "edge": 0, "u_m": 2.95, "bottom_m": 0.3, "height_m": 5.4, "width_m": 0.3, "depth_m": 0.12, "design": {"style": "auto", "variant": "recessed_panel", "material": "frame"}}
+    ]
+  },
+  "nuisance": {"seed": 7, "curtains": false}
+}

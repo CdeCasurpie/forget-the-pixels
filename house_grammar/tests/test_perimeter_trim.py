@@ -95,7 +95,11 @@ def test_flush_plinth_has_finish_without_relief():
     r['theta']['trim']['plinth']=dict(design='smooth',relief_m=0,height_m=.7)
     result=reconstruct(from_json(json.dumps(r)))
     assert all(p.semantic!='trim_plinth' for p in result.resolved.trims)
-    assert 'material_coating' in {p['name'] for p in result.mesh.parts}
+    assert 'material_coating' not in {p['name'] for p in result.mesh.parts}
+    wall_faces=[i for p in result.mesh.parts if p['name']=='wall'
+                for i in range(p['face_start'],p['face_start']+p['face_count'])]
+    assert any(result.mesh.materials[int(result.mesh.face_materials[i])]['name']=='plinth'
+               for i in wall_faces)
 
 
 def test_parapet_anchor_and_missing_parapet():
