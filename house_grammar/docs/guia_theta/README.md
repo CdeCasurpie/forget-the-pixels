@@ -206,6 +206,8 @@ Después de resolver masas y vanos, usar las referencias resultantes:
 
 No duplicar una pieza de `projections` con un ensamble independiente en el mismo sitio. Los resolvers comprueban varias de estas colisiones y rechazan combinaciones incompatibles.
 
+Las proyecciones de pilastra (`pilaster`, `classical_pilaster`, `composite_pilaster`), incluidas las emitidas por familia y `ArchitecturalOrder`, son adaptadas por `resolve_theta()` a `VerticalMemberControls` del catálogo; no se materializan también como proyecciones. Se validan junto con `theta.vertical_members`: la superposición entre dos disparadores se rechaza antes de crear malla. Para nuevas solicitudes, preferir `vertical_members` explícitos; los nombres de proyección siguen siendo entradas compatibles. Los antiguos adaptadores de pilastra en `ornaments.py`, `prefabs_facade.py` y `vertical_member_assembly.py` se eliminaron; V4 despacha esas entradas al mismo `build_member` del catálogo.
+
 El estilo global comprueba compatibilidad de ventanas, puertas, balcones, miembros independientes, frontones y entablamentos. **No es un override universal:** las cubiertas permiten estilo local, los cercos lo declaran en `kind`, y diseños anidados de columnas/portales pueden seleccionar otro estilo. La galería de la demo usa columnas anidadas `madera` dentro de un edificio republicano.
 
 ## 6. Qué no debe confundirse arriba del edificio

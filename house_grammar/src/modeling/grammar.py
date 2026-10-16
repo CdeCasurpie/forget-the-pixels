@@ -5,6 +5,7 @@ All decorative solids are clipped to it; beam placements are checked entirely.
 """
 
 import numpy as np
+from dataclasses import replace
 from shapely.geometry import Polygon, Point, LineString, box
 from shapely.geometry.polygon import orient
 from shapely.ops import unary_union
@@ -103,6 +104,20 @@ def opening(mb, a, t, n, op, pattern):
 
 def projection(mb, a, t, n, feature):
     """Build a facade-attached design mass in facade-local coordinates."""
+    if feature.kind in ('pilaster','classical_pilaster','composite_pilaster'):
+        from domain.vertical_members import MemberDesign
+        from modeling.vertical_member_assembly import build_member
+        if min(feature.width_m,feature.height_m,feature.depth_m)<=0:
+            raise ValueError('Pilaster dimensions must be positive')
+        style='barroco' if feature.kind=='composite_pilaster' else 'republicano'
+        variant='scroll_pilaster' if feature.kind=='composite_pilaster' else (
+            'restrained_fluted' if feature.kind=='classical_pilaster' else 'smooth_moulded')
+        design=feature.member or MemberDesign(style=style,variant=variant,material=feature.material_slot)
+        if design.style=='auto':design=replace(design,style=style)
+        depth=max(.06,feature.depth_m+.02)
+        center=np.asarray(a)+np.asarray(t)*(feature.u_m+feature.width_m/2)+np.asarray(n)*(depth/2-.02)
+        build_member(mb,center,t,n,feature.v_m,feature.width_m,depth,feature.height_m,design,'attached')
+        return
     from .prefabs import sign_letters
     from .prefabs_facade import FACADE_PROJECTIONS
 
@@ -281,6 +296,21 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
     regions = list(f.material_regions)
     regions.extend(trim_regions)
     features = list(f.projections) if f.has_program else []
+    pilaster_kinds=('pilaster','classical_pilaster','composite_pilaster')
+    if f.has_program and f.ornamented and f.style!='premium':
+        from domain.models import FacadeProjection
+        for u in (0.04,length-0.16):
+            candidate=FacadeProjection('pilaster',u,0,.12,total_height,.05,'stone')
+            domain=box(u,0,u+.12,total_height)
+            if not any(p.kind in pilaster_kinds and domain.intersection(
+                box(p.u_m,p.v_m,p.u_m+p.width_m,p.v_m+p.height_m)).area>1e-7 for p in features):
+                features.append(candidate)
+    pilasters=[p for p in features if p.kind in pilaster_kinds]
+    for i,p in enumerate(pilasters):
+        domain=box(p.u_m,p.v_m,p.u_m+p.width_m,p.v_m+p.height_m)
+        if any(domain.intersection(box(q.u_m,q.v_m,q.u_m+q.width_m,q.v_m+q.height_m)).area>1e-7
+               for q in pilasters[:i]):
+            raise ValueError('Overlapping facade pilasters')
     stairs = list(f.exterior_stairs) if f.has_program else []
     from modeling.facade_top import wall_domain, emit_top_trim
     from modeling.apertures import opening_shape
@@ -397,10 +427,6 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
             if not managed_trim:
                 for z in f.floor_levels_m[1:]:
                     mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
-            for u in [0.04, length - 0.16]:
-                from modeling.vertical_member_assembly import facade_member
-                from domain.models import FacadeProjection
-                facade_member(mb,a,t,n,FacadeProjection('pilaster',u,0,.12,total_height,.05,'stone'))
 
     if f.has_program:
         if f.services and length > 3.5:

@@ -1,5 +1,4 @@
 """One geometric engine for independent, embedded and facade vertical members."""
-from dataclasses import replace
 import math
 import numpy as np
 from shapely.geometry import Polygon
@@ -105,12 +104,3 @@ def build_member(mb,center,t,n,bottom,width,depth,height,design=MemberDesign(),p
     if design.ornament and ch and kind in ('volutes','leaves','composite','saddle'):
         emit_ornaments(mb,center,t,n,bottom+high,width,depth,ch,kind,
                        design.capital_material or design.material,design.detail,placement in ('attached','embedded'))
-
-
-def facade_member(mb,a,t,n,feature,variant='smooth_moulded',style='republicano'):
-    """Translation adapter for old projection names; no legacy mesh generator."""
-    design=getattr(feature,'member',None) or MemberDesign(style=style,variant=variant,material=feature.material_slot)
-    if design.style=='auto':design=replace(design,style=style)
-    depth=max(.06,feature.depth_m+.02)
-    center=np.asarray(a)+np.asarray(t)*(feature.u_m+feature.width_m/2)+np.asarray(n)*(depth/2-.02)
-    build_member(mb,center,t,n,feature.v_m,feature.width_m,depth,feature.height_m,design,'attached')

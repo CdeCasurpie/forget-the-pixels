@@ -8,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import numpy as np
 from shapely.geometry import Polygon, box
 
-from domain.models import FacadeProjection
-from modeling.grammar import projection
+from domain.models import FacadeProjection, FacadeSpecification
+from modeling.grammar import projection, facade
 from modeling.mesh_builder import MeshBuilder
 from modeling.prefabs_facade import FACADE_PROJECTIONS, LEGACY_KINDS
 
@@ -91,6 +91,13 @@ def build(kind, *, parcel=PARCEL, envelope=ENVELOPE, **overrides):
 
 
 class VocabularyTests(unittest.TestCase):
+    def test_v4_pilasters_share_catalogue_and_reject_duplicate_positions(self):
+        pilaster=feature_for('pilaster',u_m=.4,v_m=0.,height_m=5.)
+        spec=FacadeSpecification('front',(0.,0.),(10.,0.),10.,(0.,-1.),(0.,5.),
+                                 is_front=True,ornamented=False,projections=(pilaster,pilaster))
+        with self.assertRaisesRegex(ValueError,'Overlapping facade pilasters'):
+            facade(MeshBuilder(PARCEL,envelope=ENVELOPE),spec,5.)
+
     def test_every_kind_builds_its_characteristic_geometry(self):
         for kind in FACADE_PROJECTIONS:
             with self.subTest(kind=kind):

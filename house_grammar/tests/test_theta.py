@@ -31,6 +31,31 @@ def test_explicit_legacy_balcony_projection_is_promoted_to_catalogue():
     assert not any(p.kind=='balcony' for w in resolved.walls for p in w.facade.projections)
 
 
+@pytest.mark.parametrize('kind', ['pilaster','classical_pilaster','composite_pilaster'])
+def test_pilaster_projection_uses_member_catalogue(kind):
+    from domain.models import FacadeProjection
+    feature=FacadeProjection(kind,.4,0.,.3,2.5,.12)
+    t=replace(T,facade=FacadeControls(mode='explicit',openings=(),projections=(feature,)))
+    resolved=resolve_theta(P,t)
+    assert len(resolved.vertical_members)==1
+    assert not any(p.kind==kind for w in resolved.walls for p in w.facade.projections)
+    assert len(generate_resolved(resolved).faces)>0
+
+
+def test_duplicate_pilaster_triggers_rejected_across_sources():
+    from domain.models import FacadeProjection
+    from domain.vertical_members import VerticalMemberControls
+    feature=FacadeProjection('pilaster',.4,0.,.3,2.5,.12)
+    facade=FacadeControls(mode='explicit',openings=(),projections=(feature,feature))
+    with pytest.raises(ValueError,match='Overlapping vertical members'):
+        resolve_theta(P,replace(T,facade=facade))
+    from domain.vertical_members import MemberDesign
+    explicit=VerticalMemberControls('explicit', 'main:0',0,.55,0.,2.5,width_m=.3,depth_m=.14,
+                                    offset_m=-.02,design=MemberDesign(style='republicano'))
+    with pytest.raises(ValueError,match='Overlapping vertical members'):
+        resolve_theta(P,replace(T,facade=replace(facade,projections=(feature,)),vertical_members=(explicit,)))
+
+
 def test_roundtrip():
     request=ReconstructionRequest(P,T)
     other=from_json(canonical(request))

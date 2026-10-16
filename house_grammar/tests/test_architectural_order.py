@@ -54,8 +54,8 @@ def test_order_inside_facade_zone():
     c=FacadeControls(mode='explicit',openings=(),order=order(pilaster_mode='explicit',pilaster_axes_u=(.25,),cornice_height_m=.28))
     plan=solve(body((FacadeZone('front',c,(.2,.8)),)))
     wall=next(w for w in front(plan) if '/zone' in w.facade.edge_id)
-    assert any(p.source=='architectural_order' and p.kind=='pilaster' and
-               p.u_m+p.width_m/2==pytest.approx(2.4+7.2*.25) for p in wall.facade.projections)
+    assert not any(p.kind=='pilaster' for p in wall.facade.projections)
+    assert any(m.controls.u_m==pytest.approx(2.4+7.2*.25) for m in plan.vertical_members)
     assert len(generate_resolved(plan).faces)>0
 
 

@@ -67,7 +67,9 @@ def test_monumental_portal_inside_facade_zone():
     wall=next(w for w in front(plan) if '/zone' in w.facade.edge_id)
     local=compose(c,family='quiet_house')
     assert wall.facade.openings==tuple(replace(resolve_opening(o),u_m=o.u_m+8) for o in local.openings)
-    assert wall.facade.projections==tuple(replace(f,u_m=f.u_m+8) for f in local.projections)
+    pilasters={'pilaster','classical_pilaster','composite_pilaster'}
+    assert wall.facade.projections==tuple(replace(f,u_m=f.u_m+8) for f in local.projections if f.kind not in pilasters)
+    assert len(plan.vertical_members)==sum(f.kind in pilasters for f in local.projections)
     mesh=generate_resolved(plan)
     assert len(semantic_vertices(mesh,'crown_moulding'))>0
 

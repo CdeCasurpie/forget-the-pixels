@@ -85,7 +85,7 @@ Las rutas de las tablas son relativas a `house_grammar/src/`. **Theta** señala 
 |---|---|
 | `modeling/vertical_member_catalog.py` | 25 presets de sección, fuste, capitel, base y taper. Auto elige primera variante del estilo. |
 | `modeling/vertical_member_profiles.py` | Secciones rectangulares/redondeadas/achaflanadas/octogonales/circulares/elípticas, acanaladuras cóncavas reales y perfiles de basa/capitel. |
-| `modeling/vertical_member_assembly.py` | Valida diseño/dimensiones y construye anillos de fuste, pedestal, basa y capitel. Genera piezas mediante loft y añade ornato. `facade_member` traduce proyecciones antiguas. |
+| `modeling/vertical_member_assembly.py` | Valida diseño/dimensiones y construye anillos de fuste, pedestal, basa y capitel. `build_member` es el único constructor de geometría de pilastras; theta resuelve proyecciones en `modeling/theta.py` y V4 traduce nombres compatibles en `grammar.projection`. El adaptador `facade_member` fue eliminado. |
 | `modeling/vertical_member_sweep.py` | Une anillos y tapa extremos; recorta mallas contra planos de visibilidad/envolvente y escribe atributos/componentes. Mantiene el perfil en recortes. |
 | `modeling/vertical_member_ornaments.py` | Volutas barridas, hojas volumétricas curvas y zapatas de madera. El detalle cambia muestreo, no el nombre del estilo. |
 | `modeling/vertical_member_resolver.py` | Resuelve miembros sobre una banda expuesta inequívoca, aplica estilo global, valida materiales/colisiones y calcula transformación local. `u_m` es eje; esquina exige encuentro ortogonal. |

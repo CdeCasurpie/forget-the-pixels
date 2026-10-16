@@ -36,12 +36,6 @@ def moulded_surround(mb, a, t, n, feature):
                feature.material_slot,'surround_keystone')
 
 
-def classical_pilaster(mb, a, t, n, feature):
-    from modeling.vertical_member_assembly import facade_member
-    facade_member(mb,a,t,n,feature,'scroll_pilaster' if feature.kind=='composite_pilaster'
-                  else 'restrained_fluted','barroco' if feature.kind=='composite_pilaster' else 'republicano')
-
-
 def classical_cornice(mb,a,t,n,feature):
     """Projected corona above separated dentils and modestly spaced brackets."""
     u,z,w,h,d=feature.u_m,feature.v_m,feature.width_m,feature.height_m,feature.depth_m

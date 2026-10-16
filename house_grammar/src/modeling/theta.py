@@ -42,6 +42,7 @@ from modeling.balcony_resolver import ResolvedBalcony, resolve_balconies
 from domain.balconies import BalconyControls
 from domain.models import FacadeProjection
 from modeling.balcony_catalog import CATALOG as BALCONY_CATALOG
+from domain.vertical_members import VerticalMemberControls, MemberDesign
 from modeling.vertical_member_resolver import ResolvedMember, resolve_members
 from modeling.crown_resolver import ResolvedCrown, resolve_crowns
 from modeling.entrances import ResolvedEntrance, resolve_entrances, build_entrance
@@ -802,7 +803,39 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     walls=catalogue_walls
     _check(not {c.id for c in generated}&{c.id for c in theta.balconies}, 'Family balcony ID conflicts with explicit balcony')
     balconies=resolve_balconies(replace(theta,balconies=theta.balconies+tuple(generated)),masses,walls,envelope,materials)
-    members=resolve_members(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
+    # Promote family/order/explicit pilaster projections to the single catalog
+    # resolver. Its occupied footprints now catch projection-projection as well
+    # as projection-explicit collisions before any pilaster mesh is emitted.
+    promoted=[]
+    member_wall_refs={}
+    member_walls=[]
+    for wall in walls:
+        mass=next(m for m in masses if m.id==wall.mass_role)
+        retained=[]
+        for feature in wall.facade.projections:
+            if feature.kind not in ('pilaster','classical_pilaster','composite_pilaster'):
+                retained.append(feature)
+                continue
+            _check(wall.plane_offset_m==0, 'Pilaster on offset facade requires explicit vertical member controls')
+            default_style='barroco' if feature.kind=='composite_pilaster' else 'republicano'
+            default_variant='scroll_pilaster' if feature.kind=='composite_pilaster' else (
+                'restrained_fluted' if feature.kind=='classical_pilaster' else 'smooth_moulded')
+            design=feature.member or MemberDesign(style=theta.architectural_style or default_style,
+                variant='auto' if theta.architectural_style else default_variant,
+                section='rectangle',material=feature.material_slot)
+            if design.style=='auto':design=replace(design,style=theta.architectural_style or default_style)
+            promoted.append(VerticalMemberControls(
+                id=f'projection_pilaster_{len(promoted)}',mass_ref=mass.id,edge=wall.edge,
+                u_m=feature.u_m+feature.width_m/2,bottom_m=wall.base_z+feature.v_m-mass.base_z,
+                height_m=feature.height_m,width_m=feature.width_m,
+                depth_m=max(.06,feature.depth_m+.02),offset_m=-.02,
+                placement='attached',design=design))
+            member_wall_refs[promoted[-1].id]=wall.facade.edge_id
+        member_walls.append(replace(wall,facade=replace(wall.facade,projections=tuple(retained))))
+    walls=member_walls
+    _check(not {c.id for c in promoted}&{c.id for c in theta.vertical_members}, 'Pilaster ID conflicts with explicit member')
+    members=resolve_members(replace(theta,vertical_members=theta.vertical_members+tuple(promoted)),
+                            masses,walls,envelope,materials|{c.slot for c in theta.materials},member_wall_refs)
     crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
     accesses=resolve_entrances(theta,walls,masses,envelope,materials|{c.slot for c in theta.materials})

@@ -17,7 +17,8 @@ class ResolvedMember:
     bottom: float
 
 
-def resolve_members(theta,masses,walls,envelope,materials):
+def resolve_members(theta,masses,walls,envelope,materials,wall_refs=None):
+    wall_refs=wall_refs or {}
     result=[]; ids=set(); occupied=[]
     for c in theta.vertical_members:
         if not re.fullmatch('[a-z][a-z0-9_]*',c.id) or c.id in ids:raise ValueError('Invalid/duplicate member ID')
@@ -34,6 +35,7 @@ def resolve_members(theta,masses,walls,envelope,materials):
         mass=next((m for m in masses if m.id==c.mass_ref),None)
         if mass is None:raise ValueError('Unknown member mass')
         candidates=[w for w in walls if w.mass_role==c.mass_ref and w.edge==c.edge and
+                     (c.id not in wall_refs or w.facade.edge_id==wall_refs[c.id]) and
                     w.base_z-1e-6<=mass.base_z+c.bottom_m and
                     w.base_z+w.height_m+1e-6>=mass.base_z+c.bottom_m+c.height_m]
         candidates=[w for w in candidates if 0<=c.u_m<=w.facade.width_m]

@@ -11,7 +11,7 @@ from shapely.geometry import Polygon
 
 from .detail import DEFAULT_BUDGET
 from .prefabs import sign_letters
-from .ornaments import classical_pilaster, classical_cornice, moulded_surround, turned_baluster, oval_sign
+from .ornaments import classical_cornice, moulded_surround, turned_baluster, oval_sign
 
 LEGACY_KINDS = ("panel", "frame", "ledge", "canopy", "curved_canopy")
 
@@ -210,11 +210,6 @@ def sill_band(mb, a, t, n, feature):
          feature.depth_m - 0.01, "cornice_drip", "stone", chamfer=0.01)
 
 
-def pilaster(mb, a, t, n, feature):
-    from modeling.vertical_member_assembly import facade_member
-    facade_member(mb,a,t,n,feature)
-
-
 def balcony(mb, a, t, n, feature):
     """Projecting slab with a railing; the classic Lima cantilever."""
     u1, u2 = feature.u_m, feature.u_m + feature.width_m
@@ -376,8 +371,6 @@ def vertical_fins(mb,a,t,n,feature):
 
 FACADE_PROJECTIONS = {
     "oval_sign": oval_sign,
-    "classical_pilaster": classical_pilaster,
-    "composite_pilaster": classical_pilaster,
     "classical_cornice": classical_cornice,
     "moulded_surround": moulded_surround,
     "segmental_surround": moulded_surround,
@@ -391,7 +384,6 @@ FACADE_PROJECTIONS = {
     # alias so family rules and projection dispatch agree on one name
     "denticulated": denticulated_cornice,
     "sill_band": sill_band,
-    "pilaster": pilaster,
     "balcony": balcony,
     "gallery": gallery,
     "awning": awning,
