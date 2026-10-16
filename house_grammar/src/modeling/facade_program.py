@@ -16,7 +16,7 @@ from dataclasses import dataclass, field, replace
 
 import numpy as np
 
-from domain.models import FacadeMaterialRegion, FacadeProjection, Opening
+from domain.models import DoorControls, FacadeMaterialRegion, FacadeProjection, Opening
 from modeling.detail import DEFAULT_BUDGET
 
 # Bay rhythm, opening programme and relief per architectural family. Read as
@@ -27,79 +27,79 @@ FAMILY_RULES = {
         pitch=3.0, window_ratio=0.46, window_h=1.55, sill=0.95, grille=True,
         ground="entrance", upper="repetitive", cornice=0.22, sill_band=False,
         pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material=None, prefab="slim_window",
+        ground_material=None, prefab="catalog",
     ),
     "ribbon_windows": dict(
         pitch=3.6, window_ratio=0.74, window_h=1.55, sill=0.85, grille=False,
         ground="entrance", upper="ribbon", cornice=0.18, sill_band=True,
         pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material=None, prefab="slim_window",
+        ground_material=None, prefab="catalog",
     ),
     "balcony_apartments": dict(
         pitch=3.1, window_ratio=0.56, window_h=1.95, sill=0.30, grille=False,
         ground="entrance", upper="balcony_column", cornice=0.26, sill_band=False,
         pilasters=False, shutters=False, balcony_every=2, balcony_style="bars",
-        ground_material="stone", prefab="slim_window",
+        ground_material="stone", prefab="catalog",
     ),
     "mixed_use": dict(
         pitch=3.3, window_ratio=0.58, window_h=1.60, sill=0.90, grille=False,
         ground="shopfront", upper="repetitive", cornice=0.24, sill_band=True,
         pilasters=False, shutters=False, balcony_every=3, balcony_style="bars",
-        ground_material="stone", prefab="slim_window", awning=True, sign="TIENDA",
+        ground_material="stone", prefab="catalog", awning=True, sign="TIENDA",
     ),
     "workshop": dict(
         pitch=3.8, window_ratio=0.42, window_h=1.30, sill=1.45, grille=True,
         ground="garage", upper="repetitive", cornice=0.14, sill_band=False,
         pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material="concrete", prefab="slim_window", sign="TALLER",
+        ground_material="concrete", prefab="catalog", sign="TALLER",
     ),
     "brick_courtyard": dict(
         pitch=2.9, window_ratio=0.48, window_h=1.45, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.20, sill_band=False,
         pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material="brick", prefab="slim_window", crown="brick",
+        ground_material="brick", prefab="catalog", crown="brick",
     ),
     # Barranco-specific languages the generic families could not express.
     "republicano": dict(
         pitch=2.8, window_ratio=0.42, window_h=2.25, sill=0.75, grille=True,
         ground="entrance", upper="repetitive", cornice=0.42, sill_band=True,
         pilasters=True, shutters=True, balcony_every=3, balcony_style="balusters",
-        ground_material="stone", prefab="legacy", arch_ground=True, arch_upper=True,
+        ground_material="stone", prefab="catalog", arch_ground=True, arch_upper=True,
         cornice_type="denticulated_cornice",
     ),
     "galeria_madera": dict(
         pitch=3.0, window_ratio=0.62, window_h=1.85, sill=0.25, grille=False,
         ground="shopfront", upper="gallery", cornice=0.20, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="balusters",
-        ground_material="wood", prefab="legacy", awning=True, arch_upper=True,
+        ground_material="wood", prefab="catalog", awning=True, arch_upper=True,
         cornice_type="cornice",
     ),
     "esquina_comercial": dict(
         pitch=3.2, window_ratio=0.54, window_h=1.70, sill=0.80, grille=False,
         ground="shopfront", upper="balcony_column", cornice=0.30, sill_band=True,
         pilasters=True, shutters=False, balcony_every=2, balcony_style="solid",
-        ground_material="stone", prefab="slim_window", awning=True, sign="LOCAL",
+        ground_material="stone", prefab="catalog", awning=True, sign="LOCAL",
         arch_ground=True, cornice_type="denticulated_cornice",
     ),
     "quinta": dict(
         pitch=2.7, window_ratio=0.50, window_h=1.40, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.16, sill_band=False,
         pilasters=False, shutters=True, balcony_every=0, balcony_style="bars",
-        ground_material=None, prefab="wood_panel", arch_upper=True,
+        ground_material=None, prefab="catalog", arch_upper=True,
         cornice_type="cornice",
     ),
     "neoclasico": dict(
         pitch=3.5, window_ratio=0.40, window_h=2.40, sill=0.90, grille=True,
         ground="entrance", upper="repetitive", cornice=0.55, sill_band=True,
         pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        ground_material="stone", prefab="catalog", arch_upper=True, arch_ground=True,
         cornice_type="denticulated_cornice", sign="BCP",
     ),
     "neoclasico_esquina": dict(
         pitch=3.2, window_ratio=0.45, window_h=2.30, sill=0.85, grille=True,
         ground="entrance", upper="repetitive", cornice=0.60, sill_band=True,
         pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
+        ground_material="stone", prefab="catalog", arch_upper=True, arch_ground=True,
         cornice_type="denticulated_cornice",
     ),
 }
@@ -155,7 +155,8 @@ def bay_axes(length):
 
 
 def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
-             columns=2, rows=1, balcony_depth=0.75, curtain=0.0, arch_rise=None):
+             columns=2, rows=1, balcony_depth=0.75, curtain=0.0, arch_rise=None,
+             door=None):
     shape = "arch" if (arch_rise is not None or
                        (rules.get("arch_ground") and kind in ("door", "gate")) or
                        (rules.get("arch_upper") and kind == "window")) else "rectangle"
@@ -169,17 +170,18 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
         height_m=height,
         frame_width_m=0.07,
         recess_m=0.12,
-        style="sliding" if kind == "window" else "ornate_gate" if kind in ("door", "gate") and shape == "arch" else "legacy",
+        style="sliding",
         grille=rules["grille"] if grille is None else grille,
         mullion_columns=max(1, columns),
         mullion_rows=max(1, rows),
         balcony_depth_m=balcony_depth,
-        prefab=prefab or rules["prefab"],
+        prefab='catalog',
         curtain=curtain,
         grille_pattern="grid",
         source="family_rule",
         shape=shape,
         arch_rise_m=arch_rise,
+        door=door,
     )
 
 
@@ -196,26 +198,30 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
             break
         if programme == "shopfront" or programme == "gallery":
             width = min(pitch * 0.78, 3.0)
-            kind, prefab, grille = "window", "storefront", False
+            kind, grille = "window", False
+            door = None
             if index == 0:
                 width = min(width, 1.25)
-                kind, prefab = "door", "wood_panel"
+                kind = "door"
+                door = DoorControls(construction='boards', leaf_material='wood')
         elif programme == "garage":
             if index == 0:
                 width = min(pitch * 0.86, 3.2)
-                kind, prefab, grille = "gate", "roller", False
+                kind, grille = "gate", False
+                door = DoorControls(construction='louvers', leaf_material='metal')
             else:
                 width = min(pitch * rules["window_ratio"], 1.6)
-                kind, prefab, grille = "window", rules["prefab"], True
+                kind, grille = "window", True
+                door = None
         else:  # entrance
             if index == 0:
                 width = min(pitch * 0.42, 1.2)
-                kind, prefab, grille = "door", rules["prefab"], False
-                if prefab == "slim_window":
-                    prefab = "wood_panel"
+                kind, grille = "door", False
+                door = DoorControls(construction='boards', leaf_material='wood')
             else:
                 width = min(pitch * rules["window_ratio"], 2.0)
-                kind, prefab, grille = "window", rules["prefab"], rules["grille"]
+                kind, grille = "window", rules["grille"]
+                door = None
         u = centre - width / 2.0
         if u < 0.14 or u + width > length - 0.14:
             dropped.append(f"ground_bay_{index}_outside_wall")
@@ -235,15 +241,15 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
             openings.append(
                 _opening(kind, u, z0 + sill, width,
                          min(rules["window_h"], available),
-                         rules, prefab=prefab, grille=grille,
+                         rules, grille=grille,
                          columns=max(2, int(width / 0.8)), arch_rise=arch_r)
             )
         else:
             openings.append(
                 _opening(kind, u, z0 + 0.04, width, height, rules,
-                         prefab=prefab, grille=grille,
+                         grille=grille,
                          columns=max(1, int(width / 1.1)), rows=3,
-                         arch_rise=arch_rise)
+                         arch_rise=arch_rise, door=door)
             )
     return openings
 

@@ -2,10 +2,18 @@
 
 ## Activación y estilo
 
-Una abertura `kind: door` o `gate` activa el ensamblaje nuevo al incluir `door`.
+Toda abertura `kind: door` o `gate` usa exclusivamente `door_assembly.py`.
 `door.model: auto` hereda `theta.architectural_style`, con las mismas cinco familias
 de ventanas: republicano, barroco, clásico, madera y moderno. Se rechaza un modelo
-que contradiga el estilo del edificio. Las aberturas sin `door` conservan su ruta.
+que contradiga el estilo del edificio. Sin estilo global, auto se completa con
+`moderno`. Sin bloque `door`, `prefab: catalog` (por defecto) completa ese modelo
+del catálogo. Nunca activa una puerta plana antigua. Para seleccionar un diseño
+concreto, declarar `door.model` y `door.construction`.
+
+Los prefabs antiguos `wood_panel`, `metal_gate`, `roller`, `storefront` y `open`
+sin diseño `door` se rechazan. No se reinterpretan automáticamente como otro tipo
+de hoja. Los nombres presentes en las muestras originales con `door` son metadatos:
+el bloque `door` gobierna la geometría. Los JSON/GLB de los dos catálogos se conservan.
 
 El perfil utiliza el catálogo `PROFILES` compartido con ventanas. El vano y todos
 los anillos se derivan de `opening_shape`; no se coloca un marco rectangular

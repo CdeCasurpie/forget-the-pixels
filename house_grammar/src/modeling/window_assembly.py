@@ -20,7 +20,7 @@ PROFILES = {
 
 def validate_window(op):
     if op.frame_profile not in PROFILES:raise ValueError('Unknown or unresolved window frame profile')
-    if op.kind!='window' or op.prefab not in ('legacy','slim_window','storefront','open'):
+    if op.kind not in ('window','balcony_window') or op.prefab not in ('catalog','legacy','slim_window','storefront','open'):
         raise ValueError('Linked window supports window glass/open infill only')
     if not all(math.isfinite(x) and x>0 for x in
                (op.width_m,op.height_m,op.frame_width_m,op.frame_depth_m,op.recess_m,op.grille_spacing_m)):

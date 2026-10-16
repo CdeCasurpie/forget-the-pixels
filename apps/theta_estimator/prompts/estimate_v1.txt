@@ -1,5 +1,30 @@
 Mira las {n_images} fotos adjuntas del lote {lot_id} en Barranco, Lima.
-En cada foto el lote de interés está resaltado con un prisma verde: estima SOLO ese edificio, no los vecinos.
+{style_note}El lote de interés está encerrado por un prisma de líneas: base AMARILLA a nivel
+de calle, techo MAGENTA a una altura supuesta y verticales NARANJAS en sus
+esquinas. Estima SOLO el edificio dentro de ese prisma, no los vecinos.
+La altura del prisma es solo una suposición visual: estima las alturas por la
+fachada real (puertas, ventanas, pisos visibles), no por las líneas.
+
+Procedimiento:
+1. Cuenta los pisos del cuerpo principal (sin azoteas ni altillos).
+2. PRIMER PISO, con atención: en Barranco casi siempre difiere un poco
+   (portones altos, zaguanes, comercio, marquesinas). Compara su altura con
+   los pisos superiores; si es claramente más alto, first_floor_different=true
+   con su altura; si no, false.
+3. ESTILO, sin usar "moderno" por defecto; decide por ornamento y material:
+   - republicano: casona de época; molduras con labios y relieves, puertas
+     paneladas con pilastras o portada, rejas de fierro con aros, balcones de
+     fierro o galerías de madera torneada.
+   - barroco: ornamentación curva y recargada; perfiles ondulados, volutas,
+     hojas, columnas salomónicas o rejas con volutas.
+   - clasico: órdenes clásicos (columnas toscanas, dóricas, jónicas o
+     corintias), marcos escalonados, balaustres de piedra, frontón
+     triangular, simetría sobria.
+   - madera: construcción visiblemente de madera (tablas, balcón corrido y
+     celosías de madera, postes torneados, carpintería de madera).
+   - moderno: paños lisos de concreto o vidrio, líneas rectas, lamas o
+     parasoles, perfilería metálica fina, sin ornamento. Solo si no hay
+     ninguno de los rasgos anteriores.
 
 Devuelve SOLO un objeto JSON con exactamente estas claves, sin texto adicional:
 
@@ -9,7 +34,7 @@ Devuelve SOLO un objeto JSON con exactamente estas claves, sin texto adicional:
   "first_floor_different": <true si el primer piso es claramente más alto que los demás, false si no>,
   "first_floor_height_m": <número 2-8 si first_floor_different es true, null si es false>,
   "style": <uno de: republicano, barroco, clasico, madera, moderno>,
-  "notes": <una frase corta con lo que te basó la estimación, o cadena vacía>
+  "notes": <una frase corta con los rasgos que te basaron la estimación (p. ej. "balcón corrido de madera y portón alto"), o cadena vacía>
 }
 
 Si algo no se distingue, elige el valor más probable y dilo en notes. Responde únicamente el JSON.

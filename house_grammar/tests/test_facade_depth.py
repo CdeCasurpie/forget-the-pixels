@@ -27,16 +27,16 @@ def test_legacy_empty_depth():
 
 def test_openings_move_with_plane_and_visibility():
     from domain.theta import Opening, MassComponent, PlanRegion
-    control=FacadeControls(mode='explicit',openings=(Opening('window',1.,1.,1.,1.,prefab='slim_window'),))
+    control=FacadeControls(mode='explicit',openings=(Opening('window',1.,1.,1.,1.,prefab='catalog'),))
     zone=FacadeZone('front',control,(.2,.8),offset_m=-.8)
     baseline=generate_resolved(solve(body((replace(zone,offset_m=0.),))))
     displaced=generate_resolved(solve(body((zone,))))
-    a=semantic_vertices(baseline,'slim_frame')
-    b=semantic_vertices(displaced,'slim_frame')
+    a=semantic_vertices(baseline,'window_profile')
+    b=semantic_vertices(displaced,'window_profile')
     assert b[:,1].mean()-a[:,1].mean()==pytest.approx(.8,abs=1e-5)
     blocker=MassComponent('blocker',PlanRegion(u=(0.,.5),depth_m=(0.,4.)),(0.,3.,6.))
     masked=generate_resolved(solve(body((zone,)),blocker))
-    assert len(semantic_vertices(masked,'slim_frame'))==0
+    assert len(semantic_vertices(masked,'window_profile'))==0
 
 
 @pytest.mark.parametrize('depth',[-2.1,1.1,float('nan')])

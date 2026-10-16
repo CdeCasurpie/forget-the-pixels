@@ -75,19 +75,16 @@ Puertas vinculadas solo permiten rectángulo/arco. `OpeningProgram.shape` permit
 
 | `prefab` | Aspecto/función |
 |---|---|
-| `legacy` | Constructor tradicional con marco, montantes y panel según `kind`; con perfil vinculado pasa a ese constructor. |
-| `slim_window` | Vidrio en marco fino, divisiones y fondo interior en ruta tradicional. |
-| `storefront` | Relleno vidriado tipo escaparate; el tamaño lo dan las dimensiones. |
-| `wood_panel` | Hoja opaca de madera con paneles levantados. |
-| `metal_gate` | Hoja metálica opaca con juntas verticales. |
-| `roller` | Persiana metálica enrollable, listones horizontales estrechos. |
-| `louver` | Celosía de lamas metálicas horizontales. |
-| `open` | Hueco sin vidrio/hoja; `style="vestibule"` añade fondo interior en ruta tradicional. |
-| `screen` | Panel perforado de piedra con retícula de huecos cuadrados. |
+| `catalog` | Valor por defecto; ventana/puerta del catálogo vinculado. |
+| `legacy` | Alias de serialización presente en las muestras originales; no ejecuta un constructor antiguo. |
+| `slim_window`, `storefront` | Alias de vidrio de ventana normalizados a catálogo; no conservan sus prefabs antiguos. |
+| `open` | Ventana de catálogo sin vidrio ni divisiones. En puertas es alias de puerta calada con sobreluz abierta. |
+| `wood_panel`, `metal_gate`, `roller`, `storefront` (en puertas) | Alias de lectura con intención material: tablas/madera, paneles/metal, lamas/metal, vidriada. Se normalizan a `door` de catálogo. |
+| `louver`, `screen` y nombres desconocidos | Sin equivalente en el catálogo; se rechazan. |
 
-**Prioridad real de despacho** (`grammar.opening`): `door` → `frame_profile` → abertura curva/open/screen → prefab no legacy → legacy. No son capas independientes que siempre se sumen.
+**Despacho único** (`grammar.opening` → `opening_catalog`): window/balcony_window → `window_assembly`; door/gate → `door_assembly`. Los emisores de prefabs y aberturas curvas antiguos están retirados.
 
-`frame_profile`: uno de los cinco estilos; `auto` se resuelve para ventanas con estilo global. Ventanas vinculadas admiten `legacy`, `slim_window`, `storefront`, `open`. `frame_width_m` ensancha el marco dentro del vano; `frame_depth_m` determina su relieve; `recess_m` hunde el relleno. `sill=true` añade alféizar siguiendo el contorno inferior.
+`frame_profile`: uno de los cinco estilos; auto hereda estilo global y, sin este, usa moderno. `frame_width_m` ensancha el marco dentro del vano; `frame_depth_m` determina su relieve; `recess_m` hunde el relleno. `sill=true` añade alféizar siguiendo el contorno inferior.
 
 `mullion_columns/rows`: divisiones del vidrio. `grid_spacing_m` selecciona subdivisión adaptativa en ventanas vinculadas. `grille=true` añade protección independiente con `grille_spacing_m` y `grille_pattern`:
 
@@ -95,7 +92,7 @@ Puertas vinculadas solo permiten rectángulo/arco. `OpeningProgram.shape` permit
 - `grid`: retícula ortogonal.
 - `diamond`: rombos/diagonales.
 
-`Opening.style` no es el estilo arquitectónico. En legacy `casement` dibuja una hoja abatida; `ornate_gate` añade hierro ornamental en puertas/portones. El contrato comenta `sliding/transom/paneled`, pero no hay una implementación diferenciada completa para cada uno. No prometer movimiento/carpintería específica con esos strings. En prefabs no legacy se exige normalmente `sliding`, salvo `open + vestibule`.
+`Opening.style` no selecciona el catálogo. Las hojas abatidas, cortinas y ornamentos del fallback antiguo no se generan; usar los controles explícitos de los ensambles vinculados.
 
 Muestras existentes: [catalogo_ventanas](../../steps/step23_fresh_theta/catalogo_ventanas): 5 perfiles × 4 formas × con/sin reja = 40 variantes generadas por el script.
 
@@ -251,11 +248,11 @@ Muestras: [catalogo_frontones](../../steps/step23_fresh_theta/catalogo_frontones
 
 Muestras: [catalogo_remates](../../steps/step23_fresh_theta/catalogo_remates).
 
-## 10. Techos: dos niveles de control
+## 10. Techos: losa estructural y catálogo único de cubiertas
 
 ### Techo básico (`roof` y `roofs`)
 
-`kind=flat` losa plana; `corrugated` cobertura corrugada básica; `tile_shed` teja a una pendiente; `gable` dos pendientes. `parapet_m` 0–2 m, pero cero en inclinados. `slope_deg` solo tile_shed/gable (1–35°). `roofs` sobrescribe por masa.
+`kind=flat` (o `null` para completar a plano) es la única base permitida: losa estructural, parapeto 0–2 m y objetos. `slope_deg` debe ser `null`. Lo mismo rige para `component.roof`, `roof_bodies[].roof` y `roofs`. Las cubiertas inclinadas y corrugadas se escriben exclusivamente en `roof_assemblies`; los valores básicos antiguos se rechazan con instrucciones de migración. Véase [CATALOGO_TECHOS.md](../../../CATALOGO_TECHOS.md).
 
 ### Cubierta detallada (`roof_assemblies[].design`)
 
@@ -272,6 +269,8 @@ Muestras: [catalogo_remates](../../steps/step23_fresh_theta/catalogo_remates).
 `covering`: `none` sin acabado añadido; `curved_tile` tejas curvas; `flat_tile` tejas planas; `corrugated` plancha con ondas; `panel` panel continuo; `slats` listones abiertos tipo sol y sombra.
 
 `construction`: `solid` sustrato continuo, `frame` estructura abierta; tejas requieren solid. `detail=light/medium/full` cambia representación/densidad del recubrimiento. `slope_deg` se valida 1–45° incluso si la forma plana no usa esa inclinación. `rotation_deg` orienta los planos en XY; `ridge_fraction` mueve la cumbrera; `tile_width_m/tile_length_m/overlap_m` controlan módulos.
+
+En shed/gable, `rotation_deg` es la dirección XY ascendente del primer faldón, desde +X en sentido antihorario; la cumbrera gable es perpendicular. No es un ángulo respecto de la calle ni del norte geográfico. Un recorte por cuerpo superior/frontón conserva los planos. Un `RoofBody` se referencia por `<id>:0`, igual que otro componente: no necesita un campo design adicional.
 
 `eave.kind`:
 

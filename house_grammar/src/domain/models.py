@@ -91,7 +91,7 @@ class HeightEstimate:
 
 @dataclass(frozen=True)
 class DoorControls:
-    """Opt-in door/gateway assembly; dimensions refer to the parent opening."""
+    """Catalog door/gateway assembly; dimensions refer to the parent opening."""
     model: str = 'auto'
     leaves: int = 0  # 0 chooses one/two from clear width
     construction: str = 'auto'  # panelled | glazed | grille | boards | louvers
@@ -134,7 +134,7 @@ class Opening:
     mullion_columns: int = 2
     mullion_rows: int = 2
     balcony_depth_m: float = 0.75
-    prefab: str = "legacy"  # slim_window | wood_panel | metal_gate | roller | storefront | louver
+    prefab: str = "catalog"  # linked catalog; open selects an unglazed window
     curtain: float = 0.0  # fraction covered from the sides
     grille_pattern: str = "vertical"  # vertical | grid | diamond
     shape: str = "rectangle"  # rectangle | arch

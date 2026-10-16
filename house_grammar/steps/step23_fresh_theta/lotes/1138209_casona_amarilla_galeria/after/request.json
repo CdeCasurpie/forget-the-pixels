@@ -83,9 +83,9 @@
           "facade": null,
           "faces": [],
           "roof": {
-            "kind": "gable",
+            "kind": "flat",
             "parapet_m": 0.0,
-            "slope_deg": 14.0,
+            "slope_deg": null,
             "props": null
           },
           "slab_m": 0.18
@@ -126,9 +126,9 @@
           "facade": null,
           "faces": [],
           "roof": {
-            "kind": "tile_shed",
+            "kind": "flat",
             "parapet_m": 0.0,
-            "slope_deg": 8.0,
+            "slope_deg": null,
             "props": null
           },
           "slab_m": 0.18
@@ -477,7 +477,7 @@
     },
     "roofs": [],
     "site": {
-      "fence": "reja",
+      "fence": "republicano",
       "garden": null,
       "runs": null,
       "zones": [
@@ -538,7 +538,43 @@
         ]
       }
     ],
-    "finish": null
+    "finish": null,
+    "roof_assemblies": [
+      {
+        "id": "main_roof",
+        "mass_ref": "main:0",
+        "design": {
+          "form": "gable",
+          "covering": "curved_tile",
+          "material": "roof_tile",
+          "slope_deg": 14.0,
+          "rotation_deg": -174.5239650463239,
+          "detail": "full",
+          "eave": {
+            "kind": "clean",
+            "overhang_m": 0.0,
+            "fascia": false
+          }
+        }
+      },
+      {
+        "id": "wing_roof",
+        "mass_ref": "wing:0",
+        "design": {
+          "form": "shed",
+          "covering": "curved_tile",
+          "material": "roof_tile",
+          "slope_deg": 8.0,
+          "rotation_deg": -84.52396504632391,
+          "detail": "full",
+          "eave": {
+            "kind": "clean",
+            "overhang_m": 0.0,
+            "fascia": false
+          }
+        }
+      }
+    ]
   },
   "nuisance": {
     "seed": 11,

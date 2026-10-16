@@ -51,14 +51,13 @@ def apply_family(spec, family):
                 ww=pitch*(.85 if family=="ribbon_windows" else .70)
                 u=left+(pitch-ww)/2
                 v=z+.8; hh=min(1.65,fh-1.05)
-                kind="window"; prefab="slim_window"
+                kind="window"
                 grille=floor==0; columns=max(2,round(ww/.7)); rows=1
                 if floor==0 and bay==0:
-                    kind="door"; prefab=str(rng.choice(["wood_panel","metal_gate"])); ww=min(1.05,pitch-.24)
+                    kind="door"; ww=min(1.05,pitch-.24)
                     u=left+.06; v=.04; hh=min(2.25,fh-.3); grille=False
                 if floor==0 and family in ("mixed_use","workshop"):
                     kind="gate" if family=="workshop" else ("door" if bay==0 else "window")
-                    prefab="roller" if family=="workshop" else "storefront"
                     ww=pitch-.2; u=left+.1; v=.06; hh=min(2.35,fh-.42)
                     columns=2; grille=False
                 if floor>0 and family=="balcony_apartments" and bay%2==0:
@@ -71,7 +70,7 @@ def apply_family(spec, family):
                     u = max(left + 0.05, min(left + pitch - ww - 0.05, u + jitter))
                 
                 ops.append(Opening(kind,u,v,ww,hh,frame_width_m=.028,recess_m=.12,
-                                   prefab=prefab,curtain=float(rng.choice([.25,.55,.85])) if prefab=="slim_window" else 0,
+                                    prefab='catalog',curtain=0,
                                    grille=grille,grille_pattern=str(rng.choice(["vertical","grid","diamond"])),
                                    mullion_columns=columns,mullion_rows=rows,
                                    balcony_depth_m=.65,source="family_rule"))

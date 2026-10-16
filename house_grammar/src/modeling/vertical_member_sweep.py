@@ -63,7 +63,10 @@ def clip_member_mesh(vertices,faces,planes):
 def emit_member_mesh(mb,vertices,faces,material,semantic):
     footprint=Polygon() if not len(vertices) else MultiPoint(vertices[:,:2]).convex_hull
     if footprint.is_empty:return
-    if not mb.envelope.buffer(1e-7).covers(footprint):
+    # Match the roof resolver's 0.1 mm numerical tolerance. The envelope has a
+    # precision grid: a sub-grid buffer rounds to zero, needlessly slicing
+    # already clipped corrugations into almost-zero cap loops at lot edges.
+    if not mb.envelope.buffer(1e-4).covers(footprint):
         from shapely.geometry.polygon import orient
         from modeling.mesh_builder import polygons
         intersection=mb.envelope.intersection(footprint)

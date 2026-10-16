@@ -82,14 +82,13 @@ class ComponentRecord:
 
 @dataclass(frozen=True)
 class RoofSurface:
-    """One continuous roof plane over part of a mass.
+    """Structural flat slab over an exposed mass region.
 
-    A sloped surface rises from `eave_point` along `inward_normal`, so a tile
-    apron can hang below the wall head over the pavement while the same plane
-    climbs to a ridge inside the lot.
+    Historical plane fields remain serializable; designed slopes belong to
+    RoofFace in the catalog pipeline, not this basic emitter.
     """
     polygon: tuple[tuple[float, float], ...]
-    kind: str  # flat | tile_shed | corrugated
+    kind: str  # flat; designed covers use RoofAssemblyControls
     base_z: float
     slope_deg: float = 0.0
     eave_point: tuple[float, float] = (0.0, 0.0)

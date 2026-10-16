@@ -23,13 +23,16 @@ def controls(ops,proj=[],regions=[]):return dict(mode='explicit',openings=ops,pr
 
 def build(details):
  r=json.loads((lot/'after/request.json').read_text());r['observations']=[dict(view_id=p.name.removesuffix('_lot.jpg'),image_path=str(p)) for p in sorted(lot.glob('*_lot.jpg'))];r['evidence']={};t=r['theta']
- # Front pitched blocks are shallow so a tile_shed approximates the street eave
- # without growing a huge wedge over the whole 15 m depth. Rear blocks are flat.
+ # Explicit catalog coverings on the front blocks; rear blocks stay flat.
  t['massing']['components']=[
- component('street_front',[0,.44],[0,3.8],[0,3.35,6.9],dict(kind='tile_shed',parapet_m=0,slope_deg=35.,props=None)),
+ component('street_front',[0,.44],[0,3.8],[0,3.35,6.9],dict(kind='flat',parapet_m=0)),
  component('street_rear',[0,.44],[3.8,15.5],[0,3.35,6.9],None),
- component('garden_front',[.44,1],[2.35,7.0],[0,3.15,6.35],dict(kind='tile_shed',parapet_m=0,slope_deg=20.,props=None)),
+ component('garden_front',[.44,1],[2.35,7.0],[0,3.15,6.35],dict(kind='flat',parapet_m=0)),
  component('garden_rear',[.44,1],[7.0,15.5],[0,3.15,6.35],None)]
+ t['roof_assemblies']=[dict(id=name+'_roof',mass_ref=name+':0',design=dict(
+     form='shed',covering='curved_tile',slope_deg=slope,rotation_deg=-84.52396504632391,
+     eave=dict(kind='clean',overhang_m=0.,fascia=False)))
+     for name,slope in [('street_front',35.),('garden_front',20.)]]
  t['family']='galeria_madera';t['primary_color']=[.85,.82,.67];t['side_material']='plaster';t['roof']={'kind':'flat','parapet_m':0,'props':[]};t['facade']=controls([]);t['facades']=[]
  t['materials']=[dict(slot='frame',template='frame',color=[.93,.94,.88]),dict(slot='stone',template='stone',color=[.52,.53,.51]),dict(slot='wood',template='wood',color=[.92,.91,.83]),dict(slot='metal',template='metal',color=[.90,.91,.86]),dict(slot='glass',template='glass',color=[.37,.46,.43]),dict(slot='roof_tile',template='roof_tile',color=[.38,.28,.25]),dict(slot='roof',template='roof',color=[.36,.28,.24]),dict(slot='pavement',template='pavement',color=[.68,.66,.56]),dict(slot='brick',template='brick',color=[.72,.71,.66])]
  t['site']={'fence':'none','garden':False,'runs':[],'zones':[]}
@@ -67,7 +70,7 @@ def build(details):
     t['facades'].append(dict(mass_role=wall.mass_role,edge=wall.edge,controls=house))
    if wall.facade.is_front and wall.mass_role=='garden_front:0' and wall.facade.width_m>=9.2:
     t['facades'].append(dict(mass_role=wall.mass_role,edge=wall.edge,controls=gallery))
-  t['site']['runs']=[dict(edge=4,start_m=7.83,end_m=17.40,kind='reja',height_m=1.65,gate_u=8.00,gate_width=1.15)]
+  t['site']['runs']=[dict(edge=4,start_m=7.83,end_m=17.40,kind='republicano',height_m=1.65,gate_u=8.00,gate_width=1.15)]
   t['site']['zones']=[dict(id='front_garden',kind='garden',region=region([.44,1],[0,2.35]))]
  r['nuisance']['curtains']=False;r['config']['detail']=3
  req=from_json(json.dumps(r));res=reconstruct(req);parcel=Polygon(res.resolved.context.parcel);env=street_envelope(ParcelContext(res.resolved.context.parcel,explicit_fronts=res.resolved.context.fronts));val=validate_mesh(res.mesh,parcel,envelope=env)

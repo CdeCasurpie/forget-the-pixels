@@ -7,8 +7,9 @@ from shapely.geometry import Polygon, Point, box
 from shapely.ops import unary_union
 
 from domain.theta import *
-from domain.models import Opening, FacadeProjection
+from domain.models import DoorControls, Opening, FacadeProjection
 from modeling.theta import resolve_theta, generate_resolved, ResolvedArchitecture
+from modeling.opening_catalog import resolve_opening
 from modeling.assembly import mass_polygon
 from modeling.apertures import opening_shape
 from modeling.validation import validate_mesh
@@ -81,16 +82,16 @@ def test_cutout_corridor_retains_both_components():
 
 
 def test_partial_wall_exposure_area_and_fixed_opening_coordinates():
-    op=Opening('window',1.,.7,8.,1.5,prefab='slim_window')
+    op=Opening('window',1.,.7,8.,1.5,prefab='catalog')
     rear=body('rear',depth=(.4,1.),facade=FacadeControls(mode='explicit',openings=(op,)))
     # Use just front face: other edge lengths differ.
     rear=replace(rear,facade=None,faces=(FaceBand('front',rear.facade),))
     r=solve(rear,body('low',u=(0.,.5),depth=(0.,.4),levels=(0.,3.)))
     wall=next(w for w in r.walls if w.mass_role=='rear:0' and w.edge==0)
-    assert wall.facade.openings==(op,)
+    assert wall.facade.openings==(resolve_opening(op),)
     assert unary_union([box(*d) for d in wall.visible_domains]).area==pytest.approx(54.,abs=1e-5)
     mesh=generate_resolved(r)
-    vertices=semantic_vertices(mesh,'slim_frame')
+    vertices=semantic_vertices(mesh,'window_profile')
     assert len(vertices)>0
     # No frame remains in the hidden lower-left half of the rear front.
     assert not np.any((vertices[:,0]<5.99)&(vertices[:,1]>7.8)&(vertices[:,1]<8.2)&(vertices[:,2]<2.99))
@@ -149,7 +150,7 @@ def test_partial_gallery_and_continuous_balcony_reuse_prefabs():
 
 
 def test_corner_faces_and_height_bands_are_independent():
-    door=FacadeControls(mode='explicit',openings=(Opening('gate',1.,0.,5.,2.5,prefab='metal_gate'),))
+    door=FacadeControls(mode='explicit',openings=(Opening('gate',1.,0.,5.,2.5,prefab='catalog',door=DoorControls()),))
     windows=FacadeControls(bay_count=2,balconies=False,projections=())
     r=solve(body(faces=(FaceBand('front',door,(0.,3.)),FaceBand('front',windows,(3.,6.)),FaceBand('left',BLIND))))
     front=[w for w in r.walls if w.edge==0]
@@ -159,23 +160,31 @@ def test_corner_faces_and_height_bands_are_independent():
 
 
 def test_compound_roof_gable_and_shed_have_distinct_planes():
-    r=solve(body('house',u=(0.,.6),roof=RoofControls(kind='gable',slope_deg=20.,parapet_m=0.)),
-            body('garage',u=(.6,1.),levels=(0.,3.),roof=RoofControls(kind='tile_shed',slope_deg=10.,parapet_m=0.)))
-    assert sorted(len(p.surfaces) for p in r.roofs)==[1,2]
-    house=next(p for p in r.roofs if p.mass_id=='house:0')
-    assert np.dot(house.surfaces[0].inward_normal,house.surfaces[1].inward_normal)==pytest.approx(-1.)
-    assert len(semantic_vertices(generate_resolved(r),'tile_roof'))>0
+    from domain.roof_details import RoofAssemblyControls, RoofDesign, EaveDesign
+    components=(body('house',u=(.1,.55),depth=(.1,.9)),
+                body('garage',u=(.6,.9),depth=(.1,.9),levels=(0.,3.)))
+    assemblies=tuple(RoofAssemblyControls(name,name+':0',design=RoofDesign(form=form,
+        slope_deg=slope,eave=EaveDesign(overhang_m=0)))
+        for name,form,slope in [('house','gable',20.),('garage','shed',10.)])
+    r=resolve_theta(P,ThetaCandidate(schema_version='0.3',massing=MassingControls(components=components),
+        roof_assemblies=assemblies,roof=RoofControls(parapet_m=0.)))
+    assert sorted(len(p.faces) for p in r.roof_assemblies)==[1,2]
+    house=next(p for p in r.roof_assemblies if p.mass_ref=='house:0')
+    assert np.dot(house.faces[0].plane[:2],house.faces[1].plane[:2])<0
+    mesh=generate_resolved(r)
+    assert len(semantic_vertices(mesh,'roof_substrate'))>0
+    assert not len(semantic_vertices(mesh,'tile_roof'))
 
 
 def test_arch_real_hole_screen_and_pediment_geometry():
-    arch=Opening('door',1.,.1,2.,2.6,prefab='open',shape='arch')
+    arch=Opening('door',1.,.1,2.,2.6,prefab='catalog',door=DoorControls(),shape='arch')
     assert opening_shape(arch).area<arch.width_m*arch.height_m
-    f=FacadeControls(mode='explicit',openings=(arch,Opening('window',4.,.5,3.,2.,prefab='screen')),
+    f=FacadeControls(mode='explicit',openings=(arch,Opening('window',4.,.5,3.,2.,prefab='catalog')),
         projections=(FacadeProjection('pediment',.5,5.,3.,1.2,.2),))
     r=solve(body(faces=(FaceBand('front',f),)))
     mesh=generate_resolved(r)
-    assert len(semantic_vertices(mesh,'arched_frame'))>0
-    assert len(semantic_vertices(mesh,'perforated_screen'))>0
+    assert len(semantic_vertices(mesh,'window_profile'))>0
+    assert len(semantic_vertices(mesh,'window_glass'))>0
     assert len(semantic_vertices(mesh,'crown_body'))>0
     assert len(semantic_vertices(mesh,'crown_moulding'))>0
     assert len(semantic_vertices(mesh,'door_panel'))==0
@@ -237,7 +246,7 @@ def test_arch_wall_oblique_parcel_stays_in_envelope():
     from modeling.grammar import street_envelope
     from domain.architecture import ParcelContext
     p=replace(P,parcel=((0.,0.),(12.,2.),(11.,20.),(1.,18.)))
-    c=body(faces=(FaceBand('front',FacadeControls(mode='explicit',openings=(Opening('door',2.,.1,3.,2.6,prefab='open',shape='arch'),))),))
+    c=body(faces=(FaceBand('front',FacadeControls(mode='explicit',openings=(Opening('door',2.,.1,3.,2.6,prefab='catalog',door=DoorControls(),shape='arch'),))),))
     r=resolve_theta(p,ThetaCandidate(schema_version='0.3',massing=MassingControls(components=(c,))))
     mesh=generate_resolved(r)
     report=validate_mesh(mesh,Polygon(p.parcel),envelope=street_envelope(ParcelContext(p.parcel,explicit_fronts=p.fronts)))

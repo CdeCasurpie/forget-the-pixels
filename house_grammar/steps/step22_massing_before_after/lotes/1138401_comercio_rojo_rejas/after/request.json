@@ -78,7 +78,7 @@
           "facade": null,
           "faces": [],
           "roof": {
-            "kind": "corrugated",
+            "kind": "flat",
             "parapet_m": 0.0,
             "slope_deg": null,
             "props": null
@@ -220,7 +220,26 @@
     "side_material": "plaster",
     "masses": null,
     "materials": [],
-    "finish": null
+    "finish": null,
+    "roof_assemblies": [
+      {
+        "id": "shop_roof",
+        "mass_ref": "shop:0",
+        "design": {
+          "form": "flat",
+          "covering": "corrugated",
+          "material": "roof",
+          "slope_deg": 12.0,
+          "rotation_deg": -152.76378752515862,
+          "detail": "full",
+          "eave": {
+            "kind": "clean",
+            "overhang_m": 0.0,
+            "fascia": false
+          }
+        }
+      }
+    ]
   },
   "nuisance": {
     "seed": 9,

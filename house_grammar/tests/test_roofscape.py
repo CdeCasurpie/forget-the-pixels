@@ -103,29 +103,22 @@ class PlanTests(unittest.TestCase):
             sum(Polygon(s.polygon).area for s in plan.surfaces), LOT.area, places=6
         )
 
-    def test_a_tiled_band_appears_and_overhangs_the_street(self):
-        # Search seeds rather than assert on one: tiling is a weighted choice.
+    def test_no_seed_invents_a_tiled_band(self):
         for seed in range(40):
             plan = plan_roof(
                 mass_for(role="front"), program_for(), LOT, front_lines(CONTEXT),
                 parcel_polygon(CONTEXT), seed,
             )
-            tiles = [s for s in plan.surfaces if s.kind == "tile_shed"]
-            if tiles:
-                tile = tiles[0]
-                self.assertGreater(tile.slope_deg, 0)
-                self.assertLess(Polygon(tile.polygon).bounds[1], -12.0)
-                return
-        self.fail("no seed produced a tiled band")
+            self.assertTrue(all(s.kind == 'flat' for s in plan.surfaces))
 
-    def test_informal_additions_get_a_light_cover_and_no_parapet(self):
+    def test_additions_default_to_flat_without_invented_cover(self):
         plan = plan_roof(
             mass_for(role="azotea", roof_z=11.2), program_for(), LOT,
             front_lines(CONTEXT), parcel_polygon(CONTEXT), 7,
         )
         self.assertEqual(plan.parapet_height_m, 0.0)
         self.assertEqual(plan.parapet_profile, "none")
-        self.assertIn("corrugated", {s.kind for s in plan.surfaces})
+        self.assertEqual({s.kind for s in plan.surfaces}, {'flat'})
 
 
 class BuildTests(unittest.TestCase):

@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 from shapely.geometry import Polygon
+from domain.models import DoorControls
 from domain.theta import FacadeControls, FacadeTopProfile, FacadeZone, FaceBand, Opening, MassComponent, PlanRegion
 from modeling.theta import generate_resolved
 from modeling.facade_top import validate_top_profile
@@ -15,7 +16,7 @@ PROFILE=FacadeTopProfile(((0.,0.),(.25,0.),(.25,1.2),(.4,1.2),(.5,1.8),(.6,1.2),
 
 
 def test_raised_aperture_is_cut_in_wall_and_roof():
-    c=replace(BLIND,top_profile=PROFILE,openings=(Opening('door',5.,.1,2.,6.6,shape='arch',prefab='open'),))
+    c=replace(BLIND,top_profile=PROFILE,openings=(Opening('door',5.,.1,2.,6.6,shape='arch',prefab='catalog',door=DoorControls()),))
     plan=solve(body(faces=(FaceBand('front',c),)))
     original=solve(body())
     assert plan.masses==original.masses

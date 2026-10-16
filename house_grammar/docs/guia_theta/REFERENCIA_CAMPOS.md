@@ -10,7 +10,7 @@ Los defaults de objetos se muestran por clase; consultar su tabla. Los enums y l
 
 ## ReconstructionRequest
 
-Fuente: [`src/domain/theta.py:409`](../../src/domain/theta.py#L409).
+Fuente: [`src/domain/theta.py:411`](../../src/domain/theta.py#L411).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -35,7 +35,7 @@ Fuente: [`src/domain/theta.py:24`](../../src/domain/theta.py#L24).
 
 ## ThetaCandidate
 
-Fuente: [`src/domain/theta.py:366`](../../src/domain/theta.py#L366).
+Fuente: [`src/domain/theta.py:368`](../../src/domain/theta.py#L368).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -56,8 +56,8 @@ Fuente: [`src/domain/theta.py:366`](../../src/domain/theta.py#L366).
 | `massing` | `MassingControls` | `MassingControls()` | Patrón volumétrico o composición por componentes. |
 | `facade` | `FacadeControls` | `FacadeControls()` | Programa base de fachada; null de componente significa ciega. |
 | `facades` | `tuple[FacadeOverride, ...]` | `[]` | Overrides por masa y arista. |
-| `roof` | `RoofControls` | `RoofControls()` | Techo básico; en componente, override local. |
-| `roofs` | `tuple[RoofOverride, ...]` | `[]` | Overrides de techo básico por masa. |
+| `roof` | `RoofControls` | `RoofControls()` | Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies. |
+| `roofs` | `tuple[RoofOverride, ...]` | `[]` | Overrides de losa plana/parapeto por masa; slope_deg debe ser null. |
 | `site` | `SiteControls` | `SiteControls()` | Cercos, jardín y zonas libres. |
 | `primary_color` | `tuple[float, float, float] &#124; None` | `null` | RGB 0–1 del revoque principal. |
 | `side_material` | `str &#124; None` | `null` | Material base de laterales/fondo: slot existente o declarado en theta.materials; default plaster. |
@@ -332,7 +332,7 @@ Fuente: [`src/domain/balconies.py:7`](../../src/domain/balconies.py#L7).
 
 ## TrimControls
 
-Fuente: [`src/domain/theta.py:323`](../../src/domain/theta.py#L323).
+Fuente: [`src/domain/theta.py:325`](../../src/domain/theta.py#L325).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -341,7 +341,7 @@ Fuente: [`src/domain/theta.py:323`](../../src/domain/theta.py#L323).
 
 ## CorniceControls
 
-Fuente: [`src/domain/theta.py:296`](../../src/domain/theta.py#L296).
+Fuente: [`src/domain/theta.py:298`](../../src/domain/theta.py#L298).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -357,7 +357,7 @@ Fuente: [`src/domain/theta.py:296`](../../src/domain/theta.py#L296).
 
 ## PlinthControls
 
-Fuente: [`src/domain/theta.py:309`](../../src/domain/theta.py#L309).
+Fuente: [`src/domain/theta.py:311`](../../src/domain/theta.py#L311).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -382,7 +382,7 @@ Fuente: [`src/domain/theta.py:141`](../../src/domain/theta.py#L141).
 | `parent` | `str` | `OBLIGATORIO` | ID del componente padre de un cuerpo sobre azotea. |
 | `region` | `PlanRegion` | `OBLIGATORIO` | Región relativa a un frente de parcela. |
 | `height_m` | `float` | `2.4` | Altura en metros de la entidad; en theta, coronación de masas. |
-| `roof` | `RoofControls &#124; None` | `null` | Techo básico; en componente, override local. |
+| `roof` | `RoofControls &#124; None` | `null` | Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies. |
 | `facade` | `FacadeControls &#124; None` | `null` | Programa base de fachada; null de componente significa ciega. |
 | `trim` | `TrimControls &#124; None` | `null` | Cornisa/zócalo; override de componente sustituye el bloque completo. |
 
@@ -412,7 +412,7 @@ Fuente: [`src/domain/theta.py:271`](../../src/domain/theta.py#L271).
 
 ## RoofObject
 
-Fuente: [`src/domain/theta.py:287`](../../src/domain/theta.py#L287).
+Fuente: [`src/domain/theta.py:289`](../../src/domain/theta.py#L289).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -475,7 +475,7 @@ Fuente: [`src/domain/models.py:121`](../../src/domain/models.py#L121).
 | `mullion_columns` | `int` | `2` | Número de subdivisiones horizontales del vidrio. |
 | `mullion_rows` | `int` | `2` | Número de subdivisiones verticales del vidrio. |
 | `balcony_depth_m` | `float` | `0.75` | Vuelo del balcón tradicional asociado al vano. |
-| `prefab` | `str` | `"legacy"` | Relleno/constructor de vano. |
+| `prefab` | `str` | `"catalog"` | Relleno/constructor de vano. |
 | `curtain` | `float` | `0.0` | Cobertura lateral de cortina; theta explícito exige 0 y delega a nuisance. |
 | `grille_pattern` | `str` | `"vertical"` | Patrón de reja; vocabulario distinto en puertas y ventanas. |
 | `shape` | `str` | `"rectangle"` | Contorno del hueco; consultar restricciones según ruta. |
@@ -691,7 +691,7 @@ Fuente: [`src/domain/theta.py:125`](../../src/domain/theta.py#L125).
 | `support` | `SupportControls` | `SupportControls()` | Reglas de apoyo geométrico del componente. |
 | `facade` | `FacadeControls &#124; None` | `null` | Programa base de fachada; null de componente significa ciega. |
 | `faces` | `tuple[FaceBand, ...]` | `[]` | Bandas por orientación de cara. |
-| `roof` | `RoofControls &#124; None` | `null` | Techo básico; en componente, override local. |
+| `roof` | `RoofControls &#124; None` | `null` | Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies. |
 | `slab_m` | `float` | `0.18` | Espesor de losa/plataforma. |
 | `zones` | `tuple[FacadeZone, ...]` | `[]` | Zonas independientes: fachada o suelo según contrato. |
 | `trim` | `TrimControls &#124; None` | `null` | Cornisa/zócalo; override de componente sustituye el bloque completo. |
@@ -757,7 +757,7 @@ Fuente: [`src/domain/theta.py:264`](../../src/domain/theta.py#L264).
 
 ## RoofOverride
 
-Fuente: [`src/domain/theta.py:279`](../../src/domain/theta.py#L279).
+Fuente: [`src/domain/theta.py:280`](../../src/domain/theta.py#L280).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -768,7 +768,7 @@ Fuente: [`src/domain/theta.py:279`](../../src/domain/theta.py#L279).
 
 ## SiteControls
 
-Fuente: [`src/domain/theta.py:351`](../../src/domain/theta.py#L351).
+Fuente: [`src/domain/theta.py:353`](../../src/domain/theta.py#L353).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -779,7 +779,7 @@ Fuente: [`src/domain/theta.py:351`](../../src/domain/theta.py#L351).
 
 ## FenceRun
 
-Fuente: [`src/domain/theta.py:330`](../../src/domain/theta.py#L330).
+Fuente: [`src/domain/theta.py:332`](../../src/domain/theta.py#L332).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -824,7 +824,7 @@ Fuente: [`src/domain/theta.py:161`](../../src/domain/theta.py#L161).
 
 ## MaterialControl
 
-Fuente: [`src/domain/theta.py:359`](../../src/domain/theta.py#L359).
+Fuente: [`src/domain/theta.py:361`](../../src/domain/theta.py#L361).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -834,7 +834,7 @@ Fuente: [`src/domain/theta.py:359`](../../src/domain/theta.py#L359).
 
 ## NuisanceParameters
 
-Fuente: [`src/domain/theta.py:395`](../../src/domain/theta.py#L395).
+Fuente: [`src/domain/theta.py:397`](../../src/domain/theta.py#L397).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|
@@ -843,7 +843,7 @@ Fuente: [`src/domain/theta.py:395`](../../src/domain/theta.py#L395).
 
 ## GrammarConfig
 
-Fuente: [`src/domain/theta.py:401`](../../src/domain/theta.py#L401).
+Fuente: [`src/domain/theta.py:403`](../../src/domain/theta.py#L403).
 
 | Campo | Tipo | Default | Descripción |
 |---|---|---|---|

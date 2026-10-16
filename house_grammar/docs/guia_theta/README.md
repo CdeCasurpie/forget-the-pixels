@@ -10,6 +10,7 @@ Esta guía describe **la implementación del repositorio**, no una gramática ar
 4. [Recorrido archivo por archivo](MODULOS.md): responsabilidad y entradas/salidas de los 100 archivos Python de `src/`.
 5. [Casa de demostración](DEMOSTRACION.md): desglose concreto, ejecución y hallazgos.
 6. [Prompt y flujo de autoría](PROMPT.md): texto reutilizable para producir solicitudes.
+7. [Catálogo único de techos](../../../CATALOGO_TECHOS.md): losa plana, cubiertas, orientación, cuerpos de azotea y migración.
 
 Los campos estructurales están en las dataclasses; las opciones de texto y las incompatibilidades están repartidas entre los resolvers y los constructores. **Aceptar un JSON por tipos no equivale a poder generar su geometría.** Existe también un [inventario previo de Step23](../../steps/step23_fresh_theta/GRAMATICA_CAPACIDADES_Y_USO.md), con rutas y números de línea antiguos; esta guía contrasta los contratos y constructores actuales.
 

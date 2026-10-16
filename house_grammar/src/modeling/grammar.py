@@ -84,173 +84,10 @@ def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
 
 
 def opening(mb, a, t, n, op, pattern):
-    if op.door is not None:
-        from .door_assembly import build_door
-        build_door(mb,a,t,n,op)
-        return
-    if op.frame_profile is not None:
-        from .window_assembly import build_window
-        build_window(mb,a,t,n,op)
-        return
-    if op.shape!='rectangle' or op.prefab in ('open','screen'):
-        from .apertures import shaped_opening
-        shaped_opening(mb,a,t,n,op)
-        return
-    if op.prefab != "legacy":
-        from .prefabs import build_opening
-        build_opening(mb, a, t, n, op)
-        if op.kind == "balcony_window":
-            left, right, depth = op.u_m-.12, op.u_m+op.width_m+.12, op.balcony_depth_m
-            shape = Polygon([a+t*x+n*d for x,d in [(left,0),(right,0),(right,depth),(left,depth)]])
-            if mb.can_attach(shape.buffer(.04, join_style=2)):
-                mb.box(a,t,n,left,right,op.v_m-.12,op.v_m,-.02,depth,"concrete","balcony_slab")
-                railing(mb,a,t,n,left,right,op.v_m,depth-.04,pattern)
-        return
-    u, v, w, h = op.u_m, op.v_m, op.width_m, op.height_m
-    f, recess = min(op.frame_width_m, w / 5, h / 5), op.recess_m
-
-    def b(u1, u2, z1, z2, d1, d2, mat, part):
-        mb.box(a, t, n, u1, u2, z1, z2, d1, d2, mat, part)
-
-    # The jambs + head + sill form one continuous ring: a single closed
-    # component instead of four separate boxes.
-    from shapely.geometry import box as _rect
-    _ring = _rect(u, v, u + w, v + h).difference(
-        _rect(u + f, v + f, u + w - f, v + h - f))
-    mb.panel(a, t, n, [_ring], -recess, 0.045,
-             lambda kind, uu, vv, ww: "frame", "window_frame")
-    for x in [u - 0.075, u + w]:
-        b(
-            x,
-            x + 0.075,
-            v - 0.04,
-            v + h + 0.085,
-            -0.015,
-            0.065,
-            "stone",
-            "opening_surround",
-        )
-    b(u, u + w, v + h, v + h + 0.085, -0.015, 0.065, "stone", "opening_lintel")
-    panel = "wood" if op.kind in ("door", "gate") else "glass"
-    b(
-        u + f,
-        u + w - f,
-        v + f,
-        v + h - f,
-        -recess - 0.025,
-        -recess,
-        panel,
-        op.kind + "_panel",
-    )
-    cols = max(1, op.mullion_columns)
-    rows = max(1, op.mullion_rows)
-    for j in range(1, cols):
-        x = u + w * j / cols
-        b(x - 0.02, x + 0.02, v + f, v + h - f, -recess, 0.005, "frame", "mullion")
-    for j in range(1, rows):
-        y = v + h * j / rows
-        b(u + f, u + w - f, y - 0.018, y + 0.018, -recess, 0.005, "frame", "transom")
-    if op.style == "casement" and op.kind == "window":
-        # Outward rotated casement leaf; explicit geometry anchored at the jamb.
-        angle = np.radians(18)
-        st = np.cos(angle) * t + np.sin(angle) * n
-        sn = np.array([st[1], -st[0]])
-        anchor = np.asarray(a) + t * (u + f) - n * recess
-        sw = w / cols - f
-        mb.box(
-            anchor,
-            st,
-            sn,
-            0,
-            sw,
-            v + h * 0.52,
-            v + h - f,
-            -0.02,
-            0,
-            "glass",
-            "open_casement",
-        )
-        for x in [0, sw - 0.035]:
-            mb.box(
-                anchor,
-                st,
-                sn,
-                x,
-                x + 0.035,
-                v + h * 0.52,
-                v + h - f,
-                -0.03,
-                0.012,
-                "frame",
-                "casement_frame",
-            )
-        for y in [v + h * 0.52, v + h - f - 0.035]:
-            mb.box(
-                anchor,
-                st,
-                sn,
-                0,
-                sw,
-                y,
-                y + 0.035,
-                -0.03,
-                0.012,
-                "frame",
-                "casement_frame",
-            )
-    if op.kind in ("door", "gate"):
-        for x in np.arange(u + 0.12, u + w - 0.1, 0.15):
-            b(
-                x,
-                x + 0.025,
-                v + 0.10,
-                v + h - 0.1,
-                -recess,
-                -recess + 0.04,
-                "stone",
-                "door_flute",
-            )
-        b(
-            u + w - 0.18,
-            u + w - 0.13,
-            v + 0.85,
-            v + 1.02,
-            -0.025,
-            0.05,
-            "metal",
-            "door_handle",
-        )
-        b(u - 0.04, u + w + 0.04, v, v + 0.035, -0.15, 0.12, "stone", "threshold")
-        if op.style == "ornate_gate":
-            _ornate_gate(mb, a, t, n, u, v, w, h, recess)
-    else:
-        b(
-            u - 0.12,
-            u + w + 0.12,
-            v - 0.065,
-            v + 0.025,
-            -0.04,
-            0.16,
-            "stone",
-            "window_sill",
-        )
-    if op.grille:
-        grille_pitch = getattr(mb, "budget", DEFAULT_BUDGET).grille_spacing_m
-        for x in np.arange(u + 0.08, u + w - 0.04, grille_pitch):
-            b(
-                x,
-                x + 0.016,
-                v + 0.02,
-                v + h - 0.02,
-                0.075,
-                0.10,
-                "metal",
-                "security_bar",
-            )
-        for y in [v + 0.15, v + h * 0.5, v + h - 0.15]:
-            b(u, u + w, y, y + 0.025, 0.065, 0.105, "metal", "security_crossbar")
+    from .opening_catalog import build_opening
+    build_opening(mb,a,t,n,op)
     if op.kind == "balcony_window":
-        left, right = u - 0.22, u + w + 0.22
+        left, right = op.u_m - 0.22, op.u_m + op.width_m + 0.22
         depth = op.balcony_depth_m
         footprint = Polygon(
             [
@@ -260,8 +97,8 @@ def opening(mb, a, t, n, op, pattern):
         )
         # Do not emit a cut-off balcony with missing rails on a concave corner.
         if mb.can_attach(footprint.buffer(0.04, join_style=2)):
-            b(left, right, v - 0.13, v + 0.02, -0.04, depth, "stone", "balcony_slab")
-            railing(mb, a, t, n, left, right, v, depth - 0.04, pattern)
+            mb.box(a,t,n,left,right,op.v_m-.13,op.v_m+.02,-.04,depth,"stone","balcony_slab")
+            railing(mb,a,t,n,left,right,op.v_m,depth-.04,pattern)
 
 
 def projection(mb, a, t, n, feature):
@@ -367,50 +204,6 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
 
 
-def _ornate_gate(mb, a, t, n, u, v, w, h, recess):
-    """Wrought-iron gate with scrollwork diamond pattern and spear finials."""
-    mid_z = (v + h) / 2
-    panels = 3
-    pw = w / panels
-    for pi in range(panels):
-        pu = u + pi * pw
-        # Diamond scroll pattern
-        for row in range(5):
-            z_base = v + 0.15 + row * (h - 0.30) / 5
-            for col in range(3):
-                du = pu + pw * 0.15 + col * pw * 0.28
-                dz = z_base + (0.07 if row % 2 else 0)
-                # Outer diamond frame
-                pts = [
-                    a + t * (du + pw * 0.10) + n * (0.03 + recess),
-                    a + t * (du + pw * 0.22) + n * (0.08 + recess),
-                    a + t * (du + pw * 0.28) + n * (0.03 + recess),
-                    a + t * (du + pw * 0.22) + n * (recess - 0.01),
-                ]
-                for (p1, p2) in [(pts[0], pts[1]), (pts[1], pts[2]),
-                                  (pts[2], pts[3]), (pts[3], pts[0])]:
-                    mb.beam((*p1, dz), (*p2, dz), 0.012,
-                            material="metal", semantic="gate_scroll")
-                # Central vertical bar
-                if col == 1:
-                    mb.beam(
-                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz - 0.04),
-                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz + 0.04),
-                        0.008, material="metal", semantic="gate_bar",
-                    )
-        # Spear finials at top corners
-        for corner_u in [u + 0.04, u + w - 0.04]:
-            finial_base = a + t * corner_u + n * (recess + 0.02)
-            mb.beam((*finial_base, v + h - 0.06),
-                    (*finial_base, v + h + 0.12), 0.018,
-                    material="metal", semantic="gate_finial")
-        # Horizontal rails
-        for z in [v + 0.20, mid_z, v + h - 0.20]:
-            mb.beam(
-                (*(a + t * (u + 0.05) + n * (recess + 0.03)), z),
-                (*(a + t * (u + w - 0.05) + n * (recess + 0.03)), z),
-                0.010, material="metal", semantic="gate_rail",
-            )
 
 
 def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions, *, managed_trim=False, trim_start=False, extend_end=False):
@@ -666,6 +459,8 @@ def roof_details(mb, poly, h, roof, rng):
 
 
 def _roof_details_body(mb, poly, h, roof, rng):
+    if roof.kind != 'flat':
+        raise ValueError('Basic roof must be flat; use theta roof_assemblies for catalog roofs')
     mb.solid(poly, h - 0.15, h, "concrete", "roof_slab")
     parapet = poly.difference(poly.buffer(-0.14, join_style=2))
     if roof.parapet_height_m > 0:
@@ -677,30 +472,6 @@ def _roof_details_body(mb, poly, h, roof, rng):
             "stone",
             "parapet_cap",
         )
-    if roof.kind not in ("flat", "shed", "gable"):
-        raise ValueError("Supported roofs: flat, shed, gable")
-    if roof.kind in ("shed", "gable"):
-        # Height field over clipped footprint, valid for concave lots and holes.
-        lo, bot, hi, top = poly.bounds
-        slope = np.tan(np.radians(roof.slope_deg or 12.0))
-        mid = (lo + hi) / 2
-        pieces = (
-            [(poly, lambda x, y: h + 0.2 + slope * (x - lo))]
-            if roof.kind == "shed"
-            else [
-                (
-                    poly.intersection(box(lo - 1, bot - 1, mid, top + 1)),
-                    lambda x, y: h + 0.2 + slope * (x - lo),
-                ),
-                (
-                    poly.intersection(box(mid, bot - 1, hi + 1, top + 1)),
-                    lambda x, y: h + 0.2 + slope * (hi - x),
-                ),
-            ]
-        )
-        for piece, z in pieces:
-            mb.solid(piece, z, lambda x, y, z=z: z(x, y) + 0.07, "roof", "pitched_roof")
-        return
     # Search an entirely contained utility platform; never put it across a courtyard.
     safe = poly.buffer(-0.45, join_style=2)
     platform = None

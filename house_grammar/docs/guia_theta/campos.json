@@ -1,7 +1,7 @@
 {
   "ReconstructionRequest": {
     "source": "src/domain/theta.py",
-    "line": 409,
+    "line": 411,
     "fields": {
       "context": {
         "type": "ReconstructionContext",
@@ -91,7 +91,7 @@
   },
   "ThetaCandidate": {
     "source": "src/domain/theta.py",
-    "line": 366,
+    "line": 368,
     "fields": {
       "roof_assemblies": {
         "type": "tuple[RoofAssemblyControls, ...]",
@@ -240,13 +240,13 @@
           "slope_deg": null,
           "props": null
         },
-        "description": "Techo básico; en componente, override local."
+        "description": "Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies."
       },
       "roofs": {
         "type": "tuple[RoofOverride, ...]",
         "required": false,
         "default": [],
-        "description": "Overrides de techo básico por masa."
+        "description": "Overrides de losa plana/parapeto por masa; slope_deg debe ser null."
       },
       "site": {
         "type": "SiteControls",
@@ -1579,7 +1579,7 @@
   },
   "TrimControls": {
     "source": "src/domain/theta.py",
-    "line": 323,
+    "line": 325,
     "fields": {
       "cornice": {
         "type": "CorniceControls",
@@ -1618,7 +1618,7 @@
   },
   "CorniceControls": {
     "source": "src/domain/theta.py",
-    "line": 296,
+    "line": 298,
     "fields": {
       "enabled": {
         "type": "bool",
@@ -1678,7 +1678,7 @@
   },
   "PlinthControls": {
     "source": "src/domain/theta.py",
-    "line": 309,
+    "line": 311,
     "fields": {
       "enabled": {
         "type": "bool",
@@ -1774,7 +1774,7 @@
         "type": "RoofControls | None",
         "required": false,
         "default": null,
-        "description": "Techo básico; en componente, override local."
+        "description": "Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies."
       },
       "facade": {
         "type": "FacadeControls | None",
@@ -1870,7 +1870,7 @@
   },
   "RoofObject": {
     "source": "src/domain/theta.py",
-    "line": 287,
+    "line": 289,
     "fields": {
       "mass_role": {
         "type": "str",
@@ -2157,7 +2157,7 @@
       "prefab": {
         "type": "str",
         "required": false,
-        "default": "legacy",
+        "default": "catalog",
         "description": "Relleno/constructor de vano."
       },
       "curtain": {
@@ -2993,7 +2993,7 @@
         "type": "RoofControls | None",
         "required": false,
         "default": null,
-        "description": "Techo básico; en componente, override local."
+        "description": "Losa estructural flat, parapeto y props; pendientes/coberturas solo en roof_assemblies."
       },
       "slab_m": {
         "type": "float",
@@ -3197,7 +3197,7 @@
   },
   "RoofOverride": {
     "source": "src/domain/theta.py",
-    "line": 279,
+    "line": 280,
     "fields": {
       "mass_ref": {
         "type": "str",
@@ -3227,7 +3227,7 @@
   },
   "SiteControls": {
     "source": "src/domain/theta.py",
-    "line": 351,
+    "line": 353,
     "fields": {
       "fence": {
         "type": "str | None",
@@ -3257,7 +3257,7 @@
   },
   "FenceRun": {
     "source": "src/domain/theta.py",
-    "line": 330,
+    "line": 332,
     "fields": {
       "edge": {
         "type": "int",
@@ -3432,7 +3432,7 @@
   },
   "MaterialControl": {
     "source": "src/domain/theta.py",
-    "line": 359,
+    "line": 361,
     "fields": {
       "slot": {
         "type": "str",
@@ -3456,7 +3456,7 @@
   },
   "NuisanceParameters": {
     "source": "src/domain/theta.py",
-    "line": 395,
+    "line": 397,
     "fields": {
       "seed": {
         "type": "int",
@@ -3474,7 +3474,7 @@
   },
   "GrammarConfig": {
     "source": "src/domain/theta.py",
-    "line": 401,
+    "line": 403,
     "fields": {
       "implementation": {
         "type": "str",

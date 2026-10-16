@@ -4,9 +4,10 @@
 
 `theta.architectural_style` elige `republicano`, `barroco`, `clasico`, `madera`
 o `moderno`. Es independiente de `family`, que conserva sus reglas de composición.
-Al indicarlo, las aberturas de tipo `window` usan el nuevo ensamblaje y heredan
-ese perfil. Un perfil explícito contradictorio produce error. Sin este campo y
-sin `frame_profile`, los requests existentes conservan su generación anterior.
+Todas las ventanas usan exclusivamente `window_assembly.py`. Con estilo global
+heredan ese perfil; un perfil contradictorio produce error. Sin estilo global
+se respeta `frame_profile` explícito y, si falta, se completa con `moderno`.
+No existe fallback antiguo. `balcony_window` usa la misma carpintería de catálogo.
 
 Ejemplo de Opening dentro de `facades[].controls.openings`:
 
@@ -15,7 +16,7 @@ Ejemplo de Opening dentro de `facades[].controls.openings`:
   "kind": "window", "u_m": 1.2, "v_m": 0.9,
   "width_m": 1.4, "height_m": 2.0,
   "shape": "arch", "arch_rise_m": 0.6,
-  "recess_m": 0.18, "prefab": "slim_window",
+  "recess_m": 0.18, "prefab": "catalog",
   "frame_profile": "auto", "frame_width_m": 0.12,
   "frame_depth_m": 0.14, "sill": true,
   "grid_spacing_m": 0.4,
@@ -58,9 +59,11 @@ uniformemente. Las barras se intersectan con el interior del contorno.
 piezas no se escala al agrandar la ventana. Se limitan los conteos para impedir
 generaciones desmedidas.
 
-El ensamblaje nuevo admite ventanas con `legacy`, `slim_window`, `storefront`
-o `open` (sin vidrio ni divisiones). Prefabs especiales como persianas o screens
-se rechazan en esta ruta, en vez de reemplazar silenciosamente su significado.
+La autoría nueva usa `prefab: catalog` (valor por defecto), u `open` sin vidrio
+ni divisiones. Las muestras originales contienen `legacy`; ese nombre y los
+antiguos nombres de vidrio `slim_window`/`storefront` se normalizan al catálogo,
+sin ejecutar sus constructores anteriores. Persianas, lamas y screens antiguos
+se rechazan, incluso sin estilo global. No forman parte de estas muestras.
 Las hojas abatidas y cortinas de la ruta antigua no se reproducen en este ensamblaje.
 
 ## Materiales
@@ -77,7 +80,7 @@ Ejecutar desde `house_grammar`:
 python3 steps/step23_fresh_theta/generar_ventanas.py
 ```
 
-- `catalogo_ventanas/`: 20 GLB aislados y sus descripciones de Opening.
+- `catalogo_ventanas/`: 40 GLB aislados (20 formas/perfiles, con y sin reja) y sus descripciones de Opening.
 - `lotes/1134299_casa_salmon_republicana/ventanas_vinculadas/`: request completo,
   GLB, validación y registro de molduras anteriores sustituidas.
 

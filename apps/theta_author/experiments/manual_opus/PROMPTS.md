@@ -124,8 +124,13 @@ Reglas theta (schema_version="0.3"):
   Todo vano debe caber en el largo del muro con margen.
 - Techo: kind flat + parapet_m 0–0.5 si hay parapeto; props [] si la
   azotea no se ve. Sin roof_assemblies salvo cubierta claramente visible.
+  Cualquier pendiente o cobertura corrugada se escribe en roof_assemblies:
+  form shed/gable/etc., covering, detail full y alero explícito según evidencia.
+  roof/component.roof/roofs/roof_bodies[].roof solo admiten flat; slope_deg null.
+  rotation_deg es dirección ascendente desde +X local, no el norte ni la fachada;
+  en gable la cumbrera es perpendicular. No ampliar tolerancias para forzar vuelos.
 - Sitio: runs explícitos (edge, start_m/end_m dentro del largo de arista,
-  kind reja|republicano|barroco|clasico|madera|moderno según lo visto,
+  kind republicano|barroco|clasico|madera|moderno según lo visto,
   gate_u/garage_u en METROS desde start_m, openness 0.1–0.7, planters solo
   moderno, plinth null salvo estilo vinculado). site.fence="none" con runs.
   zones garden/patio solo sobre suelo libre visible.

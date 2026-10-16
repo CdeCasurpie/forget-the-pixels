@@ -118,7 +118,7 @@ class ProgrammeTests(unittest.TestCase):
     def test_a_shopfront_family_opens_the_ground_floor_to_the_street(self):
         composition = compose(family="mixed_use", length=11.0)
         ground = [o for o in composition.openings if o.v_m < LEVELS[1]]
-        self.assertTrue(any(o.prefab == "storefront" for o in ground))
+        self.assertTrue(any(o.prefab == "catalog" for o in ground))
         kinds = {p.kind for p in composition.projections}
         self.assertIn("awning", kinds)
         self.assertIn("sign_box", kinds)
@@ -126,7 +126,7 @@ class ProgrammeTests(unittest.TestCase):
     def test_a_workshop_opens_a_vehicle_gate(self):
         composition = compose(family="workshop", length=11.0)
         self.assertTrue(
-            any(o.kind == "gate" and o.prefab == "roller" for o in composition.openings)
+            any(o.kind == "gate" and o.prefab == "catalog" and o.door is not None for o in composition.openings)
         )
 
     def test_a_balcony_family_puts_a_balcony_under_a_window(self):

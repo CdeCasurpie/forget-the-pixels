@@ -9,6 +9,7 @@ import pytest
 from domain.theta import *
 from modeling.facade_composition import compose_facade, resolve_bay_layout
 from modeling.theta import _facade_controls, resolve_theta, generate_resolved
+from modeling.opening_catalog import resolve_opening
 from test_facade_zones import body, solve, front, P
 from test_compositional_massing import semantic_vertices
 
@@ -65,7 +66,8 @@ def test_bay_group_primary_entrance_not_first():
 def test_bay_group_garage():
     c=replace(controls(),bay_groups=(GROUPS[0],replace(GROUPS[1],ground_role='garage'),GROUPS[2]))
     out=compose(c,family='workshop')
-    assert [(i,o.prefab) for i,o in enumerate(out.openings) if o.kind=='gate']==[(3,'roller')]
+    assert [(i,o.prefab) for i,o in enumerate(out.openings) if o.kind=='gate']==[(3,'catalog')]
+    assert out.openings[3].door is not None
     assert out.openings[0].kind=='window'
 
 
@@ -86,7 +88,7 @@ def test_bay_groups_inside_facade_zone():
     wall=next(w for w in front(plan) if '/zone' in w.facade.edge_id)
     local=compose(c,family='quiet_house')
     assert wall.axes_m==pytest.approx([8+x for x in local.axes_m])
-    assert wall.facade.openings==tuple(replace(o,u_m=o.u_m+8) for o in local.openings)
+    assert wall.facade.openings==tuple(replace(resolve_opening(o),u_m=o.u_m+8) for o in local.openings)
     assert len(generate_resolved(plan).faces)>0
 
 
@@ -97,7 +99,7 @@ def test_bay_groups_visibility_does_not_reflow():
     a=solve(c,context=p);b=solve(c,blocker,context=p)
     wa=front(a)[0];wb=front(b)[0]
     assert wa.axes_m==wb.axes_m and wa.facade==wb.facade
-    frames=semantic_vertices(generate_resolved(b),'slim_frame')
+    frames=semantic_vertices(generate_resolved(b),'window_profile')
     assert len(frames)>0
     assert not np.any((frames[:,0]<11.99)&(frames[:,2]<2.99))
 
@@ -138,7 +140,7 @@ def test_bay_groups_gaps_blind_and_ground_roles():
     c=replace(controls(),bay_groups=(BayGroup((0.,.3),2,'blind'),BayGroup((.5,1.),2,'shopfront')))
     out=compose(c)
     assert len(out.openings)==6
-    assert all(o.prefab=='storefront' for o in out.openings[:2])
+    assert all(o.prefab=='catalog' for o in out.openings[:2])
     assert all(not (7.2<o.u_m<12.) for o in out.openings)
     assert len(out.axes_m)==4  # blind ground bays retain upper-floor identity
 

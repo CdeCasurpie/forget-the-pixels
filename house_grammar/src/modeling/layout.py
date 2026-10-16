@@ -42,12 +42,8 @@ def propose_building(
         raise ValueError("Unknown grammar style")
     if boundary != "open":
         validate_fence_style(boundary)
-    if roof_kind not in (
-        "flat",
-        "shed",
-        "gable",
-    ):
-        raise ValueError("Unknown boundary or roof kind")
+    if roof_kind != 'flat':
+        raise ValueError('Basic roof must be flat; use theta roof_assemblies for catalog roofs')
     if not parcel.is_valid or parcel.geom_type != "Polygon" or parcel.area < 2:
         raise ValueError("Valid Polygon of at least 2m² required")
     if (

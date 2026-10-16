@@ -12,7 +12,7 @@ MASA = {'components': [{'id': 'street_front',
                             'front_edge': 4,
                             'u': [0.0, 0.44],
                             'width_reference': 'edge'},
-                 'roof': {'kind': 'tile_shed', 'parapet_m': 0.0, 'props': None, 'slope_deg': 35.0},
+                 'roof': {'kind': 'flat', 'parapet_m': 0.0},
                  'slab_m': 0.18,
                  'support': {'column_width_m': 0.24,
                              'inset_m': 0.4,
@@ -44,7 +44,7 @@ MASA = {'components': [{'id': 'street_front',
                             'front_edge': 4,
                             'u': [0.44, 1.0],
                             'width_reference': 'edge'},
-                 'roof': {'kind': 'tile_shed', 'parapet_m': 0.0, 'props': None, 'slope_deg': 20.0},
+                 'roof': {'kind': 'flat', 'parapet_m': 0.0},
                  'slab_m': 0.18,
                  'support': {'column_width_m': 0.24,
                              'inset_m': 0.4,
@@ -74,6 +74,11 @@ FRENTES = [1]
 FAMILIA = 'galeria_madera'
 COLOR = [0.85, 0.82, 0.67]
 TECHO = {'kind': 'flat', 'parapet_m': 0.0, 'slope_deg': None}
+CUBIERTAS = [dict(id=name+'_roof',mass_ref=name+':0',design=dict(
+    form='shed',covering='curved_tile',slope_deg=slope,
+    rotation_deg=-84.52396504632391,detail='full',
+    eave=dict(kind='clean',overhang_m=0.,fascia=False)))
+    for name,slope in [('street_front',35.),('garden_front',20.)]]
 
 
 def _componente(c):
@@ -95,7 +100,7 @@ def build_request():
             roof=dict(kind=TECHO["kind"], parapet_m=TECHO["parapet_m"], slope_deg=TECHO.get("slope_deg"), props=[]), roofs=[],
             site=dict(fence="none", garden=False, runs=[], zones=[]),
             primary_color=COLOR, side_material="plaster", masses=None, materials=[],
-            finish=None, roof_bodies=[]),
+            finish=None, roof_bodies=[], roof_assemblies=CUBIERTAS),
         nuisance=dict(seed=12, curtains=False),
         config=dict(implementation="theta-candidate-v0", grammar_reference="grammar-v1.0",
                     completion_policy="conservative-0.2", detail=3),

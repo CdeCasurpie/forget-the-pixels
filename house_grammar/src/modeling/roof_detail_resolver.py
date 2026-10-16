@@ -111,9 +111,9 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
         if support.interiors:raise ValueError('Detailed roof courtyard requires separate masses')
         exposed=unary_union([Polygon(s.polygon,s.holes) for s in old.surfaces])
         poly=support.buffer(d.eave.overhang_m,join_style=2)
-        clearance=max(.13 if d.eave.kind=='cornice' else .025,.18 if d.eave.gutter else 0)
-        if not envelope.buffer(1e-6).covers(poly.buffer(clearance)):
-            raise ValueError('Roof overhang outside permitted envelope; reduce overhang')
+        clearance=max(.13 if d.eave.kind=='cornice' else
+                      .025 if d.eave.fascia or d.eave.kind!='clean' or d.parapet_m and d.cap!='none' else 0,
+                      .18 if d.eave.gutter else 0)
         # Existing upper masses carve out covered roof regions.
         blockers=unary_union([support.difference(exposed),*[mass_polygon(other) for other in masses
             if other.id!=m.id and other.roof_z>m.roof_z+1e-6 and other.base_z<=m.roof_z]])
@@ -133,6 +133,8 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
                 if abs(cc.width_m-(extent.max()-extent.min()))>.02:raise ValueError('Structural gable crown must span roof width')
                 d=replace(d,rotation_deg=math.degrees(math.atan2(t[1],t[0])),slope_deg=math.degrees(math.atan2(cc.height_m,cc.width_m/2)),ridge_fraction=.5,
                           eave=replace(d.eave,overhang_m=0))
+                d=validate(d,theta.architectural_style or 'republicano',materials)
+                poly=support
                 available=support.difference(blockers)
             # Reserve body thickness and a small weathering joint behind crown.
             cut=Polygon([a+t*u+n*v for u,v in ((cc.u_m,-cc.design.thickness_m-.035),(cc.u_m+cc.width_m,-cc.design.thickness_m-.035),
@@ -141,6 +143,10 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
             if available.geom_type!='Polygon' or available.is_empty:raise ValueError('Crown leaves no connected roof')
             from modeling.roof_assembly import lines
             joints+=tuple(tuple(line.coords) for line in lines(available.boundary.intersection(cut.boundary)))
+        # The cadastral envelope carries a precision grid; sub-grid buffers
+        # round to zero. One 0.1 mm tolerance handles boundary roundoff only.
+        if not envelope.buffer(1e-4).covers(available.buffer(clearance)):
+            raise ValueError('Roof overhang outside permitted envelope; reduce overhang')
         if d.form=='compound':
             if len(c.regions)<2:raise ValueError('Compound needs at least two explicit lobe regions')
             regions=[Polygon(r) for r in c.regions]
@@ -152,7 +158,13 @@ def resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials):
             for f in ff:
                 for p in polygons(geometry(f).intersection(available)):clipped+=faces(p,[f.plane])
             ff=clipped
-        else:ff=plan_faces(available,d,m.roof_z)
+        else:
+            # Plan on the complete support before clipping. An upper body or
+            # crown must not move the ridge or change the slope datum.
+            from modeling.mesh_builder import polygons
+            ff=[patch for f in plan_faces(poly,d,m.roof_z)
+                for part in polygons(geometry(f).intersection(available))
+                for patch in faces(part,[f.plane])]
         if c.crown_ref:
             # Check the entire opening against the back-wall roof section.
             if crown.controls.aperture!='none':

@@ -31,9 +31,13 @@ class EstimateResult:
     error: str | None = None
 
 
-def render_prompt(lot_id: str | None, n_images: int) -> str:
+def render_prompt(lot_id: str | None, n_images: int, style_sheet: bool = False) -> str:
     template = PROMPT_PATH.read_text()
-    return template.replace('{lot_id}', lot_id or 'desconocido').replace('{n_images}', str(n_images))
+    note = ('La PRIMERA imagen es una lámina de referencia con los 5 estilos '
+            'numerados (1 republicano, 2 barroco, 3 clasico, 4 madera, 5 moderno). '
+            'Compara el edificio del prisma con esa lámina antes de decidir el estilo. '
+            'Las demás imágenes son las fotos del lote.\n' if style_sheet else '')
+    return template.replace('{lot_id}', lot_id or 'desconocido').replace('{n_images}', str(n_images)).replace('{style_note}', note)
 
 
 def extract_text(stdout: str) -> str:
@@ -124,18 +128,22 @@ def validate(data: dict) -> dict:
                 first_floor_height_m=first, style=style, notes=notes[:2000])
 
 
-def estimate(images: list[str | Path], lot_id: str | None = None, model: str = 'claude-code/claude-sonnet-5',
-             agent: str | None = None, timeout_s: int = 180, runner=subprocess) -> EstimateResult:
+def estimate(images: list[str | Path], lot_id: str | None = None, model: str = 'opencode/muse-spark-1.3-contributor-free',
+             agent: str | None = None, timeout_s: int = 180, runner=subprocess,
+             style_sheet: str | Path | None = None) -> EstimateResult:
     """Estima el formulario de B desde fotos. Sesión siempre fresca, sin -c."""
     paths = [Path(p) for p in images]
+    sheet = Path(style_sheet) if style_sheet else None
+    if sheet and not sheet.is_file():
+        return EstimateResult(error=f'lamina de estilos inexistente: {sheet}')
     missing = [str(p) for p in paths if not p.is_file()]
     if missing:
         return EstimateResult(error=f'imágenes inexistentes: {", ".join(missing)}')
-    prompt = render_prompt(lot_id, len(paths))
+    prompt = render_prompt(lot_id, len(paths), style_sheet=sheet is not None)
     command = ['opencode', 'run', '--model', model, '--format', 'json']
     if agent:
         command += ['--agent', agent]
-    for path in paths:
+    for path in ([sheet] if sheet else []) + paths:
         command += ['--file', str(path)]
     command.append(prompt)
     start = time.monotonic()

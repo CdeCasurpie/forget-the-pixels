@@ -20,7 +20,10 @@ def build(detailed):
  r=json.loads((lot/'after/request.json').read_text());r['observations']=[dict(view_id=p.name.removesuffix('_lot.jpg'),image_path=str(p)) for p in sorted(lot.glob('*_lot.jpg'))];r['evidence']={};t=r['theta']
  # Long plot extends behind a 7.3 m frontage. Only the first ~9 m are visibly built.
  ground,roof=t['massing']['components'];ground['region']['depth_m']=[0,9.0];ground['levels_m']=[0,3.3]
- roof['region']['u']=[0,1];roof['region']['depth_m']=[0,8.5];roof['levels_m']=[3.3,6.0];roof['support']['kind']='columns';roof['support']['column_width_m']=.16;roof['support']['spacing_m']=4.0;roof['roof']={'kind':'corrugated','parapet_m':0}
+ roof['region']['u']=[0,1];roof['region']['depth_m']=[0,8.5];roof['levels_m']=[3.3,6.0];roof['support']['kind']='columns';roof['support']['column_width_m']=.16;roof['support']['spacing_m']=4.0;roof['roof']={'kind':'flat','parapet_m':0}
+ t['roof_assemblies']=[dict(id='terrace_cover',mass_ref=roof['id']+':0',design=dict(
+     form='flat',covering='corrugated',material='roof',rotation_deg=5.279328393121386,
+     eave=dict(kind='clean',overhang_m=0.,fascia=False)))]
  t['family']='quiet_house';t['primary_color']=[.88,.89,.86];t['side_material']='plaster';t['roof']={'kind':'flat','parapet_m':.36,'props':[]};t['materials']=[dict(slot='frame',template='frame',color=[.16,.18,.17]),dict(slot='metal',template='metal',color=[.18,.19,.18]),dict(slot='wood',template='wood',color=[.39,.25,.20]),dict(slot='roof',template='roof',color=[.16,.17,.17]),dict(slot='sign',template='plaster',color=[.92,.93,.91]),dict(slot='stone',template='stone',color=[.77,.79,.76]),dict(slot='glass',template='glass',color=[.13,.16,.15])]
  t['facade']={'mode':'explicit','openings':[],'projections':[],'material_regions':[]};t['facades']=[];t['site']={'fence':'none','garden':False,'runs':[],'zones':[]}
  if detailed:

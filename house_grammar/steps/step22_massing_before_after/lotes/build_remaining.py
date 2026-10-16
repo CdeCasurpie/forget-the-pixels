@@ -54,9 +54,9 @@ def main():
         if lid==1135384:
             theta['materials']=[{'slot':'stone','template':'brick','color':(.58,.32,.24)}]
         if lid==1138283:
-            theta['site']={'fence':'ladrillos','garden':False}
+            theta['site']={'fence':'clasico','garden':False}
         if lid==1138209:
-            theta['roof']={'kind':'tile_shed','slope_deg':12,'parapet_m':0}
+            theta['roof']={'kind':'flat','parapet_m':0}
         # An irregular cadastral ring may contain 0.18 m slivers and multiple
         # street edges: global bay_count on ALL fronts fails. Assign each
         # canonical edge separately, keeping narrow slivers blank.
@@ -67,6 +67,13 @@ def main():
         ring=ring[start:]+ring[:start]
         tagged=fronts_data[f'{lid}.0']
         street=[e for e in tagged['edges'] if e['edge_index'] in tagged['street_edge_indices']]
+        if lid==1138209:
+            edge=max(street,key=lambda e:np.linalg.norm(np.asarray(e['end_xy'])-e['start_xy']))
+            direction=np.asarray(edge['end_xy'])-edge['start_xy']
+            theta['roof_assemblies']=[dict(id='cover',mass_ref='main:0',design=dict(
+                form='shed',covering='curved_tile',slope_deg=12,
+                rotation_deg=float(np.degrees(np.arctan2(direction[0],-direction[1]))),
+                eave=dict(kind='clean',overhang_m=0.,fascia=False)))]
         controls=[]
         for i,a in enumerate(ring):
             b=ring[(i+1)%len(ring)]

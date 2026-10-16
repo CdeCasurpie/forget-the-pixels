@@ -23,7 +23,7 @@ BLIND=FacadeControls(mode='explicit',openings=())
 
 def explicit(tag, width=1.):
     return FacadeControls(mode='explicit',openings=(
-        Opening('window',.5,.6,width,1.5,prefab='slim_window',source=tag),))
+        Opening('window',.5,.6,width,1.5,prefab='catalog',source=tag),))
 
 
 def body(zones=(), **kwargs):
@@ -68,7 +68,7 @@ def test_facade_zone_three_horizontal_regions():
     assert plan.masses==solve(body()).masses
     assert plan.roofs==solve(body()).roofs
     mesh=generate_resolved(plan,NuisanceParameters(curtains=False))
-    assert len(semantic_vertices(mesh,'slim_frame'))>0
+    assert len(semantic_vertices(mesh,'window_profile'))>0
     # No duplicate exterior wall triangles: projected shell area equals the
     # domain area minus apertures (ignore back/side/top faces of the shell).
     triangles=[]
@@ -105,7 +105,7 @@ def test_facade_zone_blind_region():
     assert not walls[1].facade.openings and walls[0].facade.openings and walls[2].facade.openings
     assert_partition(walls,72.)
     mesh=generate_resolved(plan)
-    frames=semantic_vertices(mesh,'slim_frame')
+    frames=semantic_vertices(mesh,'window_profile')
     assert not np.any((frames[:,0]>3.6)&(frames[:,0]<7.2)&(frames[:,1]<4.1))
     vertices=semantic_vertices(mesh,'wall')
     assert np.any((vertices[:,0]>=3.6)&(vertices[:,0]<=7.2)&np.isclose(vertices[:,1],4.))
@@ -120,7 +120,7 @@ def test_facade_zone_rejects_overlap(face):
 
 def test_facade_zone_preserves_visibility_clipping():
     # Arch crosses occlusion at u=6; its surviving curve/frame must not reflow.
-    op=Opening('window',1.,.6,4.,2.,prefab='slim_window',shape='arch')
+    op=Opening('window',1.,.6,4.,2.,prefab='catalog',shape='arch')
     controls=FacadeControls(mode='explicit',openings=(op,))
     zone=FacadeZone('front',controls,(.25,.9))
     component=body((zone,))
@@ -133,7 +133,7 @@ def test_facade_zone_preserves_visibility_clipping():
     assert b.facade.openings[0].u_m==4.
     assert_partition(front(hidden),54.)
     mesh=generate_resolved(hidden,NuisanceParameters(curtains=False))
-    frames=semantic_vertices(mesh,'arched_frame')
+    frames=semantic_vertices(mesh,'window_profile')
     assert len(frames)>0
     assert np.all(frames[:,0]>=6.-1e-5)
     assert frames[:,0].max()<=8.+.1
@@ -159,10 +159,10 @@ def test_facade_zone_backwards_compatible():
         record['facade']['is_front']=wall.facade.has_program
         legacy.append(record)
     digest=hashlib.sha256(json.dumps(legacy,sort_keys=True).encode()).hexdigest()
-    assert digest=='828dce8ed30d6f1b99ca343ca8e3b6868c1d07ccc0a43ee29fef8b437f318b1e'
+    assert digest=='d024452ebd0ac70e54d37a6705566536465306aa4631460a4f7bf2b6dc137acc'
     mesh=generate_resolved(plan,NuisanceParameters(curtains=False))
-    assert hashlib.sha256(mesh.vertices.tobytes()).hexdigest()=='9ddf2b2273bf731279844654e69382604dff0c745845ec95396d7211d38c27e0'
-    assert hashlib.sha256(mesh.faces.tobytes()).hexdigest()=='4162c07a96e6dde27f5751cf8fa1e2d62ef7949a8a952461b1995efac6d57d09'
+    assert hashlib.sha256(mesh.vertices.tobytes()).hexdigest()=='6671d0055b970ae34e82dd94d51de5dbdc380dcc623205761992c8ae20262d8b'
+    assert hashlib.sha256(mesh.faces.tobytes()).hexdigest()=='ef4100ebd26fd65baec7a53130ab16d434083db18760872690508fc9765a6d53'
     request=json.loads(canonical(ReconstructionRequest(P,plan.theta)))
     del request['theta']['massing']['components'][0]['zones']
     assert from_json(json.dumps(request)).theta.massing.components[0].zones==()
@@ -281,7 +281,9 @@ def test_facade_zone_program_does_not_imply_street_front(face,edge):
     assert wall.facade.program_enabled is True and wall.facade.has_program
     assert all(w.facade.is_front is (w.edge==0) for w in plan.walls)
     mesh=generate_resolved(plan,NuisanceParameters(curtains=False))
-    frames=semantic_vertices(mesh,'slim_frame')
+    # Recessed infill always emits; outward relief is clipped where the wall
+    # stands on the cadastral line facing the neighbour (party-wall rule).
+    frames=semantic_vertices(mesh,'window_profile' if face=='front' else 'window_reveal')
     assert len(frames)>0  # side/back openings must still emit real geometry
     # Equivalent to the old overloaded flag, including wall treatments.
     legacy=replace(plan,walls=tuple(replace(w,facade=replace(w.facade,

@@ -205,12 +205,15 @@ def _complete(theta, p):
         _check(m.front_depth_m > 0 and 1 <= m.low_floors < floors, "Invalid front/rear massing")
     roof = theta.roof
     kind = fill(roof.kind, "flat", "roof.kind")
-    _check(kind in ("flat", "corrugated", "tile_shed", "gable"), "Unsupported roof")
-    _check(kind in ("tile_shed","gable") or roof.slope_deg is None, "slope_deg inactive for flat/corrugated roof")
-    parapet = fill(roof.parapet_m, 0. if kind in ("tile_shed","gable") else .5, "roof.parapet_m")
-    _check(0 <= parapet <= 2 and (kind not in ("tile_shed","gable") or parapet == 0), "Sloped parapet unsupported; use zero")
-    slope = fill(roof.slope_deg, 12., "roof.slope_deg") if kind in ("tile_shed","gable") else None
-    _check(slope is None or 1 <= slope <= 35, "Shed slope must be 1..35 degrees")
+    _check(kind == "flat", "Basic roof.kind must be flat; use roof_assemblies with a catalog design")
+    _check(roof.slope_deg is None, "Use roof_assemblies.design.slope_deg for a sloped roof")
+    parapet = fill(roof.parapet_m, .5, "roof.parapet_m")
+    _check(0 <= parapet <= 2, "Roof parapet must be 0..2 m")
+    slope = None
+    for local in [*(c.roof for c in m.components if c.roof), *theta.roofs]:
+        _check(local.kind in (None, 'flat'), 'Per-mass roof.kind must be flat; use roof_assemblies with mass_ref')
+        _check(local.slope_deg is None, 'Use roof_assemblies.design.slope_deg for a sloped roof')
+        _check(local.parapet_m is None or 0 <= local.parapet_m <= 2, 'Roof parapet must be 0..2 m')
     site = replace(theta.site, fence=fill(theta.site.fence, "none", "site.fence"), garden=fill(theta.site.garden, False, "site.garden"))
     _check(site.runs is None or site.fence == "none", "Explicit fence runs replace automatic fence kind")
     if site.fence != "none":
@@ -332,12 +335,12 @@ def _facade_controls(c, family):
         _check(all(getattr(c, x) is None for x in ("bay_count", "bay_axes_m", "window_ratio", "window_height_m", "sill_m", "balconies", "balcony_depth_m", "gallery_depth_m", "awning_depth_m")), "Repeat fields inactive on explicit facade")
         for op in c.openings:
             _check(op.kind in ('window','door','gate','balcony_window'), 'Invalid opening kind')
-            _check(op.prefab in ('legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'), 'Invalid opening prefab')
+            _check(op.prefab in ('catalog','legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'), 'Invalid opening prefab')
             _check(op.frame_width_m>0 and op.recess_m>0 and op.mullion_columns>=1 and op.mullion_rows>=1, 'Invalid frame/recess/mullions')
             _check(op.curtain==0, 'Curtain coverage belongs to xi, not explicit theta openings')
-            _check(op.prefab=='legacy' or op.style=='sliding' or
+            _check(op.prefab in ('catalog','legacy') or op.style=='sliding' or
                    (op.prefab=='open' and op.style=='vestibule'),
-                   'style only controls legacy opening or open vestibule; inactive for this prefab')
+                   'style only controls catalog opening or open vestibule; inactive for this prefab')
         return c
     _check(c.openings is None, "openings require explicit mode")
     _check(len({(e.floor,e.bay) for e in c.opening_edits})==len(c.opening_edits),"Duplicate sparse opening edit")
@@ -618,29 +621,15 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
             if component and component.roof and not override:
                 override=RoofOverride(mass.id,component.roof.kind,component.roof.parapet_m,component.roof.slope_deg)
             selected_kind=override.kind if override and override.kind is not None else theta.roof.kind
-            _check(selected_kind in ("flat","corrugated","tile_shed","gable"),"Invalid per-mass roof kind")
+            _check(selected_kind == "flat","Per-mass roof.kind must be flat; use roof_assemblies with mass_ref")
             selected_parapet=(override.parapet_m if override and override.parapet_m is not None else
-                              0. if mass.kind=='open' or override and override.kind in ("tile_shed","gable") else theta.roof.parapet_m)
-            selected_slope=(override.slope_deg if override and override.slope_deg is not None else
-                             theta.roof.slope_deg if selected_kind==theta.roof.kind else 12.) if selected_kind in ("tile_shed","gable") else None
-            selected_slope=selected_slope or (12. if selected_kind in ('tile_shed','gable') else None)
-            _check(not override or selected_kind in ("tile_shed","gable") or override.slope_deg is None,"Inactive per-mass slope")
-            _check(0<=selected_parapet<=2 and (selected_kind not in ("tile_shed","gable") or selected_parapet==0),"Invalid per-mass parapet")
-            _check(selected_slope is None or 1<=selected_slope<=35,"Invalid per-mass slope")
-            surfaces=[replace(s,kind=selected_kind,slope_deg=selected_slope or 0.,thickness_m=component.slab_m if component else s.thickness_m) for s in surfaces]
-            if component and selected_kind in ('gable','tile_shed'):
-                _,ct,cn,_=region_frame(context,component.region)
-                direction=ct if selected_kind=='gable' else cn
-                surfaces=[replace(s,inward_normal=tuple(direction),eave_point=min(s.polygon,key=lambda xy:np.dot(xy,direction))) for s in surfaces]
-            if selected_kind=='gable':
-                from modeling.roofscape import gable_surfaces
-                surfaces=[patch for s in surfaces for patch in gable_surfaces(s)]
+                              0. if mass.kind=='open' else theta.roof.parapet_m)
+            surfaces=[replace(s,kind='flat',slope_deg=0.,thickness_m=component.slab_m if component else s.thickness_m) for s in surfaces]
             props=[]
             footprints=[]
             for prop in theta.roof.props:
                 if prop.mass_role != mass.id:
                     continue
-                _check(selected_kind != "tile_shed", "Props on sloped surfaces not supported")
                 _check(prop.kind in BUILDERS and .2<=prop.scale<=3,"Invalid roof prop kind/scale")
                 shape=_prop_footprint(prop.kind,prop.xy,prop.rotation_deg,prop.scale)
                 _check(area.buffer(-.55).covers(shape),"Roof prop outside free roof clearance")
@@ -654,8 +643,7 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     theta=replace(theta,roofs=tuple(RoofOverride(ref,
                   next(plan.surfaces[0].kind for plan in roofs if plan.mass_id==ref),
                   next(plan.parapet_height_m for plan in roofs if plan.mass_id==ref),
-                  next(plan.surfaces[0].slope_deg for plan in roofs if plan.mass_id==ref)
-                  if next(plan.surfaces[0].kind for plan in roofs if plan.mass_id==ref)=="tile_shed" else None)
+                  None)
                   for ref in sorted(roof_overrides)))
     program = BuildingProgram("residential","","","","standard","","",0,has_fence=theta.site.fence!="none",fence_type=theta.site.fence)
     boundaries=[]
@@ -785,6 +773,9 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
     accesses=resolve_entrances(theta,walls,masses,envelope,materials|{c.slot for c in theta.materials})
+    from modeling.opening_catalog import resolve_opening
+    walls=[replace(w,facade=replace(w.facade,openings=tuple(
+        resolve_opening(op,theta.architectural_style) for op in w.facade.openings))) for w in walls]
     detailed_roofs=resolve_roof_assemblies(theta,masses,walls,roofs,crowns,envelope,materials|{c.slot for c in theta.materials})
     return ResolvedArchitecture(theta.schema_version,context,theta,masses,tuple(walls),tuple(roofs),tuple(boundaries),completed,detailed,structures,zones,trims,balconies,members,crowns,accesses,detailed_roofs)
 
@@ -866,27 +857,10 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
             f=replace(f,vertex_a=tuple(np.asarray(f.vertex_a)+shift),
                       vertex_b=tuple(np.asarray(f.vertex_b)+shift))
         ops=tuple(replace(op,curtain=float(_rng(nuisance.seed,f"{f.edge_id}/curtain/{i}").uniform(.15,.55)))
-                  if nuisance.curtains and op.kind=="window" and op.prefab in ("slim_window","storefront","legacy") else op
+                  if nuisance.curtains and op.kind=="window" and op.prefab in ("catalog","legacy") else op
                    for i,op in enumerate(f.openings))
-        if theta.architectural_style:
-            _check(all(op.frame_profile in (None,'auto',theta.architectural_style)
-                       for op in ops if op.kind=='window'), 'Window style conflicts with building style')
-            ops=tuple(replace(op,frame_profile=theta.architectural_style)
-                      if op.kind=='window' else op for op in ops)
-        from modeling.door_assembly import validate_door
-        door_ops=[]
-        for op in ops:
-            if op.door is not None:
-                model=op.door.model
-                if model=='auto':
-                    _check(theta.architectural_style is not None, 'Door auto model needs architectural_style')
-                    model=theta.architectural_style
-                _check(theta.architectural_style is None or model==theta.architectural_style,
-                       'Door style conflicts with building style')
-                op=replace(op,door=replace(op.door,model=model))
-                validate_door(op)
-            door_ops.append(op)
-        ops=tuple(door_ops)
+        from modeling.opening_catalog import resolve_opening
+        ops=tuple(resolve_opening(op,theta.architectural_style) for op in ops)
         local=_BandBuilder(builder,wall.base_z)
         if wall.plane_offset_m:
             from modeling.facade_depth import DepthEnvelopeBuilder, emit_returns

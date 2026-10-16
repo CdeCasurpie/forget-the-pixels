@@ -254,7 +254,7 @@ class GrammarTests(unittest.TestCase):
                 "balcony_return",
                 "corrugation",
                 "water_tank",
-                "security_bar",
+                "window_grille",
                 "shrub",
             }
             <= names
@@ -276,9 +276,9 @@ class GrammarTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             generate_mesh(replace(spec, facade_edges=(broken,)))
 
-    def test_height_and_sloped_roof(self):
+    def test_height_and_flat_roof(self):
         p = box(0, 0, 7, 9)
-        for kind in ["flat", "shed", "gable"]:
+        for kind in ["flat"]:
             s = propose_building(p, height_m=7.1, floors=2, roof_kind=kind)
             m = generate_mesh(s)
             validate_mesh(m, p)
@@ -292,6 +292,9 @@ class GrammarTests(unittest.TestCase):
                 ].max(),
                 7.1,
             )
+        for kind in ['shed','gable','corrugated']:
+            with self.assertRaisesRegex(ValueError, 'roof_assemblies'):
+                propose_building(p, roof_kind=kind)
 
     def test_spec_roundtrip_and_export_axes(self):
         spec = propose_building(box(0, 0, 6, 8), seed=12)

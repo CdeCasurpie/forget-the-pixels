@@ -4,8 +4,9 @@ from collections import Counter
 import pytest
 
 from domain.theta import ArchitecturalMotif, FacadeControls, FacadeZone, OpeningEdit, BayGroup
-from domain.models import Opening
+from domain.models import DoorControls, Opening
 from modeling.theta import _facade_controls, generate_resolved
+from modeling.opening_catalog import resolve_opening
 from modeling.facade_composition import compose_facade
 from test_facade_zones import body, solve, front
 from test_bay_groups import GROUPS, controls
@@ -65,7 +66,7 @@ def test_monumental_portal_inside_facade_zone():
     plan=solve(component,context=p)
     wall=next(w for w in front(plan) if '/zone' in w.facade.edge_id)
     local=compose(c,family='quiet_house')
-    assert wall.facade.openings==tuple(replace(o,u_m=o.u_m+8) for o in local.openings)
+    assert wall.facade.openings==tuple(replace(resolve_opening(o),u_m=o.u_m+8) for o in local.openings)
     assert wall.facade.projections==tuple(replace(f,u_m=f.u_m+8) for f in local.projections)
     mesh=generate_resolved(plan)
     assert len(semantic_vertices(mesh,'crown_moulding'))>0
@@ -93,7 +94,7 @@ def test_motif_does_not_duplicate_global_relief():
 
 
 def test_motif_replace_and_invalid_targets():
-    replacement=Opening('gate',8.3,.1,2.,3.,prefab='roller')
+    replacement=Opening('gate',8.3,.1,2.,3.,prefab='catalog',door=DoorControls())
     out=compose(controls(motifs=(M,),opening_edits=(OpeningEdit(0,3,'replace',replacement),)))
     assert out.openings[3]==replacement
     with pytest.raises(ValueError,match='door or gate'):

@@ -56,10 +56,16 @@ PROJECTING_SEMANTICS = frozenset({
     "cladding_joint", "cornice", "cornice_step", "cornice_drip", "sill_band",
     "pilaster", "pilaster_base", "pilaster_cap",
     "pediment", "vertical_fin", "arched_frame",
-    # opening trim
+    # opening trim (linked window/door catalogs protrude over the sidewalk;
+    # legacy arch/prefab names remain for serialized samples)
     "window_sill", "opening_surround", "opening_lintel", "threshold",
     "door_handle", "security_bar", "security_crossbar", "grille_diamond",
     "shutter_leaf", "shutter_slat",
+    "window_reveal", "window_profile", "window_glass", "window_mullion",
+    "window_grille", "door_reveal", "door_leaf_frame", "door_moulding",
+    "door_coffer", "door_panel_back", "door_panel_moulding", "door_board",
+    "door_louver", "door_leaf_grille", "door_glass", "door_threshold",
+    "door_hinge", "door_portal_cornice",
     # eaves and awnings
     "eave", "eave_fascia", "rafter_tail", "awning", "awning_arm",
     "awning_valance", "tile_eave_course", "tile_roof", "tile_ridge",
@@ -968,6 +974,10 @@ class MeshBuilder:
                     # Mid-depth clipping alone lets arched walls escape at
                     # oblique parcel corners.
                     for tri in triangles(domain):
+                        # Collinear curve samples triangulate into zero-area
+                        # slivers whose edge fields cross: no area to clip.
+                        _e1, _e2 = tri[1]-tri[0], tri[2]-tri[0]
+                        if abs(float(_e1[0]*_e2[1]-_e1[1]*_e2[0]))/2<1e-12:continue
                         us=sorted(set(float(p[0]) for p in tri))
                         for left,right in zip(us,us[1:]):
                             if right-left<1e-8:continue
@@ -978,10 +988,17 @@ class MeshBuilder:
                                     bounds.append((float(slope),float(pa[1]-slope*pa[0])))
                             if len(bounds)!=2:continue
                             bounds.sort(key=lambda pair:pair[0]*mid+pair[1])
+                            if bounds[0]==bounds[1]:continue  # degenerate cell: no thickness to emit
                             def field(pair):
                                 return lambda x,y,s=pair[0],c=pair[1]:s*float(np.dot(np.array([x,y])-a,t))+c
                             shape=Polygon([a+t*u+n*w for u,w in ((left,w1),(right,w1),(right,w2),(left,w2))])
                             for polygon in polygons(shapely.set_precision(shape.intersection(limit),VERTEX_QUANTUM_M)):
+                                # Stacked curve bands can share one u-cell with crossed
+                                # height fields on slivers; solid() rejects
+                                # thickness below -1e-7, so there is no volume to emit.
+                                zs=np.array(polygon.exterior.coords)[:,:2]
+                                ts=[field(bounds[1])(x,y)-field(bounds[0])(x,y) for x,y in zs]
+                                if min(ts)<-1e-7 or max(ts)<=1e-9:continue
                                 with self.component(semantic,f'{identity}/curve{piece}',assembly_id):
                                     self.solid(polygon,field(bounds[0]),field(bounds[1]),mat_fn('front',mid,sum(s*mid+c for s,c in bounds)/2,w2),semantic,
                                         facade_origin=a,facade_tangent=t,facade_normal=n,clip=clip,allow_taper=True)

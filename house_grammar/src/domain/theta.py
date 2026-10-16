@@ -269,7 +269,8 @@ class FacadeOverride:
 
 @dataclass(frozen=True)
 class RoofControls:
-    kind: str | None = None
+    """Structural flat roof only; covers/slopes use roof_assemblies."""
+    kind: str | None = None  # flat
     parapet_m: float | None = None
     slope_deg: float | None = None
     props: tuple[RoofObject, ...] | None = None
@@ -277,6 +278,7 @@ class RoofControls:
 
 @dataclass(frozen=True)
 class RoofOverride:
+    """Local flat slab/parapet controls; slope_deg must remain None."""
     mass_ref: str  # canonical role:index; unique legacy role accepted on input
     kind: str | None = None
     parapet_m: float | None = None

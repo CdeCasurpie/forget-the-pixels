@@ -11,7 +11,7 @@ from typing import NamedTuple
 import numpy as np
 from shapely.geometry import box as rect
 
-from domain.models import Opening, FacadeProjection, FacadeMaterialRegion
+from domain.models import Opening, DoorControls, FacadeProjection, FacadeMaterialRegion
 from domain.theta import FacadeControls
 from modeling.detail import DetailBudget
 from modeling.facade_program import FAMILY_RULES, compose_relief
@@ -234,7 +234,7 @@ def validate_opening_programs(c):
         _check(p.floor is None or type(p.floor) is int and p.floor>=0,'Invalid OpeningProgram floor')
         _check(p.kind in (None,'window','door','gate') and p.shape in (None,'rectangle','arch'),
                'Invalid OpeningProgram kind/shape')
-        _check(p.prefab in (None,'legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'),
+        _check(p.prefab in (None,'catalog','legacy','slim_window','wood_panel','metal_gate','roller','storefront','louver','open','screen'),
                'Invalid OpeningProgram prefab')
         _check(p.grille is None or type(p.grille) is bool,'Invalid OpeningProgram grille')
         for value,valid in ((p.width_ratio,lambda x:.1<=x<=.95),
@@ -278,7 +278,7 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
                 targets[key]=None
                 if edit.action=='replace':append(edit.opening,bay,key)
                 continue
-            kind,prefab='window',rules['prefab']
+            kind='window'
             width,sill,h=bay.pitch_m*c.window_ratio,c.sill_m,c.window_height_m
             if ground and local_floor==0:
                 role=bay.ground_role
@@ -286,20 +286,19 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
                     targets[key]=None
                     continue
                 if role in ('entrance','garage'):
-                    kind,prefab=('door','wood_panel') if role=='entrance' else ('gate','roller')
-                    # Explicit entry groups use their own available width,
-                    # without the legacy first-door cap of 1.2 metres.
+                    kind='door' if role=='entrance' else 'gate'
+                    # Explicit entry groups use their own available width.
                     width,sill,h=bay.pitch_m*.75,.04,min(max(c.window_height_m,2.3),z1-z0-.3)
                 elif role=='shopfront' or role=='inherit' and rules['ground']=='shopfront':
-                    prefab,sill='storefront',.15
+                    sill=.15
             if floor>0 and c.balconies and bay.global_index%2==0:
                 kind,sill='balcony_window',.18
             h=min(h,z1-z0-sill-.2)
             shape='rectangle'
             grille=rules['grille']
+            prefab='catalog'
             if program is not None:
                 kind=program.kind if program.kind is not None else kind
-                prefab=program.prefab if program.prefab is not None else prefab
                 shape=program.shape or shape
                 grille=program.grille if program.grille is not None else grille
                 width=bay.pitch_m*program.width_ratio if program.width_ratio is not None else width
@@ -308,9 +307,10 @@ def _compose_grouped(c, family, length, levels, height, ground, top, floor_indic
                 _check(sill+h<=z1-z0-.1 or c.top_profile is not None and abs(z1-height)<1e-8,
                        'OpeningProgram does not fit floor')
             _check(h>=.5 and width>=.4,'Openings cannot fit in BayGroup: reduce count or dimensions')
-            append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab=prefab,
+            append(Opening(kind,bay.axis_m-width/2,z0+sill,width,h,prefab='catalog',
                             grille=grille,shape=shape,arch_rise_m=min(width*.28,h*.25,.9) if shape=='arch' else None,
-                            balcony_depth_m=c.balcony_depth_m or .75,curtain=0),bay,key)
+                            balcony_depth_m=c.balcony_depth_m or .75,curtain=0,
+                            door=DoorControls() if kind in ('door','gate') else None),bay,key)
     _check(set(edits)<=found,'Sparse edit targets nonexistent floor/bay')
     for op in c.added_openings:
         owners=[b for b in bays if b.start_m<=op.u_m and op.u_m+op.width_m<=b.end_m]
@@ -363,21 +363,21 @@ def compose_facade(c: FacadeControls, family, length, levels, height, ground, to
     for local_floor, (z0,z1) in enumerate(zip(levels, levels[1:])):
         floor=local_floor if floor_indices is None else floor_indices[local_floor]
         for i, axis in enumerate(axes):
-            kind, prefab = "window", rules["prefab"]
+            kind = "window"
             width, sill, h = pitch*c.window_ratio, c.sill_m, c.window_height_m
             if ground and local_floor == 0 and i == 0:
                 kind = "gate" if rules["ground"] == "garage" else "door"
-                prefab = "roller" if kind == "gate" else "wood_panel"
                 width, sill, h = min(pitch*.75, 3.2) if kind == "gate" else min(pitch*.42, 1.2), .04, min(2.3,z1-z0-.3)
             elif ground and local_floor == 0 and rules["ground"] == "shopfront":
-                prefab, sill = "storefront", .15
+                sill = .15
             if floor > 0 and c.balconies and i % 2 == 0:
                 kind, sill = "balcony_window", .18
             h = min(h, z1-z0-sill-.2)
             _check(h >= .5 and width >= .4, "Openings cannot fit: reduce bays or window dimensions")
             opening=Opening(kind, axis-width/2, z0+sill, width,h,
-                               prefab=prefab, grille=rules["grille"],
-                               balcony_depth_m=c.balcony_depth_m or .75, curtain=0)
+                                prefab='catalog', grille=rules["grille"],
+                               balcony_depth_m=c.balcony_depth_m or .75, curtain=0,
+                               door=DoorControls() if kind in ('door','gate') else None)
             key=(floor,i)
             found.add(key)
             edit=edits.get(key)

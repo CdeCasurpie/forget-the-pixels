@@ -135,32 +135,31 @@ class AssemblyTopologyTests(unittest.TestCase):
         assert_closed(self, walls[0], "facade wall")
         self.assertGreater(walls[0]["faces"], 20)
 
-    def test_window_prefab_rings_are_closed(self):
+    def test_window_catalog_rings_are_closed(self):
         from domain.models import Opening
-        from modeling.grammar import opening as build_legacy_opening
-        from modeling.prefabs import build_opening
+        from modeling.grammar import opening as build_catalog_opening
 
         a, t, n = (np.array([0.0, 0.0]), np.array([1.0, 0.0]),
                    np.array([0.0, -1.0]))
         mb = MeshBuilder(box(-2, -2, 12, 2))
         with mb.assembly("w"):
-            build_legacy_opening(
+            build_catalog_opening(
                 mb, a, t, n,
-                Opening("window", 1.0, 0.9, 1.6, 1.5, prefab="legacy"), "vertical")
-            build_opening(
+                Opening("window", 1.0, 0.9, 1.6, 1.5, prefab="catalog"), "vertical")
+            build_catalog_opening(
                 mb, a, t, n,
-                Opening("window", 4.0, 0.9, 1.6, 1.5, prefab="slim_window",
-                        curtain=0.4))
+                Opening("window", 4.0, 0.9, 1.6, 1.5, prefab="catalog",
+                        curtain=0.0), "vertical")
         mesh = mb.finish()
         report = analyze_topology(mesh)
         rings = [c for c in report["components"]
-                 if c["semantic"] in ("window_frame", "slim_frame")]
-        self.assertEqual(len(rings), 2)
+                 if c["semantic"] in ("window_profile", "window_reveal")]
+        self.assertGreaterEqual(len(rings), 2)
         for ring in rings:
             assert_closed(self, ring, ring["semantic"])
         # Frame and glazing stay separate physical objects.
         kinds = {c["semantic"] for c in report["components"]}
-        self.assertIn("glazing", kinds)
+        self.assertIn("window_glass", kinds)
         self.assertEqual(report["total_boundary_edges"], 0)
         self.assertEqual(report["total_non_manifold_edges"], 0)
 
@@ -274,7 +273,7 @@ class AssemblyTopologyTests(unittest.TestCase):
         mesh = generate_v4_mesh(spec)
         report = analyze_topology(mesh)
         self.assertEqual(report["violations"], [])
-        glazing = [c for c in report["components"] if c["semantic"] == "glazing"]
+        glazing = [c for c in report["components"] if c["semantic"] == "window_glass"]
         self.assertTrue(glazing)
         self.assertTrue(all(c["expectation"] == "closed_solid" for c in glazing))
 

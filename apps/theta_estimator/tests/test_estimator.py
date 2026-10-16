@@ -59,6 +59,22 @@ def test_extract_text_acepta_envelope_y_texto_plano():
     assert extract_text('texto plano') == 'texto plano'
 
 
+def test_style_sheet_se_envia_primera_y_activa_nota(tmp_path):
+    from apps.theta_estimator.estimator import render_prompt
+    assert '{style_note}' not in render_prompt('1', 2, style_sheet=True)
+    assert 'lámina de referencia' in render_prompt('1', 2, style_sheet=True)
+    assert 'lámina de referencia' not in render_prompt('1', 2)
+    image = tmp_path / 'foto.jpg'
+    image.write_bytes(b'fake')
+    sheet = tmp_path / 'lamina.jpg'
+    sheet.write_bytes(b'fake')
+    runner = FakeRunner(FakeCompleted(stdout=json.dumps(GOOD)))
+    result = estimate([image], lot_id='1', runner=runner, style_sheet=sheet)
+    assert result.error is None
+    files = runner.commands[0]
+    assert files[files.index('--file') + 1] == str(sheet)
+
+
 def test_estimate_ok_con_runner_falso(tmp_path):
     image = tmp_path / 'foto.jpg'
     image.write_bytes(b'fake')
@@ -66,7 +82,7 @@ def test_estimate_ok_con_runner_falso(tmp_path):
     result = estimate([image], lot_id='1', runner=runner)
     assert result.error is None and result.floors == 3 and result.style == 'republicano'
     command = runner.commands[0]
-    assert command[:4] == ['opencode', 'run', '--model', 'claude-code/claude-sonnet-5']
+    assert command[:4] == ['opencode', 'run', '--model', 'opencode/muse-spark-1.3-contributor-free']
     assert '--file' in command and str(image) in command
     assert '-c' not in command and '--continue' not in command
 

@@ -1,38 +1,24 @@
-"""Roofs as their own grammar: surfaces, parapets and scattered rooftop objects.
+"""Structural flat slabs, parapets and rooftop objects.
 
-The previous roof was always one flat slab with a parapet and, at most, three
-objects crowded onto a single brute-force-located platform. Seen from above —
-which is how a block is read — that is the largest gap against a real Lima roof
-plan, where tanks, aerials, ducts, condensers, service rooms, laundry and pots
-are spread over the whole surface, and the street-facing band is often tiled.
+All designed coverings and slopes are emitted by roof_assembly. The historical
+V4 planner supplies flat roofs only; it never invents a random tiled band.
 """
 
 from __future__ import annotations
 
 import numpy as np
-from shapely.affinity import translate
-from shapely.geometry import Polygon, LineString
-from shapely.ops import split
-from dataclasses import replace
+from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
 from domain.architecture import RoofPlan, RoofProp, RoofSurface
 from modeling.detail import DEFAULT_BUDGET
 from modeling.geometry_constraints import (
-    apply_edge_setbacks,
     largest_polygon,
-    outward_normal,
 )
 from modeling.mesh_builder import polygons
 from modeling.prefabs_roof import BUILDERS, FOOTPRINTS, frame
 from modeling.randomness import resolve_seed
 
-TILE_SLOPE_DEG = 20.0
-TILE_EAVE_OVERHANG_M = 0.38
-# A tiled band is a band, not a roof: past roughly half the depth it stops
-# reading as a street-facing eave and starts looking like a barn dropped on top.
-TILE_MAX_DEPTH_FRACTION = 0.5
-TILE_MAX_DEPTH_M = 3.6
 PROP_EDGE_CLEARANCE_M = 0.55
 PROP_SPACING_M = 0.28
 
@@ -75,69 +61,6 @@ AZOTEA_WEIGHTS = {
     "laundry": 3.0, "water_tank": 2.4, "planter": 2.0, "rebar_cluster": 2.4,
     "antenna": 1.4,
 }
-
-
-def _sweep(polygon, direction, distance, steps=4):
-    """Polygon swept along a direction, so an eave grows a continuous apron."""
-    if distance <= 0:
-        return polygon
-    direction = np.asarray(direction, float)
-    parts = [polygon]
-    for step in range(1, steps + 1):
-        offset = direction * (distance * step / steps)
-        parts.append(translate(polygon, xoff=float(offset[0]), yoff=float(offset[1])))
-    return largest_polygon(unary_union(parts)) or polygon
-
-
-def _depth_span(polygon, outward):
-    """How far the polygon reaches back from its most street-ward point."""
-    coords = np.asarray(polygon.exterior.coords)[:, :2]
-    projected = coords @ np.asarray(outward, float)
-    return float(projected.max() - projected.min())
-
-
-def _eave_reference(strip, outward):
-    """Point on the strip furthest towards the street, used as the eave datum."""
-    coords = np.asarray(strip.exterior.coords)[:, :2]
-    return coords[int(np.argmax(coords @ np.asarray(outward, float)))]
-
-
-def _tile_surface(polygon, fronts, parcel, base_z, rng):
-    """Tiled band over the street-facing edge, with the flat remainder."""
-    if not fronts:
-        return None, polygon
-    line = min(fronts, key=lambda front: front.distance(polygon))
-    if line.distance(polygon) > 0.6:
-        return None, polygon
-    _, probe_outward, _ = outward_normal(parcel, line.coords[0], line.coords[-1])
-    if probe_outward is None:
-        return None, polygon
-    span = _depth_span(polygon, probe_outward)
-    depth = float(
-        min(rng.uniform(2.4, 3.6), span * TILE_MAX_DEPTH_FRACTION, TILE_MAX_DEPTH_M)
-    )
-    if depth < 1.8:
-        return None, polygon
-    rear = largest_polygon(apply_edge_setbacks(polygon, [line], depth))
-    if rear is None:
-        return None, polygon
-    strip = largest_polygon(polygon.difference(rear))
-    if strip is None or strip.area < 4.0 or rear.area < 6.0:
-        return None, polygon
-    _, outward, _ = outward_normal(parcel, line.coords[0], line.coords[-1])
-    if outward is None:
-        return None, polygon
-    eave = _eave_reference(strip, outward)
-    covered = _sweep(strip, outward, TILE_EAVE_OVERHANG_M)
-    surface = RoofSurface(
-        polygon=tuple((float(x), float(y)) for x, y in covered.exterior.coords),
-        kind="tile_shed",
-        base_z=base_z,
-        slope_deg=TILE_SLOPE_DEG,
-        eave_point=(float(eave[0]), float(eave[1])),
-        inward_normal=(float(-outward[0]), float(-outward[1])),
-    )
-    return surface, rear
 
 
 def _weights_for(mass, program):
@@ -213,33 +136,28 @@ def scatter_props(area, weights, rng, *, density=0.10, limit=14):
 def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot",
               budget=DEFAULT_BUDGET):
     """Decide the surfaces, parapet and objects of one mass's roof."""
+    if mass.roof_spec is not None:
+        kind=(mass.roof_spec.get('kind','flat') if isinstance(mass.roof_spec,dict)
+              else mass.roof_spec.kind)
+        if kind!='flat':
+            raise ValueError('V4 roof must be flat; use theta roof_assemblies for catalog roofs')
     rng = np.random.default_rng(resolve_seed(seed, lot_id, mass.id, "roof", "plan"))
     roof_z = float(mass.roof_z)
-
-    wants_tile = (
-        mass.role in ("front", "main", "corner", "podium")
-        and program.use in ("residential", "mixed")
-        and float(rng.random()) < 0.45
-    )
 
     surfaces, flat_parts = [], []
     for part in polygons(exposed_area):
         if part.area < 0.5:
             continue
         remainder = part
-        if wants_tile:
-            tile, remainder = _tile_surface(part, fronts, parcel, roof_z, rng)
-            if tile is not None:
-                surfaces.append(tile)
         if remainder is not None and remainder.area > 0.5:
-            kind = "corrugated" if mass.role == "azotea" else "flat"
             surfaces.append(
                 RoofSurface(
                     polygon=tuple(
                         (float(x), float(y)) for x, y in remainder.exterior.coords
                     ),
-                    kind=kind,
+                    kind="flat",
                     base_z=roof_z,
+                    holes=tuple(tuple(r.coords)[:-1] for r in remainder.interiors),
                 )
             )
             flat_parts.append(remainder)
@@ -275,51 +193,13 @@ def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot"
     )
 
 
-def _slope_fields(surface):
-    slope = np.tan(np.radians(surface.slope_deg))
-    origin = np.asarray(surface.eave_point, float)
-    inward = np.asarray(surface.inward_normal, float)
-    thickness = surface.thickness_m
-
-    def top(x, y):
-        return surface.base_z + slope * float(
-            (x - origin[0]) * inward[0] + (y - origin[1]) * inward[1]
-        )
-
-    def bottom(x, y):
-        return top(x, y) - thickness
-
-    return bottom, top
-
-
-def gable_surfaces(surface):
-    """Two planar patches meeting at a ridge, in the roof's street frame."""
-    polygon=Polygon(surface.polygon,surface.holes)
-    n=np.asarray(surface.inward_normal,float)
-    t=np.array([n[1],-n[0]])
-    points=np.asarray(polygon.exterior.coords)
-    ds=points@n; us=points@t
-    lo,hi=float(ds.min()),float(ds.max()); mid=(lo+hi)/2
-    cutter=LineString([t*(us.min()-1)+n*mid,t*(us.max()+1)+n*mid])
-    patches=[]
-    for part in split(polygon,cutter).geoms:
-        lower=np.dot(part.centroid.coords[0],n)<=mid
-        direction=n if lower else -n
-        anchor=n*(lo if lower else hi)
-        patches.append(replace(surface,polygon=tuple(part.exterior.coords)[:-1],
-            holes=tuple(tuple(r.coords)[:-1] for r in part.interiors),kind='tile_shed',
-            eave_point=tuple(anchor),inward_normal=tuple(direction)))
-    return patches
-
-
 def build_roof(mb, plan, rng, *, slab_material='concrete'):
-    """Emit one mass's roof: surfaces, ridge closures, parapet and objects."""
+    """Emit one mass's flat slabs, parapet and objects."""
     with mb.assembly(f"roof/{plan.mass_id}"):
         _build_roof_body(mb, plan, rng, slab_material=slab_material)
 
 
 def _build_roof_body(mb, plan, rng, *, slab_material='concrete'):
-    tiles = []
     flats = []
     for surface in plan.surfaces:
         polygon = Polygon(surface.polygon,surface.holes)
@@ -329,69 +209,17 @@ def _build_roof_body(mb, plan, rng, *, slab_material='concrete'):
             mb.solid(polygon, surface.base_z - surface.thickness_m, surface.base_z,
                      slab_material, "roof_slab")
             flats.append(polygon)
-        elif surface.kind == "corrugated":
-            mb.solid(polygon, surface.base_z - surface.thickness_m, surface.base_z,
-                     slab_material, "roof_slab")
-            mb.solid(polygon, surface.base_z, surface.base_z + 0.05, "roof",
-                     "corrugated_roof")
-            flats.append(polygon)
         else:
-            bottom, top = _slope_fields(surface)
-            mb.solid(polygon, bottom, top, "roof_tile", "tile_roof")
-            tiles.append((polygon, surface))
-
-    # Close the vertical face where a tiled band meets the flat roof behind it,
-    # and hang a fascia at its eave so the slab is not seen end-on. Both bands
-    # are taken from inside the tile itself: sweeping outwards and differencing
-    # would wrap around the sides, where the plane drops below the slab and the
-    # closure would have no height to span.
-    for polygon, surface in tiles:
-        bottom, top = _slope_fields(surface)
-        inward = np.asarray(surface.inward_normal, float)
-        base = surface.base_z
-
-        # Close the whole perimeter except the eave: the ridge at the back and
-        # the two gable triangles at the sides, which otherwise leave the roof
-        # open and show its underside from every oblique view.
-        eave_band = polygon.difference(
-            translate(polygon, xoff=inward[0] * 0.35, yoff=inward[1] * 0.35)
-        )
-        skirt = polygon.difference(
-            polygon.buffer(-0.13, join_style=2)
-        ).difference(eave_band.buffer(0.02, join_style=2))
-        for piece in polygons(skirt):
-            mb.solid(
-                piece,
-                base,
-                lambda x, y, f=bottom, b=base: max(f(x, y), b + 0.02),
-                "roof_tile",
-                "tile_ridge",
-            )
-
-        fascia = polygon.difference(
-            translate(polygon, xoff=inward[0] * 0.07, yoff=inward[1] * 0.07)
-        )
-        for piece in polygons(fascia):
-            mb.solid(
-                piece,
-                lambda x, y, f=bottom: f(x, y) - 0.12,
-                lambda x, y, f=bottom: f(x, y) + 0.01,
-                "roof_tile",
-                "eave_fascia",
-            )
+            raise ValueError('Basic roof surfaces must be flat; use a catalog roof assembly')
 
     if plan.parapet_height_m > 0 and flats:
         for field in polygons(unary_union(flats)):
             ring = field.difference(field.buffer(-0.14, join_style=2))
-            for polygon, _ in tiles:
-                ring = ring.difference(polygon.buffer(0.06, join_style=2))
             for piece in polygons(ring):
                 mb.solid(piece, plan.roof_z, plan.roof_z + plan.parapet_height_m,
                          "plaster", "parapet")
             if plan.parapet_profile == "cap":
                 cap = field.difference(field.buffer(-0.19, join_style=2))
-                for polygon, _ in tiles:
-                    cap = cap.difference(polygon.buffer(0.06, join_style=2))
                 # Two courses rather than one slab: the break in the arris is
                 # what keeps the coping from reading as a drawn line.
                 head = plan.roof_z + plan.parapet_height_m
