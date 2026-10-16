@@ -310,7 +310,7 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
     regions.extend(trim_regions)
     features = list(f.projections) if f.has_program else []
     pilaster_kinds=('pilaster','classical_pilaster','composite_pilaster')
-    if f.has_program and f.ornamented and f.style!='premium':
+    if f.has_program and f.ornamented:
         from domain.models import FacadeProjection
         for u in (0.04,length-0.16):
             candidate=FacadeProjection('pilaster',u,0,.12,total_height,.05,'stone')
@@ -433,13 +433,11 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
                "concrete", "top_cornice")
 
     # ── Existing ornamentation (plinth, floor bands, pilasters) ──────────
-    if f.style != "premium":
-        if not managed_trim:
-            mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
+    if not managed_trim:
+        mb.box(a, t, n, 0, length, 0, 0.28, -0.03, 0.025, "stone", "plinth")
         if f.has_program and f.ornamented:
-            if not managed_trim:
-                for z in f.floor_levels_m[1:]:
-                    mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
+            for z in f.floor_levels_m[1:]:
+                mb.box(a, t, n, 0, length, z - 0.13, z, -0.03, 0.09, "accent", "floor_band")
 
     if f.has_program:
         if f.services and length > 3.5:

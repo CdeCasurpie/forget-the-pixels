@@ -120,8 +120,8 @@ class ProgrammeTests(unittest.TestCase):
         ground = [o for o in composition.openings if o.v_m < LEVELS[1]]
         self.assertTrue(any(o.prefab == "catalog" for o in ground))
         kinds = {p.kind for p in composition.projections}
-        self.assertIn("awning", kinds)
-        self.assertIn("sign_box", kinds)
+        self.assertNotIn("awning", kinds)
+        self.assertNotIn("sign_box", kinds)
 
     def test_a_workshop_opens_a_vehicle_gate(self):
         composition = compose(family="workshop", length=11.0)
@@ -153,7 +153,7 @@ class ProgrammeTests(unittest.TestCase):
         self.assertIn("pilaster", kinds)
         self.assertIn("denticulated_cornice", kinds)
         self.assertIn("sill_band", kinds)
-        self.assertIn("shutter", kinds)
+        self.assertNotIn("shutter", kinds)
 
     def test_relief_is_reported_rather_than_silently_dropped(self):
         composition = compose(length=9.0, levels=(0.0, 1.2, 2.4),

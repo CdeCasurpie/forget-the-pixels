@@ -1,6 +1,6 @@
 {
   "balcony_4f_premium": {
-    "mesh_hash": "9d7c9cab28cdceaedb7495af1fbcfc81f3d85569610ab5ba929b0408657be47d",
+    "mesh_hash": "69a0359e9f67c0df271c593b46bc8f6d857b017240d2746800e13c092d865715",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -33,6 +33,7 @@
       "parapet_cap": 64,
       "planter": 36,
       "planting_soil": 36,
+      "plinth": 48,
       "rebar": 256,
       "roof_shrub": 300,
       "roof_slab": 12,
@@ -52,7 +53,7 @@
     }
   },
   "dense_6f": {
-    "mesh_hash": "2629aa6f9dc4ae2125033cc78b1e873b12bfb281791d3345a25961411731ced3",
+    "mesh_hash": "fc39a963e1b913ab6fddec3ae30be46e63f27d56926a4a67d111f62eb86100cd",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -81,6 +82,7 @@
       "parapet_cap": 64,
       "planter": 36,
       "planting_soil": 36,
+      "plinth": 48,
       "rebar": 256,
       "roof_shrub": 300,
       "roof_slab": 12,
@@ -101,7 +103,7 @@
     }
   },
   "heritage_3f": {
-    "mesh_hash": "9252d1b24d0b548ce905df11ed98cdb6cc9a2bef581d786aa5f2eeb3bed46283",
+    "mesh_hash": "b6db411ee61810d9732dbd37323a589726ef8bfbdd51d8c60f9d820dba3b2bf1",
     "semantic_summary": {
       "antenna_boom": 64,
       "antenna_element": 448,
@@ -130,6 +132,7 @@
       "parapet_cap": 64,
       "planter": 36,
       "planting_soil": 36,
+      "plinth": 48,
       "rebar": 256,
       "roof_shrub": 300,
       "roof_slab": 12,
@@ -200,7 +203,7 @@
     }
   },
   "square_lot": {
-    "mesh_hash": "632290a6d61caee35a7540f53e2c39769935661b1a017996842b48972708328d",
+    "mesh_hash": "3f0e6d70714f212819a987dcb5255946d02873fd0fb08ad3d69633389362b5fa",
     "semantic_summary": {
       "antenna_boom": 96,
       "antenna_element": 672,
@@ -231,6 +234,7 @@
       "parapet_cap": 64,
       "planter": 36,
       "planting_soil": 36,
+      "plinth": 48,
       "rebar": 512,
       "roof_shrub": 300,
       "roof_slab": 12,

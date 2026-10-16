@@ -145,6 +145,27 @@ Existe además el adaptador Python `modeling.base_massing.with_base()`: transfor
 5. Usar `opening_edits` (`suppress` / `replace`) para excepciones, o `added_openings` para vanos extra.
 6. Para grupos, `opening_programs` cambia tipo, forma, dimensiones y reja por `group`/`floor`.
 
+Las familias `repeat` ya no inventan rótulos (`TIENDA/TALLER/LOCAL/BCP`), toldos ni contraventanas. Si la foto los muestra, declararlos explícitamente como proyecciones `sign_box` (con `label`), `awning` o `shutter`. `finish="premium"` no debe usarse para ocultar detalles de pared: ya no suprime zócalo, bandas ni pilastras. El `_cell_finish` antiguo no existe en este árbol.
+
+Ejemplo de **fragmento dentro de `theta`**, en una fachada frontal de 10 m y altura suficiente (ajustar posiciones a los vanos resueltos):
+
+```json
+{
+  "family": "mixed_use",
+  "facade": {
+    "bay_count": 3,
+    "balconies": false,
+    "projections": [
+      {"kind": "sign_box", "u_m": 2.0, "v_m": 2.3, "width_m": 3.0, "height_m": 0.4, "depth_m": 0.1, "material_slot": "sign", "label": "TIENDA"},
+      {"kind": "awning", "u_m": 5.0, "v_m": 2.5, "width_m": 3.0, "height_m": 0.4, "depth_m": 0.8, "material_slot": "roof"},
+      {"kind": "shutter", "u_m": 1.0, "v_m": 3.7, "width_m": 1.0, "height_m": 1.4, "depth_m": 0.05, "material_slot": "wood"}
+    ]
+  }
+}
+```
+
+`sign_box.label` es el texto solicitado (usar caracteres admitidos por el constructor). `u_m` corre sobre la arista y `v_m` sube desde la base de **esa** fachada/banda; ancho, alto y profundidad son metros. Ubicar `shutter` respecto del vano real consultando `resolved_theta.json`, no suponiendo que todas las familias ponen ventanas en el mismo lugar. **Importante:** en `repeat`, `projections` explícito **reemplaza** todo el relieve automático de familia para esa fachada (también sus balcones, pilastras y cornisas de proyección); no es una lista que se sume a él. Si se quieren conservar esas piezas, declararlas también o usar controles independientes del catálogo. Con `projections=null` el relieve familiar sigue activo, pero ya no incluye rótulos, toldos ni contraventanas. En `explicit`, declarar `openings` y las proyecciones deseadas.
+
 `bay` es una crujía/eje rítmico de fachada, no un piso ni un hueco físico obligatorio. Los grupos dejan espacios ciegos entre intervalos. `ground_role="inherit"` no inventa una puerta de entrada; `entrance` y `garage` requieren `count=1`.
 
 El ritmo se compone sobre la pared completa **antes** de recortarla por exposición a otras masas: un vecino no debe desplazar puertas ni reiniciar la numeración.

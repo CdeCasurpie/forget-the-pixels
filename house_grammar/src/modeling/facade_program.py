@@ -2,9 +2,9 @@
 
 The previous generator sorted windows floor by floor and nudged each one by a
 random offset, which broke the vertical axes that make a facade read as designed
-rather than generated. It also emitted openings and nothing else: no sills, no
-cornices, no balconies, no shopfront awnings, because the caller passed empty
-projection and material tuples.
+rather than generated. It also emitted openings and nothing else: no sills,
+cornices or balconies, because the caller passed empty projection and material
+tuples. Signs, awnings and shutters now require explicit controls.
 
 Here the bay axes are fixed once for the whole wall and every floor hangs off
 them, and the relief that belongs to a rhythm is emitted together with it.
@@ -26,79 +26,79 @@ FAMILY_RULES = {
     "quiet_house": dict(
         pitch=3.0, window_ratio=0.46, window_h=1.55, sill=0.95, grille=True,
         ground="entrance", upper="repetitive", cornice=0.22, sill_band=False,
-        pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
+        pilasters=False, balcony_every=0, balcony_style="bars",
         ground_material=None, prefab="catalog",
     ),
     "ribbon_windows": dict(
         pitch=3.6, window_ratio=0.74, window_h=1.55, sill=0.85, grille=False,
         ground="entrance", upper="ribbon", cornice=0.18, sill_band=True,
-        pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
+        pilasters=False, balcony_every=0, balcony_style="bars",
         ground_material=None, prefab="catalog",
     ),
     "balcony_apartments": dict(
         pitch=3.1, window_ratio=0.56, window_h=1.95, sill=0.30, grille=False,
         ground="entrance", upper="balcony_column", cornice=0.26, sill_band=False,
-        pilasters=False, shutters=False, balcony_every=2, balcony_style="bars",
+        pilasters=False, balcony_every=2, balcony_style="bars",
         ground_material="stone", prefab="catalog",
     ),
     "mixed_use": dict(
         pitch=3.3, window_ratio=0.58, window_h=1.60, sill=0.90, grille=False,
         ground="shopfront", upper="repetitive", cornice=0.24, sill_band=True,
-        pilasters=False, shutters=False, balcony_every=3, balcony_style="bars",
-        ground_material="stone", prefab="catalog", awning=True, sign="TIENDA",
+        pilasters=False, balcony_every=3, balcony_style="bars",
+        ground_material="stone", prefab="catalog",
     ),
     "workshop": dict(
         pitch=3.8, window_ratio=0.42, window_h=1.30, sill=1.45, grille=True,
         ground="garage", upper="repetitive", cornice=0.14, sill_band=False,
-        pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
-        ground_material="concrete", prefab="catalog", sign="TALLER",
+        pilasters=False, balcony_every=0, balcony_style="bars",
+        ground_material="concrete", prefab="catalog",
     ),
     "brick_courtyard": dict(
         pitch=2.9, window_ratio=0.48, window_h=1.45, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.20, sill_band=False,
-        pilasters=False, shutters=False, balcony_every=0, balcony_style="bars",
+        pilasters=False, balcony_every=0, balcony_style="bars",
         ground_material="brick", prefab="catalog", crown="brick",
     ),
     # Barranco-specific languages the generic families could not express.
     "republicano": dict(
         pitch=2.8, window_ratio=0.42, window_h=2.25, sill=0.75, grille=True,
         ground="entrance", upper="repetitive", cornice=0.42, sill_band=True,
-        pilasters=True, shutters=True, balcony_every=3, balcony_style="balusters",
+        pilasters=True, balcony_every=3, balcony_style="balusters",
         ground_material="stone", prefab="catalog", arch_ground=True, arch_upper=True,
         cornice_type="denticulated_cornice",
     ),
     "galeria_madera": dict(
         pitch=3.0, window_ratio=0.62, window_h=1.85, sill=0.25, grille=False,
         ground="shopfront", upper="gallery", cornice=0.20, sill_band=False,
-        pilasters=False, shutters=True, balcony_every=0, balcony_style="balusters",
-        ground_material="wood", prefab="catalog", awning=True, arch_upper=True,
+        pilasters=False, balcony_every=0, balcony_style="balusters",
+        ground_material="wood", prefab="catalog", arch_upper=True,
         cornice_type="cornice",
     ),
     "esquina_comercial": dict(
         pitch=3.2, window_ratio=0.54, window_h=1.70, sill=0.80, grille=False,
         ground="shopfront", upper="balcony_column", cornice=0.30, sill_band=True,
-        pilasters=True, shutters=False, balcony_every=2, balcony_style="solid",
-        ground_material="stone", prefab="catalog", awning=True, sign="LOCAL",
+        pilasters=True, balcony_every=2, balcony_style="solid",
+        ground_material="stone", prefab="catalog",
         arch_ground=True, cornice_type="denticulated_cornice",
     ),
     "quinta": dict(
         pitch=2.7, window_ratio=0.50, window_h=1.40, sill=1.00, grille=True,
         ground="entrance", upper="repetitive", cornice=0.16, sill_band=False,
-        pilasters=False, shutters=True, balcony_every=0, balcony_style="bars",
+        pilasters=False, balcony_every=0, balcony_style="bars",
         ground_material=None, prefab="catalog", arch_upper=True,
         cornice_type="cornice",
     ),
     "neoclasico": dict(
         pitch=3.5, window_ratio=0.40, window_h=2.40, sill=0.90, grille=True,
         ground="entrance", upper="repetitive", cornice=0.55, sill_band=True,
-        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        pilasters=True, balcony_every=0, balcony_style="bars",
         ground_material="stone", prefab="catalog", arch_upper=True, arch_ground=True,
-        cornice_type="denticulated_cornice", sign="BCP",
+        cornice_type="denticulated_cornice",
     ),
     "neoclasico_esquina": dict(
         pitch=3.2, window_ratio=0.45, window_h=2.30, sill=0.85, grille=True,
         ground="entrance", upper="repetitive", cornice=0.60, sill_band=True,
-        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
+        pilasters=True, balcony_every=0, balcony_style="bars",
         ground_material="stone", prefab="catalog", arch_upper=True, arch_ground=True,
         cornice_type="denticulated_cornice",
     ),
@@ -382,10 +382,11 @@ def _relief(length, levels, axes, pitch, openings, rules, band_height,
 
 def compose_relief(length, levels, openings, rules, band_height,
                    is_ground_band, is_top_band, rng, dropped, budget):
-    """One chart-wide pass; only balconies/shutters are opening-scoped.
+    """One chart-wide pass; only balconies are opening-scoped.
 
-    Global bands, cornice, end pilasters, gallery, awning, sign, downpipe and
-    material regions depend on the whole chart, not on a fictitious pitch.
+    Global bands, cornice, end pilasters, gallery, downpipe and material regions
+    depend on the whole chart, not on a fictitious pitch. Signs, awnings and
+    shutters require explicit facade projections.
     """
     projections, regions = [], []
 
@@ -426,27 +427,6 @@ def compose_relief(length, levels, openings, rules, band_height,
     if rules["upper"] == "gallery" and len(levels) > 2 and length > 4.0:
         add("gallery", 0.10, levels[1] + 0.20, length - 0.20, 2.35,
             float(rng.uniform(1.0, 1.3)), material="wood")
-
-    if is_ground_band and rules.get("awning") and len(levels) > 1:
-        head = min(levels[1] - 0.45, band_height - 0.5)
-        if head > 1.9:
-            add("awning", 0.25, head, length - 0.5, 0.40,
-                float(rng.uniform(0.9, 1.25)), material="roof")
-
-    if is_ground_band and rules.get("sign") and len(levels) > 1:
-        head = min(levels[1] - 0.30, band_height - 0.35)
-        width = min(length - 0.9, 3.6)
-        if head > 2.1 and width > 1.6:
-            add("sign_box", (length - width) / 2.0, head, width, 0.46, 0.10,
-                material="sign",
-                label=rules["sign"] if budget.wants_lettering else "")
-
-    if rules["shutters"] and budget.wants_shutters:
-        for opening in openings:
-            if opening.kind != "window" or opening.v_m < levels[0] + 1.0:
-                continue
-            add("shutter", opening.u_m, opening.v_m, opening.width_m,
-                opening.height_m, 0.05, material="wood", border=0.32)
 
     if length > 3.0:
         add("downpipe", length - 0.28, 0.15, 0.12,

@@ -65,6 +65,23 @@ def test_facade_crown_and_explicit_catalogue_crown_cannot_overlap():
         resolve_theta(P,replace(T,schema_version='0.3',facade=facade,crowns=(explicit,)))
 
 
+@pytest.mark.parametrize('family', ['mixed_use','workshop','republicano','galeria_madera',
+                                     'esquina_comercial','quinta','neoclasico'])
+def test_family_does_not_invent_sign_awning_or_shutters(family):
+    resolved=resolve_theta(P,replace(T,family=family))
+    forbidden={'sign_box','awning','shutter'}
+    assert not any(p.kind in forbidden for w in resolved.walls for p in w.facade.projections)
+
+
+def test_explicit_sign_remains_available_without_family_sign():
+    from domain.models import FacadeProjection
+    sign=FacadeProjection('sign_box',2.,2.3,3.,.4,.1,'sign',label='LOCAL')
+    t=replace(T,family='mixed_use',facade=FacadeControls(bay_count=3,balconies=False,
+                                                        projections=(sign,)))
+    resolved=resolve_theta(P,t)
+    assert any(p==sign for w in resolved.walls for p in w.facade.projections)
+
+
 def test_roundtrip():
     request=ReconstructionRequest(P,T)
     other=from_json(canonical(request))

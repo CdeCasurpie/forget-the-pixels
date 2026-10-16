@@ -25,17 +25,17 @@ Fuente: `modeling/facade_program.py:FAMILY_RULES`, consumida por `facade_composi
 | `quiet_house` | Vivienda sobria: ventanas relativamente pequeñas, rejas, puerta inicial, cornisa discreta. |
 | `ribbon_windows` | Ventanas anchas y bandas de antepecho, lectura horizontal. |
 | `balcony_apartments` | Ventanas bajas/altas de acceso a balcón, balcones repetidos y base de piedra. |
-| `mixed_use` | Planta baja con escaparates, superiores residenciales, toldo y letrero `TIENDA`. |
-| `workshop` | Primer vano de cochera enrollable, ventanas más altas/pequeñas, concreto y letrero `TALLER`. |
+| `mixed_use` | Planta baja con escaparates y superiores residenciales; toldos y letreros solo si se solicitan explícitamente. |
+| `workshop` | Primer vano de cochera enrollable, ventanas más altas/pequeñas y concreto; no añade `TALLER`. |
 | `brick_courtyard` | Vivienda con ladrillo en base y franja de coronación; no crea un patio automáticamente. |
-| `republicano` | Proporciones altas, rejas, pilastras, contraventanas, bandas, cornisa denticulada y balcones. |
-| `galeria_madera` | Galería continua en superiores, carpintería/contraventanas, base comercial y toldo. |
-| `esquina_comercial` | Escaparates, balcones de parapeto sólido, pilastras, toldo y letrero `LOCAL`; no crea una esquina geométrica. |
-| `quinta` | Ventanas moderadas con rejas/contraventanas y prefab de panel de madera. No distribuye varias viviendas por sí sola. |
-| `neoclasico` | Vanos altos relativamente estrechos, pilastras y cornisa denticulada prominente; puede generar letrero `BCP`. |
+| `republicano` | Proporciones altas, rejas, pilastras, bandas, cornisa denticulada y balcones; contraventanas solo explícitas. |
+| `galeria_madera` | Galería continua en superiores y base comercial; toldos/contraventanas solo explícitos. |
+| `esquina_comercial` | Escaparates, balcones de parapeto sólido y pilastras; no crea esquina, toldo ni letrero automáticamente. |
+| `quinta` | Ventanas moderadas con rejas; contraventanas solo explícitas. No distribuye varias viviendas por sí sola. |
+| `neoclasico` | Vanos altos relativamente estrechos, pilastras y cornisa denticulada prominente; no genera `BCP`. |
 | `neoclasico_esquina` | Variante proporcional del anterior con cornisa mayor; la esquina depende del contexto/masas. |
 
-Las reglas familiares pueden añadir ornamentación o rótulos que no están observados. Para reconstrucción fiel, seleccionar `projections=[]`, `material_regions=[]` y construir solo los elementos vistos. Arcos de las reglas V4 no se trasladan automáticamente al compositor theta; ver [guía](README.md).
+Las reglas familiares aún pueden añadir ornamentación no observada, pero ya no rótulos, toldos ni contraventanas. Para reconstrucción fiel, seleccionar `projections=[]`, `material_regions=[]` y construir solo los elementos vistos. Arcos de las reglas V4 no se trasladan automáticamente al compositor theta; ver [guía](README.md).
 
 ## 3. Volúmenes, regiones y soportes
 
@@ -336,7 +336,7 @@ Fuente: `prefabs_facade.py:FACADE_PROJECTIONS`. Son piezas en `(u_m,v_m,width_m,
 
 `motifs[].kind` solo admite `monumental_portal`: decora una puerta/portón existente del primer piso con pilastras, marco, cornisa y frontón opcional. No crea otro vano.
 
-`cladding=stucco/horizontal`: revestimiento liso o juntas horizontales. `services` activa detalles de servicios. `finish=standard/premium` selecciona tratamiento de fachada; no confundir con los cinco estilos.
+`cladding=stucco/horizontal`: revestimiento liso o juntas horizontales. `services` activa detalles de servicios. `finish=standard/premium` sigue admitido por el contrato, pero ya no suprime zócalo, bandas ni pilastras; no confundir con los cinco estilos.
 
 ## 12. Cercos y suelo
 
