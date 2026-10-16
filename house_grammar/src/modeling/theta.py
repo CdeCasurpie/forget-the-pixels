@@ -39,6 +39,9 @@ from modeling.assembly import (compose_masses, mass_polygon, ring as assembly_ri
 from modeling.exposure import wall_domains
 from modeling.visibility import VisibleFacadeBuilder, patch_domains
 from modeling.balcony_resolver import ResolvedBalcony, resolve_balconies
+from domain.balconies import BalconyControls
+from domain.models import FacadeProjection
+from modeling.balcony_catalog import CATALOG as BALCONY_CATALOG
 from modeling.vertical_member_resolver import ResolvedMember, resolve_members
 from modeling.crown_resolver import ResolvedCrown, resolve_crowns
 from modeling.entrances import ResolvedEntrance, resolve_entrances, build_entrance
@@ -768,7 +771,37 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         for p in pieces:
             _check(envelope.buffer(1e-7).covers(sweep_domain(p.path,p.section,envelope)), f'Fence plinth outside envelope: {p.path}')
         trims+=tuple(pieces)
-    balconies=resolve_balconies(theta,masses,walls,envelope,materials)
+    # Family relief is a placement hint, not a second balcony mesh engine.
+    # Promote its balcony projections to the same validated catalogue as explicit
+    # theta.balconies, then remove them from the facade before materialization.
+    generated=[]
+    catalogue_walls=[]
+    for wall in walls:
+        mass=next(m for m in masses if m.id==wall.mass_role)
+        retained=[]
+        legacy_openings=[op for op in wall.facade.openings if op.kind=='balcony_window']
+        balcony_features=tuple(FacadeProjection('balcony',max(0.,op.u_m-.22),op.v_m,
+                                op.width_m+.44,1.05,op.balcony_depth_m,source='opening')
+                               for op in legacy_openings)
+        for feature in wall.facade.projections+balcony_features:
+            if feature.kind!='balcony':
+                retained.append(feature)
+                continue
+            _check(wall.plane_offset_m==0, 'Family balcony on offset wall requires explicit balcony controls')
+            proposed_z=wall.base_z+feature.v_m
+            floor_z=min(mass.floor_levels,key=lambda z:abs(z-proposed_z))
+            _check(abs(floor_z-proposed_z)<.35, 'Family balcony must be near a floor level')
+            generated.append(BalconyControls(
+                id=f'family_balcony_{len(generated)}',mass_ref=mass.id,edge=wall.edge,
+                floor_m=floor_z-mass.base_z,u_m=feature.u_m,
+                width_m=feature.width_m,depth_m=feature.depth_m,
+                style=theta.architectural_style or (theta.family if theta.family in BALCONY_CATALOG else 'moderno')))
+        catalogue_walls.append(replace(wall,facade=replace(wall.facade,projections=tuple(retained),
+            openings=tuple(replace(op,kind='window') if op.kind=='balcony_window' else op
+                           for op in wall.facade.openings))))
+    walls=catalogue_walls
+    _check(not {c.id for c in generated}&{c.id for c in theta.balconies}, 'Family balcony ID conflicts with explicit balcony')
+    balconies=resolve_balconies(replace(theta,balconies=theta.balconies+tuple(generated)),masses,walls,envelope,materials)
     members=resolve_members(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)

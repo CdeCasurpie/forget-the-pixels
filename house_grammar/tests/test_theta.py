@@ -10,6 +10,27 @@ P = ReconstructionContext(((0.,0.),(10.,0.),(10.,16.),(0.,16.)),(0,))
 T = ThetaCandidate(height_m=8.4,floors=3,facade=FacadeControls(bay_count=3,balconies=False))
 
 
+def test_repeat_balconies_use_only_catalogue_assemblies():
+    t=replace(T,facade=FacadeControls(bay_count=3,balconies=True,balcony_depth_m=.8))
+    resolved=resolve_theta(P,t)
+    assert resolved.balconies
+    assert all(b.controls.variant!='auto' for b in resolved.balconies)
+    assert not any(p.kind=='balcony' for w in resolved.walls for p in w.facade.projections)
+    assert resolved.theta.balconies==()  # generated pieces are resolved, not added to input
+    mesh=generate_resolved(resolved)
+    assert len(mesh.faces)>0
+
+
+def test_explicit_legacy_balcony_projection_is_promoted_to_catalogue():
+    from domain.models import FacadeProjection
+    balcony=FacadeProjection('balcony',2.,3.0,.9,1.05,.8)
+    t=replace(T,facade=FacadeControls(bay_count=3,balconies=False,projections=(balcony,)))
+    resolved=resolve_theta(P,t)
+    assert len(resolved.balconies)==1
+    assert resolved.balconies[0].controls.variant!='auto'
+    assert not any(p.kind=='balcony' for w in resolved.walls for p in w.facade.projections)
+
+
 def test_roundtrip():
     request=ReconstructionRequest(P,T)
     other=from_json(canonical(request))

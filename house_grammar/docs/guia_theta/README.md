@@ -187,7 +187,7 @@ En overrides repetitivos los campos no nulos se mezclan con el global. **Las tup
 - En `repeat`, `projections=null` deja producir el relieve de familia; `[]` lo desactiva.
 - `material_regions=null` y `[]` no añaden pintura automática de familia. El acabado se declara con `wall_material`, `side_material` y regiones explícitas. Las regiones asignan materiales al muro existente, sin cáscaras superpuestas: [guía de materiales](../../../MATERIALES_MUROS.md).
 - En `explicit`, `projections=null` acaba vacío; no produce el catálogo repetitivo.
-- `balconies=[]` en theta significa no añadir ensambles independientes; **no cancela** los balcones producidos por `facade`/familia.
+- `balconies=[]` en theta significa no añadir ensambles independientes; **no cancela** los balcones producidos por `facade`/familia. Esos balcones se convierten durante `resolve_theta()` a `BalconyControls` resueltos por el catálogo y se construyen con `balcony_assembly`/`railing_assembly`, no con una segunda baranda de `grammar.opening`. Para suprimirlos, desactivar `facade.balconies` o el relieve automático. `gallery` de relieve aún usa su constructor propio y está pendiente de migración.
 - `projections=[]` no anula piezas pedidas separadamente mediante `motifs`, `order` o `crowns` de fachada.
 
 ## 5. Añadir piezas por anclaje
