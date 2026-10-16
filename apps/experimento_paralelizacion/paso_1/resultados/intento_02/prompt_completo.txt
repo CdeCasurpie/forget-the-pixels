@@ -1,0 +1,823 @@
+# Lectura arquitectónica detallada en español
+
+Describe exclusivamente el inmueble de la parcela suministrada, usando todas las fotos. Devuelve TEXTO ESPAÑOL organizado por las preguntas siguientes, sin JSON ni código. Tu lector traducirá esta especificación a una gramática geométrica en otra solicitud independiente.
+
+## Autoridad y coordenadas
+La parcela, frentes, cantidad de pisos y cotas del registro son restricciones impuestas por el usuario, incluso si el formulario original dice suggested. No las reestimes. Puedes indicar qué cuerpos terminan en cada nivel conocido. Señala contradicciones sin alterar el registro. El estilo humano es la preferencia dominante, NO una obligación de inventar ornamentos. Otros estilos son hipótesis locales secundarias basadas en señales visibles.
+El prisma catastral es una referencia, no la huella observada del edificio. Distingue vecinos y oclusores. No supongas ocupado todo el fondo del lote. Usa IDs M1 para masas, F1 para fachadas, V1 para ventanas, P1 para puertas, B1 para balcones, C1 para cercos. Identifica cada fachada por frente/arista y foto, y define izquierda/derecha mirando desde la calle. No confundas esa izquierda con la dirección de la arista.
+Todo porcentaje debe indicar denominador: ancho de F1, profundidad del lote, altura del piso o superficie del lote. Da intervalos de ubicación y tamaño; no confundas 40% del ancho con 40% del área. Las proporciones proyectadas no son medidas rectificadas. Usa rangos métricos estimados solo cuando exista escala suficiente. No inventes precisión para el fondo invisible.
+Por elemento indica: ID, cuerpo/fachada/nivel, ubicación, dimensiones, forma, material/color, relación con otros elementos, fotos de evidencia y confianza alta/media/baja por atributo. Estados: presente, ausente observable, no visible, inferido. No visible no significa ausente. No describas detalles típicos de un estilo como si estuvieran en las imágenes.
+
+## Cuestionario obligatorio
+### Diagnóstico visual antes de asignar nombres
+El catálogo es una lista de candidatos que debes buscar, NO una lista de elementos que deban existir. Para cada región metálica, abertura o saliente compara estas alternativas y decide usando señales visibles:
+
+| Candidato | Señales necesarias / discriminantes |
+|---|---|
+| Ventana con reja | Hueco delimitado por pared con jambas y dintel; barras cubren ese hueco. Buscar vidrio/marco detrás. No implica balcón. |
+| Puerta peatonal | Hueco que llega a suelo/umbral, marco y posible hoja, bisagras/tirador. Si el pie está oculto, no confirmar uso. |
+| Portón vehicular | Hueco ancho que llega a suelo y posible acceso/rampa; hojas, carril o enrollado si visibles. Ancho por sí solo no demuestra cochera. |
+| Cerco de barrotes | Cerramiento delante de la fachada o en límite del lote, anclado al suelo/base, con continuidad entre postes. Buscar separación respecto a pared y accesos. |
+| Baranda sobre terraza | Protección de borde de superficie transitable existente; demostrar borde/solado y cota. No añadir una losa saliente nueva. |
+| Balcón saliente | Plataforma/losa que sale del muro y protección en su borde; buscar lateral, intradós y vano de acceso. Barras solas NO prueban plataforma. |
+| Protección de vano sin balcón | Barras delante de un hueco alto sin plataforma demostrable. No atribuir vuelo de 1 m por apariencia típica. |
+| Galería | Circulación/plataforma continua, cubierta y apoyos identificables; no basta una reja larga. |
+| Balcón cajón | Volumen cerrado saliente, caras laterales y frontal, paneles/vidrio/celosía; no confundir una ventana de madera con cajón. |
+| Seto / vegetación urbana | Follaje y tierra; comprobar si está dentro del lote o entre acera/calzada. No convertirlo en cerco metálico ni zona privada sin evidencia. |
+| Volumen retranqueado | Dos planos de pared unidos por un retorno lateral visible o evidencia multivista; cambio de color/sombra no basta. |
+| Cornisa / banda | Relieve horizontal limitado; no es por sí solo borde de piso ni cubierta. |
+| Frontón | Silueta ornamental sobre vano o muro; distinguir del faldón real detrás. |
+| Cubierta inclinada | Superficie y dirección de pendiente identificables; una franja de teja no prueba cubierta completa. |
+
+Antes de llamar balcón, cerco o portón a algo, registra dos señales observadas que apoyen esa clase y una alternativa descartada con motivo. Si no hay señales suficientes, conserva ID neutral R1 (región con barras), H1 (hueco), S1 (saliente) con candidatos y geometría observable. La incertidumbre de clase NO obliga a omitir ubicación/color/extensión visibles. No marques candidato como presente por cumplir una sola señal genérica.
+
+Busca también, sin asumir presencia: ventanas rectangulares/arco/óculo; puertas paneladas/tablas/vidriadas/reja/lamas; barandas verticales/aros/volutas/balaustres/cruces/vidrio; columnas circulares y pilastras rectangulares; frontones triangulares/curvos/escalonados; techo plano/una/dos/cuatro aguas, teja/chapa/listones; cercos macizos/barrotes/lamas/tablas. Describe rasgos observados antes de escoger la etiqueta de catálogo. Si la forma real no encaja, déjala sin equivalente exacto.
+
+1. Identificación: ¿qué inmueble es el objetivo en cada foto? ¿Qué caras se ven y cuáles están ocultas? ¿Hay contradicciones entre vistas?
+2. Masas: ¿cuántos cuerpos cerrados y abiertos hay? Para cada uno: intervalo del ancho del frente, profundidad conocida/estimada/desconocida, niveles ocupados, relación frente/fondo y apoyos. ¿Patios, pasos laterales, recortes, cuerpos sobre azotea, frente bajo/fondo alto, escalonamientos? Distingue masa de cambio de material.
+3. Planos: ¿qué sectores sobresalen o se retranquean y respecto a qué plano? ¿Desde qué nivel? ¿Cuánto aproximadamente? ¿Es volumen habitable, balcón, marquesina o moldura? ¿Gira por esquina? ¿Se ven columnas o ménsulas?
+4. Puertas del edificio: inventario con posición horizontal, borde inferior, ancho/alto, rectángulo/arco, uso peatonal/vehicular/comercial, hojas, cuarterones/tablas/vidrio/reja/lamas, marco, sobreluz, retranqueo, portal, escalones/rampa. No confundir con puertas del cerco.
+5. Ventanas: inventario por piso y fachada. Cantidad, intervalos, antepecho, ancho/alto, rectángulo/arco/círculo/óvalo, divisiones, marco y relieve, profundidad, alféizar, reja vertical/retícula/rombos, contraventanas. Para repetidas especifica cantidad, separación y excepciones. Explica alineación entre pisos.
+6. Balcones: plataforma saliente, protección sin plataforma, terraza sobre otro cuerpo, galería con postes o cajón cerrado. Posición, nivel, ancho, vuelo, vanos conectados, baranda (barras/aros/volutas/balaustres/madera/vidrio/lamas/macizo), lados, ménsulas, borde, cubierta, curvatura, vuelta de esquina, jardineras.
+7. Soportes: columnas/pilastras/postes, ejes, altura y sección, adosados/separados, base/capitel, liso/acanalado/torneado/panel/torsionado, material y función observable.
+8. Remates: frontones sobre vano o muro, ancho/altura, triangular/curvo/semicircular/escalonado/partido/hombros cóncavos, óculos, cartelas, volutas, dentículos. Cornisas, frisos, bandas y zócalos: intervalos, cotas, vuelo y continuidad. No confundir frontón con cubierta inclinada.
+9. Cubiertas por masa: forma plana/una/dos/cuatro aguas/compuesta/banda; recubrimiento teja curva/plana/chapa ondulada/panel/listones; dirección de pendiente/cumbrera si visible; alero y vuelo, vigas/ménsulas/tornapuntas, fascia/canaleta, parapeto. ¿Solo se ve una franja? No extrapolarla al techo entero. Marquesinas y objetos de azotea solo observados.
+10. Cercos: presencia y tramos, posición respecto al edificio, altura/base, macizo/barrotes/lamas/tablas, material/color, aros/volutas/puntas, pilares. Puerta peatonal y portón: intervalos, anchos, hojas, patrón y paso abierto/cerrado. Correspondencias orientativas: republicano=barrotes/aros; barroco=volutas; clasico=macizo; madera=tablas; moderno=lamas horizontales. Si no encaja, describe fielmente sin forzar etiqueta.
+11. Suelo: retiro, patio, jardín, estacionamiento dentro del lote (observado o inferido), cubierto/descubierto/bajo piso, acceso vehicular, rampa, corredor, pavimento y desniveles. Un portón no demuestra la geometría interior; un auto en calle no demuestra estacionamiento privado.
+12. Acabados: material/color por plano y franja. Distingue pintura de relieve. Toldos, letreros con texto realmente legible, bajantes, aletas y paneles: ubicación y tamaño. No completar letras ocultas.
+13. Cierre: cinco rasgos prioritarios para reconocer el edificio; inventario consolidado de IDs; incógnitas; contradicciones; aproximaciones necesarias. Revisa que cada pieza pueda ubicarse sin releer toda la narración.
+
+## Protocolo de lectura multivista
+Lee primero la leyenda del prisma y el registro. Identifica el objetivo por su parcela proyectada en cada imagen, no por el edificio más llamativo. Usa los identificadores de foto del paquete. Las líneas verdes NO prueban que haya una losa, ventana o cambio de fachada allí; son cotas humanas superpuestas. Las aristas traseras del prisma pueden atravesar visualmente vecinos, árboles y cielo: no son contornos del edificio. No atribuyas los colores de las líneas al inmueble.
+Reúne las observaciones de todas las fotos antes de contar elementos. Una ventana vista en dos fotos es un único ID. Si no puedes asociar dos vistas con seguridad, declara la asociación incierta en lugar de duplicar piezas. Usa la vista menos ocluida para cada atributo, no necesariamente la imagen principal. Describe árboles, vehículos y cables únicamente como oclusores salvo vegetación inequívocamente dentro del lote.
+Separa tres cosas: (a) niveles impuestos del proyecto, (b) niveles físicamente reconocibles en imágenes, (c) nivel donde asignas cada elemento. Si no ves el tercer piso impuesto, escribe eso: no inventes ventanas para rellenarlo ni cambies los tres pisos del registro.
+
+## Ficha obligatoria por cuerpo y elemento
+Usa español natural y listas breves con estas etiquetas. No es JSON:
+- ID y clase; cuerpo y fachada de pertenencia; foto(s) que lo muestran.
+- Presencia: observado / inferido / no visible / ausencia comprobable.
+- Ubicación horizontal: borde inicial–final como porcentaje del ancho de SU fachada, indicando origen izquierda mirando desde calle. Para columnas indica eje. Asocia con arista catastral solo si puedes justificarlo; si no, deja correspondencia pendiente.
+- Ubicación vertical: piso impuesto, borde inferior y superior respecto al suelo de ese piso; preferir metros estimados o porcentaje de la altura de ese piso. Di explícitamente qué unidad usas.
+- Ancho, altura, profundidad o vuelo: valor/rango y referencia del plano desde el cual se mide. Si no se puede estimar, dilo.
+- Forma, material y color aparentes; subdivisiones, relieve, adornos y estado abierto/cerrado cuando visibles.
+- Relaciones: alineado con, encima de, apoyado en, retranqueado respecto a, conectado a otro ID. Distingue soporte observado de soporte hipotético.
+- Confianza por atributo y motivo: por ejemplo, ancho medio por perspectiva; profundidad baja porque el lateral está oculto.
+- Correspondencia de catálogo opcional, con nombre y motivo visual; si no existe equivalente, describe la diferencia sin deformar la observación para encajar.
+Para grupos repetidos da número, límites de cada vano o separación entre ejes, dimensiones comunes y excepciones. Evita fórmulas vagas como 'varias ventanas uniformes'. Una lista de posiciones debe ser coherente con los anchos y la fachada disponible.
+
+## Precisiones adicionales del inventario
+- Puertas/portones: especifica hueco frente a hoja, sentido/apertura solo visible, sobreluz vidriada/abierta/con reja, pilastras/columnas del portal, cornisa, umbral, rellano, peldaños y rampa. Si parece enrollable, descríbelo así aunque el catálogo solo aproxime lamas; no inventes dos hojas.
+- Ventanas: diferencia divisiones del vidrio de barras de seguridad, alféizar de banda continua y contraventana de reja. Indica espesor aparente del marco y hundimiento del relleno solo estimables.
+- Balcones: distingue baranda sobre techo existente de losa propia; indica qué lados cierran, franja sólida inferior, postes, vidrio, celosías, cubierta y soportes. Un vano con reja no implica balcón.
+- Cercos: describe cada tramo y cada interrupción por puerta/portón; indica la posición del acceso tanto respecto al frente como al tramo. Base maciza, altura total, apertura visual entre barras/lamas, coronación y materiales por parte. No inventes cercos laterales invisibles.
+- Suelo: distingue estacionamiento de entrada vehicular, patio de terraza elevada y escalera exterior larga de peldaños de acceso. Describe recorrido, dirección, desnivel, ancho y barandas si visibles. Capacidad de autos solo si existe evidencia espacial suficiente.
+- Cubiertas: distingue cubierta opaca de sol y sombra, fascia de cornisa, cierre inferior de vigas expuestas; anota pendiente en dirección hacia calle/fondo/lateral, no un giro XY inventado. Describe encuentro con frontón y si el techo queda detrás. Props de azotea: posición respecto al cuerpo y evidencia, sin rellenar los invisibles.
+- Remates: distingue frontón sobre puerta, frontón que corona muro, parapeto y cuerpo habitable de azotea; describe continuidad por esquinas y patios solo visibles. Cornisa/zócalo/bandas deben tener cotas, extensión y proyección estimadas.
+- Materiales: localiza regiones distintas, color base/acento, hoja/marco/reja y revestimiento. No deduzcas espesor estructural de un acabado de ladrillo. Estado de conservación no autoriza añadir geometría.
+- Estilo: no produzcas porcentajes arbitrarios de mezcla estilística. Prioriza la sugerencia humana; señala excepciones locales claras, con rasgos observados. Los porcentajes pedidos son sobre todo geométricos y siempre llevan denominador.
+
+## Cierre verificable para el traductor
+Usa las imágenes MARCADAS para identificar parcela y cotas, y sus parejas LIMPIAS para reconocer detalles. Cada pareja muestra exactamente la misma foto: NO contar como evidencia independiente ni duplicar elementos. No deduzcas la altura física del edificio de una línea verde ni del extremo posterior del prisma. Para afirmar coronación observada exige borde real continuo identificable y correspondencia espacial; si la copa lo tapa, solo puedes declarar tercer nivel no reconocible, no coronación medida a 6 m.
+No inventes orientaciones cardinales ni índices de aristas a partir de impresiones de la foto. Usa el contexto/cámara suministrados o deja correspondencia pendiente. No declares ausencia de portón/ventana en una zona tapada. No conviertas 'no observado' en 'ausente' en el resumen final.
+No propongas puerta centrada, ventanas simétricas, repetición de barandas ni profundidad arbitraria para rellenar incertidumbre. En esta etapa las incógnitas quedan abiertas: el traductor recibirá por separado una política de completado. Da medidas aproximadas cuando la evidencia permita acotarlas, explicando referencia; no repitas 'no medible' seguido de un número sin fundamento.
+Comprueba aritmética: 10–90% equivale a 80% del ancho; borde superior menos inferior debe coincidir con la altura indicada. Mantén el mismo denominador de F1 en todas las fichas: ancho total del frente catastral o ancho de fachada física, explícitamente elegido, nunca intercambiados. La tabla final no debe añadir medidas, clases ni certezas que no aparezcan justificadas en las fichas.
+Incluye una tabla compacta final con ID, tipo, masa/fachada/piso, intervalo horizontal, vertical, profundidad y evidencia. Después lista las incógnitas que impiden ubicar geometría. Separa cualquier propuesta de completado de lo observado y justifica por qué sería mínima. No transformes una hipótesis del fondo en un dato medido.
+Revisa consistencia: conteo sin duplicados entre fotos; piezas dentro del ancho descrito; niveles compatibles con las cotas humanas; aperturas sin solapes inventados; referencias a IDs existentes; ningún cerco, frontón o techo añadido solo por estilo. Señala cualquier conflicto que no puedas resolver.
+
+Sé exhaustivo pero compacto: objetivo 2500–4000 palabras, sin rellenar por alcanzar una longitud. Prioriza medidas/intervalos y relaciones sobre adjetivos y repeticiones. El catálogo adjunto es vocabulario de representación, no evidencia de presencia. No omitas una sección: escribe no visible/ausente cuando corresponda, distinguiendo ambos estados.
+
+Las imágenes adjuntas llevan la proyección del lote catastral y los niveles humanos. Amarillo=suelo, verde=niveles intermedios, magenta=coronación, azul=aristas. La leyenda superior de 90 px no pertenece a la proyección fotográfica. Estas líneas identifican el inmueble y la escala impuesta; no son bordes observados, ni prueban que el edificio llene todo el prisma. Primer piso y demás cotas están en la leyenda.
+
+--- inputs/human.json ---
+{
+  "geometry_revision": "5ca18f85c5c142f08ab8a1f46708bb3a",
+  "height": {
+    "value": 9.0,
+    "mode": "suggested"
+  },
+  "floors": {
+    "value": 3.0,
+    "mode": "suggested"
+  },
+  "style": {
+    "value": "republicano",
+    "mode": "suggested"
+  },
+  "height_reference": "main_body",
+  "massing": {
+    "corner": false,
+    "delegate_complex": false,
+    "cuts": []
+  },
+  "massing_mode": "suggested",
+  "photo_ids": [
+    "xpbgOk8K5jCJHvHhs13U_g",
+    "GxILgNZfMecyxI2La4DIEA",
+    "F1o5U8RfDCT6a1YcxQcVMQ"
+  ],
+  "notes": "",
+  "floor_height_m": 3.0,
+  "first_floor_different": false,
+  "first_floor_height_m": null
+}
+
+
+--- inputs/context_and_levels.json ---
+{
+  "context": {
+    "parcel": [
+      [
+        -5.278443849470932,
+        3.4271765537559986
+      ],
+      [
+        -2.3210438507958315,
+        -5.785923445597291
+      ],
+      [
+        5.303656151343603,
+        -3.493123445659876
+      ],
+      [
+        2.2474561513517983,
+        5.858776554465294
+      ]
+    ],
+    "fronts": [
+      3
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      280344.3568775615,
+      8657426.076658258,
+      0
+    ]
+  },
+  "levels_m": [
+    0.0,
+    3.0,
+    6.0,
+    9.0
+  ],
+  "edges": [
+    {
+      "edge": 0,
+      "a": [
+        -5.278443849470932,
+        3.4271765537559986
+      ],
+      "b": [
+        -2.3210438507958315,
+        -5.785923445597291
+      ],
+      "length_m": 9.676126619171903,
+      "front": false
+    },
+    {
+      "edge": 1,
+      "a": [
+        -2.3210438507958315,
+        -5.785923445597291
+      ],
+      "b": [
+        5.303656151343603,
+        -3.493123445659876
+      ],
+      "length_m": 7.961970984771177,
+      "front": false
+    },
+    {
+      "edge": 2,
+      "a": [
+        5.303656151343603,
+        -3.493123445659876
+      ],
+      "b": [
+        2.2474561513517983,
+        5.858776554465294
+      ],
+      "length_m": 9.838617385196512,
+      "front": false
+    },
+    {
+      "edge": 3,
+      "a": [
+        2.2474561513517983,
+        5.858776554465294
+      ],
+      "b": [
+        -5.278443849470932,
+        3.4271765537559986
+      ],
+      "length_m": 7.90897271368621,
+      "front": true
+    }
+  ],
+  "policy": "floors and heights fixed by experiment instruction; style suggested",
+  "lot_id": "1136002"
+}
+
+
+--- inputs/evidence.json ---
+[
+  {
+    "id": "xpbgOk8K5jCJHvHhs13U_g",
+    "date": "2025-10",
+    "camera_xy": [
+      280339.7093969941,
+      8657439.374725612
+    ],
+    "camera_lonlat": [
+      -77.01848554644693,
+      -12.13739739118395
+    ],
+    "pose": {
+      "heading_deg": 72.07694244384766,
+      "pitch_deg": 0.525054931640625,
+      "roll_deg": 359.6004333496094
+    },
+    "image_path": "fotos_barranco/xpbgOk8K5jCJHvHhs13U_g.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": 2.8053763367213405,
+      "fov_rad": 1.1017012082914346,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280339.7093969941,
+        8657439.374725612
+      ],
+      "vertices_relative_xy": [
+        [
+          9.951136718736961,
+          -16.791190799325705
+        ],
+        [
+          6.894936718745157,
+          -7.439290799200535
+        ],
+        [
+          -0.6309632820775732,
+          -9.87089079990983
+        ],
+        [
+          2.3264367165975273,
+          -19.08399079926312
+        ],
+        [
+          9.951136718736961,
+          -16.791190799325705
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/001.jpg",
+    "sha256": "4d04c78466ca69b1553ebaee32a8a9c24fa4ad7f5a25c8e0be82b76f3217c8e2",
+    "image_role": "clean_projected_image"
+  },
+  {
+    "id": "GxILgNZfMecyxI2La4DIEA",
+    "date": "2025-10",
+    "camera_xy": [
+      280349.22411938617,
+      8657442.437877467
+    ],
+    "camera_lonlat": [
+      -77.01839794399476,
+      -12.1373703446858
+    ],
+    "pose": {
+      "heading_deg": 71.99600219726562,
+      "pitch_deg": 358.84964752197266,
+      "roll_deg": 359.5588989257812
+    },
+    "image_path": "fotos_barranco/GxILgNZfMecyxI2La4DIEA.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": -2.8524434154178833,
+      "fov_rad": 1.031287714908839,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280349.22411938617,
+        8657442.437877467
+      ],
+      "vertices_relative_xy": [
+        [
+          0.4364143266575411,
+          -19.85434265434742
+        ],
+        [
+          -2.6197856733342633,
+          -10.50244265422225
+        ],
+        [
+          -10.145685674156994,
+          -12.934042654931545
+        ],
+        [
+          -7.188285675481893,
+          -22.147142654284835
+        ],
+        [
+          0.4364143266575411,
+          -19.85434265434742
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/002.jpg",
+    "sha256": "b4bc5e889feb88791d99b2712d799c861543b2e76ef70b47f885b0bb9e878910",
+    "image_role": "clean_projected_image"
+  },
+  {
+    "id": "F1o5U8RfDCT6a1YcxQcVMQ",
+    "date": "2025-10",
+    "camera_xy": [
+      280330.4437196641,
+      8657436.268679136
+    ],
+    "camera_lonlat": [
+      -77.01857086432092,
+      -12.13742484199786
+    ],
+    "pose": {
+      "heading_deg": 68.49253845214844,
+      "pitch_deg": 0.7489013671875,
+      "roll_deg": 358.9042358398438
+    },
+    "image_path": "fotos_barranco/F1o5U8RfDCT6a1YcxQcVMQ.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": 2.20303263447682,
+      "fov_rad": 1.0197777275793807,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280330.4437196641,
+        8657436.268679136
+      ],
+      "vertices_relative_xy": [
+        [
+          19.21681404870469,
+          -13.685144323855639
+        ],
+        [
+          16.160614048712887,
+          -4.333244323730469
+        ],
+        [
+          8.634714047890157,
+          -6.764844324439764
+        ],
+        [
+          11.592114046565257,
+          -15.977944323793054
+        ],
+        [
+          19.21681404870469,
+          -13.685144323855639
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/003.jpg",
+    "sha256": "71ddc856a35140fff49cbad3224eb0c12367b1764faa8027a8f83dfc5e9be179",
+    "image_role": "clean_projected_image"
+  }
+]
+
+
+--- guides/CATALOGOS.md ---
+# Catálogos, palabras clave y aspecto
+
+Complemento de [Cómo escribir un theta](README.md). Las descripciones visuales se basan en perfiles, materiales y constructores del código; son **la apariencia implementada**, no definiciones históricas exhaustivas. Los nombres de archivos de las muestras no son necesariamente valores válidos de un campo.
+
+## 1. Los cinco estilos
+
+Se usan en `architectural_style` y en distintos controles locales. Escribir `clasico` sin tilde.
+
+| Estilo | Ventana/moldura implementada | Otras señales del catálogo |
+|---|---|---|
+| `republicano` | Perfil con varios escalones y transiciones de relieve; moldura articulada | Hierro vertical con aros, pilastras de panel rehundido, cornisas escalonadas, puertas de cuarterones |
+| `barroco` | Perfil ondulante muestreado, más curvas | Volutas, follaje, columnas torsionadas, ménsulas y frisos calados |
+| `clasico` | Moldura escalonada de geometría ordenada | Balaustres pétreos, órdenes toscano/dórico/jónico/corintio, frontones |
+| `madera` | Perfil de carpintería escalonado, material `wood` | Postes ochavados/torneados, cruces, celosías y balcones cajón |
+| `moderno` | Perfil poco profundo, casi plano | Barras finas, vidrio, lamas horizontales, prismas/cilindros sin capitel |
+
+El estilo **no fija por sí solo** color, cantidad de pisos, forma de ventana ni dimensiones. En `generar_ventanas.py` las muestras combinan estilos con anchos/profundidades distintos; esos ajustes son del script, no defaults generales del estilo.
+
+## 2. Familias de composición (`theta.family`)
+
+Fuente: `modeling/facade_program.py:FAMILY_RULES`, consumida por `facade_composition.py`.
+
+| Familia | Lectura visual/predeterminados relevantes |
+|---|---|
+| `quiet_house` | Vivienda sobria: ventanas relativamente pequeñas, rejas, puerta inicial, cornisa discreta. |
+| `ribbon_windows` | Ventanas anchas y bandas de antepecho, lectura horizontal. |
+| `balcony_apartments` | Ventanas bajas/altas de acceso a balcón, balcones repetidos y base de piedra. |
+| `mixed_use` | Planta baja con escaparates y superiores residenciales; toldos y letreros solo si se solicitan explícitamente. |
+| `workshop` | Primer vano de cochera enrollable, ventanas más altas/pequeñas y concreto; no añade `TALLER`. |
+| `brick_courtyard` | Vivienda con ladrillo en base y franja de coronación; no crea un patio automáticamente. |
+| `republicano` | Proporciones altas, rejas, pilastras, bandas, cornisa denticulada y balcones; contraventanas solo explícitas. |
+| `galeria_madera` | Galería continua en superiores y base comercial; toldos/contraventanas solo explícitos. |
+| `esquina_comercial` | Escaparates, balcones de parapeto sólido y pilastras; no crea esquina, toldo ni letrero automáticamente. |
+| `quinta` | Ventanas moderadas con rejas; contraventanas solo explícitas. No distribuye varias viviendas por sí sola. |
+| `neoclasico` | Vanos altos relativamente estrechos, pilastras y cornisa denticulada prominente; no genera `BCP`. |
+| `neoclasico_esquina` | Variante proporcional del anterior con cornisa mayor; la esquina depende del contexto/masas. |
+
+Las reglas familiares aún pueden añadir ornamentación no observada, pero ya no rótulos, toldos ni contraventanas. Para reconstrucción fiel, seleccionar `projections=[]`, `material_regions=[]` y construir solo los elementos vistos. Arcos de las reglas V4 no se trasladan automáticamente al compositor theta; ver [guía](README.md).
+
+## 3. Volúmenes, regiones y soportes
+
+| `massing.pattern` | Forma | Controles particulares |
+|---|---|---|
+| `single_block` | Un prisma de varios pisos | `front_setback_m` |
+| `stepped_back` | Cuerpo inferior y último piso retirado | `upper_setback_m`, ≥2 pisos |
+| `podium_tower` | Podio ancho con torre retirada | `podium_floors`, `upper_setback_m` |
+| `front_tall_rear_low` | Frente alto y cuerpo posterior bajo | `front_depth_m`, `low_floors` |
+| `front_low_rear_tall` | Frente bajo y cuerpo posterior alto | Los mismos |
+| `corner_accent` | Mirador/cuerpo alto en encuentro de dos frentes | `corner_reach_m`, ≥2 frentes y ≥2 pisos |
+| `explicit` | Huellas y cotas suministradas | `theta.masses`; sustituye altura/pisos |
+| `composition` | Regiones relativas al catastro | `massing.components`; se infiere si hay componentes |
+
+No existe `auto` como patrón válido de theta: `null` pide completado. `auto` sí aparece en el generador histórico `massing.py`.
+
+Otras palabras:
+
+- `MassComponent.kind`: `enclosed` (cerrado), `open` (losas/apoyos).
+- `PlanRegion.fit`: `parcel` (intersección), `rectangle` (rectángulo completo validado).
+- `PlanRegion.width_reference`: `parcel` (proyección total de parcela), `edge` (longitud del frente).
+- `SupportControls.kind`: `bearing` (apoyo sobre volumen inferior), `columns` (columnas), `cantilever` (vuelo limitado; apoyo ≥25% del área).
+- Orientaciones de bandas/zonas: `front`, `back`, `left`, `right`, `all`, relativas al marco de su componente.
+
+## 4. Vanos: forma, relleno y moldura son decisiones separadas
+
+`Opening.kind`: `window`, `door`, `gate`, `balcony_window`.
+
+| `shape` | Cómo se ve | Condición |
+|---|---|---|
+| `rectangle` | Rectángulo | Sin `arch_rise_m` |
+| `arch` | Jambas rectas y coronación curva | `arch_rise_m` >0 y menor que altura; default proporcional |
+| `circle` | Óculo circular | Ancho = alto, sin `arch_rise_m` |
+| `ellipse` | Óvalo | Ancho/alto independientes, sin `arch_rise_m` |
+
+Puertas vinculadas solo permiten rectángulo/arco. `OpeningProgram.shape` permite únicamente rectángulo/arco; círculos/óvalos requieren aberturas explícitas o ediciones completas.
+
+| `prefab` | Aspecto/función |
+|---|---|
+| `catalog` | Valor por defecto; ventana/puerta del catálogo vinculado. |
+| `legacy` | Alias de serialización presente en las muestras originales; no ejecuta un constructor antiguo. |
+| `slim_window`, `storefront` | Alias de vidrio de ventana normalizados a catálogo; no conservan sus prefabs antiguos. |
+| `open` | Ventana de catálogo sin vidrio ni divisiones. En puertas es alias de puerta calada con sobreluz abierta. |
+| `wood_panel`, `metal_gate`, `roller`, `storefront` (en puertas) | Alias de lectura con intención material: tablas/madera, paneles/metal, lamas/metal, vidriada. Se normalizan a `door` de catálogo. |
+| `louver`, `screen` y nombres desconocidos | Sin equivalente en el catálogo; se rechazan. |
+
+**Despacho único** (`grammar.opening` → `opening_catalog`): window/balcony_window → `window_assembly`; door/gate → `door_assembly`. Los emisores de prefabs y aberturas curvas antiguos están retirados.
+
+`frame_profile`: uno de los cinco estilos; auto hereda estilo global y, sin este, usa moderno. `frame_width_m` ensancha el marco dentro del vano; `frame_depth_m` determina su relieve; `recess_m` hunde el relleno. `sill=true` añade alféizar siguiendo el contorno inferior.
+
+`mullion_columns/rows`: divisiones del vidrio. `grid_spacing_m` selecciona subdivisión adaptativa en ventanas vinculadas. `grille=true` añade protección independiente con `grille_spacing_m` y `grille_pattern`:
+
+- `vertical`: barras verticales.
+- `grid`: retícula ortogonal.
+- `diamond`: rombos/diagonales.
+
+`Opening.style` no selecciona el catálogo. Las hojas abatidas, cortinas y ornamentos del fallback antiguo no se generan; usar los controles explícitos de los ensambles vinculados.
+
+Muestras existentes: [catalogo_ventanas](../../steps/step23_fresh_theta/catalogo_ventanas): 5 perfiles × 4 formas × con/sin reja = 40 variantes generadas por el script.
+
+## 5. Puertas y portones vinculados (`Opening.door`)
+
+`model`: cinco estilos o `auto`. `leaves`: 0 automático (dos desde ancho libre 1.35 m), 1 o 2. `opening_angles_deg`: un ángulo por hoja, 0–110°, apertura hacia afuera.
+
+| `construction` | Aspecto |
+|---|---|
+| `auto` | Republicano/barroco/clásico → panelled; madera → boards; moderno → louvers |
+| `panelled` | Bastidor con cuarterones rehundidos y molduras; cantidad adapta al tamaño |
+| `glazed` | Paños de vidrio dentro de bastidor |
+| `grille` | Hoja calada de reja |
+| `boards` | Tablas verticales con pequeñas juntas |
+| `louvers` | Lamas horizontales |
+
+`portal`: `none`, `pilasters` (pilastras laterales), `columns` (columnas). `portal_member` personaliza esos soportes. `cornice` añade remate sobre el portal. `transom_height_m` reserva una sobreluz; `transom_infill=glass/open`; `transom_grille` añade reja en ella.
+
+`grille_pattern`: `auto`, `vertical`, `grid`, `rings`, `scrolls`. Auto escoge volutas barrocas, aros republicanos o barras en los otros estilos. `leaf_grille` tiene efecto en construcción vidriada/calado, no convierte por sí solo una hoja panelada en reja.
+
+Materiales de este constructor: `wood`, `metal`, `frame`, `stone`, `plaster`, `concrete`, `brick`, `glass`, `accent`; hoja/marco admiten `auto`. No todo slot de materiales es válido aquí.
+
+Muestras: [catalogo_puertas](../../steps/step23_fresh_theta/catalogo_puertas), 5 estilos × rectángulo/arco × puerta/portón = 20. Los portales y sobreluces concretos de esas muestras los decide `generar_puertas.py`.
+
+## 6. Balcones: 25 variantes
+
+Fuente: `balcony_catalog.py`. `variant="auto"` elige la **primera** variante del estilo, no una inferencia visual.
+
+| Estilo | `variant` | Apariencia y tipo recomendado/exigido |
+|---|---|---|
+| republicano | `iron_vertical` | Hierro con barras verticales; projecting |
+| republicano | `iron_rings` | Barras y aros superiores; projecting |
+| republicano | `turned_gallery` | Galería con balaustres torneados de madera; gallery/terrace |
+| republicano | `open_lattice` | Galería con retícula de madera y franja superior calada; gallery/terrace |
+| republicano | `sober_box` | Cajón de madera, paneles inferiores y vidrio arriba; box |
+| barroco | `scroll_iron` | Hierro con espirales pareadas; projecting |
+| barroco | `bowed_iron` | Barras de hierro abombadas hacia fuera; projecting |
+| barroco | `ornate_balusters` | Balaustres de piedra y detalles ornamentales; projecting |
+| barroco | `ornate_box` | Cajón panelado con vidrio y ornato calado; box |
+| barroco | `fretwork_gallery` | Torneados de madera y friso calado; gallery/terrace |
+| clasico | `single_baluster` | Balaustre pétreo de una panza; projecting |
+| clasico | `double_baluster` | Balaustre pétreo de doble ondulación; projecting |
+| clasico | `mixed_parapet` | Alterna paneles macizos y balaustres; projecting |
+| clasico | `geometric` | Baranda metálica de cruces; projecting |
+| clasico | `column_gallery` | Galería con balaustres y columnas toscanas por defecto; gallery/terrace |
+| madera | `vertical_timber` | Palos verticales de madera; projecting |
+| madera | `turned_timber` | Balaustres torneados de madera; projecting |
+| madera | `cross_frames` | Bastidores de madera con aspa X; projecting |
+| madera | `lattice_panels` | Celosía diagonal de madera; projecting |
+| madera | `continuous_box` | Cajón con paneles abajo y celosía arriba; box |
+| moderno | `slim_vertical` | Barras verticales finas metálicas; projecting |
+| moderno | `horizontal_rods` | Varillas horizontales; projecting |
+| moderno | `glass_posts` | Vidrio con postes y abrazaderas; projecting |
+| moderno | `glass_channel` | Vidrio sin postes, sujeto por canal inferior; projecting |
+| moderno | `louver_parapet` | Zócalo sólido y lamas horizontales; projecting |
+
+`kind` no se cambia automáticamente al elegir variante:
+
+- `projecting`: plataforma saliente.
+- `terrace`: baranda sobre techo/piso existente; `slab=false`, comprobar `support_mass`.
+- `juliet`: protección casi en el plano de la abertura, sin plataforma; `slab=false`.
+- `gallery`: balcón continuo con columnas; `cover=true` añade cubierta.
+- `box`: cajón cerrado en sus tres lados; necesita variante de cajón y baranda activa.
+- `stair`: baranda derivada de una escalera existente por `stair_index`; `slab=false`.
+
+Patrones completos de `railing.pattern`: `auto`, `vertical`, `rings`, `turned`, `grid`, `panels`, `scrolls`, `bowed`, `vase`, `double_vase`, `mixed`, `cross`, `lattice`, `horizontal`, `glass`, `frameless`, `louvers`, `cables`. `cables` dibuja hilos horizontales finos y tensores; los demás corresponden a la tabla.
+
+Controles de aspecto: `brackets` ménsulas inferiores; `fascia` borde moldurado; `cover` cubierta; `curved_front_m` curvatura del frente; `corner_return_m` vuelta por esquina ortogonal; `planters` jardineras; `column_member` diseño de postes. `sides` combina `left/front/right`. `path` es ruta local de baranda sobre soporte existente: no sintetiza una losa ni una escalera.
+
+Muestras: [catalogo_balcones](../../steps/step23_fresh_theta/catalogo_balcones).
+
+## 7. Pilastras, columnas y postes: 25 variantes
+
+Fuente: `vertical_member_catalog.py`. Los diseños se reutilizan en `vertical_members`, portales de puertas, galerías, apoyos y secciones retranqueadas.
+
+| Estilo | `variant` | Apariencia implementada |
+|---|---|---|
+| republicano | `smooth_moulded` | Fuste rectangular liso, base y capitel moldurados |
+| republicano | `recessed_panel` | Pilastra con panel rehundido longitudinal |
+| republicano | `restrained_fluted` | Pilastra rectangular con acanaladuras |
+| republicano | `rusticated` | Fuste de relieve modulado tipo almohadillado |
+| republicano | `portico_column` | Columna circular con estrechamiento hacia arriba |
+| barroco | `scroll_pilaster` | Panel rehundido y capitel con volutas |
+| barroco | `leaf_pilaster` | Pilastra lisa con hojas en capitel |
+| barroco | `salomonic` | Fuste circular torsionado y capitel compuesto |
+| barroco | `estipite` | Sección rectangular de anchura cambiante/invertida y volutas |
+| barroco | `composite_column` | Columna circular acanalada, hojas y volutas |
+| clasico | `tuscan` | Circular lisa, base y capitel sobrios |
+| clasico | `doric` | Circular acanalada, capitel dórico; sin base por defecto |
+| clasico | `ionic` | Circular acanalada, capitel de volutas |
+| clasico | `corinthian` | Circular acanalada, capitel de hojas |
+| clasico | `panel_pilaster` | Rectangular con panel rehundido |
+| madera | `chamfered_post` | Poste de esquinas achaflanadas, sin base/capitel |
+| madera | `turned_post` | Poste circular torneado |
+| madera | `octagonal_post` | Poste octagonal de sección constante |
+| madera | `joinery_pilaster` | Pilastra rectangular con panel de carpintería |
+| madera | `saddle_post` | Poste achaflanado con zapata ensanchada superior |
+| moderno | `plain_prism` | Prisma rectangular liso sin base/capitel |
+| moderno | `plain_cylinder` | Cilindro liso sin base/capitel |
+| moderno | `oval_column` | Columna elíptica lisa |
+| moderno | `grooved_pilaster` | Rectangular acanalada, sin capitel ornamental |
+| moderno | `tapered_column` | Sección redondeada que se estrecha marcadamente |
+
+`section`: `auto`, `rectangle`, `rounded`, `chamfered`, `octagon`, `circle`, `ellipse`. Circular exige ancho=profundidad; salomónica requiere circular/elíptica; panel rehundido requiere rectangular/achaflanada/redondeada.
+
+`placement`: `attached` adosada, `embedded` embebida según `embed_ratio`, `freestanding` separada con `offset_m`, `corner` en extremo de esquina ortogonal. **Aquí `u_m` es el eje del miembro**, no su borde izquierdo.
+
+`base/capital` activan o anulan partes; `collar/abacus` controlan collarín/ábaco; `base_profile=auto/attic/simple/minimal`; `pedestal_m` añade pedestal; `taper` estrechamiento; `entasis` abombamiento del fuste; `turns` vueltas; `flute_count` acanaladuras; `ornament` activa hojas/volutas/zapata; `detail=1/2/3` muestreo geométrico.
+
+Muestras: [catalogo_pilastras](../../steps/step23_fresh_theta/catalogo_pilastras).
+
+## 8. Frontones y coronamientos
+
+`theta.crowns[].design.family` permite estas 10 formas y `auto`:
+
+| Familia | Silueta |
+|---|---|
+| `triangular` | Dos pendientes rectas que se encuentran en ápice |
+| `segmental` | Arco circular rebajado; flecha ≤ mitad de ancho |
+| `semicircular` | Medio círculo; altura exactamente ancho/2 |
+| `stepped` | Hombros escalonados y meseta central |
+| `stepped_segmental` | Escalones laterales con arco central |
+| `curved_pointed` | Dos ramas curvas que llegan a una punta |
+| `concave_shoulders` | Hombros cóncavos que ascienden a bloque central |
+| `compound_curve` | Curvas suaves con cambios de curvatura y bloque central |
+| `broken` | Dos ramas separadas, centro abierto |
+| `rectangular_attic` | Ático central rectangular elevado sobre hombros bajos |
+
+Clasificación automática, en orden: `open_center` → broken; `concave_shoulders` → homónimo; `stepped` + curved/mixed → stepped_segmental, si no stepped; `central_block` → rectangular_attic; finalmente `silhouette=angular/curved/pointed/mixed` → triangular/segmental/curved_pointed/compound_curve. `family` explícita prevalece.
+
+No confundir familia de frontón con estilo: un frontón triangular puede tener molduras modernas o republicanas.
+
+`anchor`: `wall_top`, `opening_top`, `facade`. En sobrevano `opening_index` centra automáticamente el frontón respecto a la abertura; `base_m` desplaza su base.
+
+`aperture`: `none`, `oculus` (óvalo/círculo vidriado), `roundhead` (vano con arco), `pointed` (vano apuntado). Requiere frontón sobre muro y espacio interior; `broken` no admite ese hueco central. Es una perforación real del cuerpo, con derrame y vidrio.
+
+`ornament`: `none`, `keystone` (clave central), `cartouche` (cartela oval), `volutes` (espirales laterales), `dentils` (dentículos).
+
+`thickness_m` da cuerpo; `recess_m` hunde el campo; `moulding_width_m` y `projection_m` dimensionan moldura; `base` añade cornisa inferior; materiales separados para cuerpo, campo y moldura.
+
+Muestras: [catalogo_frontones](../../steps/step23_fresh_theta/catalogo_frontones), diez familias y seis composiciones de `generar_frontones.py`.
+
+## 9. Cornisas, zócalos, entablamentos y silueta continua
+
+- `trim.cornice.profile`: cinco estilos o `auto`. Perfiles continuos en perímetro: moderno rectangular; madera escalonado; clásico/republicano moldurado; barroco curvilíneo.
+- Cornisa: `anchor=wall_top/parapet_top`, `scope=exposed/street`, `courtyards`, `offset_m`, altura/proyección/material. Parapet_top exige parapeto.
+- `trim.plinth.design`: `smooth` superficie lisa; `horizontal_joints` hiladas con juntas horizontales; `stepped` tres alturas de relieve; `blocks` hiladas con juntas verticales alternadas.
+- Zócalo: altura, relieve, altura de hilada, ancho de bloque y junta. Se corta en accesos y continúa en esquinas.
+- `entablatures`: arquitrabe inferior + friso + cornisa, `anchor=wall_top/absolute`, `scope=street/exposed`, `ornament=none/dentils`. `mass_refs=[]` selecciona masas cerradas.
+- `FacadeControls.order`: pilastras `none/group_boundaries/bay_boundaries/explicit`, ejes, pares por crujía, zócalo, bandas y alturas de entablamento/cornisa.
+- `FacadeControls.crowns`: perfiles simples `triangular/stepped` por intervalo `u`.
+- `FacadeControls.top_profile`: polilínea `(u, elevación)` de la pared por encima de su coronación; hasta 64 puntos, de u=0 a u=1; elevaciones 0–4 m; repetir u permite tramos verticales. Se puede perforar con vanos. Alternativo a `facade.crowns`.
+
+Muestras: [catalogo_remates](../../steps/step23_fresh_theta/catalogo_remates).
+
+## 10. Techos: losa estructural y catálogo único de cubiertas
+
+### Techo básico (`roof` y `roofs`)
+
+`kind=flat` (o `null` para completar a plano) es la única base permitida: losa estructural, parapeto 0–2 m y objetos. `slope_deg` debe ser `null`. Lo mismo rige para `component.roof`, `roof_bodies[].roof` y `roofs`. Las cubiertas inclinadas y corrugadas se escriben exclusivamente en `roof_assemblies`; los valores básicos antiguos se rechazan con instrucciones de migración. Véase [CATALOGO_TECHOS.md](../../../CATALOGO_TECHOS.md).
+
+### Cubierta detallada (`roof_assemblies[].design`)
+
+| `form` | Apariencia |
+|---|---|
+| `flat` | Plano horizontal |
+| `shed` | Una pendiente |
+| `gable` | Dos pendientes con cumbrera |
+| `hip` | Pendientes hacia los bordes de una huella convexa |
+| `pavilion` | Pabellón sobre huella convexa; comparte el algoritmo de hip en esta implementación |
+| `band` | Banda inclinada de tejas con resto plano |
+| `compound` | Unión de lóbulos rectangulares de cubierta, para plantas L/T |
+
+`covering`: `none` sin acabado añadido; `curved_tile` tejas curvas; `flat_tile` tejas planas; `corrugated` plancha con ondas; `panel` panel continuo; `slats` listones abiertos tipo sol y sombra.
+
+`construction`: `solid` sustrato continuo, `frame` estructura abierta; tejas requieren solid. `detail=light/medium/full` cambia representación/densidad del recubrimiento. `slope_deg` se valida 1–45° incluso si la forma plana no usa esa inclinación. `rotation_deg` orienta los planos en XY; `ridge_fraction` mueve la cumbrera; `tile_width_m/tile_length_m/overlap_m` controlan módulos.
+
+En shed/gable, `rotation_deg` es la dirección XY ascendente del primer faldón, desde +X en sentido antihorario; la cumbrera gable es perpendicular. No es un ángulo respecto de la calle ni del norte geográfico. Un recorte por cuerpo superior/frontón conserva los planos. Un `RoofBody` se referencia por `<id>:0`, igual que otro componente: no necesita un campo design adicional.
+
+`eave.kind`:
+
+| Valor | Aspecto |
+|---|---|
+| `auto` | republicano→profiled, barroco/clasico→cornice, madera→exposed, moderno→clean |
+| `clean` | Borde sobrio; fascia depende de su booleano |
+| `closed` | Alero cerrado inferiormente |
+| `exposed` | Canes/vigas visibles |
+| `profiled` | Canes con perfil escalonado |
+| `braces` | Tornapuntas diagonales |
+| `curved` | Ménsulas curvas |
+| `cornice` | Cornisa perfilada continua |
+
+`overhang_m`, `spacing_m`, `beam_width_m/height_m` dimensionan alero; `fascia` tabla frontal, `soffit` cierre inferior, `gutter` canaleta.
+
+`cap`: `none`, `flat`, `bevel`, `pitched`, `moulded`, `metal`: coronación de parapeto plana, biselada, inclinada, moldurada o chapa. `cap_drip` solo con metal. Parapeto solo en cubierta plana.
+
+`junction=none/behind/gable`: independiente, detrás de frontón, o encuentro estructural con frontón triangular de todo el ancho. Requiere `crown_ref` en los dos últimos. `join_group` une cubiertas contiguas a igual cota y acabados compatibles. `props_mode=preserve/auto/off`: conserva objetos, distribuye objetos automáticamente (solo plano), o los quita.
+
+`canopies` usa `RoofDesign` con `form=flat/shed`, dimensiones de tramo y vuelo; `posts` añade apoyos. Es distinto de `FacadeProjection.kind=canopy`.
+
+Muestras: [catalogo_techos](../../steps/step23_fresh_theta/catalogo_techos); el script incluye 20 casos: azotea con tapa, una/dos/cuatro aguas, pabellón, banda, compuesto L, canes rectos/perfilados, tornapuntas, ménsulas, alero cerrado, sol y sombra, tres encuentros con frontones, alero interrumpido, casona compuesta y moderno sin alero ornamental.
+
+### Objetos de azotea (`roof.props[].kind`)
+
+`water_tank`: tanque negro sobre base; `tank_elevated`: tanque en estructura metálica elevada; `antenna`: mástil con antena Yagi; `hvac`: condensadora con rejillas; `duct_run`: ducto con codo; `skylight`: lucernario bajo; `caseta`: cuarto de servicio con puerta y cobertura; `laundry`: postes y tendales; `planter`: maceta con vegetación; `stair_bulkhead`: salida de escalera con caseta; `rebar_cluster`: fierros de espera.
+
+Ubicación explícita `xy`, `mass_role`, giro y escala. La huella debe caber en techo libre con separación. No añadir props a una cubierta inclinada detallada conservando props: esa combinación se rechaza.
+
+## 11. Proyecciones de fachada: vocabulario completo
+
+Fuente: `prefabs_facade.py:FACADE_PROJECTIONS`. Son piezas en `(u_m,v_m,width_m,height_m,depth_m)`, con material y controles opcionales. Muchas tienen un sucesor más completo como ensamble independiente.
+
+| `kind` | Apariencia |
+|---|---|
+| `panel` | Placa rectangular aplicada |
+| `frame` | Marco rectangular hueco |
+| `ledge` | Repisa horizontal |
+| `canopy` | Losa plana saliente |
+| `curved_canopy` | Marquesina de contorno curvo |
+| `cornice` | Remate escalonado |
+| `denticulated_cornice`, `denticulated` | Cornisa con dentículos/modillones; segundo es alias |
+| `classical_cornice` | Cornisa clásica con corona y dentículos separados |
+| `sill_band` | Banda horizontal de antepecho |
+| `pilaster` | Pilastra adosada |
+| `classical_pilaster`, `composite_pilaster` | Adaptadores de pilastra al motor común de miembros; comparten dispatcher |
+| `moulded_surround`, `segmental_surround` | Molduras huecas alrededor del vano; arco si se suministra `arch_rise_m` |
+| `balcony` | Losa y baranda simple |
+| `gallery` | Galería continua con cubierta y apoyos |
+| `awning` | Toldo inclinado con brazos y faldón |
+| `bay_window` | Mirador saliente con tres caras y cubierta |
+| `eave` | Alero adaptado al motor común de cubiertas |
+| `shutter` | Contraventanas de lamas junto al vano |
+| `downpipe` | Bajante con abrazaderas |
+| `sign_box` | Caja de letrero con relieve de letras |
+| `oval_sign` | Cartel ovalado |
+| `pediment`, `crown_triangular` | Frontón triangular; el segundo extiende el ámbito de coronación |
+| `crown_stepped` | Coronamiento escalonado |
+| `vertical_fins` | Aletas verticales repetidas |
+
+`label` es texto de relieve, no un modelo de lenguaje. Alfabeto real: A–Z, 0–9, espacio, `. - / : ( )`; sin Ñ ni tildes. Si aparece un carácter no contemplado, la función omite el texto completo.
+
+`motifs[].kind` solo admite `monumental_portal`: decora una puerta/portón existente del primer piso con pilastras, marco, cornisa y frontón opcional. No crea otro vano.
+
+`cladding=stucco/horizontal`: revestimiento liso o juntas horizontales. `services` activa detalles de servicios. `finish=standard/premium` sigue admitido por el contrato, pero ya no suprime zócalo, bandas ni pilastras; no confundir con los cinco estilos.
+
+## 12. Cercos y suelo
+
+Los cercos y sus hojas de acceso se generan **exclusivamente con el catálogo**.
+`site.fence` admite `none` o uno de los cinco estilos de la tabla. `site.runs[].kind`
+admite únicamente esos cinco estilos; los runs sustituyen los cercos automáticos.
+
+Los valores antiguos `reja`, `concreto`, `ladrillos`, `concreto_bajo`, `solid_wall`,
+`wall` y `fence` se rechazan: no se convierten a otro diseño. En solicitudes antiguas
+hay que seleccionar explícitamente un estilo del catálogo y, para tramos, su altura,
+modo y material. `site.fence="none"` sin runs desactiva los cercos.
+
+En el modo automático, el frente usa el estilo elegido a 2.1 m; los linderos libres
+usan el cerramiento macizo `clasico`, material `brick`, a 2.6 m y sin puertas.
+Para controlar alturas, materiales y variantes `high/low`, utiliza `site.runs`.
+Las entradas históricas `BuildingProgram.fence_type` y `propose_building(boundary=...)`
+usan el mismo catálogo (`none` y `open`, respectivamente, indican ausencia).
+
+| `kind` | Aspecto del cerco vinculado |
+|---|---|
+| `republicano` | Base de albañilería, barrotes, aros y puntas en modo alto |
+| `barroco` | Base y hierro con espirales pareadas y puntas |
+| `clasico` | Cerramiento macizo; hojas de acceso paneladas |
+| `madera` | Estacas/tablas verticales de punta, travesaños y diagonal en puerta |
+| `moderno` | Lamas horizontales sobre base; jardineras opcionales |
+
+`height_mode=high/low` cambia remates/base; no reemplaza `height_m`. `gate_u/garage_u` son **distancias métricas desde el comienzo del run**, pese al sufijo `_u`. `gate_mode/garage_mode=auto/open` dibujan hojas o dejan paso libre. `openness` controla huecos en lamas/estacas; no afecta de igual forma a los cinco estilos. `wall_material=plaster/brick/stone/concrete`; `base_height_m` ajusta base maciza; `plinth` aplica zócalo a estilos compatibles, no al cerco de estacas de madera. `planters` solo moderno.
+
+`site.zones[].kind`: `garden` tierra/plantas; `patio`, `terrace`, `parking`, `driveway`, `corridor`, `paved` pavimento con etiqueta semántica; `unclassified` espacio libre sin malla de acabado. Solo parking/driveway pueden tener `slope_deg` (0–15°). Esas etiquetas no añaden automóviles ni mobiliario automáticamente. Las zonas se intersectan con el suelo libre.
+
+Muestras: [catalogo_cercos](../../steps/step23_fresh_theta/catalogo_cercos).
+
+## 13. Entradas y escaleras
+
+- `entrances.kind=steps`: rellano y peldaños calculados a partir de altura de puerta y `max_riser_m`; `tread_m` huella, `nosing_m` nariz.
+- `ramp`: rampa con transiciones, `run_m`, `transition_m`, pendiente resultante ≤15°.
+- `passage`: paso horizontal; suelo y umbral deben estar a igual cota.
+- `width_m=0` hereda ancho de puerta; `cheek_height_m` y `side_width_m` producen laterales.
+- `FacadeControls.stairs`: escalera exterior por `base_z_m/target_z_m`, `flight_width_m/run_m/step_count`, recta o retorno (`switchback`). Distinta del acceso corto `entrances`.
+
+Muestras: [catalogo_entradas](../../steps/step23_fresh_theta/catalogo_entradas).
+
+## 14. Materiales: 23 slots existentes
+
+Fuente: `materials.resolve_materials(BuildingAppearance())`.
+
+| Slot | Apariencia predeterminada |
+|---|---|
+| `plaster` | Revoque claro; recibe primary_color |
+| `accent` | Revoque de acento, inicialmente más oscuro que primary_color |
+| `stone` | Gris pétreo/concreto |
+| `frame` | Marco claro de aluminio pintado; cambiar template a plaster para moldura de revoque |
+| `glass` | Vidrio oscuro frío, transparente |
+| `metal` | Acero pintado oscuro |
+| `wood` | Madera marrón veteada |
+| `brick` | Ladrillo rojizo, textura de aparejo |
+| `roof` | Metal corrugado galvanizado |
+| `roof_tile` | Teja de arcilla rojiza |
+| `leaf` | Vegetación verde |
+| `soil` | Tierra oscura |
+| `concrete` | Concreto gris |
+| `pavement` | Pavimento gris |
+| `decal_moisture` | Máscara/textura de humedad |
+| `decal_drip` | Máscara/textura de escurrimiento |
+| `interior` | Fondo interior casi negro |
+| `curtain` | Tela clara |
+| `sign` | Pintura de cartel azul verdoso oscuro |
+| `plastic` | Plástico negro |
+| `rebar` | Metal oxidado |
+| `cornice` | Revoque claro cálido |
+| `plinth` | Revoque gris cálido de zócalo |
+
+`theta.materials[]` toma `slot`, `template`, `color` RGB 0–1. `slot` puede reemplazar un material o crear un nombre propio; `template` debe existir en el catálogo base y copia sus propiedades físicas/textura. `color` tiñe. `side_material` selecciona un slot existente/declarado y por defecto es `plaster` (tarrajeado); `brick` y `concrete` representan acabados vistos sin añadir estructura. `wall_material` en controles de fachada permite elegir el material de todo un plano. `material_regions` subdivide su superficie sin espesor ni coatings; la última región gana. Véase [materiales de muros](../../../MATERIALES_MUROS.md).
+
+`config.detail`: 1 manzana, 2 calle, 3 detalle cercano. Es diferente de `RoofDesign.detail` textual y del detalle local de miembros/frontones. No asumir que un único LOD controla todos los ensambles.
+
+## 15. Evidencia y configuración
+
+- `evidence.state`: `observed`, `inferred`, `prior`, `unknown`, `externally_known` (el comentario de la dataclass omite `prior`, pero el validador lo acepta).
+- `confidence`: null o número entre 0 y 1; `view_ids` debe referenciar `observations` existentes.
+- `unknown` exige valor theta nulo; `observed/externally_known` exige valor no nulo.
+- Selectores implementados: `facades[masa:0,edge:0]`, `roofs[masa:0]`, `components[id]`, `zones[id]`, `opening_edits[floor:0,bay:1]`, `masses[rol:0]`; se pueden encadenar nombres de campos. No todos los arrays aceptan selectores por ID.
+- `config.implementation="theta-candidate-v0"`; `grammar_reference="grammar-v1.0"`; `completion_policy="conservative-0.1"` o `"conservative-0.2"`. El materializador tiene su propia versión independiente.
+- `nuisance.seed`: entero 0 ≤ seed < 2^63; `curtains`: booleano.

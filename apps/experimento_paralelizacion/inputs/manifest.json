@@ -1,0 +1,41 @@
+{
+  "lot_id": "1136002",
+  "source_package": "data/barranco/theta_author/runs/3bbc4f17cf08462bbe9ea707c8d2c0a1/package.json",
+  "geometry_revision": "5ca18f85c5c142f08ab8a1f46708bb3a",
+  "primary_image": "inputs/projected_images/001.jpg",
+  "primary_selection": "First B evidence, with cadastral prism and manual levels",
+  "images": [
+    "inputs/projected_images/001.jpg",
+    "inputs/projected_images/002.jpg",
+    "inputs/projected_images/003.jpg"
+  ],
+  "sha256": {
+    "inputs/evidence.json": "ab28eda676c775abe19705cf0c548b1067e6f3a503d044297a30116eb4b051d9",
+    "inputs/context_and_levels.json": "81da68e854864d5144647994ccfa363b8ff863645af912ea9b3793b1e6baf95b",
+    "inputs/base_request.json": "30d40a0e7594b597fd5e70da3d4d14f2a3aff80e96046192cdfd0c2c03c1a2ae",
+    "inputs/source_package.json": "4749a68376d975d163b85f24f05ffb50c4ed8330eafdd03fdc93ccbfd4587a6d",
+    "inputs/human.json": "55817d4ef379fb49d89bd0589d3880a5813e83eb87a5927ac79051798428b601",
+    "inputs/images/001.jpg": "4d04c78466ca69b1553ebaee32a8a9c24fa4ad7f5a25c8e0be82b76f3217c8e2",
+    "inputs/images/002.jpg": "b4bc5e889feb88791d99b2712d799c861543b2e76ef70b47f885b0bb9e878910",
+    "inputs/images/003.jpg": "71ddc856a35140fff49cbad3224eb0c12367b1764faa8027a8f83dfc5e9be179",
+    "guides/CATALOGOS.md": "4a2a715c580bca576ccbcebf1f128db187f449580f145abbb4fd34a6d680a5ee",
+    "guides/README.md": "ae44102ba6c5f4dcde1a17016564f9fbf2214dc214807b905e07384aa2563348",
+    "guides/REFERENCIA_CAMPOS.md": "a791a73af13c350407e1149f1307c739c9d5e3b9a2e9b52abca4b433c5a92c69",
+    "inputs/projected_images/001.jpg": "e387c63ef2634ca9765b2fba281bc8c65711a3464a9d17dd420c22536d5d817a",
+    "inputs/projected_images/002.jpg": "4a0c1c8870ca662c55f815999bb05ecbd1d58f64c1f4f1d2f8707007e8e06809",
+    "inputs/projected_images/003.jpg": "45e690d779aecef454f6724e3a65ae1e182f22f88e603c0aaae541f28913696c"
+  },
+  "clean_images": [
+    "inputs/images/001.jpg",
+    "inputs/images/002.jpg",
+    "inputs/images/003.jpg"
+  ],
+  "projection_levels_m": [
+    0.0,
+    3.0,
+    6.0,
+    9.0
+  ],
+  "image_role": "cadastral_prism_with_human_floor_levels",
+  "overlay_note": "90px legend above unchanged photo; angular camera metadata refers to photo excluding legend"
+}

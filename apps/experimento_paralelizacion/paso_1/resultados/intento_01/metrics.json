@@ -1,0 +1,14 @@
+{
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "input_tokens": 18159,
+    "output_tokens": 6045,
+    "server_tool_use": {
+      "web_search_requests": 0
+    },
+    "service_tier": "standard"
+  },
+  "stop_reason": "end_turn",
+  "model": "claude-haiku-4-5-20251001",
+  "seconds": 117.40861591600697
+}

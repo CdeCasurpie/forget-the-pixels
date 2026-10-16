@@ -1,0 +1,215 @@
+# Lectura arquitectónica — Lote 1136002
+
+## Autoridad y coordenadas
+
+Restricciones impuestas por el registro (human.json, mode sugerido pero fijado por instrucción): **3 pisos, altura total 9,0 m, piso tipo 3,0 m, primer piso igual, estilo sugerido republicano, esquina=false, sin recortes, masas sugeridas**. Los niveles humanos son 0,0 / 3,0 / 6,0 / 9,0 m (context_and_levels.json). Lote 1136002, CRS EPSG:32718, solo el borde 3 (7,91 m) está marcado `front: true`; los otros tres bordes son 9,68 / 7,96 / 9,84 m. La huella es irregular (casi romboidal, no rectangular): lados opuestos no paralelos con igual longitud. No afirmo que el edificio llene el prisma: en las tres fotos hay oclusión severa por dos árboles frondosos de copa ancha, y en al menos una vista el prisma proyectado cruza vecinos.
+
+Fotos suministradas (todas `clean_projected_image`): 001 `xpbgOk8K5jCJHvHhs13U_g`, 002 `GxILgNZfMecyxI2La4DIEA`, 003 `F1o5U8RfDCT6a1YcxQcVMQ`. Las imágenes marcadas y limpias del par son la misma toma; no se duplican como evidencia. No se incluyen fotos marcadas independientes adicionales. La leyenda superior (~90 px) no pertenece a la escena.
+
+Frente elegido como denominador: **ancho físico del frente F1 = 7,91 m** (borde 3). Todos los porcentajes horizontales usan este denominador salvo que se diga "profundidad del lote" o "superficie del lote". Izquierda/derecha se define mirando el frente desde la calle.
+
+---
+
+## 1. Identificación
+
+**Foto 001** (cámara al NNE del lote, rumbo ~72°, a ~14–18 m del frente): se ve el prisma completo con cotas N0–N3. Identifico el inmueble como una casa de volumen único, fachada pintada azul-cielo, con planta baja de reja/metal negro continuo y un balcón en planta primera protegido por baranda metálica. Se ven dos frentes vecinos: a la izquierda del objeto, pared blanca/crema de vecino con ventana; a la derecha, fachada azul más intensa (vecino, NO parte del inmueble — distinto tono y sin coincidencia con el prisma). La copa de un árbol tapa el tercio superior-derecho y el tramo alto del frente. Un auto rojo en primer plano es oclusor.
+
+**Foto 002** (cámara al N, rumbo ~72°, posición desplazada hacia E): el prisma se proyecta más de lado; el inmueble queda casi íntegramente detrás del follaje de un árbol grande. Solo se adivinan vetas azules y rejas oscuras. Confianza baja para atributos propios; se usa solo para confirmar que el volumen se desarrolla hacia el fondo (el prisma no se agota en el frente). Un auto plateado y un peatón en calzada son oclusores.
+
+**Foto 003** (cámara desplazada al O, rumbo ~68°): el inmueble aparece más de frente-cerca, con el prisma claramente delimitado. Se ven mejor la planta baja con reja, la barra del balcón en N1–N2 y un tramo de cubierta/listones madera en la parte superior del prisma. A la derecha hay un edificio de dos plantas de azul profundo con franjas — **vecino distinto**, no parte de M1. Un auto oscuro antiguo en primer plano y un seto bajo en la franja entre acera y lote son oclusores/contexto.
+
+**Contradicciones entre vistas**: no hay contradicción entre las tres fotos; hay inconsistencia aparente entre prisma y realidad visible: el prisma impuesto de 9,0 m llega a N3, pero el borde superior real visible (donde se corta el follaje y donde aparece la franja de listones madera) coincide en altura con la cota verde N2 (6,0 m) en 001 y 003. Esto se lee como **tercer nivel impuesto no reconocible en imagen** (tapa copa + posible coronación baja/parapeto), NO como ausencia medida del tercer piso.
+
+---
+
+## 2. Masas
+
+**M1** — cuerpo cerrado, único, prismático de huella irregular siguiendo la parcela.
+- Ancho del frente F1: **7,91 m** (registrado, confianza alta).
+- Profundidad: **desconocida en planta**, inferida máxima 9,84 m (borde 2); en imagen no se puede confirmar que M1 ocupe el fondo: en 001 y 003 el volumen visible se agota tras la fachada y no se distingue un retorno lateral habitable ni muro trasero propio. Correspondencia con huella catastral **pendiente**.
+- Niveles ocupados visibles: N0–N1 planta baja, N1–N2 planta primera, N2–N3 **no reconocible** (oculto por copa).
+- Relación frente/fondo: no estimable con evidencia.
+- Patios, pasos, recortes, cuerpo sobre azotea, escalonamientos: **ausencia comprobable** de cuerpo sobre azotea y de recorte de esquina (no se ve ningún segundo volumen). Escalonamiento frontal de frente bajo/fondo alto: **no visible** (tapa copa), por lo que no se declara.
+- Soportes: no hay columnas libres sosteniendo M1; la fachada se lee apoyada en muro continuo.
+- Cambio de material frente a volumen: hay franja de listones madera clara en coronación; la distingo como **acabado de cubrición**, no como cambio de masa (ver §9).
+
+---
+
+## 3. Planos
+
+Respecto al plano mayor de F1:
+- **Volúmenes habitables**: M1 es un solo plano frontal; no se observa retranqueo de piso superior ni giro de esquina (corner=false por registro y corroborado visualmente: la esquina vista en 001 es lisa y continua).
+- **Salientes**: la única proyección saliente reconocible es la **baranda del balcón B1** en planta primera, cuyo borde avanza unos pocos centímetros del muro. Vuelo estimado 0,4–0,6 m, confianza media (se ve sombra lateral y borde, no intradós completo). No se distingue losa propia gruesa: la baranda parece apoyarse sobre el nivel del piso superior existente (candidato `terrace`/`projecting` débil, ver §6).
+- **Molduras/salientes menores**: en 003 se observa una franja horizontal de listones madera clara en la línea de coronación; se trata de **cubierta/listón**, no de volumen habitable (ver §9). No se ven columnas ni ménsulas de soporte de volúmenes retranqueados.
+
+---
+
+## 4. Puertas del edificio
+
+No hay puerta peatonal ni portón vehicular del edificio claramente observable en ninguna de las tres fotos. En 001 y 003, el hueco que más se acerca a un acceso en planta baja está oculto por reja continua negra y/o por el tronco del árbol; no se distingue umbral, marco, hoja ni paso. Alternativa descartada: *portón vehicular de planta baja* — no hay carril, rampa ni marco ancho visible.
+
+**P1 (hueco de acceso principal, estado: no visible)** — F1, planta baja, posición horizontal estimada **25–55 % del ancho de F1**, borde inferior a cota N0, altura esperada ~2,1 m. Forma, hojas, cuarterones, sobreluz: **no visibles**. No se declara ausencia: la tapa de reja y del follaje lo impiden. Confianza baja.
+
+---
+
+## 5. Ventanas
+
+**V1 (ventana de planta primera, F1)** — estado **observado** en 001 y 003.
+- Cantidad: **una**, aislada, sobre el balcón B1 (o junto a él; ver §6).
+- Posición horizontal: **~40–60 % del ancho de F1** (esquina derecha mirando desde calle), confianza media (perspectiva).
+- Posición vertical: piso impuesto N1; borde inferior ~0,9–1,1 m sobre suelo del piso (antepecho bajo), borde superior ~2,4–2,7 m sobre suelo del piso; referencia: metros sobre solado de planta primera. Altura total ~1,5–1,8 m.
+- Forma: **rectangular**, proporción paisaje (ancho mayor que alto), confianza media-alta.
+- División: se lee dividida en **dos paños verticales** (mullion central), pero la resolución no permite confirmar si es división del vidrio o marco. Espesor de marco no estimable.
+- Marco/relieve: marco pintado mismo tono azul de la fachada, relieve leve; no se distingue moldura republicana escalonada (contrario al estilo sugerido).
+- Alféizar: leve relieve, mismo color; **no se observa banda continua** recorriendo la fachada.
+- Reja: **no visible** en esta ventana. Contraventanas: no visibles.
+- Fotos: 001 (clara), 003 (parcial, detrás de copa). Confianza: ubicación media, forma media, división media.
+- Catálogo opcional: `window` / `rectangle` / `frame_profile` desconocido (sin escalonado apreciable).
+
+**V2 (ventanas de planta baja, F1)** — estado **no visible / presencia dudosa**. Detrás de la reja/metal negro continuo de planta baja se perciben **múltiples vanos oscuros verticales**, pero no se pueden separar huecos de barras de reja ni contarlos con confianza. **Cantidad declarada: 0 ventanas identificables**; la reja oculta. No se inventa un número.
+
+**V3 (ventana de vecino, excluida de M1)** — fachada azul profunda en 003 derecha: se ven dos ventanas horizontales con marcos blancos y vidrio oscuro en dos niveles. **Pertenecen al vecino**, no al inmueble del lote 1136002; se excluyen del inventario de M1. Corresponde a una casa adosada o contigua, sin coincidencia con el prisma proyectado.
+
+**Alineación entre pisos**: única ventana reconocible (V1) queda a la derecha del eje del frente; no se puede evaluar simetría ni repetición por piso por falta de ventanas identificables en N0 y N2.
+
+---
+
+## 6. Balcones
+
+**Diagnóstico previo**: registro dos señales observadas — (a) borde horizontal de madera/metal oscuro en línea ~2 m sobre solado de planta primera, con continuidad a lo largo de un tramo de fachada; (b) presencia de barras verticales metálicas negras delante de esa zona, con separación apreciable del muro (visible en 001 como franja de sombra). Alternativa descartada: *ventana con reja y baranda sobre muro* — no se descarta del todo porque el intradós y el lado de la losa no son visibles; por lo tanto **conservo la etiqueta neutra S1 con candidatas**: `balcony` saliente, `terrace` sobre losa existente, o `protection de vano sin plataforma`. **No atribuyo vuelo de 1 m por apariencia típica.**
+
+**S1 / B1 (balcón o baranda, F1, planta primera)**
+- Estado: **observado** (barra y borde) — la existencia de plataforma propia es **inferida con confianza baja**.
+- Posición horizontal: **~5–75 % del ancho de F1** (tramo largo), confianza media. Inicio cercano a la izquierda (mirando desde calle), término antes de la derecha del frente.
+- Posición vertical: piso N1; barra superior ~1,0–1,1 m sobre solado de planta primera; borde inferior de la losa ~0 m (solado).
+- Vuelo: **0,4–0,6 m estimado** (medido respecto al plano de F1; referencia: proyección del borde frontal sobre la sombra). Confianza media-baja: el intradós queda atrás del follaje.
+- Baranda: barras verticales metálicas negras, paso aparente ~8–10 cm (confianza media); no se distinguen aros, volutas, balaustres, vidrio ni lamas. Coronación: barra superior horizontal delgada; **sin ornato**.
+- Lados: no se distingue cierre lateral izquierdo (oculto por árbol); derecho se corta en el tramo.
+- Franja sólida inferior: leve, de madera oscura o metal; **no maciza hasta suelo**.
+- Jardineras: **ausentes** (no observadas).
+- Ménsulas: no visibles.
+- Fotos: 001 (mejor), 003 (parcial), 002 (oculta). Confianza: existencia de baranda media-alta, existencia de losa media, vuelo baja.
+- Catálogo opcional: republicano `iron_vertical` o `iron_rings` — descartadas las variantes con aros/volutas por falta de señal.
+
+---
+
+## 7. Soportes
+
+- **Columnas/pilastras de fachada**: **ausencia comprobable** de pilastras decorativas en el frente F1 visible. El estilo sugerido republicano no impone pilastras; no se inventan.
+- **Postes de cerco**: no se ve cerco, ver §10.
+- **Apoyos de balcón**: no se ven columnas ni ménsulas bajo S1/B1; se infiere apoyo empotrado o sobre solado. Soporte hipotético, no observado.
+- **Apoyos de cubierta**: no se ven tornapuntas ni vigas expuestas bajo la franja de listones (§9).
+
+---
+
+## 8. Remates
+
+- **Frontones**: **ausencia comprobable** en fachada F1 visible (ninguna silueta triangular, curva, escalonada o de hombros cóncavos sobre vano ni sobre muro). El registro de estilo republicano no crea frontones.
+- **Cornisa de coronación**: en 003 se observa un **borde horizontal liso** en la línea superior del volumen visible (~cota N2 por comparación con el prisma), de relieve moderado, mismo color azul de la fachada. Se describe como **banda/cornisa discreta**, vuelo estimado 0,1–0,2 m (confianza media). **No confundir con cubierta**: detrás de esa banda aparece la franja de listones madera (§9).
+- **Cornisas entre pisos**: no visibles. Franjas horizontales entre N0–N1 y N1–N2 no se distinguen de cambios de color/sombra; **no se declara banda continua**.
+- **Frisos, dentículos, óculos, cartelas, volutas, zócalos**: **ausencia comprobable** de dentículos, frisos ornamentales, óculos y zócalos diferenciados por material. La base de la fachada en 001 se lee con el mismo revoque azul que el resto.
+
+---
+
+## 9. Cubiertas por masa
+
+**M1 cubierta, estado: parcialmente observable.**
+- En 003 se ve una **franja de listones madera claros horizontales** en la parte superior del volumen, por encima de la cornisa azul. Interpretación: **listones/tarimas de madera como cubrición sol y sombra o como faldón expuesto**, NO cubierta inclinada completa. Forma candidata: `band` o `flat` con revestimiento `slats` (listones). Confianza media.
+- En 001 la misma zona queda **oculta por copa**; no se ve la línea de cumbrera.
+- Forma completa de la cubierta (plano / una / dos aguas / cuatro aguas): **no reconocible**. No se extrapola de una franja. Pendiente y dirección de caída: **no medible**.
+- Alero/vuelo: no estimable con seguridad; la cornisa azul sugiere 0,2–0,3 m de vuelo (confianza baja).
+- Fascia/canaleta: no visibles. Vigas/ménsulas/tornapuntas: **no visibles**.
+- Parapeto: **no visible**. Objeto de azotea (tanque, antena, caseta): **no visible**.
+- Marquesinas: **ausencia comprobable** sobre entradas (no se ven estructuras salientes en planta baja).
+
+**Propuesta de completado separada del observado**: si el traductor necesita completar, la forma más mínima consistente con las señales visibles es cubierta `flat` con parapeto oculto y una `roof_assemblies` de tipo `band` o `slats` solo en la franja superior del frente; no se proponen pendientes ni orientación de cumbrera, porque no hay evidencia espacial.
+
+---
+
+## 10. Cercos
+
+**C1 (tramo frontal, estado: ausente comprobable / no observado).** En las tres fotos, la acera y la franja de tierra entre acera y fachada aparecen **sin cerco metálico ni muro de cerramiento frontal**. Se ve césped/bajos (foto 003, franja verde en primer plano del lote) y directamente el borde de la fachada en 001.
+
+- Tramo frontal: **sin cerco**, altura base **0**, material **N/A**.
+- Puerta peatonal de cerco: **no visible** (no hay cerco que interrumpir).
+- Portón vehicular de cerco: **no visible**.
+- Pilares, aros, volutas, puntas: **ausencia comprobable**.
+- Cercos laterales (bordes 0, 1, 2): **no visibles** en ninguna foto (la cámara no los enmarca); **no se inventan**.
+- Catálogo opcional: `site.fence = none` (coherente con ausencia frontal). Si el traductor aplica completado automático, advertencia: sería **adición no observada**.
+
+Correspondencias estilísticas sugeridas (republicano = barrotes con aros) se descartan por falta de evidencia; no se fuerza la etiqueta.
+
+---
+
+## 11. Suelo
+
+- Retiro frontal: **no medible con evidencia**; el borde de la fachada F1 parece estar muy cerca de la acera (en 001 el auto rojo queda prácticamente pegado al borde del lote), pero la tapa de la leyenda y la cámara lo impiden cuantificar. Confianza baja. **Declarado: retiro no visible, correspondencia catastral pendiente.**
+- Patio/jardín dentro del lote: **una franja estrecha de vegetación baja** en 003 entre acera y fachada; en 001 se ven algunas plantas de bordillo. No se observa jardín profundo ni zona de servicio.
+- Estacionamiento dentro del lote: **no observable**. El auto rojo (001), plateado (002) y oscuro (003) están en la **calzada**, no en el lote. **No se declara estacionamiento privado.**
+- Acceso vehicular / rampa: **no visible**.
+- Corredor: no visible.
+- Pavimento: en 003 se ve pavimento gris claro en acera y franja de acceso; no se distingue solado de acceso privado del de calzada.
+- Desniveles: **no medibles** (la cámara queda a 2,5 m sobre calzada; no se ve peldaño ni rampa).
+
+---
+
+## 12. Acabados
+
+- **Revoque de fachada M1**: azul-cielo medio (color base), tono uniforme en planta baja y primera; en 001 la zona de sombra del balcón oscurece sin cambiar color. Materiales aparentes: `plaster` claro tiñido azul.
+- **Franja superior**: listones madera claros horizontales (ver §9), tono beige/grisáceo. Materiales: `wood` claro.
+- **Barra y rejas**: metal pintado negro. Materiales: `metal` oscuro.
+- **Marcos de ventana V1**: mismo tono azul que la fachada; no se ve marco blanco.
+- **Toldos**: **ausencia comprobable** (no se ven brazos ni faldones).
+- **Letreros con texto legible**: **ninguno legible**. En 001 a la izquierda, sobre la pared del vecino, hay un cartel de colores vivos; **perteneciente al vecino** y el texto no es legible: no se completan letras.
+- **Bajantes (caños)**: **no visibles** en fachada F1.
+- **Aletas verticales / paneles**: **ausencia comprobable** (fachada lisa).
+- Distinguimos pintura de relieve: la fachada parece revoque liso pintado (sin juntas de ladrillo visible, sin almohadillado, sin panel rehundido). Esto va contra lo que sugeriría el estilo "republicano" típico (pilastras, zócalo, molduras), por lo que **señalo la discrepancia como hipótesis local**: el inmueble podría ser moderno/republicano degradado. El estilo de referencia se mantiene como preferencia dominante, no como obligación de inventar ornamentos.
+
+---
+
+## 13. Cierre
+
+**Cinco rasgos prioritarios de identificación del inmueble**:
+1. Fachada pintada azul-cielo lisa de dos pisos visibles (tercero oculto por copa).
+2. Franja horizontal de listones madera clara en la línea de coronación.
+3. Tramo largo de baranda metálica negra de barras verticales en planta primera sobre el frente F1.
+4. Reja/metal negro continuo en planta baja que oculta los vanos inferiores.
+5. Ausencia de cerco frontal y de ornato decorativo (sin pilastras, frontones, zócalo, cornisa denticulada).
+
+**Inventario consolidado**:
+
+| ID | Clase | Masa/Fachada/Piso | Horiz (F1) | Vert (m sobre suelo del piso) | Profundidad/vuelo | Evidencia (fotos) |
+|---|---|---|---|---|---|---|
+| M1 | Masa cerrada | — | 0–100 % | 0–9 (impuesto) / 0–6 reconocible | frente 7,91 m; fondo N/A | 001,002,003 |
+| F1 | Fachada frontal | M1 | 0–100 % | 0–6 reconocible | — | 001,003 |
+| V1 | Ventana rectangular dividida | M1/F1/N1 | ~40–60 % | ~0,9–2,7 | marco leve, sin reja | 001,003 |
+| V2 | Ventanas N0 (ocultas) | M1/F1/N0 | ~0–100 % | 0–2,5 | N/A | no visible |
+| P1 | Acceso (no visible) | M1/F1/N0 | ~25–55 % | 0–2,1 | N/A | no visible |
+| S1/B1 | Balcón o baranda | M1/F1/N1 | ~5–75 % | 0–1,1 | vuelo 0,4–0,6 m | 001,003 |
+| C1 | Cerco frontal | M1/site/N0 | 0–100 % | 0 | 0 (ausente) | 001,003 (ausencia) |
+| R_cornisa | Banda/cornisa discreta | M1/F1 | 0–100 % | ~5,8–6,0 | 0,1–0,2 m | 003 |
+| R_listones | Franja de listones madera | M1/cubierta | 0–100 % | ~6,0 y arriba | no estimable | 003 |
+
+**Incógnitas que impiden ubicar geometría**:
+- Altura física real del inmueble: el registro impone 9,0 m y 3 pisos; el borde superior visible coincide con N2 (6,0 m). **No se puede afirmar coronación a 9 m**; el tercer piso queda como **nivel impuesto no reconocible**.
+- Profundidad del lote ocupada por M1: no hay vista lateral ni retorno visible.
+- Número y geometría exacta de vanos de planta baja (ocultos por reja).
+- Existencia y vuelo de plataforma propia bajo S1/B1.
+- Forma completa de la cubierta y dirección de pendiente.
+- Existencia de cercos laterales.
+- Existencia y geometría de acceso (P1).
+- Identidad de la fachada azul profunda visible a la derecha en 003 (declara vecino, pero su límite catastral no está en el registro).
+
+**Contradicciones / conflictos**:
+1. **Altura visual vs. altura registrada**: el prisma impuesto de 9 m sobrepasa el volumen visible; se conserva el registro sin alterar.
+2. **Estilo sugerido republicano vs. fachada observada**: no hay pilastras, zócalo, frontones, cornisa denticulada, ni moldura escalonada en marco. La fachada observada es lisa, más cercana a moderna/republicano degradado. Se declara la preferencia dominante pero no se inventa ornamento.
+3. **Ventana V1 con marco liso vs. marco republicano escalonado del catálogo**: no se fuerza el molde del catálogo sobre la observación.
+
+**Aproximaciones necesarias** (para el traductor, separadas del observado):
+- Completar el tercer piso en vacío geométrico (muro liso sin vanos) si se exige respetar 9,0 m; es la mínima intervención no observada.
+- Completar la cubierta como `flat` con parapeto bajo si se exige un cierre superior; sin pendiente ni orientación.
+- No completar cercos laterales, portón, ni puertas de cerco: las hipótesis de fondo no se convierten en datos.
+
+**Revisión de consistencia**: sin duplicados entre fotos (V1 única, S1/B1 único); todos los elementos caen dentro del ancho F1 (0–100 %); los intervalos verticales son compatibles con pisos de 3 m (V1: 0,9–2,7 dentro de piso 3 m; S1: 0–1,1 idem); las aritméticas internas son coherentes (p. ej., 5–75 % equivale a 70 % del ancho de F1; 40–60 % equivale a 20 % del ancho). No se atribuyen cercos, frontones ni tejas solo por estilo. Las etiquetas "no visible" se mantienen separadas de "ausente comprobable" en todo el documento.
+
+Fin de la lectura.
