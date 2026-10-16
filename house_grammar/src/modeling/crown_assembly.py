@@ -91,17 +91,6 @@ def build_crown(mb,a,t,n,u,z,width,height,d,aperture=None,custom_routes=None):
             panel(box(x-.04,.025,x+.04,min(.13,height*.25)),.01,d.projection_m*.7,d.moulding_material,'crown_dentil')
 
 
-def legacy_crown(mb,a,t,n,feature,family):
-    d=getattr(feature,'crown',None) or CrownDesign(family=family,style='republicano',
-        thickness_m=max(.12,feature.depth_m),material=feature.material_slot,
-        moulding_material=feature.material_slot,moulding_width_m=min(.12,feature.height_m*.25,feature.width_m*.07),
-        projection_m=min(.16,max(.04,feature.depth_m*.5)))
-    if d.style=='auto':d=replace(d,style='republicano')
-    if feature.kind.startswith('crown_'):
-        mb=CrownBuilder(mb,feature.v_m,feature.v_m+feature.height_m)
-    build_crown(mb,a,t,n,feature.u_m,feature.v_m,feature.width_m,feature.height_m,d)
-
-
 class CrownBuilder:
     """Extend only crown-visible intervals, preserving band-local Z lifting."""
     def __init__(self,builder,base,top):self.builder,self.base,self.top=builder,base,top

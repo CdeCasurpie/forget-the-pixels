@@ -43,6 +43,7 @@ from domain.balconies import BalconyControls
 from domain.models import FacadeProjection
 from modeling.balcony_catalog import CATALOG as BALCONY_CATALOG
 from domain.vertical_members import VerticalMemberControls, MemberDesign
+from domain.crowns import CrownControls, CrownDesign
 from modeling.vertical_member_resolver import ResolvedMember, resolve_members
 from modeling.crown_resolver import ResolvedCrown, resolve_crowns
 from modeling.entrances import ResolvedEntrance, resolve_entrances, build_entrance
@@ -836,7 +837,36 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
     _check(not {c.id for c in promoted}&{c.id for c in theta.vertical_members}, 'Pilaster ID conflicts with explicit member')
     members=resolve_members(replace(theta,vertical_members=theta.vertical_members+tuple(promoted)),
                             masses,walls,envelope,materials|{c.slot for c in theta.materials},member_wall_refs)
-    crowns=resolve_crowns(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials})
+    promoted_crowns=[]
+    crown_refs={}
+    crown_walls=[]
+    for wall in walls:
+        retained=[]
+        for feature in wall.facade.projections:
+            if feature.kind not in ('pediment','crown_triangular','crown_stepped'):
+                retained.append(feature)
+                continue
+            family='stepped' if feature.kind=='crown_stepped' else 'triangular'
+            design=feature.crown or CrownDesign(family=family,
+                style=theta.architectural_style or 'republicano',
+                thickness_m=max(.12,feature.depth_m),material=feature.material_slot,
+                moulding_material=feature.material_slot,
+                moulding_width_m=min(.12,feature.height_m*.25,feature.width_m*.07),
+                projection_m=min(.16,max(.04,feature.depth_m*.5)))
+            if design.style=='auto':design=replace(design,style=theta.architectural_style or 'republicano')
+            wall_top=feature.kind.startswith('crown_')
+            promoted_crowns.append(CrownControls(
+                id=f'projection_crown_{len(promoted_crowns)}',mass_ref=wall.mass_role,
+                edge=wall.edge,u_m=feature.u_m,width_m=feature.width_m,
+                height_m=feature.height_m,design=design,
+                anchor='wall_top' if wall_top else 'facade',
+                base_m=0. if wall_top else wall.base_z+feature.v_m-next(m.base_z for m in masses if m.id==wall.mass_role)))
+            crown_refs[promoted_crowns[-1].id]=wall.facade.edge_id
+        crown_walls.append(replace(wall,facade=replace(wall.facade,projections=tuple(retained))))
+    walls=crown_walls
+    _check(not {c.id for c in promoted_crowns}&{c.id for c in theta.crowns}, 'Crown ID conflicts with explicit crown')
+    crowns=resolve_crowns(replace(theta,crowns=theta.crowns+tuple(promoted_crowns)),
+                          masses,walls,envelope,materials|{c.slot for c in theta.materials},crown_refs)
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
     accesses=resolve_entrances(theta,walls,masses,envelope,materials|{c.slot for c in theta.materials})
     from modeling.opening_catalog import resolve_opening
@@ -900,14 +930,6 @@ def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameter
         member_style=theta.architectural_style or 'republicano'
         if f.top_profile is not None and f.top_profile.trim_profile is None:
             f=replace(f,top_profile=replace(f.top_profile,trim_profile=member_style))
-        from domain.crowns import CrownDesign
-        crown_kinds={'pediment':'triangular','crown_triangular':'triangular','crown_stepped':'stepped'}
-        f=replace(f,projections=tuple(replace(p,crown=(
-            replace(p.crown,style=member_style) if p.crown and p.crown.style=='auto' else p.crown or
-            CrownDesign(family=crown_kinds[p.kind],style=member_style,thickness_m=max(.12,p.depth_m),
-                material=p.material_slot,moulding_material=p.material_slot,
-                moulding_width_m=min(.12,p.height_m*.25,p.width_m*.07),projection_m=min(.16,max(.04,p.depth_m*.5)))))
-            if p.kind in crown_kinds else p for p in f.projections))
         f=replace(f,projections=tuple(replace(feature,member=(
             replace(feature.member,style=member_style) if feature.member and feature.member.style=='auto'
             else feature.member or MemberDesign(style=member_style,section='rectangle',material=feature.material_slot)))

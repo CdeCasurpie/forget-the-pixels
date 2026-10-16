@@ -91,6 +91,11 @@ def build(kind, *, parcel=PARCEL, envelope=ENVELOPE, **overrides):
 
 
 class VocabularyTests(unittest.TestCase):
+    def test_v4_frontons_use_volumetric_catalogue(self):
+        for kind in ('pediment','crown_triangular','crown_stepped'):
+            with self.subTest(kind=kind):
+                self.assertIn('crown_body',{part['name'] for part in build(kind).parts})
+
     def test_v4_pilasters_share_catalogue_and_reject_duplicate_positions(self):
         pilaster=feature_for('pilaster',u_m=.4,v_m=0.,height_m=5.)
         spec=FacadeSpecification('front',(0.,0.),(10.,0.),10.,(0.,-1.),(0.,5.),

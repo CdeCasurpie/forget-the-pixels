@@ -215,7 +215,7 @@ El estilo global comprueba compatibilidad de ventanas, puertas, balcones, miembr
 | Necesidad | Control adecuado |
 |---|---|
 | Cambiar silueta continua de la pared con vanos atravesándola | `facade.top_profile` |
-| Frontón sencillo adicional de fachada | `facade.crowns` (`triangular/stepped`) |
+| Frontón volumétrico sencillo adicional de fachada | `theta.crowns` con `design.family="triangular"` o `"stepped"`; `facade.crowns` solo se acepta como entrada compatible y se convierte al mismo catálogo |
 | Frontón volumétrico con moldura y óculo | `theta.crowns` |
 | Habitación/torre con volumen y techo detrás | `roof_bodies` o una masa/componente |
 | Forma real de cubierta | `roof_assemblies[].design.form` |

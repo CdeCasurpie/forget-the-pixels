@@ -96,7 +96,7 @@ Las rutas de las tablas son relativas a `house_grammar/src/`. **Theta** señala 
 |---|---|
 | `modeling/crown_catalog.py` | Diez familias geométricas y reglas de clasificación de atributos; devuelve familia y motivo auditable. |
 | `modeling/crown_paths.py` | Construye rutas métricas de silueta y polígonos de cuerpo; valida proporciones, espesor y moldura. No deforma una malla prefab. |
-| `modeling/crown_assembly.py` | Cuerpo grueso, campo rehundido, molduras barridas, perforación real vidriada y ornamentos. Adaptadores `legacy_crown/CrownBuilder` permiten coronamientos tradicionales. |
+| `modeling/crown_assembly.py` | Cuerpo grueso, campo rehundido, molduras barridas, perforación real vidriada y ornamentos. `build_crown` es el constructor único; `CrownBuilder` adapta el clipping de coronaciones V4. `legacy_crown` fue eliminado. |
 | `modeling/crown_resolver.py` | Anclaje superior/sobrevano/fachada, estilo y clasificación; verifica soporte visible, perforación, envolvente y ausencia de duplicados/conflictos. Devuelve razón de clasificación. |
 | `modeling/trim_profiles.py` | Secciones de las cinco cornisas y definición de hiladas de zócalo. Produce datos de sección/profundidad, no malla. |
 | `modeling/trim_sweep.py` | Barrido perimetral cerrado con esquinas compartidas y mitras acotadas; rechaza contornos auto-intersectados o fuera de envolvente. |

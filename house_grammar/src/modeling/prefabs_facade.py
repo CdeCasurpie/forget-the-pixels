@@ -347,21 +347,6 @@ def sign_box(mb, a, t, n, feature):
         sign_letters(mb, a, t, n, feature)
 
 
-def pediment(mb,a,t,n,feature):
-    from modeling.crown_assembly import legacy_crown
-    legacy_crown(mb,a,t,n,feature,'triangular')
-
-
-def crown_triangular(mb,a,t,n,feature):
-    from modeling.crown_assembly import legacy_crown
-    legacy_crown(mb,a,t,n,feature,'triangular')
-
-
-def crown_stepped(mb,a,t,n,feature):
-    from modeling.crown_assembly import legacy_crown
-    legacy_crown(mb,a,t,n,feature,'stepped')
-
-
 def vertical_fins(mb,a,t,n,feature):
     pitch=max(.15,feature.border_width_m)
     for u in np.arange(feature.u_m,feature.u_m+feature.width_m-.04,pitch):
@@ -392,8 +377,5 @@ FACADE_PROJECTIONS = {
     "shutter": shutter,
     "downpipe": downpipe,
     "sign_box": sign_box,
-    "pediment": pediment,
-    "crown_triangular": crown_triangular,
-    "crown_stepped": crown_stepped,
     "vertical_fins": vertical_fins,
 }

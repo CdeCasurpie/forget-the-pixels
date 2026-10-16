@@ -448,7 +448,7 @@ Fuente: [`src/domain/theta.py:235`](../../src/domain/theta.py#L235).
 | `added_openings` | `tuple[Opening, ...] &#124; None` | `null` | Vanos adicionales al programa repetitivo. |
 | `bay_groups` | `tuple[BayGroup, ...]` | `[]` | Grupos ordenados de crujías dentro de intervalos u. |
 | `motifs` | `tuple[ArchitecturalMotif, ...]` | `[]` | Decoración opt-in de vanos ya existentes. |
-| `crowns` | `tuple[CrownProfile, ...]` | `[]` | En theta: frontones completos. En fachada: perfiles simples. |
+| `crowns` | `tuple[CrownProfile, ...]` | `[]` | En theta: frontones completos. En fachada: entrada compatible triangular/escalonada, convertida a `CrownControls` del catálogo; para nueva autoría usar `theta.crowns`. |
 | `order` | `ArchitecturalOrder &#124; None` | `null` | Orden arquitectónico: pilastras y bandas horizontales. |
 | `opening_programs` | `tuple[OpeningProgram, ...]` | `[]` | Programa por grupo/piso de tipo, forma y proporciones de vano. |
 | `top_profile` | `FacadeTopProfile &#124; None` | `null` | Silueta continua de pared sobre la cota superior. |
@@ -873,4 +873,3 @@ Fuente: [`src/domain/theta.py:42`](../../src/domain/theta.py#L42).
 | `state` | `str` | `OBLIGATORIO` | observed/inferred/prior/unknown/externally_known. |
 | `confidence` | `float &#124; None` | `null` | Confianza nula o de 0 a 1. |
 | `view_ids` | `tuple[str, ...]` | `[]` | IDs de observaciones que respaldan el valor. |
-

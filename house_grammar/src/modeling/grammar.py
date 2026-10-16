@@ -104,6 +104,19 @@ def opening(mb, a, t, n, op, pattern):
 
 def projection(mb, a, t, n, feature):
     """Build a facade-attached design mass in facade-local coordinates."""
+    if feature.kind in ('pediment','crown_triangular','crown_stepped'):
+        from domain.crowns import CrownDesign
+        from modeling.crown_assembly import build_crown, CrownBuilder
+        family='stepped' if feature.kind=='crown_stepped' else 'triangular'
+        design=feature.crown or CrownDesign(family=family,style='republicano',
+            thickness_m=max(.12,feature.depth_m),material=feature.material_slot,
+            moulding_material=feature.material_slot,
+            moulding_width_m=min(.12,feature.height_m*.25,feature.width_m*.07),
+            projection_m=min(.16,max(.04,feature.depth_m*.5)))
+        if design.style=='auto':design=replace(design,style='republicano')
+        target=CrownBuilder(mb,feature.v_m,feature.v_m+feature.height_m) if feature.kind.startswith('crown_') else mb
+        build_crown(target,a,t,n,feature.u_m,feature.v_m,feature.width_m,feature.height_m,design)
+        return
     if feature.kind in ('pilaster','classical_pilaster','composite_pilaster'):
         from domain.vertical_members import MemberDesign
         from modeling.vertical_member_assembly import build_member

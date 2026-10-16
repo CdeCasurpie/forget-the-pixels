@@ -56,6 +56,15 @@ def test_duplicate_pilaster_triggers_rejected_across_sources():
         resolve_theta(P,replace(T,facade=replace(facade,projections=(feature,)),vertical_members=(explicit,)))
 
 
+def test_facade_crown_and_explicit_catalogue_crown_cannot_overlap():
+    from domain.crowns import CrownControls, CrownDesign
+    facade=FacadeControls(mode='explicit',openings=(),crowns=(CrownProfile((.4,.6),'triangular',1.,.2),))
+    explicit=CrownControls('explicit','main:0',0,4.,2.,1.,
+                           design=CrownDesign(family='triangular',style='republicano'))
+    with pytest.raises(ValueError,match='Overlapping crowns'):
+        resolve_theta(P,replace(T,schema_version='0.3',facade=facade,crowns=(explicit,)))
+
+
 def test_roundtrip():
     request=ReconstructionRequest(P,T)
     other=from_json(canonical(request))

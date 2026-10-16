@@ -20,7 +20,8 @@ class ResolvedCrown:
     classification_reason: str
 
 
-def resolve_crowns(theta,masses,walls,envelope,materials):
+def resolve_crowns(theta,masses,walls,envelope,materials,wall_refs=None):
+    wall_refs=wall_refs or {}
     result=[];ids=set();occupied=[]
     for c in theta.crowns:
         if not re.fullmatch('[a-z][a-z0-9_]*',c.id) or c.id in ids:raise ValueError('Invalid/duplicate crown ID')
@@ -37,12 +38,13 @@ def resolve_crowns(theta,masses,walls,envelope,materials):
         mass=next((m for m in masses if m.id==c.mass_ref),None)
         if mass is None:raise ValueError('Crown mass missing')
         candidates=[w for w in walls if w.mass_role==c.mass_ref and w.edge==c.edge and
-                    (abs(w.base_z+w.height_m-mass.roof_z)<1e-6 if c.anchor=='wall_top' else True)]
+                     (c.id not in wall_refs or w.facade.edge_id==wall_refs[c.id]) and
+                     (c.id in wall_refs or c.anchor!='wall_top' or abs(w.base_z+w.height_m-mass.roof_z)<1e-6)]
         if len(candidates)!=1:raise ValueError('Crown needs one unambiguous facade anchor')
         w=candidates[0];f=w.facade
         if c.anchor=='wall_top':
             if f.top_profile:raise ValueError('Crown duplicates existing facade top profile')
-            z=mass.roof_z+c.base_m
+            z=(w.base_z+w.height_m if c.id in wall_refs else mass.roof_z)+c.base_m
             if abs(c.base_m)>.02:raise ValueError('Wall-top crown must contact wall top')
         elif c.anchor=='facade':z=mass.base_z+c.base_m
         elif c.anchor=='opening_top':
@@ -71,9 +73,6 @@ def resolve_crowns(theta,masses,walls,envelope,materials):
             if not visible.buffer(1e-6).covers(support):raise ValueError('Crown anchor intersects hidden facade')
         for op in f.openings:
             if domain.intersection(box(op.u_m,op.v_m,op.u_m+op.width_m,op.v_m+op.height_m)).area>1e-7:raise ValueError('Crown overlaps existing opening')
-        for p in f.projections:
-            if p.kind in ('pediment','crown_triangular','crown_stepped') and domain.intersection(box(p.u_m,p.v_m,p.u_m+p.width_m,p.v_m+p.height_m)).area>1e-7:
-                raise ValueError('Crown duplicates legacy projection')
         coords=[a+t*x+n*y for x,y in ((c.u_m,-d.thickness_m),(c.u_m+c.width_m,-d.thickness_m),
                                      (c.u_m,d.projection_m+.06),(c.u_m+c.width_m,d.projection_m+.06))]
         for route in routes:
