@@ -1,0 +1,64 @@
+{
+  "id": "p5_base_and_rail",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "seed": 17,
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "site": {
+        "front_space": {
+          "front": "F1",
+          "depth": "medium",
+          "use": "garden"
+        },
+        "fence": {
+          "front": "F1",
+          "form": "base_and_rail",
+          "height": "low",
+          "cap": "tile"
+        },
+        "door": "left"
+      }
+    }
+  },
+  "expectations": {
+    "fence": "base_and_rail",
+    "parts": [
+      "fence_base",
+      "fence_rail",
+      "fence_cap"
+    ],
+    "details": true,
+    "evidence_required": false
+  }
+}

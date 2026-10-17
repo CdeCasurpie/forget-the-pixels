@@ -577,16 +577,16 @@ lenguaje de masas
 
 ## 11. Seguimiento
 
-Al crear este plan todas las fases estaban pendientes. Las fases 0–4 están cerradas: contrato `intent-v1` con 20 casos sintéticos, masas y vacíos, profundidad habitable, plantas interiores con núcleo vertical, circulación y conexiones, y envolvente constructiva con vanos métricos, carpintería, losas y soportes. El banco de evaluación ya se ejecutó durante el desarrollo; es regresión sintética, no evaluación ciega.
+Al crear este plan todas las fases estaban pendientes. Las fases 0–5 están cerradas: contrato `intent-v1` con 20 casos sintéticos, masas y vacíos, profundidad habitable, plantas interiores con núcleo vertical, circulación y conexiones, envolvente constructiva con vanos métricos, carpintería, losas y soportes, y acceso de planta baja con cerco/portones y transición de nivel. El banco de evaluación ya se ejecutó durante el desarrollo; es regresión sintética, no evaluación ciega.
 
-Entregables, comandos y relevo por fase: [`phase0`](house_grammar/experiments/phase0/README.md), [`phase1`](house_grammar/experiments/phase1/README.md), [`phase2`](house_grammar/experiments/phase2/README.md), [`phase3`](house_grammar/experiments/phase3/README.md) y [`phase4`](house_grammar/experiments/phase4/README.md). Contrato detallado: [`CONTRACT.md`](house_grammar/experiments/phase0/CONTRACT.md). Resultados reproducibles: [`results.json`](house_grammar/experiments/phase0/results.json).
+Entregables, comandos y relevo por fase: [`phase0`](house_grammar/experiments/phase0/README.md), [`phase1`](house_grammar/experiments/phase1/README.md), [`phase2`](house_grammar/experiments/phase2/README.md), [`phase3`](house_grammar/experiments/phase3/README.md), [`phase4`](house_grammar/experiments/phase4/README.md) y [`phase5`](house_grammar/experiments/phase5/README.md). Contrato detallado: [`CONTRACT.md`](house_grammar/experiments/phase0/CONTRACT.md). Resultados reproducibles: [`results.json`](house_grammar/experiments/phase0/results.json).
 
 - [x] Fase 0: lenguaje y banco de evaluación.
 - [x] Fase 1: masas y vacíos (91 pruebas; banco sintético 20 × 3 semillas).
 - [x] Fase 2: profundidad habitable (113 pruebas; 60 corridas y 8 comparaciones; accesos reservados para Fase 3).
 - [x] Fase 3: plantas interiores (160 pruebas; banco 20 × 3 semillas + 6 fijaciones × 3 semillas; núcleo, circulación, partición y conexiones).
 - [x] Fase 4: vanos y envolvente constructiva (200 pruebas; banco 20 × 3 semillas + 10 fijaciones × 3 semillas; 90 corridas, 6 comparaciones y GLB auditable por corrida).
-- [ ] Fase 5: cercos y accesos.
+- [x] Fase 5: cerco, accesos y primer piso (53 pruebas; banco 20 × 3 semillas + 11 fijaciones × 3 semillas; 93 corridas y 6 comparaciones; GLB combinado auditable).
 - [ ] Fase 6: cubiertas y azoteas.
 - [ ] Fase 7: interiores visibles.
 - [ ] Fase 8: acabados y carácter local.

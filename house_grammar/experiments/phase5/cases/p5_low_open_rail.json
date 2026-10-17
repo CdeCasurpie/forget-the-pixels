@@ -1,0 +1,71 @@
+{
+  "id": "p5_low_open_rail",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "seed": 17,
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "site": {
+        "front_space": {
+          "front": "F1",
+          "depth": "medium",
+          "use": "garden"
+        },
+        "fence": {
+          "front": "F1",
+          "form": "open",
+          "height": "low",
+          "cap": "plain"
+        },
+        "door": "left"
+      }
+    }
+  },
+  "expectations": {
+    "fence": "open",
+    "height_m": 1.15,
+    "gates": [
+      "pedestrian"
+    ],
+    "routes": [
+      "pedestrian"
+    ],
+    "parts": [
+      "fence_post",
+      "fence_rail",
+      "fence_bar"
+    ],
+    "details": true,
+    "evidence_required": false
+  }
+}

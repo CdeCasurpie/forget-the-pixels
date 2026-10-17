@@ -86,7 +86,7 @@ Las categorías cualitativas todavía no tienen constantes métricas: los rangos
 - Formas: `solid`, `open`, `base_and_rail`, `partial`.
 - Alturas: `low`, `high`. Tapa: `plain`, `tile`, `corrugated`.
 - `door`/`garage`: booleano o `left`/`center`/`right`. `door` admite además un objeto `{position, style?, material?}`; los materiales de puerta son `wood`, `metal` y `glass`, y no cambian el estilo del resto del edificio.
-- Con cerco, accesos en el cerramiento; sin cerco, en la envolvente. La conexión interior la resolverá la fase de acceso.
+- Con cerco, accesos en el cerramiento; sin cerco, en la envolvente. La Fase 5 enlaza el cerramiento con los vanos reales de planta baja.
 - Ausencia de cerco no impone retiro cero. Cerco alto no determina profundidad del espacio oculto.
 
 ### Fachadas
@@ -185,3 +185,32 @@ documentadas `site.door` como objeto y `windows.mechanism`.
 Véase `../phase4/README.md` para escenarios, comandos y limitaciones
 (envolvente sin CSG, piezas cerradas por sólido y saneadas para extrusión, y
 verificación ingenieril pendiente).
+
+## Extensión Fase 5
+
+`planning.site_access.plan_site` toma la envolvente y produce `site-plan-v1`:
+cerramiento físico en el frente declarado, portones y recorrido desde la calle
+hasta los **vanos reales** de planta baja. No amplía las claves de `intent-v1`:
+usa `site.front_space`, `site.fence`, `site.door` y `site.garage` ya existentes.
+
+- `fence: false` prohíbe el cerco. Con `front_space` explícito y `fence`
+  omitido, se completa una reja baja y abierta; sin espacio frontal declarado
+  se deja la entrada del edificio en el borde de la calle, sin cerco inventado.
+- `form` define la **geometría** (`solid`, `open`, `base_and_rail`, `partial`),
+  mientras `style` se hereda o se expresa localmente sin cambiar esa forma.
+  `height: low/high` produce 1.15/2.20 m. `cap` (`plain`, `tile`,
+  `corrugated`) se apoya en el muro o postes; un portón vehicular con remate
+  de teja/calamina recibe cubierta apoyada en sus jambas.
+- `site.door.position` y `site.garage` orientan los accesos; el plan de sitio
+  **no crea una puerta de edificio nueva**. Con cerco, las hojas viven en el
+  cerramiento; sin cerco, la entrada sigue siendo la del edificio. La planta
+  baja abierta conserva su umbral sin simular un muro ni una hoja.
+- Los itinerarios libres miden 0.82 m peatonal y 2.20 m vehicular. Si el
+  primer piso está elevado, se usa rampa de pendiente máxima 1:12 cuando hay
+  longitud disponible; en otro caso, escalones de contrahuella máxima 0.17 m.
+  Un desnivel sin carrera dentro del lote devuelve `access_run`.
+- Medidor, timbre y numeración son piezas ancladas junto al portón peatonal.
+  `site.fence` y `site.access_route` dejan de figurar en `pending` de esta
+  etapa; cubierta, muebles e ingeniería siguen pendientes.
+
+Véase `../phase5/README.md` para banco, comparaciones, auditoría y límites.

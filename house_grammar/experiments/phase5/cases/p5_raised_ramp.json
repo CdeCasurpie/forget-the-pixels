@@ -1,0 +1,58 @@
+{
+  "id": "p5_raised_ramp",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "seed": 17,
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0.2,
+        3.4,
+        6.2
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "site": {
+        "front_space": {
+          "front": "F1",
+          "depth": "deep",
+          "use": "garden"
+        },
+        "fence": false
+      }
+    }
+  },
+  "expectations": {
+    "no_fence": true,
+    "transitions": [
+      "ramp"
+    ],
+    "parts": [
+      "ramp"
+    ],
+    "evidence_required": false
+  }
+}

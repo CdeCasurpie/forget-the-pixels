@@ -1,0 +1,65 @@
+{
+  "id": "p5_covered_portal",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "seed": 17,
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "site": {
+        "front_space": {
+          "front": "F1",
+          "depth": "medium",
+          "use": "driveway"
+        },
+        "fence": {
+          "front": "F1",
+          "form": "solid",
+          "height": "high",
+          "cap": "corrugated"
+        },
+        "door": "left",
+        "garage": "right"
+      }
+    }
+  },
+  "expectations": {
+    "fence": "solid",
+    "cap": "corrugated",
+    "gates": [
+      "pedestrian",
+      "vehicle"
+    ],
+    "canopy": true,
+    "evidence_required": false
+  }
+}
