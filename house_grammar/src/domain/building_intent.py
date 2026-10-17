@@ -188,9 +188,14 @@ def _validate_intent(data):
         if 'alignment' in facade:_enum(facade['alignment'],('aligned','staggered','independent'),'facade.alignment')
         if 'windows' in facade:
             w=facade['windows']
-            _object(w,('count','proportion','distribution','style','frame'),('count',),'windows')
+            _object(w,('count','proportion','proportions','weights','distribution','style','frame'),('count',),'windows')
             _check(type(w['count']) is int and w['count']>=0,'windows.count','nonnegative integer required')
             if 'proportion' in w:_enum(w['proportion'],('horizontal','vertical','square','small_high'),'windows.proportion')
+            if 'proportions' in w:
+                _check(isinstance(w['proportions'],list) and len(w['proportions'])==w['count'],'windows.proportions','one proportion per window required')
+                for value in w['proportions']:_enum(value,('horizontal','vertical','square','small_high'),'windows.proportions')
+            if 'weights' in w:
+                _check(isinstance(w['weights'],list) and len(w['weights'])==w['count'] and all(_number(v) and v>0 for v in w['weights']),'windows.weights','one positive relative width per window required')
             if 'distribution' in w:_enum(w['distribution'],('balanced','left','right','grouped'),'windows.distribution')
             if 'style' in w:_enum(w['style'],STYLES,'windows.style')
             if 'frame' in w:_enum(w['frame'],('wood','metal','pvc'),'windows.frame')

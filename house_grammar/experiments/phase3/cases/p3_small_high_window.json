@@ -1,0 +1,72 @@
+{
+  "id": "p3_small_high_window",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          20
+        ],
+        [
+          0,
+          20
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1
+          ],
+          "windows": {
+            "count": 1,
+            "proportions": [
+              "small_high"
+            ],
+            "weights": [
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1
+      ],
+      "count": 1,
+      "unique_rooms": true
+    },
+    "window_kinds_allowed": [
+      "service",
+      "bathroom"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

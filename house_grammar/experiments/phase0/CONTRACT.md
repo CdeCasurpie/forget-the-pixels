@@ -143,3 +143,14 @@ cualitativos. No reciben coordenadas. `planning.articulation.plan_articulation`
 materializa estas operaciones junto con `loggia`, `recess`, `depth_rhythm` y
 `floor_shift`. Véase `../phase2/README.md` para dimensiones iniciales, semántica
 del plano base y reserva de accesos para Fase 3. El banco Fase 0 no se modifica.
+
+## Extensión Fase 3
+
+`planning.interiors.plan_interiors` consume el plan de articulación y produce
+`interior-plan-v1`: plantas esquemáticas con ambientes, puertas, ventanas,
+núcleo vertical y grafo de conexiones. No añade claves nuevas a `intent-v1`; la
+única entrada de habitabilidad es la ya declarada (`site.door`, `site.garage`,
+`facades[].windows` con `proportions`/`weights`/`distribution`). Los accesos
+reservados por Fase 2 se conectan a un único ambiente. Véase
+`../phase3/README.md` para plantillas del núcleo, anchos de circulación,
+partición condicionada por fachada y expectativas de las fijaciones.

@@ -133,8 +133,13 @@ def _cut(poly, op, frame, seed):
         cx=x0+w*(.35 if pos=='left' else .65 if pos=='right' else .5)
         cy=y0+d*(.68 if pos=='rear' else .5)
         cutter=box(cx-width/2,cy-height/2,cx+width/2,cy+height/2)
-        safe=p.buffer(-.6,join_style=2)
-        if not safe.covers(cutter):
+        # Prefer a ring wide enough for a 1.20 m room route around the courtyard;
+        # fall back to the historical 0.60 m clearance when the body is narrow.
+        found=False
+        for ring in (1.45,.6):
+            safe=p.buffer(-ring,join_style=2)
+            if safe.covers(cutter):
+                found=True;break
             # Fit the qualitative courtyard inside an existing wing. Preserve
             # its side and minimum size rather than deleting it for a U/L plan.
             candidates=[]
@@ -147,9 +152,10 @@ def _cut(poly, op, frame, seed):
                         q=box(xx-ww/2,yy-hh/2,xx+ww/2,yy+hh/2)
                         if safe.covers(q):candidates.append((-(ww*hh),abs(xx-cx)+abs(yy-cy),xx,yy,q))
                 if candidates:break
-            if not candidates:
-                fail('courtyard_clearance',op['id'],'courtyard leaves insufficient surrounding body')
-            cutter=min(candidates,key=lambda item:item[:4])[-1]
+            if candidates:
+                cutter=min(candidates,key=lambda item:item[:4])[-1];found=True;break
+        if not found:
+            fail('courtyard_clearance',op['id'],'courtyard leaves insufficient surrounding body')
         width=cutter.bounds[2]-cutter.bounds[0];depth=cutter.bounds[3]-cutter.bounds[1]
     else: # chamfer
         size=min(width,depth,w*.3)

@@ -1,0 +1,83 @@
+{
+  "id": "p3_connected_loggia",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "loggia",
+          "body": "main",
+          "front": "F1",
+          "position": "center",
+          "depth": "medium",
+          "floors": [
+            2
+          ]
+        }
+      ],
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1,
+            3
+          ],
+          "windows": {
+            "count": 2,
+            "proportion": "square"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1,
+        3
+      ],
+      "count": 2,
+      "unique_rooms": true
+    },
+    "loggia": {
+      "floor": 2
+    },
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}
