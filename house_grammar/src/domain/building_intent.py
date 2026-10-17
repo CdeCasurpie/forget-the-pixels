@@ -15,7 +15,7 @@ ORGANIZATIONS = ('compact', 'bar', 'L', 'U', 'courtyard', 'stepped',
                  'podium', 'attached', 'corner', 'incremental')
 OPERATIONS = ('setback', 'bite', 'courtyard', 'attach', 'advance', 'overhang',
               'open_ground', 'recess', 'depth_rhythm', 'floor_shift',
-              'chamfer', 'round_corner', 'crown', 'loggia')
+              'chamfer', 'round_corner', 'crown', 'loggia', 'portico', 'vestibule', 'balcony')
 STYLES = ('republicano', 'moderno', 'clasico', 'barroco', 'madera', 'mixed')
 POSITIONS = ('left', 'center', 'right', 'corner', 'rear', 'all')
 SIZES = ('shallow', 'medium', 'deep')
@@ -23,7 +23,8 @@ PHASE_ORDER = ('site', 'bodies', 'voids', 'storeys', 'planes', 'spaces', 'crowns
 OP_PHASE = dict(setback='storeys', bite='voids', courtyard='voids', attach='bodies',
                 advance='bodies', overhang='storeys', open_ground='spaces',
                 recess='planes', depth_rhythm='planes', floor_shift='planes',
-                chamfer='voids', round_corner='voids', crown='crowns', loggia='spaces')
+                 chamfer='voids', round_corner='voids', crown='crowns', loggia='spaces',
+                 portico='spaces', vestibule='spaces', balcony='spaces')
 
 
 @dataclass(frozen=True)

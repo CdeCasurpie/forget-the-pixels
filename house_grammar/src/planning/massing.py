@@ -217,9 +217,14 @@ def _surfaces(record, storeys, frames, frame):
     return result
 
 
-def plan_massing(request):
+def plan_massing(request, *, articulation=False):
     request=validate_intent(request.data if isinstance(request,IntentRequest) else request)
     data=request.data;c=data['context'];b=data['building'];seed=data.get('seed',0)
+    if articulation:
+        from planning.articulation import IMPLEMENTED as depth_kinds, apply_operation
+    else:
+        depth_kinds=frozenset()
+    implemented=IMPLEMENTED | depth_kinds
     parcel=Polygon(c['parcel']);frames=front_frames(c)
     primary=min(frames,key=lambda key:(-frames[key]['length_m'],key));frame=frames[primary]
     levels=c['levels_m'];total=len(levels)-1
@@ -279,18 +284,20 @@ def plan_massing(request):
             rows[(body['id'],floor)]={'poly':poly,'kind':'enclosed'}
     for opid in operation_order(request):
         op=ops[opid];kind=op['kind'];body=op['body'];oframe=frames.get(op.get('front'),frame)
-        if kind not in IMPLEMENTED:
+        if kind not in implemented:
             pending.append(dict(id=opid,kind=kind,path='building.operations',reason='phase_2_or_later'))
             records.append(dict(id=opid,kind=kind,status='pending'))
             continue
-        if any(ops[ref]['kind'] not in IMPLEMENTED for ref in op.get('after',[])):
+        if any(ops[ref]['kind'] not in implemented for ref in op.get('after',[])):
             fail('pending_dependency',opid,'mass operation depends on a future-stage operation')
         floors=op.get('floors',sorted(f for bid,f in rows if bid==body))
         if kind=='open_ground' and 'floors' not in op:floors=[min(floors)]
         record=dict(id=opid,kind=kind,status='applied',floors=[])
         for floor in floors:
             row=rows[(body,floor)];before=row['poly'];params={}
-            if kind in ('setback','bite','courtyard','chamfer'):
+            if kind in depth_kinds:
+                after,params=apply_operation(row,op,oframe,parcel,floor,levels,seed,c.get('ground_z_m',min(0.,levels[0])))
+            elif kind in ('setback','bite','courtyard','chamfer'):
                 after,cut,params=_cut(before,op,oframe,seed)
             elif kind=='attach':
                 reserve=attachment_reserves[(opid,floor)]
@@ -322,6 +329,7 @@ def plan_massing(request):
         record=dict(id=f'{body}/floor{floor}',body=body,floor=floor,kind=row['kind'],
                     bottom_m=levels[floor-1],top_m=levels[floor],geometry=encode(poly))
         storeys.append(record)
+        if row.get('spaces'):record['spaces']=row['spaces']
         if floor==1 and levels[0]>ground+EPS and row['kind']=='enclosed':
             supports.append(dict(id=record['id']+'/base',kind='plinth',geometry=encode(poly),bottom_m=ground,top_m=levels[0]))
         if row['kind']=='open':
@@ -388,7 +396,7 @@ def plan_massing(request):
             'free_ground_m2':free.area,'covered_free_m2':covered_free.area,
             'uncovered_m2':uncovered.area,
             'area_balance_error_m2':abs(occupied.area+free.area-parcel.area)}
-    return MassingPlan('massing-plan-v1',data,frames,storeys,supports,
+    return MassingPlan('articulation-plan-v1' if articulation else 'massing-plan-v1',data,frames,storeys,supports,
                       dict(reservations=site_reservations,occupied=encode(occupied),free=encode(free),
                            covered_free=encode(covered_free),uncovered=encode(uncovered)),
                       records,decisions,pending,checks)

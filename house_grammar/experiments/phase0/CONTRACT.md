@@ -134,3 +134,12 @@ Son **hipótesis iniciales de diseño**. No se ha medido su frecuencia real ni s
 - No certifica coherencia estructural ni habitabilidad.
 - Los casos de evaluación son sintéticos y aún no constituyen una evaluación visual independiente sobre fotos reales.
 - Ampliar el lenguaje con casos y pruebas durante las fases posteriores; no añadir claves ignoradas silenciosamente.
+
+## Extensión Fase 2
+
+Se añaden operaciones `portico`, `vestibule` y `balcony` en la fase `spaces`,
+con el mismo vocabulario de cuerpo, frente, pisos, posición, ancho y profundidad
+cualitativos. No reciben coordenadas. `planning.articulation.plan_articulation`
+materializa estas operaciones junto con `loggia`, `recess`, `depth_rhythm` y
+`floor_shift`. Véase `../phase2/README.md` para dimensiones iniciales, semántica
+del plano base y reserva de accesos para Fase 3. El banco Fase 0 no se modifica.

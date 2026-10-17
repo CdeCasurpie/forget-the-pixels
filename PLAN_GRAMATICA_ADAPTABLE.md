@@ -1,6 +1,6 @@
 # Plan de rediseño: gramática arquitectónica adaptable de Barranco
 
-**Estado:** Fases 0 y 1 implementadas y verificadas; Fase 2 en desarrollo. Véase `house_grammar/experiments/phase1/README.md`.
+**Estado:** Fases 0–2 implementadas y verificadas en el banco sintético. Véanse `house_grammar/experiments/phase1/README.md` y `house_grammar/experiments/phase2/README.md`. Accesos interiores reservados para Fase 3.
 **Objetivo:** generar casas plausibles, detalladas y habitadas de Barranco a partir de una descripción exterior compacta, completando algorítmicamente lo que no se ve.
 **Alcance:** nuevo contrato, planificación espacial, generación procedural y materialización. No se exige compatibilidad con el sistema anterior.
 
@@ -583,7 +583,7 @@ Entregables, comandos y relevo: [`house_grammar/experiments/phase0/README.md`](h
 
 - [x] Fase 0: lenguaje y banco de evaluación.
 - [x] Fase 1: masas y vacíos (91 pruebas; banco sintético 20 × 3 semillas).
-- [ ] Fase 2: profundidad habitable.
+- [x] Fase 2: profundidad habitable (113 pruebas; 60 corridas y 8 comparaciones; accesos reservados para Fase 3).
 - [ ] Fase 3: plantas interiores.
 - [ ] Fase 4: vanos y envolvente.
 - [ ] Fase 5: cercos y accesos.

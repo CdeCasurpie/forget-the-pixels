@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import trimesh
-from shapely.geometry import shape
+from shapely.geometry import shape, Point
 
 from planning.massing import polygons
 
@@ -13,17 +13,35 @@ COLORS=((208,171,129,255),(129,173,192,255),(184,190,142,255),(180,149,184,255))
 
 
 def solids(plan):
+    if plan.version=='articulation-plan-v1':
+        from planning.articulation import solid_sections
+        from planning.layered_mesh import layered_mesh
+        sections=[section for row in plan.storeys for section in solid_sections(row)]
+        sections.extend((shape(s['geometry']),s['bottom_m'],s['top_m']) for s in plan.supports if s['kind']!='cantilever')
+        mesh=layered_mesh(sections)
+        colors=np.tile(np.asarray(COLORS[0]),(len(mesh.faces),1))
+        # Diagnostic shading distinguishes recessed space boundaries even in
+        # the unlit Matplotlib preview and a flat-material GLB viewer.
+        for row in plan.storeys:
+            for space in row.get('spaces',[]):
+                boundary=shape(space['geometry']).union(shape(space['access']['geometry'])).buffer(1e-6)
+                for i,center in enumerate(mesh.triangles_center):
+                    if row['bottom_m']<center[2]<row['top_m'] and boundary.covers(Point(center[:2])):
+                        colors[i,:3]=(np.asarray(COLORS[0][:3])*.62).astype(int)
+        mesh.visual.face_colors=colors
+        return [('building/exterior',mesh)]
     bodies=sorted({s['body'] for s in plan.storeys})
     meshes=[]
     for s in plan.storeys:
-        bottom=s['bottom_m'] if s['kind']=='enclosed' else s['top_m']-.18
-        for i,poly in enumerate(polygons(shape(s['geometry']))):
-            mesh=trimesh.creation.extrude_polygon(poly,s['top_m']-bottom,engine='earcut')
-            mesh.apply_translation([0,0,bottom])
-            color=np.array(COLORS[bodies.index(s['body'])%len(COLORS)])
-            color[:3]=np.clip(color[:3]*(1-.045*(s['floor']-1)),0,255)
-            mesh.visual.face_colors=color
-            meshes.append((s['id']+f'/{i}',mesh))
+        from planning.articulation import solid_sections
+        for section,(geometry,bottom,top) in enumerate(solid_sections(s)):
+            for i,poly in enumerate(polygons(geometry)):
+                mesh=trimesh.creation.extrude_polygon(poly,top-bottom,engine='earcut')
+                mesh.apply_translation([0,0,bottom])
+                color=np.array(COLORS[bodies.index(s['body'])%len(COLORS)])
+                color[:3]=np.clip(color[:3]*(1-.045*(s['floor']-1)),0,255)
+                mesh.visual.face_colors=color
+                meshes.append((s['id']+f'/{section}/{i}',mesh))
     for s in plan.supports:
         if s['kind']=='cantilever':continue  # already part of the mass
         for i,poly in enumerate(polygons(shape(s['geometry']))):
@@ -50,11 +68,13 @@ def export_plan(plan, output, preview=True):
             'checks':plan.checks,'pending':plan.pending,
             'scope':'solid massing study, not a detailed or boolean-unified building'}
     (output/'summary.json').write_text(json.dumps(report,indent=2)+'\n')
-    if preview:render(plan,meshes,output/'preview.png')
+    if preview:
+        render(plan,meshes,output/'preview.png')
+        if plan.version=='articulation-plan-v1':render(plan,meshes,output/'front.png',view=(8,-90))
     return report
 
 
-def render(plan, meshes, output):
+def render(plan, meshes, output, view=(27,-125)):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -72,7 +92,7 @@ def render(plan, meshes, output):
         for row in plan.storeys:
             if row['floor']!=floor:continue
             color=np.array(COLORS[bodies.index(row['body'])%len(COLORS)])/255
-            for poly in polygons(shape(row['geometry'])):
+            for poly in polygons(shape(row.get('enclosed_geometry',row['geometry']))):
                 poly=orient(poly)
                 verts=[];codes=[]
                 for ring in [poly.exterior,*poly.interiors]:
@@ -81,6 +101,12 @@ def render(plan, meshes, output):
                 ax.add_patch(PathPatch(PlotPath(verts,codes),facecolor=color,edgecolor='#444444',
                                        alpha=.35 if row['kind']=='open' else .9))
                 point=poly.representative_point();ax.text(point.x,point.y,row['body'],ha='center',fontsize=8)
+            for space in row.get('spaces',[]):
+                for poly in polygons(shape(space['geometry'])):
+                    x,y=poly.exterior.xy;ax.fill(x,y,color='#73b7c7',alpha=.45)
+                if space['protection']:
+                    for poly in polygons(shape(space['protection'])):
+                        x,y=poly.exterior.xy;ax.fill(x,y,color='#485b63')
         for support in plan.supports:
             if support['kind']=='column' and abs(support['bottom_m']-plan.request['context']['levels_m'][floor-1])<1e-6:
                 for poly in polygons(shape(support['geometry'])):
@@ -96,12 +122,15 @@ def render(plan, meshes, output):
         light=np.array([-1.,-2.,3.]);light/=np.linalg.norm(light)
         rgba=mesh.visual.face_colors.astype(float)/255
         rgba[:,:3]*=(.65+.35*np.maximum(0,mesh.face_normals@light))[:,None]
-        triangles.extend(mesh.triangles);colors.extend(rgba)
+        direction=np.array([np.cos(np.deg2rad(view[0]))*np.cos(np.deg2rad(view[1])),
+                            np.cos(np.deg2rad(view[0]))*np.sin(np.deg2rad(view[1])),np.sin(np.deg2rad(view[0]))])
+        visible=mesh.face_normals@direction>1e-8
+        triangles.extend(mesh.triangles[visible]);colors.extend(rgba[visible])
     # One collection sorts faces globally; one per storey can paint a hidden
     # rear triangle over a front wall and misrepresent the solid geometry.
-    ax.add_collection3d(Poly3DCollection(np.asarray(triangles),facecolors=np.asarray(colors),edgecolors='none'))
+    ax.add_collection3d(Poly3DCollection(np.asarray(triangles),facecolors=np.asarray(colors),edgecolors='none',antialiased=False))
     vertices=np.vstack([m.vertices for _,m in meshes]);low=vertices.min(axis=0);high=vertices.max(axis=0)
     ax.set_xlim(low[0],high[0]);ax.set_ylim(low[1],high[1]);ax.set_zlim(low[2],high[2])
-    ax.set_box_aspect(np.maximum(high-low,.1));ax.view_init(elev=27,azim=-125)
+    ax.set_box_aspect(np.maximum(high-low,.1));ax.view_init(elev=view[0],azim=view[1])
     ax.set_title('Maqueta volumetrica');ax.set_axis_off()
     fig.tight_layout();fig.savefig(output,dpi=120);plt.close(fig)
