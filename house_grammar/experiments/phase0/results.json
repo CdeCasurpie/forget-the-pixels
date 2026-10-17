@@ -1,0 +1,182 @@
+{
+  "scope": "intent_contract_only",
+  "geometry_generated": false,
+  "cases": [
+    {
+      "id": "15_upper_shift",
+      "split": "evaluation",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "16_irregular_bite",
+      "split": "evaluation",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "17_corrugated_addition",
+      "split": "evaluation",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "18_mixed_use",
+      "split": "evaluation",
+      "valid": true,
+      "order": [],
+      "evidence_present": false
+    },
+    {
+      "id": "19_corner_loggia",
+      "split": "evaluation",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "20_complex_combination",
+      "split": "evaluation",
+      "valid": true,
+      "order": [
+        "retreat",
+        "op1",
+        "loggia",
+        "crown"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "01_compact_narrow",
+      "split": "tuning",
+      "valid": true,
+      "order": [],
+      "evidence_present": false
+    },
+    {
+      "id": "02_wide_bar",
+      "split": "tuning",
+      "valid": true,
+      "order": [],
+      "evidence_present": false
+    },
+    {
+      "id": "03_corner",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "04_high_fence",
+      "split": "tuning",
+      "valid": true,
+      "order": [],
+      "evidence_present": false
+    },
+    {
+      "id": "05_open_setback",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "06_courtyard",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "07_left_bite",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "08_upper_setback",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "09_loggia",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "10_depth_rhythm",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "11_open_ground",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "12_mixed_styles",
+      "split": "tuning",
+      "valid": true,
+      "order": [],
+      "evidence_present": false
+    },
+    {
+      "id": "13_L_rear_wing",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    },
+    {
+      "id": "14_U_courtyard",
+      "split": "tuning",
+      "valid": true,
+      "order": [
+        "op1"
+      ],
+      "evidence_present": false
+    }
+  ],
+  "passed": 20,
+  "tuning": 14,
+  "evaluation": 6
+}

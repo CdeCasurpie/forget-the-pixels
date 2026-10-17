@@ -1,0 +1,61 @@
+{
+  "id": "03_corner",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0,
+        "F2": 3
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "corner",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "chamfer",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium"
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "corner",
+    "operations": [
+      "chamfer"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

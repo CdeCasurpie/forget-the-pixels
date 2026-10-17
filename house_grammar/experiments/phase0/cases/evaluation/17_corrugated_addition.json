@@ -1,0 +1,70 @@
+{
+  "id": "17_corrugated_addition",
+  "split": "evaluation",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "incremental",
+      "profile": "barranco_incremental",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "attach",
+          "body": "main",
+          "front": "F1",
+          "position": "rear",
+          "depth": "medium"
+        }
+      ],
+      "roof": {
+        "cover": "corrugated",
+        "objects": [
+          "water_tank"
+        ]
+      },
+      "finishes": {
+        "sides": "brick",
+        "front": "mixed"
+      }
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "incremental",
+    "operations": [
+      "attach"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

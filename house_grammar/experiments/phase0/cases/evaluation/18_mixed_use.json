@@ -1,0 +1,52 @@
+{
+  "id": "18_mixed_use",
+  "split": "evaluation",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "bar",
+      "profile": "barranco_mixed_use",
+      "site": {
+        "door": true,
+        "garage": false
+      }
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "bar",
+    "operations": [],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

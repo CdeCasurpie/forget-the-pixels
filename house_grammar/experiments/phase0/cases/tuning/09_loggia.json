@@ -1,0 +1,63 @@
+{
+  "id": "09_loggia",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "compact",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "loggia",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium",
+          "floors": [
+            3
+          ]
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "compact",
+    "operations": [
+      "loggia"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

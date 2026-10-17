@@ -1,0 +1,65 @@
+{
+  "id": "12_mixed_styles",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "incremental",
+      "profile": "barranco_casona",
+      "style": "republicano",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            2
+          ],
+          "style": "moderno",
+          "windows": {
+            "count": 2,
+            "style": "moderno",
+            "frame": "metal",
+            "proportion": "horizontal"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "incremental",
+    "operations": [],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "04_high_fence",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "compact",
+      "profile": "barranco_residential",
+      "site": {
+        "front_space": {
+          "front": "F1",
+          "depth": "medium",
+          "use": "patio"
+        },
+        "fence": {
+          "front": "F1",
+          "form": "solid",
+          "height": "high",
+          "cap": "tile"
+        },
+        "door": "left",
+        "garage": "right"
+      }
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "compact",
+    "operations": [],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

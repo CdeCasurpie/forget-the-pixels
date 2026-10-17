@@ -1,0 +1,79 @@
+{
+  "id": "19_corner_loggia",
+  "split": "evaluation",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0,
+        "F2": 3
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "corner",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "loggia",
+          "body": "main",
+          "front": "F2",
+          "position": "left",
+          "depth": "medium",
+          "floors": [
+            3
+          ]
+        }
+      ],
+      "facades": [
+        {
+          "body": "main",
+          "front": "F2",
+          "floors": [
+            1,
+            2
+          ],
+          "alignment": "staggered",
+          "windows": {
+            "count": 2,
+            "proportion": "vertical"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "corner",
+    "operations": [
+      "loggia"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

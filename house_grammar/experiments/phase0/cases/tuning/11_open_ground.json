@@ -1,0 +1,60 @@
+{
+  "id": "11_open_ground",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "podium",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "open_ground",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium"
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "podium",
+    "operations": [
+      "open_ground"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

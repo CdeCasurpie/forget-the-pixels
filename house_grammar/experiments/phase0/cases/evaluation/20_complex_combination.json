@@ -1,0 +1,128 @@
+{
+  "id": "20_complex_combination",
+  "split": "evaluation",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0,
+        "F2": 3
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "attached",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "depth_rhythm",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium",
+          "weights": [
+            1,
+            2,
+            1
+          ],
+          "planes": [
+            "base",
+            "recessed",
+            "projecting"
+          ]
+        },
+        {
+          "id": "retreat",
+          "kind": "setback",
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            3
+          ],
+          "depth": "medium"
+        },
+        {
+          "id": "loggia",
+          "kind": "loggia",
+          "body": "main",
+          "front": "F2",
+          "floors": [
+            2
+          ],
+          "after": [
+            "op1"
+          ]
+        },
+        {
+          "id": "crown",
+          "kind": "crown",
+          "body": "main",
+          "front": "F1",
+          "position": "center",
+          "after": [
+            "retreat"
+          ]
+        }
+      ],
+      "bodies": [
+        {
+          "id": "main",
+          "floors": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "id": "wing",
+          "floors": [
+            1
+          ],
+          "position": "rear",
+          "width": "narrow"
+        }
+      ],
+      "roof": {
+        "cover": "mixed",
+        "shade": true
+      }
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "attached",
+    "operations": [
+      "depth_rhythm",
+      "setback",
+      "loggia",
+      "crown"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

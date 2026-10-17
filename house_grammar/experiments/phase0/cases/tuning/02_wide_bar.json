@@ -1,0 +1,47 @@
+{
+  "id": "02_wide_bar",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          18,
+          12
+        ],
+        [
+          0,
+          12
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6
+      ]
+    },
+    "building": {
+      "organization": "bar",
+      "profile": "barranco_residential"
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "bar",
+    "operations": [],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

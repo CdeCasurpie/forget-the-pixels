@@ -1,0 +1,60 @@
+{
+  "id": "13_L_rear_wing",
+  "split": "tuning",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "L",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "attach",
+          "body": "main",
+          "front": "F1",
+          "position": "rear",
+          "depth": "medium"
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "L",
+    "operations": [
+      "attach"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

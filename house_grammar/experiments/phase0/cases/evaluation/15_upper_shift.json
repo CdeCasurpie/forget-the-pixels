@@ -1,0 +1,63 @@
+{
+  "id": "15_upper_shift",
+  "split": "evaluation",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "attached",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "floor_shift",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium",
+          "floors": [
+            3
+          ]
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "organization": "attached",
+    "operations": [
+      "floor_shift"
+    ],
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}
