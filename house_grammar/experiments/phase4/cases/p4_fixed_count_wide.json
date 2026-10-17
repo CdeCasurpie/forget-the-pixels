@@ -1,0 +1,81 @@
+{
+  "id": "p4_fixed_count_wide",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          13
+        ],
+        [
+          0,
+          13
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "bar",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1,
+            2
+          ],
+          "windows": {
+            "count": 3,
+            "proportions": [
+              "horizontal",
+              "vertical",
+              "small_high"
+            ],
+            "weights": [
+              1.6,
+              1.0,
+              0.9
+            ],
+            "distribution": "balanced"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1,
+        2
+      ],
+      "count": 3,
+      "proportions": [
+        "horizontal",
+        "vertical",
+        "small_high"
+      ]
+    },
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

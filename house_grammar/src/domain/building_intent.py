@@ -172,6 +172,13 @@ def _validate_intent(data):
         if 'cap' in fence:_enum(fence['cap'],('plain','tile','corrugated'),'site.fence.cap')
     for key in ('door','garage'):
         if key in site:
+            if key=='door' and isinstance(site[key],dict):
+                door=site[key]
+                _object(door,('position','style','material'),(),'site.door')
+                if 'position' in door:_enum(door['position'],('left','center','right'),'site.door.position')
+                if 'style' in door:_enum(door['style'],STYLES,'site.door.style')
+                if 'material' in door:_enum(door['material'],('wood','metal','glass'),'site.door.material')
+                continue
             _check(type(site[key]) is bool or site[key] in ('left','center','right'), 'site.'+key,'boolean or horizontal position required')
     facade_scopes=set()
     for facade in _list(b.get('facades',[]),'facades'):
@@ -188,7 +195,7 @@ def _validate_intent(data):
         if 'alignment' in facade:_enum(facade['alignment'],('aligned','staggered','independent'),'facade.alignment')
         if 'windows' in facade:
             w=facade['windows']
-            _object(w,('count','proportion','proportions','weights','distribution','style','frame'),('count',),'windows')
+            _object(w,('count','proportion','proportions','weights','distribution','style','frame','mechanism'),('count',),'windows')
             _check(type(w['count']) is int and w['count']>=0,'windows.count','nonnegative integer required')
             if 'proportion' in w:_enum(w['proportion'],('horizontal','vertical','square','small_high'),'windows.proportion')
             if 'proportions' in w:
@@ -199,6 +206,7 @@ def _validate_intent(data):
             if 'distribution' in w:_enum(w['distribution'],('balanced','left','right','grouped'),'windows.distribution')
             if 'style' in w:_enum(w['style'],STYLES,'windows.style')
             if 'frame' in w:_enum(w['frame'],('wood','metal','pvc'),'windows.frame')
+            if 'mechanism' in w:_enum(w['mechanism'],('guillotine','sliding','casement','awning','fixed'),'windows.mechanism')
     roof=b.get('roof',{})
     _object(roof,('cover','objects','shade'),(),'roof')
     if 'cover' in roof:_enum(roof['cover'],('slab','corrugated','tile','mixed'),'roof.cover')

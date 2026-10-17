@@ -123,6 +123,9 @@ def _facade_slots(massing, floor, frame, blocked=None):
                 if distribution=='left':u=.05+u*.65
                 elif distribution=='right':u=.30+u*.65
                 elif distribution=='grouped':u=.2+u*.6
+                if facade.get('alignment')=='staggered':
+                    # Alternating floors of the SAME front, bounded within its cell.
+                    u+=(-1 if floor%2 else 1)*.10/n
                 center=wall.interpolate(u,normalized=True)
                 proportion=windows.get('proportions',[windows.get('proportion','vertical')]*count)[index]
                 weight=windows.get('weights',[1.]*count)[index]
@@ -145,6 +148,7 @@ def _facade_slots(massing, floor, frame, blocked=None):
 def _entry(massing, envelope, frame, floor, garage=None, protected=()):
     site=massing.request['building'].get('site',{})
     position=site.get('door','left')
+    if isinstance(position,dict):position=position.get('position','left')
     if position is False:fail('entry_absent','building.site.door','residential circulation needs an entrance')
     candidates=[]
     for row in massing.storeys:

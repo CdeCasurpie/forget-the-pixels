@@ -1,0 +1,68 @@
+{
+  "id": "p4_low_ceiling",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        2.7,
+        5.4
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1,
+            2
+          ],
+          "windows": {
+            "count": 2,
+            "proportion": "vertical"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1,
+        2
+      ],
+      "count": 2
+    },
+    "heights": {
+      "max_window_head_m": 2.320001
+    },
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

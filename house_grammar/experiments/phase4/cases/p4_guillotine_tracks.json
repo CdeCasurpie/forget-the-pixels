@@ -1,0 +1,78 @@
+{
+  "id": "p4_guillotine_tracks",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1,
+            2
+          ],
+          "windows": {
+            "count": 2,
+            "proportion": "horizontal",
+            "mechanism": "guillotine",
+            "frame": "wood"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1,
+        2
+      ],
+      "count": 2
+    },
+    "mechanisms": {
+      "present": [
+        "guillotine"
+      ]
+    },
+    "materials": {
+      "present": [
+        "wood"
+      ]
+    },
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

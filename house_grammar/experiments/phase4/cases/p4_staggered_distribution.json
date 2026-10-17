@@ -1,0 +1,69 @@
+{
+  "id": "p4_staggered_distribution",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1,
+            2
+          ],
+          "alignment": "staggered",
+          "windows": {
+            "count": 2,
+            "proportion": "vertical",
+            "distribution": "left"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1,
+        2
+      ],
+      "count": 2
+    },
+    "staggered": true,
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

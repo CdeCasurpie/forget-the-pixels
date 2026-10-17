@@ -1,0 +1,76 @@
+{
+  "id": "p4_completion_upper_floor",
+  "source": "synthetic_design_fixture",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "profile": "barranco_residential",
+      "organization": "compact",
+      "facades": [
+        {
+          "body": "main",
+          "front": "F1",
+          "floors": [
+            1
+          ],
+          "windows": {
+            "count": 2,
+            "proportion": "vertical"
+          }
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "expectations": {
+    "windows": {
+      "floors": [
+        1
+      ],
+      "count": 2
+    },
+    "no_completion": {
+      "floors": [
+        1
+      ]
+    },
+    "completion": {
+      "floors": [
+        2,
+        3
+      ],
+      "min": 1
+    },
+    "evidence_required": false,
+    "geometry_verified": false
+  }
+}

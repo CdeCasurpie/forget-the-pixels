@@ -39,6 +39,7 @@ Fuente ejecutable: `house_grammar/src/domain/building_intent.py`. Esta entrada e
 | `site.garage: false` | No generar cochera |
 | `site.door: true` | Generar puerta y decidir ubicación |
 | `site.door: "left"` | Generar puerta a la izquierda |
+| `site.door: {position, style?, material?}` | Puerta con diseño local (`style` y `material` independientes del estilo global) |
 | `windows.count: 0` | Cero ventanas en el ámbito declarado |
 | `roof.objects: []` | Ausencia explícita de objetos de azotea |
 | `roof.objects` omitido | Poblar automáticamente |
@@ -84,7 +85,7 @@ Las categorías cualitativas todavía no tienen constantes métricas: los rangos
 - `fence`: `false` o `{front, form, height?, style?, cap?}`.
 - Formas: `solid`, `open`, `base_and_rail`, `partial`.
 - Alturas: `low`, `high`. Tapa: `plain`, `tile`, `corrugated`.
-- `door`/`garage`: booleano o `left`/`center`/`right`.
+- `door`/`garage`: booleano o `left`/`center`/`right`. `door` admite además un objeto `{position, style?, material?}`; los materiales de puerta son `wood`, `metal` y `glass`, y no cambian el estilo del resto del edificio.
 - Con cerco, accesos en el cerramiento; sin cerco, en la envolvente. La conexión interior la resolverá la fase de acceso.
 - Ausencia de cerco no impone retiro cero. Cerco alto no determina profundidad del espacio oculto.
 
@@ -93,7 +94,7 @@ Las categorías cualitativas todavía no tienen constantes métricas: los rangos
 Cada entrada exige `body`, `front`, `floors`. No permitir dos entradas ambiguas para el mismo cuerpo/frente/piso; agrupar o dividir explícitamente sus ámbitos.
 
 - `alignment`: `aligned`, `staggered`, `independent`.
-- `windows`: `count` entero no negativo; proporción opcional `horizontal`, `vertical`, `square`, `small_high`; distribución `balanced`, `left`, `right`, `grouped`; material de marco `wood`, `metal`, `pvc`; estilo local opcional.
+- `windows`: `count` entero no negativo; proporción opcional `horizontal`, `vertical`, `square`, `small_high`; distribución `balanced`, `left`, `right`, `grouped`; material de marco `wood`, `metal`, `pvc`; mecanismo opcional `guillotine`, `sliding`, `casement`, `awning`, `fixed`; estilo local opcional.
 - El conteo se aplica a **cada piso** del ámbito, no al total del grupo.
 - Un plano con cero ventanas no obliga a eliminar puertas ni detalles.
 - Máscaras por sector y grupos secundarios se incorporarán con pruebas al ampliar el contrato; no fingir que ya existen.
@@ -154,3 +155,33 @@ núcleo vertical y grafo de conexiones. No añade claves nuevas a `intent-v1`; l
 reservados por Fase 2 se conectan a un único ambiente. Véase
 `../phase3/README.md` para plantillas del núcleo, anchos de circulación,
 partición condicionada por fachada y expectativas de las fijaciones.
+
+## Extensión Fase 4
+
+`planning.envelope.plan_envelope` consume el plan interior y produce
+`envelope-plan-v1`: vanos métricos, muros y particiones huecas, losas por nivel,
+soportes y carpintería. No añade claves nuevas a `intent-v1`; reconoce las ya
+documentadas `site.door` como objeto y `windows.mechanism`.
+
+- Antepechos por uso: `small_high` 1.50 m; baño/servicio 1.20; cocina-comedor
+  1.05; sala 0.70; tienda 0.60; resto 0.90. Dintel libre 0.20 m sobre el vano.
+- Altura de vano y proporción se resuelven juntas. Si la banda solicitada no
+  cabe en la altura útil, el vano se limita al máximo disponible y la adaptación
+  queda como decisión explícita (`requested proportion adapted...`).
+- Mecanismo derivado si se omite: `vertical` → `casement`, `horizontal` →
+  `sliding`, `small_high` → `awning`; cochera `sliding` + `metal`; puerta
+  peatonal `hinged`. Estilo local hereda del cuerpo y del estilo global.
+- Completado activo: una ventana por ambiente perimetral habitable en ámbitos
+  no declarados; los frentes nombrados tienen prioridad y las aristas sobre el
+  borde del lote son muros medieros. `facades: []` desactiva el completado.
+  Los pisos ya declarados con `windows` quedan cerrados.
+- Las decisiones (`decisions`) usan un vocabulario auditado: proporción
+  adaptada, cabeza limitada por losa y dintel, completado en frente no
+  especificado, desplazamiento a lo largo del mismo muro y revelas fusionadas
+  en un muro doble delgado. Lo pendiente queda en `pending` (`roof`,
+  `site.fence`, `site.access_route`, `interior.furniture`); una planta baja
+  abierta difiere la puerta de calle hasta la fase de acceso.
+
+Véase `../phase4/README.md` para escenarios, comandos y limitaciones
+(envolvente sin CSG, piezas cerradas por sólido y saneadas para extrusión, y
+verificación ingenieril pendiente).
