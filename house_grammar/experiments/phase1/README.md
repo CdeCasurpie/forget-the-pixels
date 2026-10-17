@@ -1,5 +1,8 @@
 # Fase 1 — masas y vacíos
 
+Maquetas definitivas: `apps/experimento_paralelizacion/gramatica_adaptable/fase_1/resultados/`.
+Corridas previas: `fase_1/archivo/` dentro de ese mismo directorio de experimentos.
+
 Revisión de cierre: 91 pruebas del contrato y planificador pasan. El banco
 sintético de 20 casos sobre semillas 7, 17 y 81 genera 60 planes sin conflicto;
 todos sus componentes tienen volumen positivo, winding consistente y son

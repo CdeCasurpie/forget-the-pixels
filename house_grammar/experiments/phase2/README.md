@@ -30,6 +30,12 @@ Los accesos son huecos/pockets de 0.90 × 2.10 m conectados al cuerpo con estado
 Fase 3 deberá consumir esas reservas. Tampoco hay carpinterías de puerta aún.
 Los apoyos siguen siendo conceptuales, no cálculo estructural.
 
+**Limitación de autocompletado:** esta fase construye articulaciones solicitadas;
+todavía no decide añadir logias, balcones o ritmos cuando se omiten. Solo 5 de
+los 20 casos originales solicitan articulaciones de Fase 2. Las comparaciones
+las piden explícitamente. Aprobar geometría no demuestra variedad arquitectónica
+autocompletada; ese objetivo general sigue pendiente.
+
 ## Verificación
 
 113 pruebas pasan (contrato, masas y articulación). Banco sintético congelado:
@@ -42,8 +48,9 @@ además de pórtico. No equivale a validación con fotografías de casas reales.
 La comparación adicional detectó y corrigió un encuentro no manifold en PB:
 la losa ahora continúa bajo el cuerpo y los retornos, en vez de tocar el muro
 solo por una arista. Las ocho variantes finales pasan los tres checks de malla.
-Entregas locales: `apps/experimento_paralelizacion/gramatica_adaptable/fase2_cierre/`
-y `fase2_comparacion_cierre/`. Resumen reproducible con hashes en `results.json`.
+Entregas locales: `apps/experimento_paralelizacion/gramatica_adaptable/fase_2/resultados/`
+y `apps/experimento_paralelizacion/gramatica_adaptable/fase_2/comparaciones/`.
+Las corridas previas están en `fase_2/archivo/`. Resumen reproducible con hashes en `results.json`.
 
 ```bash
 PYTHONPATH=house_grammar/src python3 -m pytest house_grammar/tests/test_building_intent.py house_grammar/tests/test_intent_massing.py house_grammar/tests/test_intent_articulation.py -q
