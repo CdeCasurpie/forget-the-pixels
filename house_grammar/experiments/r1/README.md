@@ -1,8 +1,13 @@
 # R1 — Integración de las masas nuevas con el materializador de catálogo
 
-**Estado:** completada. Cambios en `src/`: nuevo contrato `domain/surfaces.py`;
+**Estado:** puente implementado y cierre técnico cerrado (anclaje de superficie,
+vecindad entre pisos, estilo local, paleta y cobertura geométrica). La aceptación
+arquitectónica sigue abierta.
+Véase [auditoría y diseño de R2](AUDITORIA_Y_R2.md): las imágenes prueban conexión
+con catálogo, no una composición arquitectónica aceptada. Cambios en `src/`: nuevo contrato `domain/surfaces.py`;
 `modeling/crown_resolver.py` y `modeling/balcony_resolver.py` consumen el
-contrato en vez de un candidato theta; `modeling/theta.py` pasa a construir el
+contrato en vez de un candidato theta; `domain/styles.py` hereda el estilo;
+`modeling/theta.py` pasa a construir el
 chart en su frontera; nuevo `planning/chart.py` (chart desde las masas nuevas) y
 `planning/catalogue.py` (resolución y materialización con los ensambladores del
 catálogo). **No** se tocó ningún constructor de piezas, ni los JSON históricos de
@@ -53,17 +58,26 @@ cosas: la geometría pasa a ser un contrato explícito y las piezas un parámetr
 
 | Tipo | Campos que importan para colocar piezas |
 |---|---|
-| `WallSurface` | `mass_role`, `edge`, `base_z`, `height_m`, `axes_m`, `facade: FacadeSpecification`, `visible_domains` (regiones expuestas `u0,z0,u1,z1` en local), `plane_offset_m`, `section` |
+| `WallSurface` | `mass_role`, `edge`, `base_z`, `height_m`, `axes_m`, `facade: FacadeSpecification`, `visible_domains` (regiones expuestas `u0,z0,u1,z1` en local), `plane_offset_m`, `thickness_m`, `section` |
 | `SurfaceChart` | `bodies: tuple[MassSpec,...]`, `surfaces: tuple[WallSurface,...]` + `body()`, `surfaces_of()`, `surface()`, `candidates()` |
 
 `WallSurface` conserva la forma del antiguo `ResolvedWall` de `theta.py` (que
 ahora es un alias del nuevo tipo), por lo que la frontera theta no cambió de
-contrato. Añade dos ayudas que los resolvers no tenían:
+contrato. Añade tres ayudas que los resolvers no tenían:
 
 - `frame()` → `(origin, tangent, normal)` con el origen desplazado al plano
   construido (`plane_offset_m`).
 - `local_point(u, z, offset)` → coordenada de mundo de un punto local; es la
   misma aritmética que usan `crown_resolver` y `balcony_resolver`.
+- `thickness_m` → espesor construido tras el plano (`EXTERIOR` en el chart de
+  `planning/`); `0.0` significa que el front end no lo declara.
+
+**Decisión:** un cuerpo por **piso** (no por edificio). Un retiro deja de
+aplanarse a una huella única; el cuerpo del piso conserva su silueta y su
+`roof_z` real, que es lo que exige el anclaje `wall_top` de un frontón. La
+contrapartida es que un resolver no puede mirar «el piso de abajo» por `mass.id`:
+debe comparar los planos de fachada, que es lo que hace
+`balcony_resolver._same_plane`.
 
 **Decisión:** un cuerpo por **piso** (no por edificio). Un retiro deja de
 aplanarse a una huella única; el cuerpo del piso conserva su silueta y su
@@ -109,17 +123,26 @@ balcón no choca con una puerta.
 - `tests/test_intent_catalogue.py` prueba el contrato, el mapeo de vanos, la
   coincidencia arista↔huella, que un anclaje sobre un cuerpo inexistente se
   rechaza, y que sin colocación no hay piezas.
+- `tests/test_r1_footprints.py` compara la silueta por **diferencia simétrica**
+  de polígonos (con agujeros) e igualdad de IDs, no por resta de áreas.
+- `tests/test_r1_closure.py` fija el cierre técnico: anclaje al plano construido,
+  rechazo sobre fachada oculta, consulta del piso inferior, herencia y excepción
+  de estilo, paleta única, espías sobre los ensambladores y cobertura de patio,
+  retiro, parcela irregular, borde compartido y dos cuerpos.
 
 ---
 
 ## 6. Límites (lo que R1 no hace)
 
 - **No** migra los resolvers de pilastras, entablamentos, entradas y cubiertas
-  (siguen sobre theta; migran en R4/R5).
+  (siguen sobre theta; migran en R4/R5). La regla de estilo (`resolve_style`) sí
+  se aplica ya en todos ellos.
 - **No** toca los vanos: la carpintería propia `_joinery` se sustituye por
-  `opening_catalog` en **R3**.
+  `opening_catalog` en **R3**. `opening_catalog` ya acepta estilos locales.
 - **No** introduce uso, tipología ni pisos tipo (**R2**).
 - **No** elige ornamento por estilo ni cercos (**R4**).
+- **No** define un anclaje propio para cerco/cubierta: `WallSurface` es una
+  superficie de fachada y no finge serlo de otros soportes.
 
 ## 7. Huecos que R1 deja abiertos
 

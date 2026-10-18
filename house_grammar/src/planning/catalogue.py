@@ -6,6 +6,8 @@ it, and the catalog assemblers emit them into the same :class:`MeshBuilder` the
 legacy pipeline uses. No piece is drawn twice and no alternative constructor is
 written here: a crown is a crown mesh and a balcony is a balcony mesh.
 """
+from dataclasses import replace
+
 from domain import BuildingAppearance
 from modeling.balcony_assembly import build_balcony
 from modeling.balcony_resolver import resolve_balconies
@@ -30,10 +32,26 @@ def catalogue_materials(appearance=None, extra=()):
     return materials
 
 
+def _palette(appearance, materials):
+    """One palette for both the resolvers and the builder.
+
+    The resolvers validate against ``materials``; the builder paints whatever
+    ``appearance`` resolves to. Supplying both and letting them disagree paints
+    a different palette than the one that was validated, so the validated
+    mapping wins and the appearance is rebuilt from it (its ``source`` kept).
+    """
+    if materials is None:
+        appearance = appearance or BuildingAppearance()
+        materials = catalogue_materials(appearance)
+    appearance = replace(appearance or BuildingAppearance(),
+                         materials=tuple(materials.values()))
+    return appearance, materials
+
+
 def resolve_pieces(chart, *, crowns=(), balconies=(), style=None, envelope=None,
                    appearance=None, materials=None):
     """Place crowns and balconies on ``chart`` through the catalog resolvers."""
-    materials = materials or catalogue_materials(appearance)
+    _, materials = _palette(appearance, materials)
     resolved_crowns = (resolve_crowns(tuple(crowns), style, chart, envelope, materials)
                        if crowns else ())
     resolved_balconies = (resolve_balconies(tuple(balconies), style, chart, envelope, materials)
@@ -58,11 +76,10 @@ def build_pieces(builder, resolved_crowns=(), resolved_balconies=(), envelope=No
 def materialize(chart, *, crowns=(), balconies=(), style=None, envelope=None, parcel=None,
                 appearance=None, materials=None, budget=DEFAULT_BUDGET):
     """Resolve and build catalogue pieces; returns MeshData plus the placements."""
-    appearance = appearance or BuildingAppearance()
-    materials = materials or catalogue_materials(appearance)
+    appearance, materials = _palette(appearance, materials)
     resolved_crowns, resolved_balconies = resolve_pieces(
         chart, crowns=crowns, balconies=balconies, style=style, envelope=envelope,
-        appearance=appearance, materials=materials)
+        materials=materials)
     builder = MeshBuilder(parcel, appearance, envelope=envelope, budget=budget)
     build_pieces(builder, resolved_crowns, resolved_balconies, envelope)
     return builder.finish(), resolved_crowns, resolved_balconies

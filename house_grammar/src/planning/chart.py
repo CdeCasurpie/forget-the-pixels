@@ -19,6 +19,7 @@ from domain.architecture import MassSpec
 from domain.models import FacadeSpecification, Opening
 from domain.surfaces import SurfaceChart, WallSurface
 from modeling.geometry_constraints import projection_envelope
+from planning.interiors import EXTERIOR
 
 STREET_OVERHANG_M = 1.35
 
@@ -175,7 +176,8 @@ def surface_chart(plan, *, openings=None):
                     ornamented=False)
                 surfaces.append(WallSurface(
                     mass_role=record['id'], edge=edge, base_z=base_z, height_m=height,
-                    axes_m=(), facade=facade, visible_domains=tuple(domains)))
+                    axes_m=(), facade=facade, visible_domains=tuple(domains),
+                    thickness_m=EXTERIOR))
             edge_offset += count
     return SurfaceChart(tuple(bodies), tuple(surfaces))
 

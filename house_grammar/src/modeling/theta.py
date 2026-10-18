@@ -462,7 +462,8 @@ def _facade_zone_wall(zone, index, mass, edge, a, b, normal, length, domains, th
                'Open FacadeSection needs empty explicit controls')
         _check(not any(low+1e-7<z-mass.base_z<high-1e-7 for z in mass.floor_levels),
                'FacadeSection must not cross an intermediate floor slab; split zones by storey')
-    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,zone.offset_m,zone.section)
+    return ResolvedWall(mass.id,edge,mass.base_z,height,tuple(x+start for x in axes),f,visible,
+                        plane_offset_m=zone.offset_m,section=zone.section)
 
 
 def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:

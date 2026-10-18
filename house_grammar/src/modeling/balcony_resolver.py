@@ -8,9 +8,10 @@ from dataclasses import dataclass, replace
 import math
 import re
 import numpy as np
-from shapely.geometry import Polygon, LineString
+from shapely.geometry import Polygon, LineString, box
 from shapely.ops import unary_union
 from domain.balconies import BalconyControls
+from domain.styles import resolve_style
 from modeling.assembly import mass_polygon
 from modeling.balcony_catalog import preset, PATTERNS
 
@@ -91,6 +92,36 @@ def validate_controls(c,materials):
         if LineString(xy).length>80:raise ValueError('Railing path exceeds budget')
 
 
+def _same_plane(reference, other, tolerance=1e-6):
+    """True when ``other``'s facade lies on ``reference``'s facade plane.
+
+    Storeys of one building are separate bodies now, so a balcony must be able
+    to look at the facade above and below it, not only at its own body edge.
+    """
+    normal = np.asarray(reference.facade.normal_xy, float)
+    origin = np.asarray(reference.facade.vertex_a, float)
+    return all(abs(float((np.asarray(point, float) - origin) @ normal)) <= tolerance
+               for point in (other.facade.vertex_a, other.facade.vertex_b))
+
+
+def _span(base_a, tangent, p0, p1):
+    along = [float((np.asarray(p, float) - base_a) @ tangent) for p in (p0, p1)]
+    return min(along), max(along)
+
+
+def _feature_span(wall, feature, base_a, tangent):
+    """Feature extent in the anchor surface frame, not the feature's own."""
+    return _span(base_a, tangent,
+                 wall.local_point(feature.u_m, wall.base_z)[:2],
+                 wall.local_point(feature.u_m + feature.width_m, wall.base_z)[:2])
+
+
+def _opening_span(wall, opening, base_a, tangent):
+    return _span(base_a, tangent,
+                 wall.local_point(opening.u_m, wall.base_z)[:2],
+                 wall.local_point(opening.u_m + opening.width_m, wall.base_z)[:2])
+
+
 def resolve_balconies(controls,architectural_style,chart,envelope,materials):
     masses=chart.bodies;walls=chart.surfaces
     result=[]; ids=set(); occupied=[]
@@ -99,8 +130,7 @@ def resolve_balconies(controls,architectural_style,chart,envelope,materials):
         ids.add(c.id)
         if not c.enabled:continue
         validate_controls(c,materials)
-        style=architectural_style if c.style=='auto' else c.style
-        if architectural_style and style!=architectural_style:raise ValueError('Balcony style conflicts with building')
+        style=resolve_style(c.style,architectural_style)
         variant,p=preset(style,c.variant)
         if p.kind=='box' and c.kind!='box':raise ValueError('Box variant requires kind=box')
         if c.kind=='box' and p.kind!='box':raise ValueError('Closed box needs a box variant')
@@ -111,24 +141,35 @@ def resolve_balconies(controls,architectural_style,chart,envelope,materials):
         c=replace(c,style=style,variant=variant,railing=replace(c.railing,material=material,pattern=pattern))
         mass=next((m for m in masses if m.id==c.mass_ref),None)
         if mass is None:raise ValueError('Balcony references missing mass')
-        ring=mass.footprint
-        if not 0<=c.edge<len(ring):raise ValueError('Balcony edge outside mass')
-        a=np.asarray(ring[c.edge]); b=np.asarray(ring[(c.edge+1)%len(ring)])
-        length=np.linalg.norm(b-a); t=(b-a)/length; n=np.array([t[1],-t[0]])
+        surfaces=[w for w in walls if w.mass_role==mass.id and w.edge==c.edge]
+        if len(surfaces)!=1:raise ValueError('Balcony needs one unambiguous facade surface')
+        surface=surfaces[0]
+        base_a=np.asarray(surface.facade.vertex_a,float)
+        origin_full,t,n=surface.frame()
+        length=surface.width_m
+        b=np.asarray(surface.facade.vertex_b,float)
         if c.opening_index is not None:
-            candidates=[w for w in walls if w.mass_role==mass.id and w.edge==c.edge and not w.plane_offset_m]
-            ops=[op for w in candidates for op in w.facade.openings]
-            if not 0<=c.opening_index<len(ops):raise ValueError('Balcony opening anchor missing')
-            op=ops[c.opening_index]; c=replace(c,u_m=op.u_m+(op.width_m-c.width_m)/2)
+            if not 0<=c.opening_index<len(surface.facade.openings):raise ValueError('Balcony opening anchor missing')
+            op=surface.facade.openings[c.opening_index]; c=replace(c,u_m=op.u_m+(op.width_m-c.width_m)/2)
         z=mass.base_z+c.floor_m
         if not any(abs(z-level)<1e-5 for level in mass.floor_levels):raise ValueError('Balcony must anchor to an existing floor level')
         if c.u_m<0 or c.u_m+c.width_m>length+1e-6:raise ValueError('Balcony outside edge span')
+        if surface.visible_domains:
+            visible=unary_union([box(*r) for r in surface.visible_domains])
+            z_local=z-surface.base_z
+            lo=max(0.,min(z_local-.01,surface.height_m));hi=max(0.,min(z_local+.01,surface.height_m))
+            attach=box(c.u_m,lo,c.u_m+c.width_m,hi)
+            if attach.is_empty or not visible.buffer(1e-6).covers(attach):
+                raise ValueError('Balcony anchor intersects hidden facade')
         if c.corner_return_m:
+            ring=mass.footprint
+            if not 0<=c.edge<len(ring):raise ValueError('Corner balcony requires an exterior mass edge')
             next_edge=np.asarray(ring[(c.edge+2)%len(ring)])-b
             if abs(c.u_m+c.width_m-length)>1e-5 or np.dot(next_edge/np.linalg.norm(next_edge),-n)<.9999:
                 raise ValueError('Corner balcony must end at an orthogonal mass corner')
             if c.corner_return_m>np.linalg.norm(next_edge):raise ValueError('Corner return exceeds adjacent edge')
-        origin=a+t*c.u_m
+        related=[w for w in walls if _same_plane(surface,w)]
+        origin=origin_full+t*c.u_m
         def world(q):return (* (origin+t*q[0]+n*q[1]),z+q[2])
         routes=tuple(tuple(world(q) for q in route) for route in local_routes(c))
         if c.curved_front_m:
@@ -145,8 +186,7 @@ def resolve_balconies(controls,architectural_style,chart,envelope,materials):
         if c.slab or c.cover or c.kind=='box':extent=extent.union(platform.buffer(.035,join_style=2))
         if not envelope.buffer(1e-7).covers(extent):raise ValueError('Balcony projection outside permitted envelope')
         if c.kind=='stair':
-            candidates=[(w,s) for w in walls if w.mass_role==mass.id and w.edge==c.edge
-                        for s in w.facade.exterior_stairs]
+            candidates=[(surface,s) for s in surface.facade.exterior_stairs]
             if not 0<=c.stair_index<len(candidates):raise ValueError('Stair anchor missing')
             wall,s=candidates[c.stair_index]
             z0=wall.base_z+s.base_z_m; z1=wall.base_z+s.target_z_m
@@ -164,8 +204,8 @@ def resolve_balconies(controls,architectural_style,chart,envelope,materials):
             if not envelope.buffer(1e-7).covers(extent):raise ValueError('Stair railing outside permitted envelope')
         if not c.slab and c.kind not in ('juliet','stair'):
             support=[m for m in masses if (not c.support_mass or m.id==c.support_mass) and abs(m.roof_z-z)<1e-5]
-            surface=unary_union([mass_polygon(m) for m in support])
-            if not surface.buffer(1e-5).covers(unary_union([LineString([q[:2] for q in r]) for r in routes])):
+            substrate=unary_union([mass_polygon(m) for m in support])
+            if not substrate.buffer(1e-5).covers(unary_union([LineString([q[:2] for q in r]) for r in routes])):
                 raise ValueError('Terrace railing has no existing roof/floor substrate')
             if any(abs(q[2]-z)>1e-6 for r in routes for q in r):
                 raise ValueError('Sloped railing requires kind=stair with stair_index, not a terrace route')
@@ -179,23 +219,27 @@ def resolve_balconies(controls,architectural_style,chart,envelope,materials):
             if abs(z-zprev)<.05 and platform.intersection(prev).area>.01:raise ValueError('Overlapping balcony assemblies')
         if c.kind!='stair':occupied.append((platform,z))
         # A new slab/bracket must not intersect the head of a lower opening.
-        for w in walls:
-            if w.mass_role!=mass.id or w.edge!=c.edge:continue
+        # Storeys are separate bodies, so inspect every facade on the same plane.
+        for w in related:
             for feature in w.facade.projections:
-                if feature.kind in ('balcony','gallery') and feature.u_m<c.u_m+c.width_m and feature.u_m+feature.width_m>c.u_m:
-                    if abs(w.base_z+feature.v_m-z)<.4:
-                        raise ValueError('New balcony overlaps a legacy balcony; migrate that projection explicitly')
+                if feature.kind not in ('balcony','gallery'):continue
+                f0,f1=_feature_span(w,feature,base_a,t)
+                if f0<c.u_m+c.width_m and f1>c.u_m and abs(w.base_z+feature.v_m-z)<.4:
+                    raise ValueError('New balcony overlaps a legacy balcony; migrate that projection explicitly')
             for op in w.facade.openings:
-                overlap=op.u_m<c.u_m+c.width_m and op.u_m+op.width_m>c.u_m
+                u0,u1=_opening_span(w,op,base_a,t)
+                overlap=u0<c.u_m+c.width_m and u1>c.u_m
                 if c.slab and overlap and w.base_z+op.v_m<z and w.base_z+op.v_m+op.height_m>z-c.slab_m:
                     raise ValueError('Balcony slab intersects an opening')
         brackets=[]
         if c.brackets and c.slab:
             drop=min(.55,c.depth_m*.65)
-            forbidden=[(op.u_m-c.u_m-.08,op.u_m+op.width_m-c.u_m+.08)
-                       for w in walls if w.mass_role==mass.id and w.edge==c.edge
-                       for op in w.facade.openings if w.base_z+op.v_m<z-c.slab_m and
-                       w.base_z+op.v_m+op.height_m>z-c.slab_m-drop]
+            forbidden=[]
+            for w in related:
+                for op in w.facade.openings:
+                    if w.base_z+op.v_m<z-c.slab_m and w.base_z+op.v_m+op.height_m>z-c.slab_m-drop:
+                        u0,u1=_opening_span(w,op,base_a,t)
+                        forbidden.append((u0-c.u_m-.08,u1-c.u_m+.08))
             for axis in np.linspace(.15,c.width_m-.15,max(2,math.ceil(c.width_m/1.5)+1)):
                 choices=[axis+shift for shift in (0.,-.15,.15,-.3,.3,-.45,.45)]
                 safe=next((x for x in choices if .07<x<c.width_m-.07 and

@@ -471,6 +471,7 @@ def canonical(value) -> str:
             return {f.name:data(getattr(x,f.name)) for f in fields(x)
                     if not (isinstance(x,FacadeZone) and f.name=='offset_m' and x.offset_m==0.)
                     and not (f.name=='plane_offset_m' and getattr(x,f.name)==0.)
+                    and not (f.name=='thickness_m' and getattr(x,f.name)==0.)
                     and not (f.name=='section' and getattr(x,f.name) is None)
                     and not (f.name=='roof_bodies' and not getattr(x,f.name))
                     and not (f.name=='balconies' and isinstance(getattr(x,f.name),tuple) and not getattr(x,f.name))

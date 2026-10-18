@@ -1,6 +1,6 @@
 # Plan de rediseño: gramática arquitectónica adaptable de Barranco
 
-**Estado:** replanteamiento aprobado como dirección de trabajo, pendiente de implementación. Las antiguas Fases 0–5 son antecedentes técnicos, no aceptación arquitectónica del resultado. El programa vigente es R0–R7, abajo.
+**Estado:** R0 implementada; R1 con puente funcional y cierre técnico cerrado (anclaje de superficie, vecindad entre pisos, estilo local, paleta y cobertura geométrica); la aceptación arquitectónica sigue abierta y R2 en diseño. Las antiguas Fases 0–5 son antecedentes técnicos, no aceptación arquitectónica del resultado. El programa vigente es R0–R7, abajo.
 **Objetivo:** generar casas plausibles, detalladas y habitadas de Barranco a partir de una descripción exterior compacta, completando algorítmicamente lo que no se ve.
 **Alcance:** nuevo contrato, planificación espacial, generación procedural y materialización. No se exige compatibilidad con el sistema anterior.
 
@@ -56,9 +56,13 @@ Puertas y ventanas tienen profundidades independientes. El acceso puede tener ma
 
 **Salida:** una ruta de generación que muestra nuevas masas con piezas reales de catálogo, incluidos un frontón y un balcón; mismas huellas/siluetas que las masas aprobadas, sin constructores alternativos de piezas. Los frontones conservan volumen y relación con techo; no se reducen a etiquetas o material.
 
-**Hecho (R1):** contrato neutral `domain/surfaces.py` (`WallSurface`, `SurfaceChart`) y refactor nativo de `crown_resolver.py` y `balcony_resolver.py`, que consumen `(controls, estilo, chart, envelope, materials)` en vez de un candidato theta; `theta.py` construye el chart en la frontera y queda como adaptador. `planning/chart.py` deriva el chart de las masas nuevas (un cuerpo por piso, con su silueta) y los vanos ya reservados; `planning/catalogue.py` resuelve y materializa con los ensambladores del catálogo. Ruta y pruebas: `house_grammar/experiments/r1/` y `tests/test_intent_catalogue.py`. Los resolvers de pilastras, entablamentos, entradas y cubiertas siguen sobre theta y migran en R4/R5; los vanos de catálogo (`_joinery` duplicada) se sustituyen en R3.
+**Hecho (R1):** contrato neutral `domain/surfaces.py` (`WallSurface`, `SurfaceChart`) y refactor nativo de `crown_resolver.py` y `balcony_resolver.py`, que consumen `(controls, estilo, chart, envelope, materials)` en vez de un candidato theta; `theta.py` construye el chart en la frontera y queda como adaptador. `planning/chart.py` deriva el chart de las masas nuevas (un cuerpo por piso, con su silueta, espesor `EXTERIOR` y regiones visibles) y los vanos ya reservados; `planning/catalogue.py` resuelve y materializa con los ensambladores del catálogo.
+
+**Cierre técnico (R1):** el balcón se ancla al plano construido (`surface.frame()`, con `plane_offset_m`), valida su región visible y consulta las fachadas del mismo plano —incluido el piso inferior, que ya es otro cuerpo— reproyectando los vanos al marco ancla. `domain/styles.py` hereda el estilo global y acepta una excepción local sin rechazarla. `planning/catalogue._palette` pinta la misma paleta que los resolvers validaron. Ruta y pruebas: `house_grammar/experiments/r1/`, `tests/test_intent_catalogue.py`, `tests/test_r1_footprints.py` y `tests/test_r1_closure.py` (patio, retiro, parcela irregular, borde compartido, dos cuerpos). Los resolvers de pilastras, entablamentos, entradas y cubiertas siguen sobre theta y migran en R4/R5; los vanos de catálogo (`_joinery` duplicada) se sustituyen en R3. La aceptación arquitectónica sigue abierta: es lo que R2 ataca.
 
 ### R2 — Composición exterior y tipos de edificio sin planta interior completa
+
+**Diseño de ejecución y auditoría previa:** véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Conservar `plan_massing`/`plan_articulation`; sustituir la dependencia de `plan_interiors` como origen obligatorio de vanos. La mejora debe ser visible incluso en una masa rectangular sencilla.
 
 **Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
 
@@ -79,6 +83,8 @@ Resolver grupos de pisos tipo y ejes compartidos: escalera lateral o central, re
 **Trabajo:** conectar planificación de sitio con `boundaries.py`, `fences.py`, `entrances.py` y catálogos asociados. Mantener forma independiente del estilo, ausencia explícita, posición de accesos y rutas exteriores. Resolver acceso compartido por cochera cuando se solicite, sin exigir siempre otra puerta peatonal. Retirar `_fence_parts` duplicado al integrar el catálogo.
 
 Integrar todos los balcones, pilastras, frontones, cornisas, zócalos y remates conservados. Selección explícita o autocompletado compatible con lenguaje local; no ornamentar todas las casas. Remates sobre cerco usan su propio anclaje y cubierta apoyada.
+
+**Corrección visual solicitada — frontones:** no colocar un triángulo de ancho fijo en el centro de cualquier fachada. R2 debe reservar su paño anfitrión, eje, ancho y relación con acceso/balcón/cornisa; R4 resolverá la continuidad de base, molduras, espesor y retornos con esa fachada, y R5 el encuentro con cubierta. Ajustar proporciones al sector coronado, sin estirar arbitrariamente perfiles del catálogo ni imponer frontón a casas que no lo requieren. Verificar apoyo y continuidad en frente y oblicua, incluyendo fachadas asimétricas, retiros y distintos anchos.
 
 **Salida:** matriz de los nueve catálogos sin capacidades perdidas por la migración; frente republicano, moderno y mixto sobre las nuevas masas; accesos conectados y piezas apoyadas, sin invasiones. Cubiertas detalladas se completan en R5, con su constructor ya conectado.
 
@@ -109,7 +115,7 @@ El “noise” es detalle contextual: reglas de soporte, espacio, orientación, 
 R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R1; R6 amplía la evaluación, no posterga todas las revisiones hasta el final.
 
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
-- [x] R1: nuevas masas integradas al `src` existente. Véase `house_grammar/experiments/r1/README.md`.
+- [ ] R1: puente implementado y cierre técnico hecho (anclaje de superficie, pisos entre cuerpos, estilo local, paleta y cobertura geométrica). La aceptación arquitectónica —frente y oblicua— pasa a R2/R6. Véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Las cuatro imágenes no constituyen aceptación arquitectónica.
 - [ ] R2: composición exterior, tipologías y pisos tipo.
 - [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
 - [ ] R4: cercos, entradas y ornamentación conservada.

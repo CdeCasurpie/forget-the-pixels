@@ -78,13 +78,18 @@ def test_attribute_classification(attributes,family):
 @pytest.mark.parametrize('change,match',[
     ({'mass_ref':'absent'},'mass missing'),({'u_m':-1},'span'),
     ({'base_m':1},'contact'),({'aperture':'oculus','aperture_width_m':8},'fit'),
-    ({'design':dict(style='barroco')},'conflicts'),
     ({'design':dict(thickness_m=.03)},'thickness'),
     ({'design':dict(family='semicircular')},'height'),
 ])
 def test_invalid_configuration_rejected(change,match):
     r=request();r['theta']['crowns'][0].update(change)
     with pytest.raises(ValueError,match=match):reconstruct(from_json(json.dumps(r)))
+
+
+def test_local_style_is_honored_not_rejected():
+    r=request();r['theta']['crowns'][0]['design']['style']='barroco'
+    result=reconstruct(from_json(json.dumps(r)))
+    assert result.resolved.crowns[0].controls.design.style=='barroco'
 
 
 def test_entablature_continuous_across_adjacent_masses():

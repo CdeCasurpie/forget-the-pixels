@@ -64,14 +64,24 @@ def front_direction(frame):
 
 
 def massing_footprints(plan):
-    """Storey id -> area, the silhouette the pieces must not move."""
+    """Storey id -> complete footprint, including courtyard holes."""
     data = plan.to_dict()
-    return {storey['id']: float(shape(storey['geometry']).area)
+    return {storey['id']: shape(storey['geometry'])
             for storey in data['interior']['massing']['storeys']}
 
 
 def chart_footprints(chart):
-    return {body.id: float(Polygon(body.footprint).area) for body in chart.bodies}
+    return {body.id: Polygon(body.footprint, body.footprint_holes) for body in chart.bodies}
+
+
+def footprint_drift(before, after):
+    """Equal areas are insufficient: compare occupied regions and all IDs."""
+    if before.keys() != after.keys():
+        raise ValueError('Surface chart changed the set of massing bodies')
+    drift = {key: before[key].symmetric_difference(after[key]).area for key in before}
+    if any(value > 1e-8 for value in drift.values()):
+        raise ValueError(f'Surface chart changed massing footprints: {drift}')
+    return drift
 
 
 def contact_sheet(rows, output, columns=2, cell=420):
@@ -123,7 +133,7 @@ def run_case(name, request, style, case_dir, size):
     found = all(any(token in semantic for semantic in semantics) for token in cases.EXPECTED)
     before = massing_footprints(plan)
     after = chart_footprints(chart)
-    drift = {key: round(abs(after[key] - value), 9) for key, value in before.items() if key in after}
+    drift = footprint_drift(before, after)
     return dict(
         name=name, style=style, seconds=round(time.time() - started, 2),
         found=bool(found), semantics=semantics,

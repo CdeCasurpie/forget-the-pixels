@@ -91,7 +91,6 @@ def test_off_preserves_legacy_and_canonical_empty():
 
 
 @pytest.mark.parametrize('change,match',[
-    (dict(style='moderno'),'conflicts'),
     (dict(variant='missing'),'Variant'),
     (dict(width_m=.2),'dimensions'),
     (dict(depth_m=4.,curved_front_m=.6),'envelope'),
@@ -101,6 +100,15 @@ def test_off_preserves_legacy_and_canonical_empty():
 def test_bad_controls_rejected(change,match):
     r=request();r['theta']['balconies'][0].update(change)
     with pytest.raises(ValueError,match=match):reconstruct(from_json(json.dumps(r)))
+
+
+def test_local_style_is_honored_not_rejected():
+    variant=next(iter(CATALOG['clasico']));p=CATALOG['clasico'][variant]
+    r=request()
+    r['theta']['balconies'][0].update(dict(style='clasico',variant=variant,kind=p.kind,
+                                           cover=p.kind in ('gallery','box')))
+    result=reconstruct(from_json(json.dumps(r)))
+    assert result.resolved.balconies[0].controls.style=='clasico'
 
 
 def test_box_wraps_real_corner_without_intersecting_mass():

@@ -5,6 +5,7 @@ import numpy as np
 from shapely.geometry import Polygon, MultiPoint, box
 from shapely.ops import unary_union
 from domain.vertical_members import VerticalMemberControls
+from domain.styles import resolve_style
 from modeling.vertical_member_assembly import member_rings
 
 
@@ -24,8 +25,7 @@ def resolve_members(theta,masses,walls,envelope,materials,wall_refs=None):
         if not re.fullmatch('[a-z][a-z0-9_]*',c.id) or c.id in ids:raise ValueError('Invalid/duplicate member ID')
         ids.add(c.id)
         if not c.enabled:continue
-        style=theta.architectural_style if c.design.style=='auto' else c.design.style
-        if theta.architectural_style and style!=theta.architectural_style:raise ValueError('Member style conflicts with building')
+        style=resolve_style(c.design.style,theta.architectural_style)
         c=replace(c,design=replace(c.design,style=style))
         if not np.isfinite((c.u_m,c.bottom_m,c.offset_m,c.embed_ratio)).all():raise ValueError('Nonfinite member anchor')
         if c.placement not in ('attached','embedded','freestanding','corner'):raise ValueError('Unknown member placement')

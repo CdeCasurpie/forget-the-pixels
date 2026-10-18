@@ -10,6 +10,7 @@ import numpy as np
 from shapely.geometry import Polygon, box, MultiPoint
 from shapely.ops import unary_union
 from domain.crowns import CrownControls
+from domain.styles import resolve_style
 from domain.surfaces import SurfaceChart
 from modeling.crown_paths import validate, paths, body_shapes
 from modeling.crown_assembly import aperture_shape, moulding_section
@@ -34,9 +35,8 @@ def resolve_crowns(controls,architectural_style,chart,envelope,materials,wall_re
         if not re.fullmatch('[a-z][a-z0-9_]*',c.id) or c.id in ids:raise ValueError('Invalid/duplicate crown ID')
         ids.add(c.id)
         if not c.enabled:continue
-        style=architectural_style if c.design.style=='auto' else c.design.style
+        style=resolve_style(c.design.style,architectural_style)
         d=replace(c.design,style=style)
-        if architectural_style and style!=architectural_style:raise ValueError('Crown style conflicts with building')
         family,reason=validate(d,c.width_m,c.height_m)
         d=replace(d,family=family);c=replace(c,design=d)
         for mat in (d.material,d.moulding_material,d.field_material):

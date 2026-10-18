@@ -198,7 +198,11 @@ Hallazgos de R0 que condicionan las fases siguientes:
    anclaje no dependa de la numeración de aristas.
    → **R1 (hecho):** `domain/surfaces.py` publica `WallSurface`/`SurfaceChart` y
    `planning/chart.py` las deriva de las masas nuevas; `crown_resolver` y
-   `balcony_resolver` ya las consumen (véase `experiments/r1/README.md`).
+   `balcony_resolver` ya las consumen y el balcón se ancla al plano construido
+   (`plane_offset_m`), con espesor declarado (`thickness_m`) y regiones visibles
+   validadas (véase `experiments/r1/README.md`). La regla de estilo
+   (`domain/styles.resolve_style`) ya no rechaza excepciones locales en ninguno
+   de los cinco resolvers.
 4. **El vocabulario de uso/tipología no existe** en `intent-v1` (solo
    `organization/profile/style`). R2 lo introduce.
 5. **`DoorControls.portal_depth_m` ya prevé profundidad propia**; conviene

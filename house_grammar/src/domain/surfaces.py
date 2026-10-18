@@ -28,7 +28,10 @@ class WallSurface:
     ``facade.vertex_a`` -> ``facade.vertex_b`` spans the full edge; the exposed
     intervals are ``visible_domains`` in local ``(u0, z0, u1, z1)`` metres, and
     ``plane_offset_m`` shifts the facade plane along its own normal (recessed
-    or projected zones).
+    or projected zones). ``thickness_m`` is the built wall depth behind that
+    plane: openings recess into it and a piece must not be authored as if the
+    facade were a zero-thickness sheet. ``0.0`` means the front end does not
+    declare one.
     """
 
     mass_role: str
@@ -39,6 +42,7 @@ class WallSurface:
     facade: FacadeSpecification
     visible_domains: tuple[tuple[float, float, float, float], ...] = ()
     plane_offset_m: float = 0.0
+    thickness_m: float = 0.0
     section: Any = None
 
     @property

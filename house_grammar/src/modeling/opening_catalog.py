@@ -2,6 +2,7 @@
 from dataclasses import replace
 
 from domain.models import DoorControls
+from domain.styles import resolve_style
 from modeling.window_assembly import PROFILES, validate_window
 from modeling.door_assembly import validate_door
 
@@ -17,10 +18,7 @@ def resolve_opening(op, style=None):
             raise ValueError('Window cannot carry a door catalog design')
         if op.prefab not in ('catalog','legacy','slim_window','storefront','open'):
             raise ValueError('Window prefab is not in catalogo_ventanas; select a catalog frame_profile')
-        profile=op.frame_profile
-        if style and profile not in (None,'auto',style):
-            raise ValueError('Window style conflicts with building style')
-        profile=style or ('moderno' if profile in (None,'auto') else profile)
+        profile=resolve_style(op.frame_profile, style) or 'moderno'
         if profile not in PROFILES:
             raise ValueError('Unknown window catalog frame_profile')
         op=replace(op,frame_profile=profile,prefab='open' if op.prefab=='open' else 'catalog')
@@ -41,10 +39,7 @@ def resolve_opening(op, style=None):
                      'open': dict(construction='grille',transom_infill='open'),
                      }.get(op.prefab, {})
             op=replace(op,door=DoorControls(model=style or 'moderno',**alias))
-        model=op.door.model
-        model=(style or 'moderno') if model=='auto' else model
-        if style and model!=style:
-            raise ValueError('Door style conflicts with building style')
+        model=resolve_style(op.door.model, style) or 'moderno'
         op=replace(op,door=replace(op.door,model=model),prefab='catalog')
         validate_door(op)
         return op

@@ -39,14 +39,19 @@ def test_full_pipeline_resolves_building_style():
     assert len(result.mesh.faces)>0
 
 
-def test_invalid_circle_and_conflicting_style():
+def test_circle_window_needs_equal_axes():
     with pytest.raises(ValueError,match='equal'):
         opening_shape(Opening('window',0,0,1,2,shape='circle'))
+
+
+def test_local_frame_profile_is_honored_not_rejected():
+    from modeling.opening_catalog import resolve_opening
+    op=Opening('window',.5,.5,1.5,1.5,frame_profile='barroco')
+    assert resolve_opening(op,'clasico').frame_profile=='barroco'
     r=request()
     op=replace(r.theta.facade.openings[0],frame_profile='barroco')
     r=replace(r,theta=replace(r.theta,facade=replace(r.theta.facade,openings=(op,))))
-    with pytest.raises(ValueError,match='conflicts'):
-        reconstruct(r)
+    assert len(reconstruct(r).mesh.faces)>0
 
 
 def test_grid_remains_bounded_for_small_aperture():

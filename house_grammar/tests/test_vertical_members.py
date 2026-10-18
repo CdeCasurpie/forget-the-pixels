@@ -65,12 +65,17 @@ def test_pipeline_roundtrip_offset_and_style_inheritance():
     ({'mass_ref':'missing'},'mass'),
     ({'u_m':9.},'span'),
     ({'height_m':9.},'facade band'),
-    ({'design':dict(style='moderno')},'conflicts'),
     ({'design':dict(style='republicano',section='circle')},'equal width'),
 ])
 def test_invalid_members_rejected(changes,match):
     r=request();r['theta']['vertical_members'][0].update(changes)
     with pytest.raises(ValueError,match=match):reconstruct(from_json(json.dumps(r)))
+
+
+def test_local_style_is_honored_not_rejected():
+    r=request();r['theta']['vertical_members'][0]['design']=dict(style='moderno')
+    result=reconstruct(from_json(json.dumps(r)))
+    assert result.resolved.vertical_members[0].controls.design.style=='moderno'
 
 
 def test_clipped_loft_remains_closed_and_z_offset_applied_once():

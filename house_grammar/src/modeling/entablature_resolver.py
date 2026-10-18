@@ -6,6 +6,7 @@ from shapely import line_merge
 from shapely.geometry import LineString, Polygon
 from shapely.ops import unary_union
 from domain.theta import CorniceControls
+from domain.styles import resolve_style
 from modeling.assembly import mass_polygon
 from modeling.trim_profiles import cornice_section
 from modeling.trim_resolver import ResolvedTrim, perimeter_paths, opening_cuts, lines, mass_trim
@@ -35,9 +36,8 @@ def resolve_entablatures(theta,masses,walls,envelope,materials,context):
         if not c.id or c.id in ids:raise ValueError('Duplicate entablature ID')
         ids.add(c.id)
         if not c.enabled:continue
-        style=theta.architectural_style if c.style=='auto' else c.style
+        style=resolve_style(c.style,theta.architectural_style)
         if style not in STYLES or c.scope not in ('street','exposed') or c.anchor not in ('wall_top','absolute'):raise ValueError('Invalid entablature style/scope/anchor')
-        if theta.architectural_style and style!=theta.architectural_style:raise ValueError('Entablature style conflicts with building')
         if not all(math.isfinite(v) for v in (c.height_m,c.projection_m,c.top_m)) or not .08<=c.height_m<=2 or not .02<=c.projection_m<=.6:raise ValueError('Invalid entablature dimensions')
         if c.material not in materials or c.frieze_material not in materials:raise ValueError('Unknown entablature material')
         if c.ornament not in ('none','dentils'):raise ValueError('Unknown entablature ornament')
