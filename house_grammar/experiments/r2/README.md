@@ -29,6 +29,12 @@ PYTHONPATH=house_grammar/src python3 house_grammar/experiments/r2/run.py \
 Escribe 11 casos con `front.png`, `preview.png` (oblicua), GLB y manifest:
 vivienda individual/multifamiliar, comercio, uso mixto, oficina, balcón con
 puerta, patio, retiro, esquina, desocupación y comercio con intención de cerco.
+Las [vistas de revisión](review/) conservan los 22 PNG frontal/oblicuo y el
+manifest del banco, sin sobrescribir material histórico. Entre ellos:
+[balcón con acceso](review/balcony_access/front.png),
+[uso mixto](review/mixed_use/front.png) y
+[casa individual](review/single_family/front.png).
+
 Los previews aún son sobrios: los cercos **no** se dibujan en R2 y la
 carpintería sigue siendo la auxiliar de la envolvente. Su despacho al catálogo
 es R3, cercos/ornamento R4, cubierta R5. No son aceptación arquitectónica.

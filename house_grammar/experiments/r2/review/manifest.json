@@ -1,0 +1,115 @@
+[
+  {
+    "name": "single_family",
+    "doors": 1,
+    "windows": 4,
+    "sectors": 2,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "multi_family",
+    "doors": 1,
+    "windows": 9,
+    "sectors": 3,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "commerce",
+    "doors": 1,
+    "windows": 1,
+    "sectors": 1,
+    "floor_types": 1,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "mixed_use",
+    "doors": 1,
+    "windows": 7,
+    "sectors": 3,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "office",
+    "doors": 1,
+    "windows": 9,
+    "sectors": 3,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "balcony_access",
+    "doors": 2,
+    "windows": 4,
+    "sectors": 2,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 1,
+    "fence_intent": null
+  },
+  {
+    "name": "courtyard",
+    "doors": 1,
+    "windows": 4,
+    "sectors": 2,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "upper_setback",
+    "doors": 1,
+    "windows": 9,
+    "sectors": 3,
+    "floor_types": 3,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "corner",
+    "doors": 1,
+    "windows": 8,
+    "sectors": 4,
+    "floor_types": 4,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "vacant",
+    "doors": 1,
+    "windows": 4,
+    "sectors": 2,
+    "floor_types": 2,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": null
+  },
+  {
+    "name": "commerce_with_fence",
+    "doors": 1,
+    "windows": 1,
+    "sectors": 1,
+    "floor_types": 1,
+    "partitions": 0,
+    "balcony_accesses": 0,
+    "fence_intent": {
+      "front": "street",
+      "form": "open"
+    }
+  }
+]
