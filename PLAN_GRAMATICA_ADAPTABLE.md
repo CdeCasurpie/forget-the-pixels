@@ -1,10 +1,121 @@
 # Plan de rediseño: gramática arquitectónica adaptable de Barranco
 
-**Estado:** Fases 0–3 implementadas y verificadas en el banco sintético. Véanse `house_grammar/experiments/phase1/README.md`, `phase2/README.md` y `phase3/README.md`.
+**Estado:** replanteamiento aprobado como dirección de trabajo, pendiente de implementación. Las antiguas Fases 0–5 son antecedentes técnicos, no aceptación arquitectónica del resultado. El programa vigente es R0–R7, abajo.
 **Objetivo:** generar casas plausibles, detalladas y habitadas de Barranco a partir de una descripción exterior compacta, completando algorítmicamente lo que no se ve.
 **Alcance:** nuevo contrato, planificación espacial, generación procedural y materialización. No se exige compatibilidad con el sistema anterior.
 
 > Este documento conserva las decisiones de la conversación y organiza su implementación por fases. Las capacidades propuestas y los criterios de aceptación no son resultados ya obtenidos. Para localizar la implementación vigente, consultar `PIPELINE_GRAMATICA.md` y contrastar con el código.
+
+## Replanteamiento vigente — conservar catálogo, mejorar composición exterior
+
+Esta sección sustituye las prioridades y fases del plan histórico que sigue debajo. No se implementa código con esta revisión. La petición es evolucionar el `src` existente: nuevas masas, ubicación automática coherente de vanos y elementos cotidianos, conservando la riqueza geométrica ya desarrollada.
+
+### Contrato de alcance
+
+- **Uso obligatorio de todos los catálogos existentes:** balcones, cercos, entradas, frontones, pilastras, puertas, remates, techos y ventanas. Conservar diseños, perfiles, formas, materiales y capacidades; no significa añadir todas las piezas a cada inmueble.
+- Se permite modificar contratos, resolvers, ensambladores y pipeline dentro de `src`. No se exige compatibilidad con theta ni JSON antiguos. No actualizar ni regenerar `steps/` para perseguir compatibilidad: sus muestras son referencias visuales históricas, no una API que deba seguir ejecutándose.
+- No crear otro motor de piezas paralelo. La planificación produce superficies y anclajes; los constructores existentes materializan las piezas. Migrar y retirar los emisores duplicados solo cuando su sustitución esté verificada.
+- Mantener masas, vacíos, articulación, espesores, vanos reales, losas y conexiones exteriores útiles. El interior pasa a ser una hipótesis ligera de zonas perimetrales y núcleo vertical: **sin particiones, puertas internas ni mobiliario oculto en la malla por defecto**.
+- La fachada gobierna la composición. Las zonas funcionales ayudan a elegir ventana y antepecho, pero no obligan a subdividir toda la casa para colocar vanos.
+- Variación por edificio/cuerpo/piso y por función. La semilla de detalles cotidianos nunca cambia masas, ejes o dimensiones de vanos.
+
+### Correcciones al diagnóstico anterior
+
+- `small_high` significa ventana pequeña situada alta; no exige una proporción vertical. No convertir respiraderos horizontales en ventanas altas y estrechas indiscriminadamente.
+- En `_completion`, la proporción horizontal se selecciona con el ancho final (`line.length >= 1.3`), no con la longitud original del borde. Una ventana automática de 0.85 m no se convierte por esa regla en 0.85 × 0.47 m. El problema de tamaños conservadores sigue existiendo.
+- La alineación puede ocurrir con tramos y conteos iguales, pero no existe un sistema explícito de ejes compartidos que la garantice entre pisos distintos.
+- El renderer ortográfico filtra caras con una dirección, pero no fija la cámara correspondiente (`view_init` solo se llama si no es ortográfico). Esto es un defecto concreto adicional al orden de profundidad limitado de matplotlib. Una malla watertight no demuestra por sí sola que el GLB sea visualmente correcto.
+- No copiar automáticamente la planta baja comercial en las viviendas superiores. Repetir pisos tipo compatibles y permitir excepciones.
+
+### Reglas dimensionales y compositivas
+
+**Márgenes solicitados:** puerta peatonal a ≥1.00 m y ventana a ≥0.85 m de los extremos laterales del frente/paño anfitrión, medidos desde el borde del vano, no desde su centro. Reservar además el volumen del marco, portal o moldura de catálogo. No convertir cada fragmento de triangulación en un nuevo paño ni aplicar ese margen como separación entre cada par de ventanas.
+
+La puerta puede estar a izquierda, centro o derecha: respetar la intención dentro del intervalo admisible; no imponer centro universal. El acceso debe coordinarse con escalera, comercio, cochera y cerco. Cuando no cabe, intentar otro paño o ajustar dimensiones libres dentro de su rango; si la cantidad o posición explícita lo impide, informar el conflicto. Nunca rebajar silenciosamente el margen ni producir ventanas minúsculas. Portones vehiculares, vitrinas continuas y vanos de esquina requieren reglas específicas, no heredar sin análisis el margen peatonal.
+
+**Referencia peruana consultada:** RNE A.020, RM 188-2021-VIVIENDA, artículos 9 y 12, disponible en el [índice oficial del RNE](https://www.gob.pe/institucion/vivienda/informes-publicaciones/2309793-reglamento-nacional-de-edificaciones-rne) y en el [texto oficial](https://cdn.www.gob.pe/uploads/document/file/2366561/36%20A.020%20VIVIENDA%20-%20RM%20N%C2%BA%20188-2021-VIVIENDA.pdf).
+
+- Altura mínima de vano de puerta residencial: 2.10 m; ancho mínimo de acceso a vivienda: 0.90 m; acceso principal multifamiliar: 1.20 m.
+- No establece una altura universal de ventana: área de vanos ≥10% del ambiente y abertura al exterior ≥5%; alféizar mínimo 1.00 m, con las excepciones de vidrio fijo/protección descritas en el artículo 12.5.
+- Estas referencias residenciales no se extrapolan como normativa comercial ni certifican un proyecto generado sin planta completa. Las áreas funcionales aproximadas ayudan a dimensionar, pero no demuestran cumplimiento normativo.
+- Los márgenes 1.00/0.85 m son reglas compositivas solicitadas por el usuario, no mínimos atribuidos al RNE.
+
+**Rangos iniciales propuestos para calibración, no medidas oficiales ni estadísticas de Barranco:** ventana residencial principal: ancho 1.20–2.40 m, alto 1.20–1.60 m; sala horizontal amplia: ancho 1.80–3.00 m cuando el paño lo permita; ventana vertical de casona: ancho 1.00–1.50 m y alto 1.80–2.40 m si el piso y el catálogo lo admiten. Los respiraderos siguen una familia pequeña y alta en posición. Dimensionar ancho y alto conjuntamente según tipo, proporción, antepecho, dintel y superficie disponible; no estirar todo hasta el dintel ni sustituir la proporción histórica por un estándar moderno.
+
+Puertas y ventanas tienen profundidades independientes. El acceso puede tener mayor retranqueo y portal; resolver el espesor/vestíbulo necesario en vez de colocar la hoja detrás de un muro inexistente. Comparar sus sombras y derrames en vista oblicua.
+
+### R0 — Inventario de capacidades y referencia visual fiable
+
+**Trabajo:** registrar cada catálogo, su constructor, controles, anclaje esperado y casos representativos. Revisar `opening_catalog.py`, `window_assembly.py`, `door_assembly.py`, `fences.py`, `entrances.py`, `balcony_*`, `vertical_member_*`, `crown_*`, `trim_*`, `entablature_resolver.py`, `roof_*` y materiales. Separar pruebas de capacidad de las que exigen un JSON histórico. Corregir cámara/culling y usar render con profundidad real para la validación; preservar vistas frontal y oblicua comparables.
+
+**Salida:** matriz de conservación de los nueve catálogos; referencias históricas consultables y casos mínimos nuevos fuera de `steps/`; imágenes sin paredes transparentadas, triángulos espurios ni cámara frontal incorrecta. No aprobar integración basándose en los PNG actuales.
+
+### R1 — Integración de nuevas masas con el materializador existente
+
+**Trabajo:** reutilizar `planning/massing.py` y `articulation.py`; adaptar los contratos de superficies y ensamblaje existentes a sus resultados. Superficies con ID estable, sistema local, normal, espesor, piso/cuerpo, exposición y regiones utilizables. Anclajes explícitos para fachada, cerco, cubierta y coronación. Modificar `modeling/assembly.py`, `theta.py`/pipeline y contratos según corresponda; no forzar el nuevo plan a serializarse como theta viejo.
+
+**Salida:** una ruta de generación que muestra nuevas masas con piezas reales de catálogo, incluidos un frontón y un balcón; mismas huellas/siluetas que las masas aprobadas, sin constructores alternativos de piezas. Los frontones conservan volumen y relación con techo; no se reducen a etiquetas o material.
+
+### R2 — Composición exterior y tipos de edificio sin planta interior completa
+
+**Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
+
+Separar atributos: uso (residencial/comercial/oficinas-mixto), organización residencial (unifamiliar/multifamiliar), uso por piso/sector, evolución (unitaria/progresiva), conservación/ocupación y estilo. Abandonada es un estado, no una tipología equivalente a comercio. Permitir edificios sencillos, irregulares o sin estilo dominante. Cerco es independiente del uso.
+
+Resolver grupos de pisos tipo y ejes compartidos: escalera lateral o central, repetición superior, planta baja diferenciada, retiros y ampliaciones como excepciones. Conservar núcleo conceptual cuando aporte coherencia; sin obligar a resolver baños y pasillos completos.
+
+**Salida:** vivienda individual, comercio con/sin cerco, multifamiliar, multifamiliar sobre comercio, oficinas, edificio progresivo y variantes desocupadas/deterioradas distinguibles por composición. Misma fachada tipo se repite entre pisos compatibles; cambiar semilla de detalles no mueve vanos.
+
+### R3 — Vanos automáticos dimensionados y construidos con catálogo
+
+**Trabajo:** resolver conjuntamente conteo, ejes, ancho, alto, antepecho, dintel, padding, separación entre vanos y profundidad. Aplicar reglas anteriores, respetar solicitudes explícitas y evaluar ocupación del paño. Reservar huella completa de portales, pilastras y molduras. Adaptar `Opening` y el despacho existente a la escena resuelta y a estilos locales; conservar formas curvas, rejas, sobreluces, hojas y perfiles. Retirar `_joinery` duplicado después de verificar equivalencia de capacidades requeridas.
+
+**Salida:** ventanas principales claramente mayores que respiraderos; puertas alejadas del borde y con profundidad propia; conteos y proporciones correctos en lotes estrechos/anchos. Verificar ventanas y puertas de cada familia, huecos de igual contorno que su pieza y repetición de dinteles/ejes entre pisos. Una prueba confirma invocación del constructor de catálogo, no solo parecido visual.
+
+### R4 — Cercos, accesos y composición ornamental completa
+
+**Trabajo:** conectar planificación de sitio con `boundaries.py`, `fences.py`, `entrances.py` y catálogos asociados. Mantener forma independiente del estilo, ausencia explícita, posición de accesos y rutas exteriores. Resolver acceso compartido por cochera cuando se solicite, sin exigir siempre otra puerta peatonal. Retirar `_fence_parts` duplicado al integrar el catálogo.
+
+Integrar todos los balcones, pilastras, frontones, cornisas, zócalos y remates conservados. Selección explícita o autocompletado compatible con lenguaje local; no ornamentar todas las casas. Remates sobre cerco usan su propio anclaje y cubierta apoyada.
+
+**Salida:** matriz de los nueve catálogos sin capacidades perdidas por la migración; frente republicano, moderno y mixto sobre las nuevas masas; accesos conectados y piezas apoyadas, sin invasiones. Cubiertas detalladas se completan en R5, con su constructor ya conectado.
+
+### R5 — Cubiertas y vida cotidiana exterior automáticas
+
+**Trabajo:** reutilizar techos, tejas/calamina y props existentes. Planificar zonas de azotea, circulación conceptual, acceso de escalera, caseta, tanque, tendido, antenas, equipos y macetas según uso y superficie. Resolver pendientes, apoyos, aleros y encuentros con frontones. Extender la colocación automática a fachadas, balcones, entradas y retiros.
+
+El “noise” es detalle contextual: reglas de soporte, espacio, orientación, agrupación y densidad; no dispersión uniforme. Cortinas/persianas y fondos someros detrás de ventanas cuando sean visibles, sin una vivienda interna completa. Reutilizar capacidades existentes y ampliar solo huecos funcionales identificados en R0.
+
+**Salida:** azoteas y exteriores habitados pero no saturados; cero props flotantes/bloqueando accesos; variantes de ocupación mantienen arquitectura idéntica. Ausencias explícitas respetadas.
+
+### R6 — Calibración Barranco y aceptación arquitectónica
+
+**Trabajo:** comparar con referencias de fachadas reales, incluidas las aportadas por el usuario cuando estén disponibles como archivos de referencia. Banco nuevo separado de los casos usados para ajustar. Cubrir lotes angostos/anchos, esquina, casona, vivienda sencilla, multifamiliar repetitivo, comercio y construcción progresiva.
+
+**Medir:** padding real al borde del vano, dimensiones, proporción vano/paño, alineación entre pisos, profundidad puerta/ventana, fidelidad al catálogo, silueta, colocación de ornamentos y densidad de detalle. Revisar frente y oblicua del GLB con render fiable. Revisar geometría y coste por componente sin exigir que piezas decorativas legítimamente abiertas sean sólidos cerrados.
+
+**Salida:** aceptación visual además de tests; casos inviables producen diagnósticos y no ventanas comprimidas. El éxito de 413 pruebas y 93 corridas anteriores conserva valor como regresión geométrica, no como evidencia de realismo arquitectónico.
+
+### R7 — Entrada compacta, ruta única y limpieza
+
+**Trabajo:** conectar descripción humana/LLM con tipología, masas, composición y selección cualitativa de catálogo. LLM sin metros por ventana; compilador resuelve dimensiones. Consolidar una ruta pública de `src`; retirar emisores duplicados y dependencias del plan interior completo después de migrar consumidores. Actualizar documentación vigente y pruebas del contrato nuevo. JSON/theta históricos pueden dejar de funcionar; `steps/` permanece como historia visual.
+
+**Salida:** generación extremo a extremo determinista, conservando todas las capacidades inventariadas y con presupuesto de geometría exterior medido. No mantener dos motores para producir la misma pieza.
+
+### Secuencia y seguimiento
+
+R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R1; R6 amplía la evaluación, no posterga todas las revisiones hasta el final.
+
+- [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
+- [ ] R1: nuevas masas integradas al `src` existente.
+- [ ] R2: composición exterior, tipologías y pisos tipo.
+- [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
+- [ ] R4: cercos, entradas y ornamentación conservada.
+- [ ] R5: cubiertas y detalle cotidiano contextual.
+- [ ] R6: aceptación arquitectónica sobre referencias.
+- [ ] R7: flujo compacto, ruta única y limpieza.
+
+Las secciones siguientes documentan el plan anterior y sus resultados. Sus instrucciones de interiores completos y su declaración de fases cerradas no prevalecen sobre este replanteamiento.
 
 ## 1. Decisiones fundamentales
 

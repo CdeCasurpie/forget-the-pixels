@@ -106,34 +106,14 @@ def export_envelope(plan, output, preview=True):
 
 
 def _render(meshes, output, view, direction=None, ortho=False):
-    import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-    light=np.array([-1.,-2.,3.]);light/=np.linalg.norm(light)
-    if direction is None:
-        direction=np.array([np.cos(np.deg2rad(view[0]))*np.cos(np.deg2rad(view[1])),
-                            np.cos(np.deg2rad(view[0]))*np.sin(np.deg2rad(view[1])),
-                            np.sin(np.deg2rad(view[0]))])
-    fig=plt.figure(figsize=(7,7))
-    ax=fig.add_subplot(1,1,1,projection='3d')
-    if ortho:ax.set_proj_type('ortho')
-    triangles=[];colors=[]
-    for name,material,mesh in meshes:
-        base=np.asarray(MATERIAL_COLORS.get(material,(200,200,200,255)),dtype=float)/255
-        rgba=np.tile(base,(len(mesh.faces),1))
-        rgba[:,:3]*=(.62+.38*np.maximum(0,mesh.face_normals@light))[:,None]
-        visible=mesh.face_normals@direction>1e-8
-        triangles.extend(mesh.triangles[visible]);colors.extend(rgba[visible])
-    ax.add_collection3d(Poly3DCollection(np.asarray(triangles),facecolors=np.asarray(colors),
-                                         edgecolors='none',antialiased=False))
-    vertices=np.vstack([m.vertices for _,_,m in meshes])
-    low=vertices.min(axis=0);high=vertices.max(axis=0)
-    ax.set_xlim(low[0],high[0]);ax.set_ylim(low[1],high[1]);ax.set_zlim(low[2],high[2])
-    ax.set_box_aspect(np.maximum(high-low,.1))
-    if not ortho:ax.view_init(elev=view[0],azim=view[1])
-    ax.set_axis_off()
-    fig.tight_layout();fig.savefig(output,dpi=130);plt.close(fig)
+    """Depth-tested raster preview.
+
+    Replaces the matplotlib 3D collection, whose per-triangle paint order and
+    camera-independent culling produced diagonal streaks and floating panels.
+    See ``modeling/software_render.py`` for the rasteriser and its rationale.
+    """
+    from modeling.software_render import render
+    render(meshes,output,view=view,direction=direction,ortho=ortho,palette=MATERIAL_COLORS)
 
 
 def render_drawings(data, meshes, output):
