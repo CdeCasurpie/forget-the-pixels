@@ -1,4 +1,9 @@
-"""Resolve balcony placement, compatibility, routes and existing substrates."""
+"""Resolve balcony placement, compatibility, routes and existing substrates.
+
+The resolver consumes a :class:`domain.surfaces.SurfaceChart` (bodies plus
+facade surfaces) and the balcony controls to place, never a theta candidate.
+The legacy theta front end builds a chart from its resolved masses and walls.
+"""
 from dataclasses import dataclass, replace
 import math
 import re
@@ -86,15 +91,16 @@ def validate_controls(c,materials):
         if LineString(xy).length>80:raise ValueError('Railing path exceeds budget')
 
 
-def resolve_balconies(theta,masses,walls,envelope,materials):
+def resolve_balconies(controls,architectural_style,chart,envelope,materials):
+    masses=chart.bodies;walls=chart.surfaces
     result=[]; ids=set(); occupied=[]
-    for c in theta.balconies:
+    for c in controls:
         if c.id in ids:raise ValueError('Duplicate balcony id')
         ids.add(c.id)
         if not c.enabled:continue
         validate_controls(c,materials)
-        style=theta.architectural_style if c.style=='auto' else c.style
-        if theta.architectural_style and style!=theta.architectural_style:raise ValueError('Balcony style conflicts with building')
+        style=architectural_style if c.style=='auto' else c.style
+        if architectural_style and style!=architectural_style:raise ValueError('Balcony style conflicts with building')
         variant,p=preset(style,c.variant)
         if p.kind=='box' and c.kind!='box':raise ValueError('Box variant requires kind=box')
         if c.kind=='box' and p.kind!='box':raise ValueError('Closed box needs a box variant')

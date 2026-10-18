@@ -31,3 +31,5 @@ from .architecture import (
     SitePlan,
     BuildingSpecificationV4
 )
+
+from .surfaces import WallSurface, SurfaceChart

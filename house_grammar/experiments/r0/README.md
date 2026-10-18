@@ -188,11 +188,17 @@ Hallazgos de R0 que condicionan las fases siguientes:
    catálogo; sus previews de Fase 4/5 dibujan ventanas y puertas con geometría
    propia (`_joinery`) y no con `build_window`/`build_door`. R1/R3 deben
    conectar el catálogo y retirar el duplicado solo tras verificar equivalencia.
+   → **R1 (hecho):** la mitad de coronación y balcones ya está conectada
+   (`planning/catalogue.py` con `build_crown`/`build_balcony`); los vanos
+   (`_joinery`) siguen pendientes para R3.
 2. **El render ya no es el cuello de botella.** A partir de aquí, una pieza que
    se vea mal es geometría, no dibujo.
 3. **Los catálogos aceptan hoy "aristas de masa".** R1 debe publicar superficies
    con ID, sistema local, normal, espesor y región de fachada para que el
    anclaje no dependa de la numeración de aristas.
+   → **R1 (hecho):** `domain/surfaces.py` publica `WallSurface`/`SurfaceChart` y
+   `planning/chart.py` las deriva de las masas nuevas; `crown_resolver` y
+   `balcony_resolver` ya las consumen (véase `experiments/r1/README.md`).
 4. **El vocabulario de uso/tipología no existe** en `intent-v1` (solo
    `organization/profile/style`). R2 lo introduce.
 5. **`DoorControls.portal_depth_m` ya prevé profundidad propia**; conviene

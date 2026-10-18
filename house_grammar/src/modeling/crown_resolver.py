@@ -1,10 +1,16 @@
-"""Crown anchors and explicit, auditable rule classification."""
+"""Crown anchors and explicit, auditable rule classification.
+
+The resolver consumes a :class:`domain.surfaces.SurfaceChart` (bodies plus
+facade surfaces) and the crown controls to place, never a theta candidate. The
+legacy theta front end builds a chart from its resolved masses and walls.
+"""
 from dataclasses import dataclass, replace
 import re
 import numpy as np
 from shapely.geometry import Polygon, box, MultiPoint
 from shapely.ops import unary_union
 from domain.crowns import CrownControls
+from domain.surfaces import SurfaceChart
 from modeling.crown_paths import validate, paths, body_shapes
 from modeling.crown_assembly import aperture_shape, moulding_section
 from modeling.elevation_sweep import sweep_mesh
@@ -20,16 +26,17 @@ class ResolvedCrown:
     classification_reason: str
 
 
-def resolve_crowns(theta,masses,walls,envelope,materials,wall_refs=None):
+def resolve_crowns(controls,architectural_style,chart,envelope,materials,wall_refs=None):
+    masses=chart.bodies;walls=chart.surfaces
     wall_refs=wall_refs or {}
     result=[];ids=set();occupied=[]
-    for c in theta.crowns:
+    for c in controls:
         if not re.fullmatch('[a-z][a-z0-9_]*',c.id) or c.id in ids:raise ValueError('Invalid/duplicate crown ID')
         ids.add(c.id)
         if not c.enabled:continue
-        style=theta.architectural_style if c.design.style=='auto' else c.design.style
+        style=architectural_style if c.design.style=='auto' else c.design.style
         d=replace(c.design,style=style)
-        if theta.architectural_style and style!=theta.architectural_style:raise ValueError('Crown style conflicts with building')
+        if architectural_style and style!=architectural_style:raise ValueError('Crown style conflicts with building')
         family,reason=validate(d,c.width_m,c.height_m)
         d=replace(d,family=family);c=replace(c,design=d)
         for mat in (d.material,d.moulding_material,d.field_material):

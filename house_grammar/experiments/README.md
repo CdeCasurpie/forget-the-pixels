@@ -6,6 +6,7 @@ Programa vigente (replanteamiento): **R0–R7**, ver
 | Fase | Contenido | Reporte |
 |---|---|---|
 | R0 | Inventario de los nueve catálogos y render con profundidad real | [r0](r0/README.md) |
+| R1 | Masas nuevas vestidas por el catálogo vía contrato de superficies | [r1](r1/README.md) |
 
 Fases 0–5 del plan histórico (antecedentes técnicos, no aceptación
 arquitectónica):

@@ -56,6 +56,8 @@ Puertas y ventanas tienen profundidades independientes. El acceso puede tener ma
 
 **Salida:** una ruta de generación que muestra nuevas masas con piezas reales de catálogo, incluidos un frontón y un balcón; mismas huellas/siluetas que las masas aprobadas, sin constructores alternativos de piezas. Los frontones conservan volumen y relación con techo; no se reducen a etiquetas o material.
 
+**Hecho (R1):** contrato neutral `domain/surfaces.py` (`WallSurface`, `SurfaceChart`) y refactor nativo de `crown_resolver.py` y `balcony_resolver.py`, que consumen `(controls, estilo, chart, envelope, materials)` en vez de un candidato theta; `theta.py` construye el chart en la frontera y queda como adaptador. `planning/chart.py` deriva el chart de las masas nuevas (un cuerpo por piso, con su silueta) y los vanos ya reservados; `planning/catalogue.py` resuelve y materializa con los ensambladores del catálogo. Ruta y pruebas: `house_grammar/experiments/r1/` y `tests/test_intent_catalogue.py`. Los resolvers de pilastras, entablamentos, entradas y cubiertas siguen sobre theta y migran en R4/R5; los vanos de catálogo (`_joinery` duplicada) se sustituyen en R3.
+
 ### R2 — Composición exterior y tipos de edificio sin planta interior completa
 
 **Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
@@ -107,7 +109,7 @@ El “noise” es detalle contextual: reglas de soporte, espacio, orientación, 
 R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R1; R6 amplía la evaluación, no posterga todas las revisiones hasta el final.
 
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
-- [ ] R1: nuevas masas integradas al `src` existente.
+- [x] R1: nuevas masas integradas al `src` existente. Véase `house_grammar/experiments/r1/README.md`.
 - [ ] R2: composición exterior, tipologías y pisos tipo.
 - [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
 - [ ] R4: cercos, entradas y ornamentación conservada.

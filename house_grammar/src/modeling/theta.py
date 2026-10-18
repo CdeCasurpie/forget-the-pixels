@@ -51,19 +51,7 @@ from modeling.roof_detail_resolver import ResolvedRoofAssembly, resolve_roof_ass
 from modeling.entablature_resolver import resolve_entablatures
 from modeling.trim_resolver import (ResolvedTrim, mass_trim, resolve_trims, emit_trims,
                                     validate_plinth, plinth_pieces, lines)
-
-
-@dataclass(frozen=True)
-class ResolvedWall:
-    mass_role: str
-    edge: int
-    base_z: float
-    height_m: float
-    axes_m: tuple[float, ...]
-    facade: FacadeSpecification
-    visible_domains: tuple[tuple[float,float,float,float], ...] = ()
-    plane_offset_m: float = 0.
-    section: FacadeSection | None = None
+from domain.surfaces import WallSurface as ResolvedWall, SurfaceChart
 
 
 @dataclass(frozen=True)
@@ -803,7 +791,8 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
                            for op in wall.facade.openings))))
     walls=catalogue_walls
     _check(not {c.id for c in generated}&{c.id for c in theta.balconies}, 'Family balcony ID conflicts with explicit balcony')
-    balconies=resolve_balconies(replace(theta,balconies=theta.balconies+tuple(generated)),masses,walls,envelope,materials)
+    balconies=resolve_balconies(theta.balconies+tuple(generated),theta.architectural_style,
+                               SurfaceChart(masses,walls),envelope,materials)
     # Promote family/order/explicit pilaster projections to the single catalog
     # resolver. Its occupied footprints now catch projection-projection as well
     # as projection-explicit collisions before any pilaster mesh is emitted.
@@ -865,8 +854,8 @@ def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> Reso
         crown_walls.append(replace(wall,facade=replace(wall.facade,projections=tuple(retained))))
     walls=crown_walls
     _check(not {c.id for c in promoted_crowns}&{c.id for c in theta.crowns}, 'Crown ID conflicts with explicit crown')
-    crowns=resolve_crowns(replace(theta,crowns=theta.crowns+tuple(promoted_crowns)),
-                          masses,walls,envelope,materials|{c.slot for c in theta.materials},crown_refs)
+    crowns=resolve_crowns(theta.crowns+tuple(promoted_crowns),theta.architectural_style,
+                          SurfaceChart(masses,walls),envelope,materials|{c.slot for c in theta.materials},crown_refs)
     trims+=resolve_entablatures(theta,masses,walls,envelope,materials|{c.slot for c in theta.materials},context)
     accesses=resolve_entrances(theta,walls,masses,envelope,materials|{c.slot for c in theta.materials})
     from modeling.opening_catalog import resolve_opening
