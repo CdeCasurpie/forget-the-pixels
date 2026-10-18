@@ -110,7 +110,7 @@ def run(output, seeds, preview=True, include_bank=True, comparisons=None):
             result={'id':case['id'],'group':group,'seed':seed,
                     'fixture_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
             try:
-                plan=plan_envelope(request)
+                plan=plan_envelope(request, interiors=True)
                 report=export_envelope(plan,output/f"{case['id']}_seed{seed}",preview)
                 result.update(status='passed',parts=report['parts'],openings=report['openings'],
                               windows=report['windows'],doors=report['doors'],

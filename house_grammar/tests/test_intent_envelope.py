@@ -14,10 +14,15 @@ from shapely.geometry import shape
 from shapely.strtree import STRtree
 
 from domain.architectural_plan import PlanningError
-from planning.envelope import (LINTEL, PROFILE_WIDTH, RATIOS, SLAB,
-                               plan_envelope, window_dimensions)
+from planning.envelope import LINTEL, PROFILE_WIDTH, RATIOS, SLAB, window_dimensions
 from planning.envelope_export import export_envelope
 from planning.massing import polygons
+
+
+def plan_envelope(request):
+    """Historical phase-4 reference: opt into its room/BSP layout."""
+    from planning.envelope import plan_envelope as compile_envelope
+    return compile_envelope(request, interiors=True)
 
 
 ROOT=Path(__file__).parents[1]

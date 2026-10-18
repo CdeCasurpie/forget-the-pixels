@@ -81,8 +81,10 @@ def summary(plan):
                 styles={s:sum(o['style']==s for o in openings) for s in sorted({o['style'] for o in openings})},
                 useful_heights=[round(data['request']['context']['levels_m'][f+1]-data['request']['context']['levels_m'][f]-.18,3)
                                 for f in range(len(data['request']['context']['levels_m'])-1)],
-                decisions=data['decisions'],pending=data['pending'],checks=data['checks'],
-                scope='constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof')
+                decisions=data['decisions'],pending=data.get('pending',[]),checks=data['checks'],
+                 scope=('exterior envelope with stair reservation; no room partitions'
+                        if 'interior' not in data else
+                        'constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof'))
 
 
 def export_envelope(plan, output, preview=True):
@@ -117,8 +119,12 @@ def _render(meshes, output, view, direction=None, ortho=False):
 
 
 def render_drawings(data, meshes, output):
-    render_plan(data,output/'floors')
-    fronts=data['interior']['massing']['fronts']
+    if 'interior' in data:
+        render_plan(data,output/'floors')
+        fronts=data['interior']['massing']['fronts']
+    else:
+        # The default route has no room diagram to draw. Show the facade only.
+        fronts=data['massing']['fronts']
     primary=max(fronts,key=lambda name:fronts[name]['length_m'])
     render_elevation(meshes,fronts[primary],output/'front.png')
     directory=output/'elevations';directory.mkdir(parents=True,exist_ok=True)

@@ -47,7 +47,7 @@ def run(output):
     output=Path(output);output.mkdir(parents=True,exist_ok=False)
     report=[]
     for name,request in variants():
-        plan=plan_envelope(request)
+        plan=plan_envelope(request, interiors=True)
         export_envelope(plan,output/name)
         report.append(dict(id=name,checks=plan.checks,openings=design_table(plan)))
     (output/'comparisons.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')

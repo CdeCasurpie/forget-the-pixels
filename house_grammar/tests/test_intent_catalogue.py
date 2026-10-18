@@ -28,7 +28,7 @@ REQUEST = {
 
 
 def build():
-    plan = plan_envelope(REQUEST)
+    plan = plan_envelope(REQUEST, interiors=True)
     chart = surface_chart(plan)
     envelope = permitted_envelope(plan)
     parcel = Polygon(REQUEST['context']['parcel'])

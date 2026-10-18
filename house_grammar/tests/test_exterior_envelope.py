@@ -1,0 +1,138 @@
+"""R2 exterior-only route: the stair matters, invisible rooms do not."""
+from copy import deepcopy
+import json
+from pathlib import Path
+
+import pytest
+from shapely.geometry import shape
+
+from planning.chart import surface_chart
+from planning.envelope import plan_envelope
+from planning.envelope_export import export_envelope, solids
+from planning.exterior_envelope import plan_exterior_envelope
+
+
+def request():
+    return dict(version='intent-v1', seed=17,
+                context=dict(parcel=[[0, 0], [12, 0], [12, 18], [0, 18]],
+                             fronts={'F1': 0}, levels_m=[0, 3.2, 6.]),
+                building=dict(profile='barranco_residential',
+                              site=dict(front_space=dict(front='F1', depth='medium'))))
+
+
+def with_balcony():
+    r = request()
+    r['building']['operations'] = [dict(id='bal', kind='balcony', body='main',
+                                         front='F1', floors=[2])]
+    return r
+
+
+def test_exterior_route_has_no_rooms_partitions_or_internal_doors():
+    r = request(); original = deepcopy(r)
+    plan = plan_envelope(r)  # the exterior-only route is the default
+    assert r == original
+    assert 'interior' not in plan.to_dict()
+    assert plan.core['stairs']['type'] != 'GeometryCollection'
+    assert shape(plan.core['stairs']).area > 2.2 * 3.
+    assert not any(part['kind'] == 'partition' or 'room' in part['id'] for part in plan.parts)
+    assert not any(op['surface'] is None for op in plan.openings)
+    assert len([op for op in plan.openings if op['kind'] == 'entrance']) == 1
+    assert [op['kind'] for op in plan.openings].count('window') == 4
+    assert plan.checks['aperture_intrusion_m3'] == pytest.approx(0.)
+
+
+def test_balcony_has_a_real_access_door_on_the_enclosure_wall():
+    plan = plan_exterior_envelope(with_balcony())
+    balconies = [space for row in plan.massing['storeys'] for space in row.get('spaces', [])
+                if space['kind'] == 'balcony']
+    assert len(balconies) == 1
+    space = balconies[0]
+    access = [op for op in plan.openings if op['access_for'] == space['id']]
+    assert len(access) == 1
+    door = access[0]
+    assert door['kind'] == 'exterior_space'
+    assert door['floor'] == 2
+    assert door['sill_m'] == 0.
+    assert door['width_m'] - 2 * door['frame_width_m'] >= .70
+    assert shape(space['access']['geometry']).buffer(1e-6).intersects(shape(door['geometry']))
+    assert len([op for op in plan.openings if op['kind'] == 'window' and op['floor'] == 2]) == 2
+    assert not any(part['kind'] == 'partition' for part in plan.parts)
+    assert plan.checks['aperture_intrusion_m3'] == pytest.approx(0.)
+
+
+def test_chart_anchors_openings_on_the_wall_behind_the_balcony():
+    plan = plan_exterior_envelope(with_balcony())
+    chart = surface_chart(plan, enclosed=True)
+    for op in plan.openings:
+        hosts = [s for s in chart.surfaces if s.facade.edge_id == op['surface'].rsplit('/part', 1)[0]]
+        assert len(hosts) == 1
+        assert any(abs(w.width_m-op['width_m']) < 1e-5
+                   for w in hosts[0].facade.openings)
+    meshes, audit = solids(plan)
+    assert meshes and audit['watertight']
+
+
+def test_window_count_zero_and_site_door_false_are_respected():
+    r = request()
+    r['building']['site']['door'] = False
+    r['building']['facades'] = [dict(body='main', front='F1', floors=[1, 2],
+                                    windows=dict(count=0))]
+    plan = plan_exterior_envelope(r)
+    assert not plan.openings
+    assert all(part['kind'] not in ('partition', 'jamb_left') for part in plan.parts)
+
+
+def test_no_street_door_does_not_remove_a_required_balcony_door():
+    r = with_balcony()
+    r['building']['site']['door'] = False
+    plan = plan_envelope(r)
+    assert not any(op['kind'] == 'entrance' for op in plan.openings)
+    assert len([op for op in plan.openings if op['access_for'] == 'bal/floor2']) == 1
+
+
+def test_unchanged_upper_storeys_repeat_window_axes_around_one_stair():
+    r = request()
+    r['context']['levels_m'] = [0, 3.2, 6., 8.8]
+    plan = plan_envelope(r)
+    chart = surface_chart(plan, enclosed=True)
+    fronts = [s for s in chart.surfaces if s.facade.is_front]
+    upper = sorted((s for s in fronts if s.base_z > 0), key=lambda s: s.base_z)
+    assert len(upper) == 2
+    assert [(round(op.u_m, 5), round(op.width_m, 5)) for op in upper[0].facade.openings] == [
+        (round(op.u_m, 5), round(op.width_m, 5)) for op in upper[1].facade.openings]
+    assert shape(plan.core['stairs']).area > 0
+    for level in (1, 2):
+        slab = next(part for part in plan.parts if part['id'] == f'level{level}/slab')
+        assert shape(slab['geometry']).intersection(shape(plan.core['stairs'])).area < 1e-7
+
+
+def test_local_program_changes_use_not_internal_geometry():
+    r = request()
+    r['building']['program'] = dict(use='mixed', residential='multi_family')
+    plan = plan_exterior_envelope(r)
+    assert plan.program['use'] == 'mixed'
+    assert {op['kind'] for op in plan.openings} >= {'entrance', 'window'}
+    assert not any(part['kind'] == 'partition' for part in plan.parts)
+
+
+def test_default_export_has_front_and_oblique_without_room_plans(tmp_path):
+    plan = plan_envelope(with_balcony())
+    report = export_envelope(plan, tmp_path/'exterior')
+    output = tmp_path/'exterior'
+    assert (output/'front.png').exists() and (output/'preview.png').exists()
+    assert (output/'envelope.glb').exists()
+    assert not (output/'floors').exists()
+    assert 'no room partitions' in report['scope']
+
+
+@pytest.mark.parametrize('case', sorted((Path(__file__).parents[1]/'experiments/phase0/cases').glob('*/*.json')))
+def test_exterior_route_on_existing_massing_bank_without_bsp(case):
+    request = json.loads(case.read_text())['request']
+    plan = plan_envelope(request)
+    assert 'interior' not in plan.to_dict()
+    assert not any(part['kind'] == 'partition' for part in plan.parts)
+    assert plan.checks['aperture_intrusion_m3'] == pytest.approx(0., abs=1e-6)
+    for row in plan.massing['storeys']:
+        for space in row.get('spaces', []):
+            if space['kind'] in ('balcony', 'loggia', 'portico', 'vestibule'):
+                assert len([o for o in plan.openings if o['access_for'] == space['id']]) == 1

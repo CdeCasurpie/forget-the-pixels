@@ -225,7 +225,7 @@ def _op(kind, **changes):
 
 
 def _chart(request):
-    plan = plan_envelope(request)
+    plan = plan_envelope(request, interiors=True)
     return plan, surface_chart(plan), permitted_envelope(plan)
 
 

@@ -72,6 +72,19 @@ lo completa sobre `plan_articulation` sin crear tabiques ni tocar la masa.
 consumir estas asignaciones para reservar paños y construir la envolvente;
 agregar vocabulario por sí solo no satisface la salida visual de R2.
 
+**Primer corte exterior R2.2/R2.4/R2.5 (sin aprobar R2):** `plan_envelope()`
+ejecuta por defecto `planning/exterior_envelope.py` sobre las masas articuladas:
+reserva solo la huella continua de la escalera, construye muros/losas exteriores,
+abre ventanas y un acceso peatonal, sin habitaciones, tabiques ni puertas internas.
+Cada balcón/logia/espacio transitable de `building.operations` reserva **una puerta
+de fachada real** en su desembarco (`access_for`); una ventana no cuenta. Los
+tests recorren 20 casos sintéticos sin BSP y comprueban el acceso. La ruta de
+interiores previa exige ahora `plan_envelope(request, interiors=True)` y sigue
+siendo referencia histórica. `surface_chart(..., enclosed=True)` ancla vanos en
+el muro detrás de balcones, sin confundirlo con la silueta de la losa. Faltan
+retícula arquitectónica y pisos tipo, criterios completos para comercio, y
+despacho de carpintería al catálogo en R3; el preview aún no acredita realismo.
+
 **Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
 
 Separar atributos: uso (residencial/comercial/oficinas-mixto), organización residencial (unifamiliar/multifamiliar), uso por piso/sector, evolución (unitaria/progresiva), conservación/ocupación y estilo. Abandonada es un estado, no una tipología equivalente a comercio. Permitir edificios sencillos, irregulares o sin estilo dominante. Cerco es independiente del uso.
@@ -124,7 +137,7 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
 - [ ] R1: puente implementado y cierre técnico hecho (anclaje de superficie, pisos entre cuerpos, estilo local, paleta y cobertura geométrica). La aceptación arquitectónica —frente y oblicua— pasa a R2/R6. Véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Las cuatro imágenes no constituyen aceptación arquitectónica.
-- [ ] R2: R2.1 (programa exterior) implementada; pendientes R2.2–R2.5 (paños, ejes/pisos tipo, relaciones funcionales y envolvente sin BSP obligatorio).
+- [ ] R2: R2.1 implementada; primer corte R2.2/R2.4/R2.5 funcional sin BSP. Pendientes paños/ejes/pisos tipo, reservas generales de balcones de catálogo, tipologías y aceptación visual.
 - [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
 - [ ] R4: cercos, entradas y ornamentación conservada.
 - [ ] R5: cubiertas y detalle cotidiano contextual.

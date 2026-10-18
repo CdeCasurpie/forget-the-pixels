@@ -106,11 +106,14 @@ def _facade_openings(records, surface_vertex_a, tangent, base_z):
     return tuple(result)
 
 
-def surface_chart(plan, *, openings=None):
+def surface_chart(plan, *, openings=None, enclosed=False):
     """Build a :class:`SurfaceChart` from a massing/interior/envelope stage.
 
     ``openings`` defaults to the envelope openings carried by ``plan`` when it
-    is an envelope plan; pass ``()`` to ignore them.
+    is an envelope plan; pass ``()`` to ignore them. The exterior-only route
+    uses ``enclosed=True``: a projecting balcony belongs to the storey's slab
+    silhouette, but its door and windows belong to the enclosure wall behind it.
+    The original massing geometry remains unchanged in the plan.
     """
     massing, _request = _massing_of(plan)
     if openings is None:
@@ -124,8 +127,9 @@ def surface_chart(plan, *, openings=None):
     bodies = []
     surfaces = []
     for record in sorted(storeys, key=lambda r: (r['floor'], r['id'])):
-        poly = orient(shape(record['geometry']))
-        neighbors = unary_union([shape(s['geometry']) for s in storeys
+        geometry = lambda s: s.get('enclosed_geometry', s['geometry']) if enclosed else s['geometry']
+        poly = orient(shape(geometry(record)))
+        neighbors = unary_union([shape(geometry(s)) for s in storeys
                                  if s['floor'] == record['floor'] and s['id'] != record['id']
                                  and s['kind'] == 'enclosed'])
         rings = [poly.exterior, *poly.interiors]

@@ -7,8 +7,10 @@ Las regresiones previas (150 de theta, 387 de planning, 8 de R1) verifican sus
 respectivos contratos, no realismo ni toda la cobertura geométrica prometida.
 La revisión visual del usuario rechaza las casas como resultado arquitectónico.
 
-Se conserva el sistema de masas: `plan_envelope` llama a `plan_interiors`, que
-parte de `plan_articulation`/`plan_massing`. Los cuatro casos R1 son compactos:
+Se conserva el sistema de masas. La **ruta histórica R1** usa
+`plan_envelope(..., interiors=True)` y llama a `plan_interiors`, que parte de
+`plan_articulation`/`plan_massing`. La ruta exterior nueva es la predeterminada.
+Los cuatro casos R1 son compactos:
 no ejercitan patios, retiros, logias, esquinas ni cuerpos adosados.
 
 ## Hallazgos comprobados en código
@@ -17,7 +19,7 @@ no ejercitan patios, retiros, logias, esquinas ni cuerpos adosados.
 |---|---|---|---|
 | Frontón añadido sin composición | `experiments/r1/cases.py` fuerza familia triangular, altura 1 m y ancho limitado a 2.4 m, centrado en todos los estilos | R2 reserva sector y eje; R4 integra base/cornisa/perfiles; R5 cubierta | Pendiente (R2/R4/R5) |
 | Balcón sin acceso requerido | `placements` centra el balcón independientemente de los vanos; el resolver no exige puerta transitable | R2 resuelve balcón y acceso juntos, no agrega una baranda después | Pendiente (R2.4) |
-| Fachada subordinada a interiores | `plan_envelope → plan_interiors`; `build_envelope` genera particiones y puertas internas | R2 separa planificación exterior de BSP e interior completo | Pendiente (R2.5) |
+| Fachada subordinada a interiores | El pipeline histórico `plan_envelope(..., interiors=True) → plan_interiors` genera particiones y puertas internas | Ruta exterior por defecto; interiores solo con opción explícita | Primer corte resuelto; aceptación R2.5 pendiente |
 | Carpintería aún duplicada | `_joinery` sigue produciendo ventanas/puertas de previews | R3 conecta catálogo; no atribuir a ventanas de catálogo el aspecto de estas imágenes | Pendiente (R3) |
 | Evidencia débil de silueta | Runner restaba áreas, omitía agujeros y omitía IDs faltantes | Corregido: diferencia simétrica con patios, igualdad de IDs y fallo efectivo (`experiments/r1/run.py`, `tests/test_r1_footprints.py`) | Resuelto |
 | Anclaje de balcón parcialmente antiguo | `resolve_balconies` calculaba el marco desde `mass.footprint`, no desde `WallSurface.frame`; no consultaba `visible_domains` | Anclaje explícito de superficie con offset y validación de exposición | Resuelto |
@@ -106,6 +108,15 @@ variantes angostas/anchas, esquina, retiro, patio, desocupación y mezcla local.
 Comparar misma masa antes/después: acceso válido a balcones, ejes/dinteles
 coherentes, márgenes, tamaños y proporción de vacíos legibles, sin particiones
 ocultas por defecto. Cambiar semilla de detalle no mueve arquitectura.
+
+**Primer corte verificable:** `planning/exterior_envelope.py` es la ruta por
+defecto de `plan_envelope()`. Reserva una huella continua de escalera, no una
+planta de habitaciones; materializa muros/losas exteriores, ventanas y puertas,
+incluida una puerta con `access_for` por cada espacio transitable articulado.
+`tests/test_exterior_envelope.py` cubre también los 20 casos de masas sin
+particiones. El programa por sectores y los pisos tipo todavía no gobiernan
+ejes compartidos; esta ruta **no** sustituye el trabajo R3 de carpintería de
+catálogo, ni aprueba visualmente las casas.
 
 **Aceptación:** primero debe funcionar una fachada sobria, sin frontón ni props.
 Después añadir ornamento vinculado a sus paños. R2 no se aprueba porque se hayan

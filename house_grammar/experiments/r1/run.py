@@ -110,7 +110,7 @@ def contact_sheet(rows, output, columns=2, cell=420):
 def run_case(name, request, style, case_dir, size):
     started = time.time()
     case_dir.mkdir()
-    plan = plan_envelope(request)
+    plan = plan_envelope(request, interiors=True)
     chart = surface_chart(plan)
     crowns, balconies = cases.placements(chart, style)
     envelope = permitted_envelope(plan)

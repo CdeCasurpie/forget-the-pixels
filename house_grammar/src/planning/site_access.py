@@ -257,4 +257,4 @@ def validate_site(plan):
 
 
 def plan_site(request):
-    return build_site(plan_envelope(request))
+    return build_site(plan_envelope(request, interiors=True))

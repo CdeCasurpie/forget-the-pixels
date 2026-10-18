@@ -100,6 +100,11 @@ request (intent-v1)
   → MeshBuilder.finish()                 MeshData con semántica de catálogo
 ```
 
+Este bloque es la referencia **histórica R1**: `run.py` solicita ahora
+`plan_envelope(request, interiors=True)` para conservar esa evidencia. La ruta
+predeterminada exterior de R2 se explica en `../r2/README.md` y no crea
+habitaciones ni tabiques.
+
 `planning/chart.permitted_envelope` reconstruye la envolvente de proyección
 (parcela + vuelo sobre las frentes declaradas) reutilizando
 `modeling/geometry_constraints.projection_envelope`; es la misma cota que valida

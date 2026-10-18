@@ -465,5 +465,13 @@ def validate_envelope(plan):
                 floor_relative_elevations=True,engineering_verified=False)
 
 
-def plan_envelope(request):
-    return build_envelope(plan_interiors(request))
+def plan_envelope(request, *, interiors=False):
+    """Exterior-only by default; full room/BSP layout is explicitly opt-in.
+
+    Historical phase-4/5 evaluations can still request ``interiors=True``.
+    The exterior route reserves only a stair footprint and facade openings.
+    """
+    if interiors:
+        return build_envelope(plan_interiors(request))
+    from planning.exterior_envelope import plan_exterior_envelope
+    return plan_exterior_envelope(request)
