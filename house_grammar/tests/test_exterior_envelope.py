@@ -101,6 +101,9 @@ def test_unchanged_upper_storeys_repeat_window_axes_around_one_stair():
     assert [(round(op.u_m, 5), round(op.width_m, 5)) for op in upper[0].facade.openings] == [
         (round(op.u_m, 5), round(op.width_m, 5)) for op in upper[1].facade.openings]
     assert shape(plan.core['stairs']).area > 0
+    upper_type = [t for t in plan.facade['floor_types'] if t['floors'] == [2, 3]]
+    assert len(upper_type) == 1
+    assert len(upper_type[0]['axes_m']) == 3
     for level in (1, 2):
         slab = next(part for part in plan.parts if part['id'] == f'level{level}/slab')
         assert shape(slab['geometry']).intersection(shape(plan.core['stairs'])).area < 1e-7
@@ -113,6 +116,64 @@ def test_local_program_changes_use_not_internal_geometry():
     assert plan.program['use'] == 'mixed'
     assert {op['kind'] for op in plan.openings} >= {'entrance', 'window'}
     assert not any(part['kind'] == 'partition' for part in plan.parts)
+
+
+def test_front_sector_override_changes_only_its_window_program():
+    r = request()
+    r['building']['program'] = {'use': 'residential', 'floors': [
+        {'body': 'main', 'floor': 1,
+         'sectors': [{'front': 'F1', 'use': 'commercial'}]}]}
+    plan = plan_envelope(r)
+    ground = [op for op in plan.openings if op['floor'] == 1 and op['kind'] == 'window']
+    upstairs = [op for op in plan.openings if op['floor'] == 2 and op['kind'] == 'window']
+    assert len(ground) == 1 and ground[0]['use'] == 'commercial'
+    assert ground[0]['width_m'] >= 3.5
+    assert ground[0]['width_m'] > max(op['width_m'] for op in upstairs)
+    assert len(upstairs) == 2 and all(op['use'] == 'residential' for op in upstairs)
+    sectors = {sector['floor']: sector for sector in plan.facade['sectors']}
+    assert sectors[1]['use'] == 'commercial' and sectors[2]['use'] == 'residential'
+
+
+def test_typology_changes_facade_without_creating_internal_rooms():
+    scenarios = [('single_family', {'use': 'residential', 'residential': 'single_family'}, 2),
+                 ('multi_family', {'use': 'residential', 'residential': 'multi_family'}, 3),
+                 ('office', {'use': 'office'}, 3),
+                 ('commercial', {'use': 'commercial'}, 1)]
+    for name, program, expected in scenarios:
+        r = request();r['building']['program'] = program
+        plan = plan_envelope(r)
+        upper = [o for o in plan.openings if o['kind'] == 'window' and o['floor'] == 2]
+        assert len(upper) == expected, name
+        assert not any(p['kind'] == 'partition' for p in plan.parts)
+
+
+def test_requested_crown_reserves_its_exposed_sector_not_a_fixed_triangle():
+    r = request()
+    r['building']['operations'] = [dict(id='remate', kind='crown', body='main',
+                                         front='F1', position='right')]
+    plan = plan_envelope(r)
+    coronation, = plan.facade['coronations']
+    assert coronation['sector_id'] == 'main/floor2/F1'
+    assert coronation['host_surface_id'] in next(
+        sector['surface_ids'] for sector in plan.facade['sectors']
+        if sector['id'] == coronation['sector_id'])
+    left, right = coronation['support_span_m']
+    assert right-left > 2.4  # no universal 2.4 m triangular cap
+    assert coronation['axis_m'] == pytest.approx((left+right)/2)
+    assert not any(part['kind'] == 'crown' for part in plan.parts)
+
+
+def test_opening_clearances_are_measured_from_edges_not_centres():
+    plan = plan_envelope(with_balcony())
+    hosts = {s['id']: s for row in plan.massing['storeys'] for s in row['surfaces']}
+    for opening in plan.openings:
+        line = shape(opening['geometry']);host = shape({'type': 'LineString',
+                                                        'coordinates': hosts[opening['surface']]['line']})
+        distances = sorted(host.project(shape({'type': 'Point', 'coordinates': list(p)}))
+                           for p in line.coords)
+        margin = 1.0 if opening['kind'] == 'entrance' else .85
+        assert distances[0] >= margin-1e-6
+        assert host.length-distances[1] >= margin-1e-6
 
 
 def test_default_export_has_front_and_oblique_without_room_plans(tmp_path):

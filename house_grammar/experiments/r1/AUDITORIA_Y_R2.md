@@ -118,6 +118,13 @@ particiones. El programa por sectores y los pisos tipo todavía no gobiernan
 ejes compartidos; esta ruta **no** sustituye el trabajo R3 de carpintería de
 catálogo, ni aprueba visualmente las casas.
 
+**Banco R2 ampliado:** `experiments/r2/run.py` genera 11 frentes y oblicuas
+con paños/ejes documentados en `facade.sectors` y pisos repetibles en
+`facade.floor_types`. Las coronaciones solicitadas reservan paño y eje en
+`facade.coronations`, **sin** superponer un triángulo; el constructor de frontones
+se integrará al encuentro real en R4/R5. `site.fence` queda declarado pero no
+dibujado: no reemplazar el catálogo de cercos por un constructor temporal.
+
 **Aceptación:** primero debe funcionar una fachada sobria, sin frontón ni props.
 Después añadir ornamento vinculado a sus paños. R2 no se aprueba porque se hayan
 añadido campos de tipología al JSON o más piezas a los mismos rectángulos.

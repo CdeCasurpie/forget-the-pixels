@@ -26,6 +26,7 @@ class ExteriorEnvelopePlan:
     massing: dict
     program: dict
     core: dict
+    facade: dict
     openings: list
     parts: list
     decisions: list
@@ -92,8 +93,10 @@ def _accesses(row, surfaces):
         if host is None or width < .8:
             fail('balcony_access', space['id'], 'no exterior wall supports a pedestrian door')
         line = LineString(host['line'])
+        if line.length < width+2.0:
+            fail('balcony_access', space['id'], 'door needs 1.00 m from each wall end')
         center = line.project(landing.centroid)
-        start = max(.05, min(center-width/2, line.length-width-.05))
+        start = max(1.0, min(center-width/2, line.length-width-1.0))
         door = _segment(host, start, width)
         if not landing.buffer(1e-6).intersects(door):
             fail('balcony_access', space['id'], 'door does not meet its landing')
@@ -117,7 +120,7 @@ def _entrance(row, surfaces, request):
     return [(host, _segment(host, start, width), 'entrance', 'ground_entry')]
 
 
-def _windows(row, surfaces, blocked, request, usage):
+def _windows(row, surfaces, blocked, request, usage, residential_type):
     """Small R2 facade prior. R3 will resolve full bay sizes and catalog frames."""
     floor = row['floor']; body = row['body']; selected = []
     declarations = [fac for fac in request['building'].get('facades', [])
@@ -130,8 +133,12 @@ def _windows(row, surfaces, blocked, request, usage):
         elif declarations:  # explicit facade scopes close unlisted fronts
             continue
         else:
-            count = 1 if usage in ('commercial', 'office') else 2
-            proportions = None; default_proportion = 'vertical'
+            local_use = usage.get(front, usage['floor'])
+            count = (1 if local_use == 'commercial' else 3 if local_use == 'office' else
+                     3 if residential_type == 'multi_family' and
+                          sum(s['length_m'] for s in surfaces if s['front'] == front) >= 9. else 2)
+            proportions = None
+            default_proportion = 'horizontal' if local_use in ('commercial', 'office') else 'vertical'
         if count == 0:continue
         candidates = []
         for surface in surfaces:
@@ -158,7 +165,9 @@ def _windows(row, surfaces, blocked, request, usage):
             n = allocation[surface['slot_id']]
             if not n:continue
             line = LineString(surface['line'])
-            window_width = min(1.35, (line.length-1.7)/n)
+            local_use = usage.get(front, usage['floor'])
+            maximum = 4.5 if local_use == 'commercial' else 1.65 if local_use == 'office' else 1.35
+            window_width = min(maximum, (line.length-1.7)/n)
             for i in range(n):
                 start = .85 + (line.length-1.7)*(i+.5)/n-window_width/2
                 candidate = _segment(surface, start, window_width)
@@ -169,6 +178,83 @@ def _windows(row, surfaces, blocked, request, usage):
     return selected
 
 
+def _facade_axes(massing, programmed, openings):
+    """Architectural street sectors and compatible repeated-storey axes.
+
+    Axis distances use the named street frame, not an interior room or the
+    arbitrary start of a cut wall edge. A setback or balcony cut makes a new
+    type; truly matching upper floors share the same type and window axes.
+    """
+    sectors = []
+    types = {}
+    for row in massing['storeys']:
+        if row['kind'] != 'enclosed':continue
+        program = next(p for p in programmed if p['id'] == row['id'])
+        for front in sorted({s['front'] for s in row['surfaces'] if s['front'] is not None}):
+            frame = massing['fronts'][front]
+            origin = np.asarray(frame['origin'], float)
+            right = np.asarray(frame['right'], float)
+            surfaces = sorted((s for s in row['surfaces'] if s['front'] == front and s['enclosure']),
+                              key=lambda s: s['id'])
+            if not surfaces:continue
+            placed = [op for op in openings if op['floor'] == row['floor'] and
+                      op['body'] == row['body'] and op['surface'] in {s['id'] for s in surfaces}]
+            placed.sort(key=lambda op: float((np.asarray(shape(op['geometry']).centroid.coords[0])-origin)@right))
+            axes = [round(float((np.asarray(shape(op['geometry']).centroid.coords[0])-origin)@right), 6)
+                    for op in placed]
+            local_use = program['sectors'].get(front, program['use'])
+            sector_id = f'{row["id"]}/{front}'
+            sector = dict(id=sector_id, body=row['body'], floor=row['floor'], front=front,
+                          use=local_use, surface_ids=[s['id'] for s in surfaces],
+                          axes_m=axes, opening_ids=[op['id'] for op in placed],
+                          access_ids=[op['access_for'] for op in placed if op['access_for']],
+                          exposed_width_m=round(sum(s['length_m'] for s in surfaces), 6))
+            sectors.append(sector)
+            # Exposed lines, not only the polygon area, distinguish a recessed
+            # wall from an ordinary upper floor. Access changes a type too.
+            signature = (row['body'], front, local_use,
+                         tuple((tuple(map(tuple, s['line'])), s['id'].split('/ring')[-1].split('/part')[0])
+                               for s in surfaces),
+                         tuple(op['kind'] for op in placed))
+            group = types.setdefault(signature, dict(body=row['body'], front=front,
+                                                       floors=[], sector_ids=[], axes_m=axes))
+            if group['axes_m'] != axes:
+                fail('floor_type_axes', sector_id, 'matching facade type changed its opening axes')
+            group['floors'].append(row['floor']);group['sector_ids'].append(sector_id)
+    floor_types = []
+    for index, group in enumerate(types.values()):
+        floor_types.append(dict(id=f'{group["body"]}/{group["front"]}/type{index}', **group))
+    coronations = []
+    for operation in massing['request']['building'].get('operations', []):
+        if operation['kind'] != 'crown':continue
+        available = [sector for sector in sectors if sector['body'] == operation['body'] and
+                     (operation.get('front') is None or sector['front'] == operation['front']) and
+                     (not operation.get('floors') or sector['floor'] in operation['floors'])]
+        if not available:fail('crown_host', operation['id'], 'no exposed facade sector for crown')
+        if not operation.get('floors'):
+            top = max(sector['floor'] for sector in available)
+            available = [sector for sector in available if sector['floor'] == top]
+        for sector in available:
+            frame = massing['fronts'][sector['front']]
+            origin = np.asarray(frame['origin'], float);right = np.asarray(frame['right'], float)
+            surfaces = [s for row in massing['storeys'] if row['body'] == sector['body'] and
+                        row['floor'] == sector['floor'] for s in row['surfaces']
+                        if s['id'] in sector['surface_ids']]
+            spans = sorted((min(float((np.asarray(p)-origin)@right) for p in s['line']),
+                            max(float((np.asarray(p)-origin)@right) for p in s['line']), s['id'])
+                           for s in surfaces)
+            position = operation.get('position', 'center')
+            left, right_edge, host = (spans[0] if position == 'left' else spans[-1]
+                                      if position == 'right' else
+                                      max(spans, key=lambda span: (span[1]-span[0], -span[0])))
+            coronations.append(dict(id=operation['id'], sector_id=sector['id'],
+                                    host_surface_id=host,
+                                    support_span_m=[round(left, 6), round(right_edge, 6)],
+                                    axis_m=round((left+right_edge)/2, 6),
+                                    opening_ids=sector['opening_ids']))
+    return dict(sectors=sectors, floor_types=floor_types, coronations=coronations)
+
+
 def plan_exterior_envelope(request):
     """New exterior-only route; the historic interior route remains opt-in separately."""
     program_plan = plan_exterior_program(request)
@@ -176,7 +262,7 @@ def plan_exterior_envelope(request):
     levels = request['context']['levels_m']
     stair = _stair_footprint(massing)
     parts = []; openings = []; decisions = list(program_plan.decisions)
-    uses = {s['id']: s['use'] for s in program_plan.storeys}
+    uses = {s['id']: {'floor': s['use'], **s['sectors']} for s in program_plan.storeys}
     for floor in range(1, len(levels)):
         rows = [r for r in massing['storeys'] if r['floor'] == floor and r['kind'] == 'enclosed']
         if not rows:continue
@@ -190,7 +276,7 @@ def plan_exterior_envelope(request):
             surfaces = [dict(s, body=row['body']) for s in row['surfaces'] if s['enclosure']]
             access = _accesses(row, surfaces) + _entrance(row, surfaces, request)
             requested = _windows(row, surfaces, [door for _, door, _, _ in access],
-                                 request, uses[row['id']])
+                                 request, uses[row['id']], program_plan.program['residential'])
             for index, (surface, line, kind, source) in enumerate(access+requested):
                 width = line.length
                 proportion, provenance = source if kind == 'window' else (None, None)
@@ -198,7 +284,8 @@ def plan_exterior_envelope(request):
                                  proportion)
                 frame = PROFILE_WIDTH[design['style']]
                 if kind == 'window':
-                    sill, head, adapted = window_dimensions(width, proportion, 'shop' if uses[row['id']] == 'commercial' else 'living', top-bottom)
+                    local_use = uses[row['id']].get(surface['front'], uses[row['id']]['floor'])
+                    sill, head, adapted = window_dimensions(width, proportion, 'shop' if local_use == 'commercial' else 'living', top-bottom)
                     if adapted:decisions.append(dict(path=surface['id'], reason='window height limited by lintel'))
                 else:
                     sill = 0.; head = min(2.15, top-bottom-LINTEL)
@@ -214,7 +301,8 @@ def plan_exterior_envelope(request):
                           top_m=bottom+head, sill_m=sill, head_m=head,
                           wall_thickness_m=EXTERIOR, frame_width_m=frame,
                           surface=surface['id'], body=row['body'], front=surface['front'],
-                           proportion=proportion, **design)
+                           proportion=proportion,
+                           use=uses[row['id']].get(surface['front'], uses[row['id']]['floor']), **design)
                 if kind != 'window' and width-2*frame < .70:
                     fail('door_clear_width', op['id'], 'insufficient pedestrian clearance')
                 current.append(op)
@@ -258,8 +346,9 @@ def plan_exterior_envelope(request):
         high = support['top_m']-SLAB if support['kind'] == 'plinth' else support['top_m']
         _part(parts, support['id'], support['kind'], 'concrete', 1,
               shape(support['geometry']), support['bottom_m'], high)
+    facade = _facade_axes(massing, program_plan.storeys, openings)
     plan = ExteriorEnvelopePlan('exterior-envelope-v1', request, massing,
-                                program_plan.program, dict(stairs=encode(stair)),
+                                program_plan.program, dict(stairs=encode(stair)), facade,
                                 openings, parts, decisions, {})
     plan.checks = validate_envelope(plan)
     return plan

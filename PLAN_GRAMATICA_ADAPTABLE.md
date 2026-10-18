@@ -85,6 +85,16 @@ el muro detrás de balcones, sin confundirlo con la silueta de la losa. Faltan
 retícula arquitectónica y pisos tipo, criterios completos para comercio, y
 despacho de carpintería al catálogo en R3; el preview aún no acredita realismo.
 
+**Avance R2.3/R2.4:** el plan exterior publica `facade.sectors` (uso local,
+superficies expuestas, ejes, accesos) y `facade.floor_types` (retícula compartida
+por pisos geométricamente compatibles). Uso comercial reserva una vitrina mayor;
+oficinas y multifamiliares repiten tres ejes en paños suficientemente anchos.
+Una solicitud de coronación reserva `facade.coronations` con su **paño anfitrión**
+y ancho disponible, sin generar un triángulo universal: su volumen y encuentro
+con cubierta siguen siendo trabajo de R4/R5. Banco R2: 11 escenarios exportados
+con frente/oblicua y 20 casos de masas comprobados sin BSP. El cerco se conserva
+como intención, **aún no se materializa** hasta integrar su catálogo en R4.
+
 **Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
 
 Separar atributos: uso (residencial/comercial/oficinas-mixto), organización residencial (unifamiliar/multifamiliar), uso por piso/sector, evolución (unitaria/progresiva), conservación/ocupación y estilo. Abandonada es un estado, no una tipología equivalente a comercio. Permitir edificios sencillos, irregulares o sin estilo dominante. Cerco es independiente del uso.
@@ -137,7 +147,7 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
 - [ ] R1: puente implementado y cierre técnico hecho (anclaje de superficie, pisos entre cuerpos, estilo local, paleta y cobertura geométrica). La aceptación arquitectónica —frente y oblicua— pasa a R2/R6. Véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Las cuatro imágenes no constituyen aceptación arquitectónica.
-- [ ] R2: R2.1 implementada; primer corte R2.2/R2.4/R2.5 funcional sin BSP. Pendientes paños/ejes/pisos tipo, reservas generales de balcones de catálogo, tipologías y aceptación visual.
+- [ ] R2: R2.1–R2.5 tienen una ruta exterior funcional (paños, ejes/pisos tipo, puerta vinculada al balcón y envolvente sin BSP). Pendiente la aceptación visual del usuario y completar composición/zonas de acceso en casos complejos; cerco y piezas finales pertenecen a R3–R5.
 - [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
 - [ ] R4: cercos, entradas y ornamentación conservada.
 - [ ] R5: cubiertas y detalle cotidiano contextual.

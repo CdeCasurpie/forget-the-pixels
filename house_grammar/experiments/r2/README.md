@@ -14,7 +14,21 @@ sin atribuirlas al borde delantero del voladizo.
 
 Pruebas: `PYTHONPATH=house_grammar/src python3 -m pytest
 house_grammar/tests/test_exterior_envelope.py -q`. Incluyen 20 casos de masas,
-exportación con vistas frontal/oblicua y ausencia de tabiques. Los previews de
-este primer corte siguen siendo sobrios: composición por ejes/pisos tipo,
-tipologías y carpintería de los nueve catálogos quedan pendientes para R2.3 y
-R3–R5; no son aceptación arquitectónica.
+exportación con vistas frontal/oblicua y ausencia de tabiques. El plan publica
+`facade.sectors` (uso por frente y ejes en metros), `facade.floor_types`
+(pisos superiores compatibles comparten retícula) y `facade.coronations` para
+reservar el paño de un frontón solicitado sin dibujar un triángulo fijo.
+
+Banco visual:
+
+```bash
+PYTHONPATH=house_grammar/src python3 house_grammar/experiments/r2/run.py \
+  --output /tmp/opencode/r2-review
+```
+
+Escribe 11 casos con `front.png`, `preview.png` (oblicua), GLB y manifest:
+vivienda individual/multifamiliar, comercio, uso mixto, oficina, balcón con
+puerta, patio, retiro, esquina, desocupación y comercio con intención de cerco.
+Los previews aún son sobrios: los cercos **no** se dibujan en R2 y la
+carpintería sigue siendo la auxiliar de la envolvente. Su despacho al catálogo
+es R3, cercos/ornamento R4, cubierta R5. No son aceptación arquitectónica.
