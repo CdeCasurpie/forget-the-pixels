@@ -37,11 +37,16 @@ def materialize_openings(plan):
             frame_width_m=record['frame_width_m'], frame_depth_m=.10 if window else .12,
             recess_m=.08 if window else .12,
             frame_profile=style if window else None,
+            frame_material=({'wood':'wood','metal':'metal','pvc':'plastic'}
+                            .get(record['material']) if window else None),
             prefab='catalog', source=record['source'], sill=window,
             door=None if window else DoorControls(
                 model=style,
+                frame_material=('metal' if record['material']=='glass' else
+                                record['material'] if record['material'] in ('wood','metal') else 'auto'),
                 construction='glazed' if record['source'] == 'balcony_access' or
-                               record['use'] == 'commercial' else 'auto'))
+                               record['use'] == 'commercial' or
+                               record['material'] == 'glass' else 'auto'))
         catalogue = resolve_opening(catalogue, style)
         a = np.asarray(line.coords[0], float)
         tangent = (np.asarray(line.coords[-1], float)-a)/line.length

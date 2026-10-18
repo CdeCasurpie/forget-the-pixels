@@ -156,6 +156,8 @@ def test_facade_zone_backwards_compatible():
         assert record.pop('thickness_m')==0.
         assert record.pop('section') is None
         assert record['facade'].pop('top_profile') is None
+        for opening in record['facade']['openings']:
+            assert opening.pop('frame_material') is None
         record['facade'].pop('program_enabled')
         record['facade']['is_front']=wall.facade.has_program
         legacy.append(record)

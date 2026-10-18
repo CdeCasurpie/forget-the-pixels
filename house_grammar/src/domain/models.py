@@ -141,6 +141,7 @@ class Opening:
     arch_rise_m: float | None = None
     frame_profile: str | None = None
     frame_depth_m: float = .10
+    frame_material: str | None = None  # optional local catalog slot; None keeps historic profile default
     sill: bool = False
     grid_spacing_m: float | None = None
     grille_spacing_m: float = .14

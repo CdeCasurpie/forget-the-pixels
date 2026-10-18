@@ -20,6 +20,8 @@ PROFILES = {
 
 def validate_window(op):
     if op.frame_profile not in PROFILES:raise ValueError('Unknown or unresolved window frame profile')
+    if op.frame_material not in (None,'wood','metal','frame','plastic'):
+        raise ValueError('Unknown window frame material slot')
     if op.kind not in ('window','balcony_window') or op.prefab not in ('catalog','legacy','slim_window','storefront','open'):
         raise ValueError('Linked window supports window glass/open infill only')
     if not all(math.isfinite(x) and x>0 for x in
@@ -70,7 +72,7 @@ def build_window(mb,a,t,n,op):
     validate_window(op)
     shape=opening_shape(op)
     clear=interior(op)
-    material='wood' if op.frame_profile=='madera' else 'frame'
+    material=op.frame_material or ('wood' if op.frame_profile=='madera' else 'frame')
     def emit(geom,back,front,mat,name):
         if not geom.is_empty:
             parts=list(geom.geoms) if geom.geom_type=='MultiPolygon' else [geom]
