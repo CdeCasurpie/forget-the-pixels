@@ -13,7 +13,7 @@ from shapely.geometry import LineString, Polygon, box, shape
 from shapely.ops import unary_union
 
 from planning.envelope import (EXTERIOR, SLAB, LINTEL, PROFILE_WIDTH, _design,
-                               _joinery, _part, strip, validate_envelope,
+                               _part, strip, validate_envelope,
                                window_dimensions)
 from planning.exterior_program import plan_exterior_program
 from planning.massing import clean, encode, fail, local, world
@@ -318,7 +318,6 @@ def plan_exterior_envelope(request):
                       if op['bottom_m'] < (low+high)/2 < op['top_m']]
             _part(parts, f'floor{floor}/wall{i}', 'wall', 'plaster', floor,
                   clean(outer.difference(unary_union(active))), low, high)
-        for op in current:_joinery(op, parts)
         openings.extend(current)
         for row in rows:
             for space in row.get('spaces', []):
@@ -339,8 +338,19 @@ def plan_exterior_envelope(request):
         slab = clean(unary_union(upper+lower))
         if 0 < index < len(levels)-1 and not stair.is_empty:
             slab = clean(slab.difference(stair))
-        _part(parts, f'level{index}/slab', 'slab', 'concrete', max(1, index),
-              slab, z-SLAB, z)
+        door_feet = [strip(shape(op['geometry']), 0., op['width_m'], -.11, .13,
+                           op['inward']) for op in openings
+                     if op['floor'] == index+1 and op['kind'] != 'window']
+        if door_feet:
+            # The catalog threshold sits 3.5 cm below the finished floor. Give
+            # it a real recess instead of placing stone inside solid concrete.
+            _part(parts, f'level{index}/slab_lower', 'slab', 'concrete', max(1, index),
+                  slab, z-SLAB, z-.035)
+            _part(parts, f'level{index}/slab', 'slab', 'concrete', max(1, index),
+                  clean(slab.difference(unary_union(door_feet))), z-.035, z)
+        else:
+            _part(parts, f'level{index}/slab', 'slab', 'concrete', max(1, index),
+                  slab, z-SLAB, z)
     for support in massing['supports']:
         if support['kind'] == 'cantilever':continue
         high = support['top_m']-SLAB if support['kind'] == 'plinth' else support['top_m']

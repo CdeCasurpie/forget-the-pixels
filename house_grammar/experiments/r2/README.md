@@ -30,11 +30,14 @@ Escribe 11 casos con `front.png`, `preview.png` (oblicua), GLB y manifest:
 vivienda individual/multifamiliar, comercio, uso mixto, oficina, balcón con
 puerta, patio, retiro, esquina, desocupación y comercio con intención de cerco.
 Las [vistas de revisión](review/) conservan los 22 PNG frontal/oblicuo y el
-manifest del banco, sin sobrescribir material histórico. Entre ellos:
+manifest del banco **antes del puente R3**, sin sobrescribir material histórico.
+Si vuelves a ejecutar `run.py`, obtendrás carpintería de catálogo en el GLB y
+las vistas nuevas. Entre los PNG históricos:
 [balcón con acceso](review/balcony_access/front.png),
 [uso mixto](review/mixed_use/front.png) y
 [casa individual](review/single_family/front.png).
 
-Los previews aún son sobrios: los cercos **no** se dibujan en R2 y la
-carpintería sigue siendo la auxiliar de la envolvente. Su despacho al catálogo
-es R3, cercos/ornamento R4, cubierta R5. No son aceptación arquitectónica.
+Los previews aún son sobrios: los cercos **no** se dibujan en R2. La
+carpintería de estos PNG era la auxiliar; la ruta activa la sustituyó por el
+catálogo en R3. Cercos/ornamento son R4 y cubierta R5. No son aceptación
+arquitectónica.

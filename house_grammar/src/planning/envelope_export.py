@@ -93,21 +93,33 @@ def export_envelope(plan, output, preview=True):
     (output/'plan.json').write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
     report=summary(plan)
     meshes,audit=solids(plan)
+    catalogue=None
+    if 'interior' not in data:
+        from planning.catalogue_openings import materialize_openings, mesh_items
+        catalogue=materialize_openings(plan)
+        meshes+=list(mesh_items(catalogue))
+        report['catalogue_openings']=dict(
+            faces=len(catalogue.faces),
+            semantics=sorted({part['name'] for part in catalogue.parts}))
     report['audit']=audit
     (output/'summary.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     scene=trimesh.Scene()
+    palette=dict(MATERIAL_COLORS)
+    if catalogue is not None:
+        for material in catalogue.materials:
+            palette[material['name']]=tuple(round(255*c) for c in material['color'])+(255,)
     for name,material,mesh in meshes:
-        mesh.visual.face_colors=np.tile(np.asarray(MATERIAL_COLORS.get(material,(200,200,200,255))),(len(mesh.faces),1))
+        mesh.visual.face_colors=np.tile(np.asarray(palette.get(material,(200,200,200,255))),(len(mesh.faces),1))
         scene.add_geometry(mesh,node_name=name,geom_name=name)
     scene.apply_transform(trimesh.transformations.rotation_matrix(-np.pi/2,[1,0,0]))
     scene.export(output/'envelope.glb')
     if preview:
-        _render(meshes,output/'preview.png',view=(27,-125))
-        render_drawings(data,meshes,output)
+        _render(meshes,output/'preview.png',view=(27,-125),palette=palette)
+        render_drawings(data,meshes,output,palette=palette)
     return report
 
 
-def _render(meshes, output, view, direction=None, ortho=False):
+def _render(meshes, output, view, direction=None, ortho=False, palette=None):
     """Depth-tested raster preview.
 
     Replaces the matplotlib 3D collection, whose per-triangle paint order and
@@ -115,10 +127,10 @@ def _render(meshes, output, view, direction=None, ortho=False):
     See ``modeling/software_render.py`` for the rasteriser and its rationale.
     """
     from modeling.software_render import render
-    render(meshes,output,view=view,direction=direction,ortho=ortho,palette=MATERIAL_COLORS)
+    render(meshes,output,view=view,direction=direction,ortho=ortho,palette=palette or MATERIAL_COLORS)
 
 
-def render_drawings(data, meshes, output):
+def render_drawings(data, meshes, output, palette=None):
     if 'interior' in data:
         render_plan(data,output/'floors')
         fronts=data['interior']['massing']['fronts']
@@ -126,16 +138,16 @@ def render_drawings(data, meshes, output):
         # The default route has no room diagram to draw. Show the facade only.
         fronts=data['massing']['fronts']
     primary=max(fronts,key=lambda name:fronts[name]['length_m'])
-    render_elevation(meshes,fronts[primary],output/'front.png')
+    render_elevation(meshes,fronts[primary],output/'front.png',palette=palette)
     directory=output/'elevations';directory.mkdir(parents=True,exist_ok=True)
     for name,frame in sorted(fronts.items()):
-        render_elevation(meshes,frame,directory/f'{name}.png')
+        render_elevation(meshes,frame,directory/f'{name}.png',palette=palette)
 
 
-def render_elevation(meshes, frame, output):
+def render_elevation(meshes, frame, output, palette=None):
     inward=np.asarray(frame['inward'],dtype=float)
     direction=np.array([-inward[0],-inward[1],0.])
-    _render(meshes,output,view=(0,0),direction=direction/np.linalg.norm(direction),ortho=True)
+    _render(meshes,output,view=(0,0),direction=direction/np.linalg.norm(direction),ortho=True,palette=palette)
 
 
 def render_plan(data, floors_dir):

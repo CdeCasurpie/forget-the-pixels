@@ -105,6 +105,21 @@ Resolver grupos de pisos tipo y ejes compartidos: escalera lateral o central, re
 
 ### R3 — Vanos automáticos dimensionados y construidos con catálogo
 
+**Primer puente R3 implementado:** la ruta exterior conserva sus huecos y
+cortes, pero ya no llama `_joinery`: `planning/catalogue_openings.py` convierte
+cada vano a `Opening`, resuelve `opening_catalog` y llama al único
+`build_opening` existente. El export reúne el catálogo y la mampostería en el
+mismo GLB y en frente/oblicua. La puerta de balcón es acristalada, con su
+`access_for`; su profundidad (.12 m) no es menor que la de ventana (.08 m).
+El umbral de catálogo tiene reserva real en la losa. La ruta histórica
+`interiors=True` conserva `_joinery` para sus regresiones. Los PNG guardados en
+`experiments/r2/review/` documentan el estado **anterior** al puente R3.
+
+**Aún pendiente para cerrar R3:** ampliar la selección de formas, rejas,
+sobreluz y mecanismos por intención exterior; reserva volumétrica de portales
+y molduras, tipologías estrechas/anchas y banco visual de cada familia. El
+puente de despacho no equivale a aprobar todas las capacidades del catálogo.
+
 **Trabajo:** resolver conjuntamente conteo, ejes, ancho, alto, antepecho, dintel, padding, separación entre vanos y profundidad. Aplicar reglas anteriores, respetar solicitudes explícitas y evaluar ocupación del paño. Reservar huella completa de portales, pilastras y molduras. Adaptar `Opening` y el despacho existente a la escena resuelta y a estilos locales; conservar formas curvas, rejas, sobreluces, hojas y perfiles. Retirar `_joinery` duplicado después de verificar equivalencia de capacidades requeridas.
 
 **Salida:** ventanas principales claramente mayores que respiraderos; puertas alejadas del borde y con profundidad propia; conteos y proporciones correctos en lotes estrechos/anchos. Verificar ventanas y puertas de cada familia, huecos de igual contorno que su pieza y repetición de dinteles/ejes entre pisos. Una prueba confirma invocación del constructor de catálogo, no solo parecido visual.
