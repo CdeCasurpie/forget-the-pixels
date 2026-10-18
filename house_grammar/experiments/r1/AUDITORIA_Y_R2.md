@@ -58,6 +58,12 @@ piso/sector, organización residencial, evolución y conservación independiente
 Estilo global heredable, excepciones locales; cerco independiente. Omitido permite
 completar; `false` prohíbe. El LLM no entrega metros por ventana.
 
+**Contrato implementado:** `building.program` y `planning/exterior_program.py`;
+`ExteriorProgramPlan` incorpora el mismo massing articulado más asignaciones
+por cuerpo/piso/frente, sin habitaciones. `tests/test_exterior_program.py`
+fija validación, prioridades locales y ausencia explícita de cerco. Aún falta
+que R2.2–R2.5 consuman el programa para producir una fachada exterior.
+
 ### R2.2 — Paños y reservas sobre las masas actuales
 
 Entrada: salida de `plan_articulation` y chart corregido. Agrupar bordes

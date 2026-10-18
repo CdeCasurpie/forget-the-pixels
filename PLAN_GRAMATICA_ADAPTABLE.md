@@ -64,6 +64,14 @@ Puertas y ventanas tienen profundidades independientes. El acceso puede tener ma
 
 **Diseño de ejecución y auditoría previa:** véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Conservar `plan_massing`/`plan_articulation`; sustituir la dependencia de `plan_interiors` como origen obligatorio de vanos. La mejora debe ser visible incluso en una masa rectangular sencilla.
 
+**R2.1 implementada (contrato, aún no fachada visible):** `building.program`
+declara uso, organización residencial, evolución, conservación y ocupación
+independientes, con excepciones por cuerpo/piso/frente. `planning/exterior_program.py`
+lo completa sobre `plan_articulation` sin crear tabiques ni tocar la masa.
+`site.fence=False` permanece una prohibición explícita. R2.2–R2.5 deberán
+consumir estas asignaciones para reservar paños y construir la envolvente;
+agregar vocabulario por sí solo no satisface la salida visual de R2.
+
 **Trabajo:** sustituir la dependencia obligatoria de la partición BSP por paños, ejes, zonas funcionales aproximadas y reserva de núcleo. Reutilizar ideas/código de `facade_composition.py`, `facade_program.py` y las reservas útiles de `interiors.py`. No materializar muros interiores por defecto.
 
 Separar atributos: uso (residencial/comercial/oficinas-mixto), organización residencial (unifamiliar/multifamiliar), uso por piso/sector, evolución (unitaria/progresiva), conservación/ocupación y estilo. Abandonada es un estado, no una tipología equivalente a comercio. Permitir edificios sencillos, irregulares o sin estilo dominante. Cerco es independiente del uso.
@@ -116,7 +124,7 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
 - [ ] R1: puente implementado y cierre técnico hecho (anclaje de superficie, pisos entre cuerpos, estilo local, paleta y cobertura geométrica). La aceptación arquitectónica —frente y oblicua— pasa a R2/R6. Véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Las cuatro imágenes no constituyen aceptación arquitectónica.
-- [ ] R2: composición exterior, tipologías y pisos tipo.
+- [ ] R2: R2.1 (programa exterior) implementada; pendientes R2.2–R2.5 (paños, ejes/pisos tipo, relaciones funcionales y envolvente sin BSP obligatorio).
 - [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
 - [ ] R4: cercos, entradas y ornamentación conservada.
 - [ ] R5: cubiertas y detalle cotidiano contextual.

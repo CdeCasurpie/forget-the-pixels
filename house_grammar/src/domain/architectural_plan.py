@@ -23,3 +23,21 @@ class MassingPlan:
 
     def to_dict(self):
         return asdict(self)
+
+
+@dataclass
+class ExteriorProgramPlan:
+    """Exterior use assignments over existing massing, without an interior BSP.
+
+    ``storeys`` are keyed by the actual massing storey IDs. ``massing`` remains
+    the unmodified articulation result; this plan only adds program decisions.
+    """
+    version: str
+    request: dict
+    massing: dict
+    program: dict
+    storeys: list[dict]
+    decisions: list[dict]
+
+    def to_dict(self):
+        return asdict(self)

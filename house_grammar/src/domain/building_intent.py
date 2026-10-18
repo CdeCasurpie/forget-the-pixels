@@ -17,6 +17,12 @@ OPERATIONS = ('setback', 'bite', 'courtyard', 'attach', 'advance', 'overhang',
               'open_ground', 'recess', 'depth_rhythm', 'floor_shift',
               'chamfer', 'round_corner', 'crown', 'loggia', 'portico', 'vestibule', 'balcony')
 STYLES = ('republicano', 'moderno', 'clasico', 'barroco', 'madera', 'mixed')
+USES = ('residential', 'commercial', 'office', 'mixed')
+FLOOR_USES = ('residential', 'commercial', 'office')
+RESIDENTIAL_TYPES = ('single_family', 'multi_family', 'none')
+EVOLUTIONS = ('unitary', 'progressive', 'adapted')
+CONDITIONS = ('maintained', 'ordinary', 'weathered', 'abandoned')
+OCCUPANCIES = ('occupied', 'vacant')
 POSITIONS = ('left', 'center', 'right', 'corner', 'rear', 'all')
 SIZES = ('shallow', 'medium', 'deep')
 PHASE_ORDER = ('site', 'bodies', 'voids', 'storeys', 'planes', 'spaces', 'crowns')
@@ -93,7 +99,7 @@ def _validate_intent(data):
         _check(type(edge) is int and 0<=edge<len(points),'context.fronts.'+key,'invalid input-ring edge')
     _check(len(set(fronts.values()))==len(fronts),'context.fronts','duplicate edge')
     b=data['building']
-    _object(b, ('organization','profile','style','bodies','operations','site','facades','roof','finishes'), (), 'building')
+    _object(b, ('organization','profile','style','bodies','operations','site','facades','roof','finishes','program'), (), 'building')
     if 'organization' in b: _enum(b['organization'],ORGANIZATIONS,'building.organization')
     if 'style' in b: _enum(b['style'],STYLES,'building.style')
     if 'profile' in b:
@@ -113,6 +119,30 @@ def _validate_intent(data):
         if 'width' in body: _enum(body['width'],('narrow','medium','wide'),'body.width')
         if 'style' in body: _enum(body['style'],STYLES,'body.style')
     body_floors={body['id']:set(body.get('floors',range(1,len(levels)))) for body in bodies}
+    if 'program' in b:
+        program=b['program']
+        _object(program, ('use','residential','evolution','condition','occupancy','floors'), (), 'building.program')
+        for key, choices in (('use',USES),('residential',RESIDENTIAL_TYPES),
+                             ('evolution',EVOLUTIONS),('condition',CONDITIONS),
+                             ('occupancy',OCCUPANCIES)):
+            if key in program:_enum(program[key],choices,'building.program.'+key)
+        scopes=set()
+        for row in _list(program.get('floors',[]),'building.program.floors'):
+            _object(row, ('body','floor','use','sectors'), ('body','floor'), 'building.program.floor')
+            _check(row['body'] in body_floors,'building.program.floor.body','unknown body')
+            _check(type(row['floor']) is int and row['floor'] in body_floors[row['body']],
+                   'building.program.floor.floor','floor absent from body')
+            scope=(row['body'],row['floor'])
+            _check(scope not in scopes,'building.program.floors','duplicate body/floor scope')
+            scopes.add(scope)
+            if 'use' in row:_enum(row['use'],FLOOR_USES,'building.program.floor.use')
+            seen_fronts=set()
+            for sector in _list(row.get('sectors',[]),'building.program.floor.sectors'):
+                _object(sector,('front','use'),('front','use'),'building.program.sector')
+                _check(sector['front'] in fronts,'building.program.sector.front','unknown front')
+                _check(sector['front'] not in seen_fronts,'building.program.sector.front','duplicate front')
+                seen_fronts.add(sector['front'])
+                _enum(sector['use'],FLOOR_USES,'building.program.sector.use')
     operations=_list(b.get('operations',[]),'operations')
     opids=set()
     for op in operations:
