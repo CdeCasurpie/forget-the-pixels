@@ -1,0 +1,477 @@
+{
+  "version": "r0-reference",
+  "cases": [
+    {
+      "faces": 35800,
+      "finite": true,
+      "parts": 102,
+      "semantics": [
+        "roof_slab",
+        "wall",
+        "window_glass",
+        "window_grille",
+        "window_mullion",
+        "window_profile",
+        "window_reveal",
+        "window_sill"
+      ],
+      "expected": [
+        "window_glass"
+      ],
+      "found": true,
+      "name": "ventanas_republicano",
+      "seconds": 4.6,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_republicano/front.png"
+    },
+    {
+      "faces": 104888,
+      "finite": true,
+      "parts": 306,
+      "semantics": [
+        "roof_slab",
+        "wall",
+        "window_glass",
+        "window_grille",
+        "window_mullion",
+        "window_profile",
+        "window_reveal",
+        "window_sill"
+      ],
+      "expected": [
+        "window_glass"
+      ],
+      "found": true,
+      "name": "ventanas_barroco",
+      "seconds": 12.94,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_barroco/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_barroco/front.png"
+    },
+    {
+      "faces": 27672,
+      "finite": true,
+      "parts": 78,
+      "semantics": [
+        "roof_slab",
+        "wall",
+        "window_glass",
+        "window_grille",
+        "window_mullion",
+        "window_profile",
+        "window_reveal",
+        "window_sill"
+      ],
+      "expected": [
+        "window_glass"
+      ],
+      "found": true,
+      "name": "ventanas_clasico",
+      "seconds": 3.85,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_clasico/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_clasico/front.png"
+    },
+    {
+      "faces": 27672,
+      "finite": true,
+      "parts": 78,
+      "semantics": [
+        "roof_slab",
+        "wall",
+        "window_glass",
+        "window_grille",
+        "window_mullion",
+        "window_profile",
+        "window_reveal",
+        "window_sill"
+      ],
+      "expected": [
+        "window_glass"
+      ],
+      "found": true,
+      "name": "ventanas_madera",
+      "seconds": 3.88,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_madera/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_madera/front.png"
+    },
+    {
+      "faces": 15480,
+      "finite": true,
+      "parts": 42,
+      "semantics": [
+        "roof_slab",
+        "wall",
+        "window_glass",
+        "window_grille",
+        "window_mullion",
+        "window_profile",
+        "window_reveal",
+        "window_sill"
+      ],
+      "expected": [
+        "window_glass"
+      ],
+      "found": true,
+      "name": "ventanas_moderno",
+      "seconds": 2.22,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_moderno/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/ventanas_moderno/front.png"
+    },
+    {
+      "faces": 42360,
+      "finite": true,
+      "parts": 82,
+      "semantics": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_portal_cornice",
+        "door_reveal",
+        "door_threshold",
+        "entrance_step",
+        "member_base",
+        "member_capital",
+        "member_shaft",
+        "roof_slab",
+        "transom_glass",
+        "transom_rail",
+        "wall"
+      ],
+      "expected": [
+        "door_leaf_frame"
+      ],
+      "found": true,
+      "name": "puertas_republicano_portal",
+      "seconds": 5.95,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/puertas_republicano_portal/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/puertas_republicano_portal/front.png"
+    },
+    {
+      "faces": 2716,
+      "finite": true,
+      "parts": 53,
+      "semantics": [
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_louver",
+        "door_moulding",
+        "door_reveal",
+        "door_threshold",
+        "entrance_step",
+        "roof_slab",
+        "transom_glass",
+        "transom_rail",
+        "wall"
+      ],
+      "expected": [
+        "door_leaf_frame"
+      ],
+      "found": true,
+      "name": "puertas_moderno_plain",
+      "seconds": 0.58,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/puertas_moderno_plain/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/puertas_moderno_plain/front.png"
+    },
+    {
+      "faces": 1596,
+      "finite": true,
+      "parts": 63,
+      "semantics": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold",
+        "entrance_nosing",
+        "entrance_side",
+        "entrance_steps",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "entrance_step",
+        "entrance_ramp",
+        "entrance_passage"
+      ],
+      "found": true,
+      "name": "entradas_steps",
+      "seconds": 0.45,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/entradas_steps/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/entradas_steps/front.png"
+    },
+    {
+      "faces": 1520,
+      "finite": true,
+      "parts": 60,
+      "semantics": [
+        "door_coffer",
+        "door_handle",
+        "door_hinge",
+        "door_leaf_frame",
+        "door_moulding",
+        "door_panel_back",
+        "door_panel_moulding",
+        "door_reveal",
+        "door_threshold",
+        "entrance_ramp",
+        "entrance_side",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "entrance_step",
+        "entrance_ramp",
+        "entrance_passage"
+      ],
+      "found": true,
+      "name": "entradas_ramp",
+      "seconds": 0.44,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/entradas_ramp/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/entradas_ramp/front.png"
+    },
+    {
+      "faces": 9072,
+      "finite": true,
+      "parts": 290,
+      "semantics": [
+        "balcony_bar",
+        "balcony_bracket",
+        "balcony_fascia",
+        "balcony_handrail",
+        "balcony_lower_rail",
+        "balcony_ornament",
+        "balcony_platform",
+        "balcony_post",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "balcony_platform"
+      ],
+      "found": true,
+      "name": "balcones_republicano",
+      "seconds": 1.22,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/balcones_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/balcones_republicano/front.png"
+    },
+    {
+      "faces": 248,
+      "finite": true,
+      "parts": 19,
+      "semantics": [
+        "balcony_bracket",
+        "balcony_fascia",
+        "balcony_glass",
+        "balcony_glass_channel",
+        "balcony_handrail",
+        "balcony_platform",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "balcony_platform"
+      ],
+      "found": true,
+      "name": "balcones_moderno",
+      "seconds": 0.32,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/balcones_moderno/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/balcones_moderno/front.png"
+    },
+    {
+      "faces": 17584,
+      "finite": true,
+      "parts": 8,
+      "semantics": [
+        "member_base",
+        "member_capital",
+        "member_shaft",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "pilaster",
+        "member_shaft"
+      ],
+      "found": true,
+      "name": "pilastras_republicano",
+      "seconds": 2.47,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/pilastras_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/pilastras_republicano/front.png"
+    },
+    {
+      "faces": 28496,
+      "finite": true,
+      "parts": 6,
+      "semantics": [
+        "member_shaft",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "pilaster",
+        "member_shaft"
+      ],
+      "found": true,
+      "name": "pilastras_moderno",
+      "seconds": 3.82,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/pilastras_moderno/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/pilastras_moderno/front.png"
+    },
+    {
+      "faces": 2552,
+      "finite": true,
+      "parts": 10,
+      "semantics": [
+        "crown_base_cornice",
+        "crown_body",
+        "crown_inner_bead",
+        "crown_moulding",
+        "crown_rim",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "crown_body"
+      ],
+      "found": true,
+      "name": "frontones_republicano",
+      "seconds": 0.59,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/frontones_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/frontones_republicano/front.png"
+    },
+    {
+      "faces": 316,
+      "finite": true,
+      "parts": 7,
+      "semantics": [
+        "roof_slab",
+        "trim_cornice",
+        "trim_plinth",
+        "wall"
+      ],
+      "expected": [
+        "trim_cornice"
+      ],
+      "found": true,
+      "name": "remates_republicano",
+      "seconds": 0.34,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/remates_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/remates_republicano/front.png"
+    },
+    {
+      "faces": 45680,
+      "finite": true,
+      "parts": 1503,
+      "semantics": [
+        "boundary_base",
+        "boundary_post",
+        "fence_bar",
+        "fence_rail",
+        "fence_ring",
+        "fence_spear",
+        "gate_frame",
+        "gate_handle",
+        "gate_hinge",
+        "post_cap",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "fence_bar",
+        "fence_louver",
+        "fence_wall"
+      ],
+      "found": true,
+      "name": "cercos_republicano",
+      "seconds": 4.94,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/cercos_republicano/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/cercos_republicano/front.png"
+    },
+    {
+      "faces": 4752,
+      "finite": true,
+      "parts": 227,
+      "semantics": [
+        "boundary_base",
+        "boundary_post",
+        "fence_louver",
+        "gate_frame",
+        "gate_handle",
+        "gate_hinge",
+        "modern_reveal",
+        "post_cap",
+        "roof_slab",
+        "wall"
+      ],
+      "expected": [
+        "fence_bar",
+        "fence_louver",
+        "fence_wall"
+      ],
+      "found": true,
+      "name": "cercos_moderno",
+      "seconds": 0.65,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/cercos_moderno/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/cercos_moderno/front.png"
+    },
+    {
+      "faces": 138864,
+      "finite": true,
+      "parts": 2180,
+      "semantics": [
+        "roof_fascia",
+        "roof_gable_closure",
+        "roof_rafter",
+        "roof_rafter_tip",
+        "roof_ridge_tile",
+        "roof_substrate",
+        "roof_tile_piece",
+        "wall"
+      ],
+      "expected": [
+        "roof_substrate",
+        "roof_tile_piece",
+        "roof_corrugation",
+        "roof_panel"
+      ],
+      "found": true,
+      "name": "techos_gable_tile",
+      "seconds": 38.28,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/techos_gable_tile/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/techos_gable_tile/front.png"
+    },
+    {
+      "faces": 5816,
+      "finite": true,
+      "parts": 234,
+      "semantics": [
+        "roof_corrugation",
+        "roof_fascia",
+        "roof_gable_closure",
+        "roof_rafter",
+        "roof_rafter_tip",
+        "roof_substrate",
+        "wall"
+      ],
+      "expected": [
+        "roof_substrate",
+        "roof_tile_piece",
+        "roof_corrugation",
+        "roof_panel"
+      ],
+      "found": true,
+      "name": "techos_shed_corrugated",
+      "seconds": 9.07,
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r0/techos_shed_corrugated/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r0/techos_shed_corrugated/front.png"
+    }
+  ]
+}
