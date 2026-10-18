@@ -1,0 +1,476 @@
+{
+  "version": "massing-plan-v1",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          18,
+          12
+        ],
+        [
+          0,
+          12
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6
+      ]
+    },
+    "building": {
+      "organization": "bar",
+      "profile": "barranco_residential"
+    },
+    "seed": 81
+  },
+  "fronts": {
+    "F1": {
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "right": [
+        1.0,
+        0.0
+      ],
+      "inward": [
+        -0.0,
+        1.0
+      ],
+      "length_m": 18.0
+    }
+  },
+  "storeys": [
+    {
+      "id": "main/floor1",
+      "body": "main",
+      "floor": 1,
+      "kind": "enclosed",
+      "bottom_m": 0,
+      "top_m": 3.2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              10.82735335
+            ],
+            [
+              14.04,
+              10.82735335
+            ],
+            [
+              14.04,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              10.82735335
+            ]
+          ]
+        ]
+      },
+      "surfaces": [
+        {
+          "id": "main/floor1/ring0/edge0/part0",
+          "kind": "exterior",
+          "front": "F1",
+          "line": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              14.04,
+              0.0
+            ]
+          ],
+          "normal": [
+            0.0,
+            -1.0
+          ],
+          "length_m": 14.04,
+          "bottom_m": 0,
+          "top_m": 3.2,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor1/ring0/edge1/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              14.04,
+              0.0
+            ],
+            [
+              14.04,
+              10.82735335
+            ]
+          ],
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "length_m": 10.82735335,
+          "bottom_m": 0,
+          "top_m": 3.2,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor1/ring0/edge2/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              14.04,
+              10.82735335
+            ],
+            [
+              0.0,
+              10.82735335
+            ]
+          ],
+          "normal": [
+            0.0,
+            1.0
+          ],
+          "length_m": 14.04,
+          "bottom_m": 0,
+          "top_m": 3.2,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor1/ring0/edge3/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              0.0,
+              10.82735335
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "normal": [
+            -1.0,
+            -0.0
+          ],
+          "length_m": 10.82735335,
+          "bottom_m": 0,
+          "top_m": 3.2,
+          "enclosure": true
+        }
+      ]
+    },
+    {
+      "id": "main/floor2",
+      "body": "main",
+      "floor": 2,
+      "kind": "enclosed",
+      "bottom_m": 3.2,
+      "top_m": 6,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              10.82735335
+            ],
+            [
+              14.04,
+              10.82735335
+            ],
+            [
+              14.04,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              10.82735335
+            ]
+          ]
+        ]
+      },
+      "surfaces": [
+        {
+          "id": "main/floor2/ring0/edge0/part0",
+          "kind": "exterior",
+          "front": "F1",
+          "line": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              14.04,
+              0.0
+            ]
+          ],
+          "normal": [
+            0.0,
+            -1.0
+          ],
+          "length_m": 14.04,
+          "bottom_m": 3.2,
+          "top_m": 6,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor2/ring0/edge1/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              14.04,
+              0.0
+            ],
+            [
+              14.04,
+              10.82735335
+            ]
+          ],
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "length_m": 10.82735335,
+          "bottom_m": 3.2,
+          "top_m": 6,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor2/ring0/edge2/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              14.04,
+              10.82735335
+            ],
+            [
+              0.0,
+              10.82735335
+            ]
+          ],
+          "normal": [
+            0.0,
+            1.0
+          ],
+          "length_m": 14.04,
+          "bottom_m": 3.2,
+          "top_m": 6,
+          "enclosure": true
+        },
+        {
+          "id": "main/floor2/ring0/edge3/part0",
+          "kind": "exterior",
+          "front": null,
+          "line": [
+            [
+              0.0,
+              10.82735335
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "normal": [
+            -1.0,
+            -0.0
+          ],
+          "length_m": 10.82735335,
+          "bottom_m": 3.2,
+          "top_m": 6,
+          "enclosure": true
+        }
+      ]
+    }
+  ],
+  "supports": [],
+  "site": {
+    "reservations": [
+      {
+        "id": "rear_service",
+        "use": "unclassified",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                18.0,
+                12.0
+              ],
+              [
+                18.0,
+                10.82735335
+              ],
+              [
+                0.0,
+                10.82735335
+              ],
+              [
+                0.0,
+                12.0
+              ],
+              [
+                18.0,
+                12.0
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "occupied": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            14.04,
+            10.82735335
+          ],
+          [
+            14.04,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            10.82735335
+          ],
+          [
+            14.04,
+            10.82735335
+          ]
+        ]
+      ]
+    },
+    "free": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            12.0
+          ],
+          [
+            18.0,
+            12.0
+          ],
+          [
+            18.0,
+            0.0
+          ],
+          [
+            14.04,
+            0.0
+          ],
+          [
+            14.04,
+            10.82735335
+          ],
+          [
+            0.0,
+            10.82735335
+          ],
+          [
+            0.0,
+            12.0
+          ]
+        ]
+      ]
+    },
+    "covered_free": {
+      "type": "GeometryCollection",
+      "geometries": []
+    },
+    "uncovered": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            12.0
+          ],
+          [
+            18.0,
+            12.0
+          ],
+          [
+            18.0,
+            0.0
+          ],
+          [
+            14.04,
+            0.0
+          ],
+          [
+            14.04,
+            10.82735335
+          ],
+          [
+            0.0,
+            10.82735335
+          ],
+          [
+            0.0,
+            12.0
+          ]
+        ]
+      ]
+    }
+  },
+  "operations": [],
+  "decisions": [
+    {
+      "path": "site.rear_service",
+      "source": "completion",
+      "reason": "service yard prior, not legal area requirement"
+    }
+  ],
+  "pending": [],
+  "checks": {
+    "parcel_containment": true,
+    "same_floor_overlap": false,
+    "support_collisions": false,
+    "valid_footprints": true,
+    "conceptual_support": true,
+    "engineering_verified": false,
+    "parcel_area_m2": 216.0,
+    "occupied_ground_m2": 152.01604103399998,
+    "free_ground_m2": 63.98395896600003,
+    "covered_free_m2": 0.0,
+    "uncovered_m2": 63.98395896600003,
+    "area_balance_error_m2": 0.0
+  }
+}

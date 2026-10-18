@@ -1,0 +1,340 @@
+{
+  "version": "massing-plan-v1",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "compact",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "depth_rhythm",
+          "body": "main",
+          "front": "F1",
+          "position": "left",
+          "depth": "medium",
+          "weights": [
+            1,
+            2,
+            1
+          ],
+          "planes": [
+            "base",
+            "recessed",
+            "projecting"
+          ]
+        }
+      ]
+    },
+    "seed": 17
+  },
+  "fronts": {
+    "F1": {
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "right": [
+        1.0,
+        0.0
+      ],
+      "inward": [
+        -0.0,
+        1.0
+      ],
+      "length_m": 10.0
+    }
+  },
+  "storeys": [
+    {
+      "id": "main/floor1",
+      "body": "main",
+      "floor": 1,
+      "kind": "enclosed",
+      "bottom_m": 0,
+      "top_m": 3.2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "main/floor2",
+      "body": "main",
+      "floor": 2,
+      "kind": "enclosed",
+      "bottom_m": 3.2,
+      "top_m": 6,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "main/floor3",
+      "body": "main",
+      "floor": 3,
+      "kind": "enclosed",
+      "bottom_m": 6,
+      "top_m": 8.8,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              16.27364758
+            ],
+            [
+              10.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "supports": [],
+  "site": {
+    "reservations": [
+      {
+        "id": "rear_service",
+        "use": "unclassified",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                18.0
+              ],
+              [
+                10.0,
+                16.27364758
+              ],
+              [
+                0.0,
+                16.27364758
+              ],
+              [
+                0.0,
+                18.0
+              ],
+              [
+                10.0,
+                18.0
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "occupied": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            16.27364758
+          ],
+          [
+            10.0,
+            16.27364758
+          ],
+          [
+            10.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            16.27364758
+          ]
+        ]
+      ]
+    },
+    "free": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            18.0
+          ],
+          [
+            10.0,
+            18.0
+          ],
+          [
+            10.0,
+            16.27364758
+          ],
+          [
+            0.0,
+            16.27364758
+          ],
+          [
+            0.0,
+            18.0
+          ]
+        ]
+      ]
+    },
+    "covered_free": {
+      "type": "GeometryCollection",
+      "geometries": []
+    },
+    "uncovered": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            18.0
+          ],
+          [
+            10.0,
+            18.0
+          ],
+          [
+            10.0,
+            16.27364758
+          ],
+          [
+            0.0,
+            16.27364758
+          ],
+          [
+            0.0,
+            18.0
+          ]
+        ]
+      ]
+    }
+  },
+  "operations": [
+    {
+      "id": "op1",
+      "kind": "depth_rhythm",
+      "status": "pending"
+    }
+  ],
+  "decisions": [
+    {
+      "path": "site.rear_service",
+      "source": "completion",
+      "reason": "service yard prior, not legal area requirement"
+    }
+  ],
+  "pending": [
+    {
+      "id": "op1",
+      "kind": "depth_rhythm",
+      "path": "building.operations",
+      "reason": "phase_2_or_later"
+    }
+  ],
+  "checks": {
+    "parcel_containment": true,
+    "same_floor_overlap": false,
+    "valid_footprints": true,
+    "conceptual_support": true,
+    "engineering_verified": false,
+    "parcel_area_m2": 180.0,
+    "occupied_ground_m2": 162.7364758,
+    "free_ground_m2": 17.263524200000013,
+    "covered_free_m2": 0.0,
+    "uncovered_m2": 17.263524200000013,
+    "area_balance_error_m2": 0.0
+  }
+}

@@ -1,0 +1,374 @@
+class EvidenceValue:
+class BuildingProgram:
+class ParcelContext:
+class EdgeRef:
+class MassSpec:
+class FacadeSpecV4:
+class ComponentRecord:
+class RoofSurface:
+class RoofProp:
+class RoofPlan:
+class SitePlan:
+class BuildingSpecificationV4:
+class LotGeometry:
+class CameraPose:
+class PanoramaView:
+class Alignment2D:
+class ReconstructionInput:
+class RoofObservation:
+class HeightEstimate:
+class Opening:
+class FacadeMaterialRegion:
+class FacadeProjection:
+class ExteriorStairSpecification:
+class FacadeSpecification:
+class SetbackSpecification:
+class RoofSpecification:
+class TextureSet:
+class MaterialSpecification:
+class BuildingAppearance:
+class BuildingSpecification:
+class MeshData:
+class ReconstructionContext:
+class Observation:
+class Evidence:
+class MassingControls:
+class ArchitecturalMass:
+class OpeningEdit:
+class FacadeControls:
+class FacadeOverride:
+class RoofControls:
+class RoofOverride:
+class RoofObject:
+class FenceRun:
+class SiteControls:
+class MaterialControl:
+class ThetaCandidate:
+class NuisanceParameters:
+class GrammarConfig:
+class ReconstructionRequest:
+def decode(cls, value, path="$ "):
+def canonical(value) -> str:
+def from_json(text: str) -> ReconstructionRequest:
+def collect_files(root: Path) -> list[Path]:
+def build_tree(files: list[Path], root: Path) -> str:
+    def walk(node: dict, prefix: str) -> None:
+def dump(root: Path, output: Path, with_tree: bool) -> None:
+def main() -> None:
+def load_height_fits(paths: list[Path]) -> dict[int, HeightEstimate]:
+def select_block_lots(
+def build_block_specifications(
+class BoundarySpec:
+def _segments(geometry):
+def generate_boundaries(
+def compose_facade(facade, parcel, style):
+    def add(kind, u, v, w, h, depth, material="accent", border=.12):
+class DetailBudget:
+    def __post_init__(self):
+    def _pick(self, block, street, close_up):
+    def balustrade_spacing_m(self) -> float:
+    def fence_bar_spacing_m(self) -> float:
+    def roof_prop_density(self) -> float:
+    def roof_prop_limit(self) -> int:
+    def grille_spacing_m(self) -> float:
+    def curtain_fold_m(self) -> float:
+    def shutter_pitch_m(self) -> float:
+    def emits(self, semantic: str) -> bool:
+    def cladding_joint_m(self) -> float:
+    def wants_curtains(self) -> bool:
+    def wants_mortar_courses(self) -> bool:
+    def wants_shutters(self) -> bool:
+    def wants_sill_bands(self) -> bool:
+    def wants_lettering(self) -> bool:
+def _merge_component_nodes(tree):
+def _corner_uvs(mesh):
+def export_glb(mesh, path, *, library=None, mode="authoring"):
+    def postprocess(tree):
+def export_obj(mesh: MeshData, output_path: Path, y_up: bool = False):
+def filter_lines(geom: shapely.Geometry) -> MultiLineString:
+def calculate_mass_exposures(site_plan: SitePlan, tolerance: float = 1e-4) -> Dict[str, Any]:
+class WallComposition:
+def resolve_family(program, rng):
+def bay_axes(length):
+def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
+def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
+def _upper_openings(axes, pitch, z0, z1, length, floor_index, rules, rng, dropped):
+def compose_wall(length, floor_levels, *, is_front, family, program, rng,
+def _relief(length, levels, axes, pitch, openings, rules, band_height,
+    def add(kind, u, v, width, height, depth, material="stone", border=0.14,
+def apply_family(spec, family):
+def snap(geometry, grid: float = CADASTRAL_GRID_M):
+def parcel_polygon(context, grid: float = CADASTRAL_GRID_M) -> Polygon:
+def front_lines(context) -> list[LineString]:
+def largest_polygon(geometry):
+def outward_normal(polygon: Polygon, p1, p2, probe: float = 1e-3):
+def projection_envelope(parcel: Polygon, front_lines, overhang_m: float = 1.35) -> Polygon:
+def extend_line_start(coords, dist):
+def extend_line_end(coords, dist):
+def get_interior_side(polygon: Polygon, line: LineString) -> str:
+def create_setback_mask(polygon: Polygon, front_line: LineString, distance: float) -> Polygon:
+def apply_edge_setbacks(parcel_poly: Polygon, specific_edges: list[LineString], distance: float) -> Polygon:
+def triangulate_polygon(polygon, z_height):
+def railing(mb, a, t, n, left, right, z, depth, pattern="vertical"):
+    def p(u, v, w):
+def opening(mb, a, t, n, op, pattern):
+    def b(u1, u2, z1, z2, d1, d2, mat, part):
+def projection(mb, a, t, n, feature):
+def exterior_stair(mb, a, t, n, stair, facade_length):
+    def xyz(u, z, depth):
+    def flight(u0, z0, z1, count, reverse=False):
+def _frame_intervals(length, levels):
+def _cell_finish(f, u_mid, z_mid, length, total_height, regions):
+def _brick_frame_polys(length, total_height, levels):
+def _emit_wall_shells(mb, a, t, n, f, length, total_height, ops, regions):
+    def emit(domain, back, front, material, semantic, label):
+def facade(mb, f, total_height):
+def _facade_body(mb, f, total_height):
+def roof_details(mb, poly, h, roof, rng):
+def _roof_details_body(mb, poly, h, roof, rng):
+def boundary_and_garden(mb, spec, poly, rng):
+def _boundary_and_garden_body(mb, spec, poly, rng):
+def generate_mesh(spec: BuildingSpecification):
+def _outward_normal(p1, p2, footprint_poly):
+def _is_front_edge(n_vec, spec, p1, p2, *, cos_tol=FRONT_NORMAL_COS_TOL,
+class ZOffsetMeshBuilder:
+    def __init__(self, builder, z_offset):
+    def box(self, a, t, n, u1, u2, z1, z2, w1, w2, *args, **kwargs):
+    def beam(self, a, b, *args, **kwargs):
+    def solid(self, shape, bottom, top, *args, **kwargs):
+    def foliage(self, center, *args, **kwargs):
+    def panel(self, a, t, n, polys_uz, w1, w2, *args, **kwargs):
+    def assembly(self, assembly_id):
+    def __getattr__(self, name):
+def street_envelope(context, overhang_m=STREET_OVERHANG_M):
+def _floor_levels_for_band(mass, z_bottom, z_top):
+def generate_v4_mesh(spec: BuildingSpecificationV4, *, detail=None) -> MeshData:
+def read_specification(path):
+def propose_building(
+def usable(polygon, min_area=MIN_MASS_AREA_M2, min_width=MIN_MASS_WIDTH_M):
+def lot_depth(parcel, fronts):
+def split_at_depth(parcel, fronts, depth):
+def floor_ladder(base_z, roof_z, floor_h):
+def _volume(role, polygon, base_z, roof_z, floor_h, index):
+def _single_block(buildable, fronts, roof_z, floor_h, rng):
+def _front_rear(buildable, fronts, roof_z, floor_h, rng, *, tall_front):
+def _podium_tower(buildable, fronts, roof_z, floor_h, rng):
+def _stepped_back(buildable, fronts, roof_z, floor_h, rng):
+def _corner_accent(buildable, fronts, roof_z, floor_h, rng):
+def choose_pattern(buildable, program, floors, fronts, rng):
+def _rooftop_addition(volumes, fronts, floor_h, rng):
+def generate_masses(
+def validate_material(material: MaterialSpecification) -> None:
+def resolve_materials(appearance: BuildingAppearance) -> tuple[MaterialSpecification, ...]:
+def appearance_for_style(style: str, wall_rgb: tuple[int, int, int], seed: int) -> BuildingAppearance:
+def material_to_dict(material: MaterialSpecification) -> dict:
+def _subdivide_ring(coords, max_len):
+def _is_rectilinear(poly, tol=1e-9):
+def _refine(axis, max_step):
+def _rectilinear_cells(poly, cuts_u=(), cuts_z=(), max_step=float('inf')):
+def _split_rect(x0, x1, z0, z1, max_aspect=3.5):
+def _clean_ring(coords):
+def triangulate_rings(exterior, holes=()):
+def _oriented(tris, verts, ccw=True):
+def _pos_key(point):
+def polygons(geometry):
+def triangles(polygon):
+class _Component:
+    def __init__(self, semantic, component_id, assembly_id):
+class MeshBuilder:
+    def __init__(self, parcel, appearance=BuildingAppearance(), *, envelope=None,
+    def limit_for(self, semantic, clip="auto"):
+    def can_attach(self, shape):
+    def _assembly(self):
+    def _auto_id(self, semantic):
+    def begin_component(self, semantic, component_id=None, assembly_id=None):
+    def end_component(self):
+    def component(self, semantic, component_id=None, assembly_id=None):
+    def assembly(self, assembly_id):
+    def _ensure_component(self, semantic):
+    def mat_index(self, material):
+    def uv_scale_for(self, material):
+    def vert(self, point):
+    def tri(self, a, b, c, uvs, material_idx):
+    def quad(self, a, b, c, d, uvs, material_idx):
+    def _cap_uvs(points_3d, scale):
+    def _uv_for_wall(u_along, z, scale):
+    def _ring_ids(self, coords, z_bottom, z_top):
+    def solid(self, shape, bottom, top, material="plaster", semantic="wall",
+    def _wall_edge_uv(A1, B1, B2, A2, facade_origin, facade_tangent,
+    def _level_ids(self, coords, bottom, top, height):
+    def box(self, a, t, n, u1, u2, z1, z2, w1, w2,
+    def _chamfered_box(self, a, t, n, u1, u2, z1, z2, w1, w2,
+    def beam(self, a, b, radius=0.018, material="metal", semantic="rail", *, clip="auto"):
+    def foliage(self, center, radii, rng, segments=10, rings=5, *, semantic="shrub",
+    def panel(self, a, t, n, polys_uz, w1, w2, mat_fn, semantic,
+    def _panel_poly(self, a, t, n, poly, w1, w2, mat_fn, cuts_u=(),
+    def _panel_rectilinear(self, a, t, n, poly, w1, w2, mat_fn, W,
+    def _side_dir(subrect, edge):
+    def _side_strip(self, W, mat_fn, scale_of, subs, pa, pb, w_lo, w_hi,
+    def finish(self):
+def _legacy_primary_color(legacy: BuildingSpecification) -> tuple[float, float, float]:
+def migrate_to_v4(legacy: BuildingSpecification,
+def sign_letters(mb,a,t,n,feature):
+def build_opening(mb, a, t, n, op):
+    def b(x1,x2,z1,z2,d1,d2,mat,part):
+def _add(mb, a, t, n, feature, u1, u2, z1, z2, w1, w2, semantic, material=None,
+def _footprint(a, t, n, u1, u2, w1, w2):
+def _balustrade(mb, a, t, n, u1, u2, z, depth, style="bars", material="metal"):
+    def point(u, height, out):
+def panel(mb, a, t, n, feature):
+def frame(mb, a, t, n, feature):
+def ledge(mb, a, t, n, feature):
+def canopy(mb, a, t, n, feature):
+def curved_canopy(mb, a, t, n, feature):
+def cornice(mb, a, t, n, feature):
+def sill_band(mb, a, t, n, feature):
+def pilaster(mb, a, t, n, feature):
+def balcony(mb, a, t, n, feature):
+def gallery(mb, a, t, n, feature):
+def awning(mb, a, t, n, feature):
+def bay_window(mb, a, t, n, feature):
+def eave(mb, a, t, n, feature):
+def shutter(mb, a, t, n, feature):
+def downpipe(mb, a, t, n, feature):
+def sign_box(mb, a, t, n, feature):
+def frame(rotation_deg):
+def _box(mb, origin, tangent, normal, u1, u2, z1, z2, w1, w2, material, semantic):
+def water_tank(mb, xy, z, rotation, scale, rng):
+def tank_elevated(mb, xy, z, rotation, scale, rng):
+def antenna(mb, xy, z, rotation, scale, rng):
+def hvac(mb, xy, z, rotation, scale, rng):
+def duct_run(mb, xy, z, rotation, scale, rng):
+def skylight(mb, xy, z, rotation, scale, rng):
+def caseta(mb, xy, z, rotation, scale, rng):
+def laundry(mb, xy, z, rotation, scale, rng):
+def planter(mb, xy, z, rotation, scale, rng):
+def stair_bulkhead(mb, xy, z, rotation, scale, rng):
+def rebar_cluster(mb, xy, z, rotation, scale, rng):
+class OpeningSpec:
+def generate_facade_openings(length: float, floor_levels: tuple[float, ...], program: str, z_bottom: float, z_top: float) -> list[OpeningSpec]:
+def resolve_seed(seed: int, lot_id: str, mass_id: str, feature_id: str, purpose: str) -> int:
+def _sweep(polygon, direction, distance, steps=4):
+def _depth_span(polygon, outward):
+def _eave_reference(strip, outward):
+def _tile_surface(polygon, fronts, parcel, base_z, rng):
+def _weights_for(mass, program):
+def _prop_footprint(kind, xy, rotation, scale):
+def scatter_props(area, weights, rng, *, density=0.10, limit=14):
+def plan_roof(mass, program, exposed_area, fronts, parcel, seed, *, lot_id="lot",
+def _slope_fields(surface):
+    def top(x, y):
+    def bottom(x, y):
+def build_roof(mb, plan, rng):
+def _build_roof_body(mb, plan, rng):
+def draw_fence(mb, a, t, n, length, boundary, rng, base_mat="plaster", style="reja"):
+    def spans_gate(u):
+def entrance_step(mb, entrance, rng):
+def plant_garden(mb, parcel, built, boundaries, entrances, rng):
+def build_site(mb, context, program, site_plan, entrances, rng):
+def build_building_specification(
+def write_building_specification(
+class FacadeTextureRequest:
+def find_project_root(start: str | Path | None = None,
+def default_catalog_path() -> Path | None:
+class ValidationError(Exception):
+class MaterialLibrary:
+    def __init__(self, catalog_path: str | Path, *, validate: bool = True):
+    def _load_catalog(self, *, validate: bool) -> None:
+    def _validate_texture_set(
+    def get_texture_set(self, name: str) -> TextureSet | None:
+    def get_image(self, path: str | None) -> Image.Image | None:
+    def load_all_maps(self, name: str) -> dict[str, Image.Image]:
+    def clear_cache(self) -> None:
+class ResolvedWall:
+class ResolvedBoundary:
+class ResolvedArchitecture:
+def _check(condition, message):
+def _ring(poly):
+def _polygon(poly, label):
+def _context(p):
+def _complete(theta, p):
+    def fill(value, default, path):
+def _masses(p, theta):
+def _canonical_masses(masses):
+    def key(m):
+def _mass_ref(value, masses):
+def _facade_controls(c, family):
+def _facade_override_controls(local, global_controls, family):
+def _composition(c, family, length, levels, height, ground, top):
+def resolve_theta(context: ReconstructionContext, theta: ThetaCandidate) -> ResolvedArchitecture:
+    def track(old,new,path=''):
+class _BandBuilder(ZOffsetMeshBuilder):
+    def panel(self,a,t,n,polys,w1,w2,mat_fn,semantic,**kwargs):
+def _rng(seed, label):
+def generate_resolved(resolved: ResolvedArchitecture, nuisance=NuisanceParameters(), config=GrammarConfig()):
+def generate_from_theta(context, theta, nuisance=NuisanceParameters(), config=GrammarConfig()):
+def validate_mesh(mesh, parcel, *, envelope=None, tolerance_m=CONTAINMENT_TOLERANCE_M):
+def component_topology(vertices, faces, face_start=0, face_count=None):
+    def find(a):
+def analyze_topology(mesh, open_semantics=()):
+class BuildingRequest:
+class GenerationReport:
+def propose_site(request: BuildingRequest, config: Any) -> SitePlan:
+def resolve_building(plan: SitePlan, evidence: Any) -> BuildingSpecificationV4:
+class ReconstructionResult:
+def _evidence_value(theta, path):
+def reconstruct(request: ReconstructionRequest) -> ReconstructionResult:
+def bearing_from_north(origin: Point, target: Point) -> float:
+def signed_angle(angle: float) -> float:
+def point_at_bearing(origin: Point, bearing: float, length: float) -> Point:
+def edge_midpoints(polygon: Polygon) -> list[tuple[int, Point, Point, Point]]:
+def find_target_lot(gdf: gpd.GeoDataFrame, lat: float, lon: float, tolerance_m: float):
+class StreetEdge:
+    def to_dict(self) -> dict:
+def _validate_lots(lots: gpd.GeoDataFrame) -> None:
+def street_facing_edges(
+def annotate_street_fronts(lots: gpd.GeoDataFrame, **thresholds) -> gpd.GeoDataFrame:
+def angle_to_degrees(value: Any) -> tuple[float | None, str]:
+def get_attr(obj: Any, name: str, default: Any = None) -> Any:
+def orientation_metadata(pano: Any, width: int, height: int) -> dict[str, Any]:
+def pano_date_year(pano: Any) -> int | None:
+def load_route(path: Path) -> list[dict[str, Any]]:
+def collect_from_coordinate(lat: float, lon: float, count: int, year: int | None) -> list[Any]:
+def collect_from_route(route: list[dict[str, Any]]) -> list[Any]:
+def download(panos: list[Any], output: Path) -> None:
+def parse_args() -> argparse.Namespace:
+def main() -> None:
+def build_reconstruction_input(shapefile: Path, manifest: Path, objectid: int, *, views: int | None = None) -> ReconstructionInput:
+def _package_payload(value: ReconstructionInput) -> dict:
+def write_reconstruction_input(value: ReconstructionInput, output: Path) -> None:
+def read_reconstruction_input(path: Path) -> ReconstructionInput:
+def intersection_distance(line: LineString, polygon, camera: Point) -> float | None:
+def find_blockers(gdf: gpd.GeoDataFrame, target_index, camera: Point, target: Point, spatial_index=None) -> list[int]:
+def score_edges(
+def select_cameras(
+def aligned_footprint(footprint, east_m: float, north_m: float):
+def predicted_row(height_m, distance_m, image_height_px, camera_height_m: float = 2.5):
+def fit_height(observations: list[dict], camera_height_m: float = 2.5, bounds_m=(1.0, 150.0)) -> dict:
+    def residual(height):
+def regularize_height_to_floors(
+def extract_full_vertical_strip(
+def main(step: int, output_default: Path) -> None:
+def angles_from_direction(direction) -> tuple[float, float]:
+class PinholeCamera:
+    def __post_init__(self):
+    def intrinsics(self) -> np.ndarray:
+    def vertical_fov_deg(self) -> float:
+    def camera_to_panorama(self) -> np.ndarray:
+def extract_rectilinear(panorama: np.ndarray, camera: PinholeCamera) -> np.ndarray:
+def project_prism_to_panorama(footprint, height_m: float, *, crs: str, latitude: float, longitude: float,
+class PanoramaCamera:
+    def __post_init__(self):
+    def basis(self):
+    def angles(self, points):
+    def pixels(self, points, width, height):
+def strip_pixels(panorama_pixels, source_size, strip_size, center_yaw_deg, fov_deg):
+def prism_edges(footprint, height, base_z=0., spacing=.2):
+    def add(a, b, kind):
+def draw_edges(image, curves, color, thickness=2):
+def split_vertical_strip(rgb: np.ndarray, min_segment_px: int = 8) -> tuple[int, float]:
+def detect_roof_boundary(rgb_strip: np.ndarray, *, min_segment_px: int = 8) -> dict[str, float | int]:
+class Sam3Backend:
+    def __init__(self, checkpoint: Path, confidence: float = .5):
+    def predict(self, image, prompt: str):
+def select_vertical(masks, x: float, half_width: int = 0):

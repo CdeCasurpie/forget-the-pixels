@@ -1,0 +1,24 @@
+{
+  "components": 3,
+  "vertices": 48,
+  "triangles": 84,
+  "all_components_watertight": true,
+  "all_components_positive_volume": true,
+  "all_components_winding_consistent": true,
+  "checks": {
+    "parcel_containment": true,
+    "same_floor_overlap": false,
+    "support_collisions": false,
+    "valid_footprints": true,
+    "conceptual_support": true,
+    "engineering_verified": false,
+    "parcel_area_m2": 180.0,
+    "occupied_ground_m2": 153.7588892,
+    "free_ground_m2": 26.241110799999987,
+    "covered_free_m2": 0.0,
+    "uncovered_m2": 26.241110799999987,
+    "area_balance_error_m2": 0.0
+  },
+  "pending": [],
+  "scope": "solid massing study, not a detailed or boolean-unified building"
+}

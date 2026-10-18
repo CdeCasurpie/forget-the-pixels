@@ -1,0 +1,7881 @@
+{
+  "version": "interior-plan-v1",
+  "request": {
+    "version": "intent-v1",
+    "context": {
+      "parcel": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "fronts": {
+        "F1": 0
+      },
+      "levels_m": [
+        0,
+        3.2,
+        6,
+        8.8
+      ]
+    },
+    "building": {
+      "organization": "L",
+      "profile": "barranco_residential",
+      "operations": [
+        {
+          "id": "op1",
+          "kind": "attach",
+          "body": "main",
+          "front": "F1",
+          "position": "rear",
+          "depth": "medium"
+        }
+      ]
+    },
+    "seed": 7
+  },
+  "massing": {
+    "version": "articulation-plan-v1",
+    "request": {
+      "version": "intent-v1",
+      "context": {
+        "parcel": [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            18
+          ],
+          [
+            0,
+            18
+          ]
+        ],
+        "fronts": {
+          "F1": 0
+        },
+        "levels_m": [
+          0,
+          3.2,
+          6,
+          8.8
+        ]
+      },
+      "building": {
+        "organization": "L",
+        "profile": "barranco_residential",
+        "operations": [
+          {
+            "id": "op1",
+            "kind": "attach",
+            "body": "main",
+            "front": "F1",
+            "position": "rear",
+            "depth": "medium"
+          }
+        ]
+      },
+      "seed": 7
+    },
+    "fronts": {
+      "F1": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "right": [
+          1.0,
+          0.0
+        ],
+        "inward": [
+          -0.0,
+          1.0
+        ],
+        "length_m": 10.0
+      }
+    },
+    "storeys": [
+      {
+        "id": "main/floor1",
+        "body": "main",
+        "floor": 1,
+        "kind": "enclosed",
+        "bottom_m": 0,
+        "top_m": 3.2,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ]
+          ]
+        },
+        "surfaces": [
+          {
+            "id": "main/floor1/ring0/edge0/part0",
+            "kind": "exterior",
+            "front": "F1",
+            "line": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "length_m": 10.0,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge1/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 7.4754089,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge2/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                4.8,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 5.2,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge3/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                4.8,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 5.52530224,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge4/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                2.16,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.6399999999999997,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge5/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                2.16,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge6/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                0.0,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.16,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge7/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                0.0,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor1/ring0/edge8/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 13.00071114,
+            "bottom_m": 0,
+            "top_m": 3.2,
+            "enclosure": true,
+            "access_reservations": []
+          }
+        ],
+        "enclosed_geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "id": "main/floor2",
+        "body": "main",
+        "floor": 2,
+        "kind": "enclosed",
+        "bottom_m": 3.2,
+        "top_m": 6,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ]
+          ]
+        },
+        "surfaces": [
+          {
+            "id": "main/floor2/ring0/edge0/part0",
+            "kind": "exterior",
+            "front": "F1",
+            "line": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "length_m": 10.0,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge1/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 7.4754089,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge2/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                4.8,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 5.2,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge3/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                4.8,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 5.52530224,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge4/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                2.16,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.6399999999999997,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge5/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                2.16,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge6/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                0.0,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.16,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge7/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                0.0,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor2/ring0/edge8/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 13.00071114,
+            "bottom_m": 3.2,
+            "top_m": 6,
+            "enclosure": true,
+            "access_reservations": []
+          }
+        ],
+        "enclosed_geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "id": "main/floor3",
+        "body": "main",
+        "floor": 3,
+        "kind": "enclosed",
+        "bottom_m": 6,
+        "top_m": 8.8,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ]
+          ]
+        },
+        "surfaces": [
+          {
+            "id": "main/floor3/ring0/edge0/part0",
+            "kind": "exterior",
+            "front": "F1",
+            "line": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "length_m": 10.0,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge1/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                10.0,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 7.4754089,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge2/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                4.8,
+                7.4754089
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 5.2,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge3/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                4.8,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 5.52530224,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge4/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                2.16,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.6399999999999997,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge5/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                2.16,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge6/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                0.0,
+                16.25088892
+              ]
+            ],
+            "normal": [
+              0.0,
+              1.0
+            ],
+            "length_m": 2.16,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge7/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                0.0,
+                13.00071114
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 3.2501777800000013,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          },
+          {
+            "id": "main/floor3/ring0/edge8/part0",
+            "kind": "exterior",
+            "front": null,
+            "line": [
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "normal": [
+              -1.0,
+              -0.0
+            ],
+            "length_m": 13.00071114,
+            "bottom_m": 6,
+            "top_m": 8.8,
+            "enclosure": true,
+            "access_reservations": []
+          }
+        ],
+        "enclosed_geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                13.00071114
+              ],
+              [
+                0.0,
+                16.25088892
+              ],
+              [
+                2.16,
+                16.25088892
+              ],
+              [
+                2.16,
+                13.00071114
+              ],
+              [
+                4.8,
+                13.00071114
+              ],
+              [
+                4.8,
+                7.4754089
+              ],
+              [
+                10.0,
+                7.4754089
+              ],
+              [
+                10.0,
+                0.0
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "supports": [],
+    "site": {
+      "reservations": [
+        {
+          "id": "rear_service",
+          "use": "unclassified",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  10.0,
+                  18.0
+                ],
+                [
+                  10.0,
+                  16.25088892
+                ],
+                [
+                  0.0,
+                  16.25088892
+                ],
+                [
+                  0.0,
+                  18.0
+                ],
+                [
+                  10.0,
+                  18.0
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "occupied": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              10.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              13.00071114
+            ],
+            [
+              0.0,
+              16.25088892
+            ],
+            [
+              2.16,
+              16.25088892
+            ],
+            [
+              2.16,
+              13.00071114
+            ],
+            [
+              4.8,
+              13.00071114
+            ],
+            [
+              4.8,
+              7.4754089
+            ],
+            [
+              10.0,
+              7.4754089
+            ],
+            [
+              10.0,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "free": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              18.0
+            ],
+            [
+              10.0,
+              18.0
+            ],
+            [
+              10.0,
+              7.4754089
+            ],
+            [
+              4.8,
+              7.4754089
+            ],
+            [
+              4.8,
+              13.00071114
+            ],
+            [
+              2.16,
+              13.00071114
+            ],
+            [
+              2.16,
+              16.25088892
+            ],
+            [
+              0.0,
+              16.25088892
+            ],
+            [
+              0.0,
+              18.0
+            ]
+          ]
+        ]
+      },
+      "covered_free": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              10.0,
+              7.4754089
+            ],
+            [
+              4.8,
+              7.4754089
+            ]
+          ],
+          [
+            [
+              4.8,
+              7.4754089
+            ],
+            [
+              4.8,
+              13.00071114
+            ]
+          ],
+          [
+            [
+              4.8,
+              13.00071114
+            ],
+            [
+              2.16,
+              13.00071114
+            ]
+          ],
+          [
+            [
+              2.16,
+              13.00071114
+            ],
+            [
+              2.16,
+              16.25088892
+            ]
+          ],
+          [
+            [
+              2.16,
+              16.25088892
+            ],
+            [
+              0.0,
+              16.25088892
+            ]
+          ]
+        ]
+      },
+      "uncovered": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0,
+              18.0
+            ],
+            [
+              10.0,
+              18.0
+            ],
+            [
+              10.0,
+              7.4754089
+            ],
+            [
+              4.8,
+              7.4754089
+            ],
+            [
+              4.8,
+              13.00071114
+            ],
+            [
+              2.16,
+              13.00071114
+            ],
+            [
+              2.16,
+              16.25088892
+            ],
+            [
+              0.0,
+              16.25088892
+            ],
+            [
+              0.0,
+              18.0
+            ]
+          ]
+        ]
+      }
+    },
+    "operations": [
+      {
+        "id": "op1",
+        "kind": "attach",
+        "status": "applied",
+        "floors": [
+          {
+            "floor": 1,
+            "before_m2": 101.27553975199999,
+            "after_m2": 108.2959237568,
+            "removed": {
+              "type": "Polygon",
+              "coordinates": []
+            },
+            "added": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    0.0,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    16.25088892
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "floor": 2,
+            "before_m2": 101.27553975199999,
+            "after_m2": 108.2959237568,
+            "removed": {
+              "type": "Polygon",
+              "coordinates": []
+            },
+            "added": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    0.0,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    16.25088892
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "floor": 3,
+            "before_m2": 101.27553975199999,
+            "after_m2": 108.2959237568,
+            "removed": {
+              "type": "Polygon",
+              "coordinates": []
+            },
+            "added": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    0.0,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    16.25088892
+                  ],
+                  [
+                    2.16,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    13.00071114
+                  ],
+                  [
+                    0.0,
+                    16.25088892
+                  ]
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "decisions": [
+      {
+        "path": "site.rear_service",
+        "source": "completion",
+        "reason": "service yard prior, not legal area requirement"
+      }
+    ],
+    "pending": [],
+    "checks": {
+      "parcel_containment": true,
+      "same_floor_overlap": false,
+      "support_collisions": false,
+      "valid_footprints": true,
+      "conceptual_support": true,
+      "engineering_verified": false,
+      "parcel_area_m2": 180.0,
+      "occupied_ground_m2": 108.2959237568,
+      "free_ground_m2": 71.7040762432,
+      "covered_free_m2": 0.0,
+      "uncovered_m2": 71.7040762432,
+      "area_balance_error_m2": 0.0
+    }
+  },
+  "floors": [
+    {
+      "floor": 1,
+      "bottom_m": 0,
+      "envelope": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.18,
+              0.18
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              0.18,
+              0.18
+            ]
+          ]
+        ]
+      },
+      "rooms": [
+        {
+          "id": "floor1/hall",
+          "kind": "circulation",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  0.19138119951338542,
+                  0.8967831629548548
+                ],
+                [
+                  1.1,
+                  5.9372764690686965
+                ],
+                [
+                  1.1,
+                  10.477035484881917
+                ],
+                [
+                  3.6105340258277296,
+                  12.659773303251589
+                ],
+                [
+                  3.7714718625761416,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  11.972183002576143
+                ],
+                [
+                  4.444264068711928,
+                  11.796447071288071
+                ],
+                [
+                  4.42876554738736,
+                  11.782400030361567
+                ],
+                [
+                  4.41367279762592,
+                  11.767917888714846
+                ],
+                [
+                  2.3,
+                  9.930223795118085
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.351615832616396
+                ],
+                [
+                  2.3,
+                  5.415643447383605
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  2.1113803341621784,
+                  4.78362964
+                ],
+                [
+                  1.3704828099479744,
+                  0.6735572869758363
+                ],
+                [
+                  1.368112845642107,
+                  0.663317219511699
+                ],
+                [
+                  1.366393884016078,
+                  0.6529479917965151
+                ],
+                [
+                  1.263921819126832,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.8442545498161534
+                ],
+                [
+                  0.19138119951338542,
+                  0.8967831629548548
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  8.65715597
+                ],
+                [
+                  1.16,
+                  8.65715597
+                ],
+                [
+                  1.16,
+                  10.4496949
+                ],
+                [
+                  3.65148063,
+                  12.61586708
+                ],
+                [
+                  3.79632468,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  11.99703582
+                ],
+                [
+                  4.50490042,
+                  11.94193624
+                ],
+                [
+                  4.40287917,
+                  11.83991499
+                ],
+                [
+                  4.39695042,
+                  11.83454148
+                ],
+                [
+                  4.3878397,
+                  11.826284
+                ],
+                [
+                  4.37319397,
+                  11.8122308
+                ],
+                [
+                  3.51164112,
+                  11.06316945
+                ],
+                [
+                  3.5510083940239765,
+                  11.0178901261226
+                ],
+                [
+                  2.871818518906553,
+                  10.427380931257657
+                ],
+                [
+                  2.83245124,
+                  10.47266025
+                ],
+                [
+                  2.34493317,
+                  10.0487966
+                ],
+                [
+                  2.24,
+                  9.95756438
+                ],
+                [
+                  2.24,
+                  9.26362964
+                ],
+                [
+                  2.24,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.04362964
+                ],
+                [
+                  2.24,
+                  4.84362964
+                ],
+                [
+                  2.06122911,
+                  4.84362964
+                ],
+                [
+                  2.0612291,
+                  4.84362964
+                ],
+                [
+                  1.76171532,
+                  3.18209984
+                ],
+                [
+                  1.82076360660015,
+                  3.1714555697115507
+                ],
+                [
+                  1.6610995380659987,
+                  2.2857313603486307
+                ],
+                [
+                  1.60205126,
+                  2.29637563
+                ],
+                [
+                  1.40369208,
+                  1.19599326
+                ],
+                [
+                  1.31169583,
+                  0.68565111
+                ],
+                [
+                  1.31169583,
+                  0.6856511
+                ],
+                [
+                  1.30923064,
+                  0.67499958
+                ],
+                [
+                  1.30923063,
+                  0.67499957
+                ],
+                [
+                  1.30844901,
+                  0.6702846
+                ],
+                [
+                  1.3074426,
+                  0.6642137
+                ],
+                [
+                  1.3074426,
+                  0.66421368
+                ],
+                [
+                  1.22894819,
+                  0.3019318
+                ],
+                [
+                  1.21552964,
+                  0.24
+                ],
+                [
+                  1.125,
+                  0.24
+                ],
+                [
+                  1.125,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.3
+                ],
+                [
+                  0.24,
+                  0.3
+                ],
+                [
+                  0.24,
+                  0.83782909
+                ],
+                [
+                  0.25024308,
+                  0.88510484
+                ],
+                [
+                  0.88988393,
+                  4.43346357
+                ],
+                [
+                  1.16,
+                  5.93191179
+                ],
+                [
+                  1.16,
+                  7.75715597
+                ],
+                [
+                  1.1,
+                  7.75715597
+                ],
+                [
+                  1.1,
+                  8.65715597
+                ]
+              ]
+            ]
+          },
+          "area_m2": 15.039652092787621
+        },
+        {
+          "id": "floor1/bath",
+          "kind": "bathroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.0,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  9.603629640000001
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 3.6514000000000015
+        },
+        {
+          "id": "floor1/stairs",
+          "kind": "stairs",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.699999999999999,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  3.34295377,
+                  4.78362964
+                ],
+                [
+                  3.34295377,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  5.37768235
+                ],
+                [
+                  5.64,
+                  5.25768235
+                ],
+                [
+                  5.64,
+                  4.84362964
+                ],
+                [
+                  5.34590753,
+                  4.84362964
+                ],
+                [
+                  5.22590753,
+                  4.84362964
+                ],
+                [
+                  4.24295377,
+                  4.84362964
+                ],
+                [
+                  4.24295377,
+                  4.78362964
+                ],
+                [
+                  3.34295377,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 6.8764
+        },
+        {
+          "id": "floor1/room0",
+          "kind": "living",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.28590753,
+                  0.18
+                ],
+                [
+                  1.26392182,
+                  0.18
+                ],
+                [
+                  1.36639388,
+                  0.65294799
+                ],
+                [
+                  1.36811285,
+                  0.66331722
+                ],
+                [
+                  1.37048281,
+                  0.67355729
+                ],
+                [
+                  2.11138033,
+                  4.78362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.28590753,
+                  4.78362964
+                ],
+                [
+                  5.28590753,
+                  0.18
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.8207636,
+                  3.17145557
+                ],
+                [
+                  1.87981189,
+                  3.1608113
+                ],
+                [
+                  2.16153156,
+                  4.72362964
+                ],
+                [
+                  2.24,
+                  4.72362964
+                ],
+                [
+                  2.36,
+                  4.72362964
+                ],
+                [
+                  3.34295377,
+                  4.72362964
+                ],
+                [
+                  3.34295377,
+                  4.78362964
+                ],
+                [
+                  4.24295377,
+                  4.78362964
+                ],
+                [
+                  4.24295377,
+                  4.72362964
+                ],
+                [
+                  5.22590753,
+                  4.72362964
+                ],
+                [
+                  5.22590753,
+                  2.93181482
+                ],
+                [
+                  5.28590753,
+                  2.93181482
+                ],
+                [
+                  5.28590753,
+                  2.03181482
+                ],
+                [
+                  5.22590753,
+                  2.03181482
+                ],
+                [
+                  5.22590753,
+                  0.24
+                ],
+                [
+                  1.338314,
+                  0.24
+                ],
+                [
+                  1.42534516,
+                  0.64168228
+                ],
+                [
+                  1.42534517,
+                  0.64168231
+                ],
+                [
+                  1.42596167,
+                  0.6454012
+                ],
+                [
+                  1.42699506,
+                  0.65163486
+                ],
+                [
+                  1.42699506,
+                  0.65163487
+                ],
+                [
+                  1.42849889,
+                  0.65813257
+                ],
+                [
+                  1.42926979,
+                  0.66146346
+                ],
+                [
+                  1.42926979,
+                  0.66146348
+                ],
+                [
+                  1.72014782,
+                  2.27508709
+                ],
+                [
+                  1.66109954,
+                  2.28573136
+                ],
+                [
+                  1.8207636,
+                  3.17145557
+                ]
+              ]
+            ]
+          },
+          "area_m2": 15.716530928417583
+        },
+        {
+          "id": "floor1/room1",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  9.82,
+                  5.31768235
+                ],
+                [
+                  9.82,
+                  0.18
+                ],
+                [
+                  5.28590753,
+                  0.18
+                ],
+                [
+                  5.28590753,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  5.31768235
+                ],
+                [
+                  9.82,
+                  5.31768235
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.28590753,
+                  2.93181482
+                ],
+                [
+                  5.34590753,
+                  2.93181482
+                ],
+                [
+                  5.34590753,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  5.25768235
+                ],
+                [
+                  9.76,
+                  5.25768235
+                ],
+                [
+                  9.76,
+                  0.24
+                ],
+                [
+                  5.34590753,
+                  0.24
+                ],
+                [
+                  5.34590753,
+                  2.03181482
+                ],
+                [
+                  5.28590753,
+                  2.03181482
+                ],
+                [
+                  5.28590753,
+                  2.93181482
+                ]
+              ]
+            ]
+          },
+          "area_m2": 21.98136667219281
+        },
+        {
+          "id": "floor1/room2",
+          "kind": "kitchen_dining",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  9.82,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  5.31768235
+                ],
+                [
+                  5.7,
+                  5.31768235
+                ],
+                [
+                  5.7,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.9302238
+                ],
+                [
+                  4.4136728,
+                  11.76791789
+                ],
+                [
+                  4.42876555,
+                  11.78240003
+                ],
+                [
+                  4.44426407,
+                  11.79644707
+                ],
+                [
+                  4.62,
+                  11.972183
+                ],
+                [
+                  4.62,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  7.2954089
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  3.55100839,
+                  11.01789013
+                ],
+                [
+                  3.59037567,
+                  10.9726108
+                ],
+                [
+                  4.45415162,
+                  11.72360498
+                ],
+                [
+                  4.46947241,
+                  11.73830593
+                ],
+                [
+                  4.4696914,
+                  11.73851606
+                ],
+                [
+                  4.48564897,
+                  11.75297915
+                ],
+                [
+                  4.55132887,
+                  11.81865906
+                ],
+                [
+                  4.56,
+                  11.82733019
+                ],
+                [
+                  4.56,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  5.37768235
+                ],
+                [
+                  5.76,
+                  5.37768235
+                ],
+                [
+                  5.76,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  9.66362964
+                ],
+                [
+                  2.64,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.90288321
+                ],
+                [
+                  2.9111858,
+                  10.38210161
+                ],
+                [
+                  2.87181852,
+                  10.42738093
+                ],
+                [
+                  3.55100839,
+                  11.01789013
+                ]
+              ]
+            ]
+          },
+          "area_m2": 11.655970575762737
+        },
+        {
+          "id": "floor1/room3",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.98,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  12.82071114
+                ],
+                [
+                  3.77147186,
+                  12.82071114
+                ],
+                [
+                  3.61053403,
+                  12.6597733
+                ],
+                [
+                  1.1,
+                  10.47703548
+                ],
+                [
+                  1.1,
+                  5.93727647
+                ],
+                [
+                  0.1913812,
+                  0.89678316
+                ],
+                [
+                  0.18,
+                  0.84425455
+                ],
+                [
+                  0.18,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  16.07088892
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  7.75715597
+                ],
+                [
+                  1.04,
+                  7.75715597
+                ],
+                [
+                  1.04,
+                  5.94264115
+                ],
+                [
+                  0.24,
+                  1.50470233
+                ],
+                [
+                  0.24,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  12.76071114
+                ],
+                [
+                  3.62661905,
+                  12.76071114
+                ],
+                [
+                  3.56958743,
+                  12.70367952
+                ],
+                [
+                  1.04,
+                  10.50437607
+                ],
+                [
+                  1.04,
+                  10.50437606
+                ],
+                [
+                  1.04,
+                  8.65715597
+                ],
+                [
+                  1.1,
+                  8.65715597
+                ],
+                [
+                  1.1,
+                  7.75715597
+                ]
+              ]
+            ]
+          },
+          "area_m2": 15.671488143242264
+        }
+      ],
+      "doors": [
+        {
+          "id": "floor1/door0",
+          "source": "floor1/hall",
+          "target": "floor1/bath",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                2.3,
+                7.72862964
+              ],
+              [
+                2.3,
+                8.57862964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor1/door1",
+          "source": "floor1/hall",
+          "target": "floor1/room0",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                1.661099535614777,
+                2.2857313574699964
+              ],
+              [
+                1.8207636043852227,
+                3.171455572530004
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.5845704803692207,
+                  3.2140326575354563
+                ],
+                [
+                  2.0569567284012247,
+                  3.128878487524552
+                ],
+                [
+                  1.897292659630779,
+                  2.2431542724645444
+                ],
+                [
+                  1.424906411598775,
+                  2.3283084424754485
+                ],
+                [
+                  1.5845704803692207,
+                  3.2140326575354563
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor1/door2",
+          "source": "floor1/hall",
+          "target": "floor1/room2",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                2.8718185161121528,
+                10.427380932268212
+              ],
+              [
+                3.5510083938878467,
+                11.017890127731787
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  3.39353927509756,
+                  11.199007428471973
+                ],
+                [
+                  3.7084775126781335,
+                  10.836772826991602
+                ],
+                [
+                  3.0292876349024396,
+                  10.246263631528027
+                ],
+                [
+                  2.714349397321866,
+                  10.608498233008397
+                ],
+                [
+                  3.39353927509756,
+                  11.199007428471973
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor1/door3",
+          "source": "floor1/hall",
+          "target": "floor1/room3",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                1.1,
+                8.657155974999998
+              ],
+              [
+                1.1,
+                7.757155974999999
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.34,
+                  7.757155974999999
+                ],
+                [
+                  0.8600000000000001,
+                  7.757155974999999
+                ],
+                [
+                  0.8600000000000001,
+                  8.657155974999998
+                ],
+                [
+                  1.34,
+                  8.657155974999998
+                ],
+                [
+                  1.34,
+                  7.757155974999999
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor1/door4",
+          "source": "floor1/room0",
+          "target": "floor1/room1",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                5.28590753,
+                2.03181482
+              ],
+              [
+                5.28590753,
+                2.9318148200000005
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.04590753,
+                  2.9318148200000005
+                ],
+                [
+                  5.5259075300000005,
+                  2.9318148200000005
+                ],
+                [
+                  5.5259075300000005,
+                  2.03181482
+                ],
+                [
+                  5.04590753,
+                  2.03181482
+                ],
+                [
+                  5.04590753,
+                  2.9318148200000005
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor1/door5",
+          "source": "floor1/room0",
+          "target": "floor1/stairs",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                3.342953765,
+                4.78362964
+              ],
+              [
+                4.242953765,
+                4.78362964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.242953765,
+                  5.02362964
+                ],
+                [
+                  4.242953765,
+                  4.54362964
+                ],
+                [
+                  3.342953765,
+                  4.54362964
+                ],
+                [
+                  3.342953765,
+                  5.02362964
+                ],
+                [
+                  4.242953765,
+                  5.02362964
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "windows": [],
+      "connections": [
+        {
+          "source": "street",
+          "target": "floor1/hall",
+          "kind": "entrance",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                0.17500000000000004,
+                0.0
+              ],
+              [
+                1.125,
+                0.0
+              ]
+            ]
+          }
+        }
+      ],
+      "walls": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              1.125,
+              0.18
+            ],
+            [
+              1.125,
+              0.24
+            ],
+            [
+              1.21552964,
+              0.24
+            ],
+            [
+              1.22894819,
+              0.3019318
+            ],
+            [
+              1.3074426,
+              0.66421368
+            ],
+            [
+              1.3074426,
+              0.6642137
+            ],
+            [
+              1.30844901,
+              0.6702846
+            ],
+            [
+              1.30923063,
+              0.67499957
+            ],
+            [
+              1.30923064,
+              0.67499958
+            ],
+            [
+              1.31169583,
+              0.6856511
+            ],
+            [
+              1.31169583,
+              0.68565111
+            ],
+            [
+              1.40369208,
+              1.19599326
+            ],
+            [
+              1.60205126,
+              2.29637563
+            ],
+            [
+              1.72014782,
+              2.27508709
+            ],
+            [
+              1.42926979,
+              0.66146348
+            ],
+            [
+              1.42926979,
+              0.66146346
+            ],
+            [
+              1.42849889,
+              0.65813257
+            ],
+            [
+              1.42699506,
+              0.65163487
+            ],
+            [
+              1.42699506,
+              0.65163486
+            ],
+            [
+              1.42596167,
+              0.6454012
+            ],
+            [
+              1.42534517,
+              0.64168231
+            ],
+            [
+              1.42534516,
+              0.64168228
+            ],
+            [
+              1.338314,
+              0.24
+            ],
+            [
+              5.22590753,
+              0.24
+            ],
+            [
+              5.22590753,
+              2.03181482
+            ],
+            [
+              5.34590753,
+              2.03181482
+            ],
+            [
+              5.34590753,
+              0.24
+            ],
+            [
+              9.76,
+              0.24
+            ],
+            [
+              9.76,
+              5.25768235
+            ],
+            [
+              5.76,
+              5.25768235
+            ],
+            [
+              5.76,
+              4.72362964
+            ],
+            [
+              5.34590753,
+              4.72362964
+            ],
+            [
+              5.34590753,
+              2.93181482
+            ],
+            [
+              5.22590753,
+              2.93181482
+            ],
+            [
+              5.22590753,
+              4.72362964
+            ],
+            [
+              4.24295377,
+              4.72362964
+            ],
+            [
+              4.24295377,
+              4.84362964
+            ],
+            [
+              5.22590753,
+              4.84362964
+            ],
+            [
+              5.34590753,
+              4.84362964
+            ],
+            [
+              5.64,
+              4.84362964
+            ],
+            [
+              5.64,
+              5.25768235
+            ],
+            [
+              5.64,
+              5.37768235
+            ],
+            [
+              5.64,
+              6.92362964
+            ],
+            [
+              2.36,
+              6.92362964
+            ],
+            [
+              2.36,
+              4.84362964
+            ],
+            [
+              3.34295377,
+              4.84362964
+            ],
+            [
+              3.34295377,
+              4.72362964
+            ],
+            [
+              2.36,
+              4.72362964
+            ],
+            [
+              2.24,
+              4.72362964
+            ],
+            [
+              2.16153156,
+              4.72362964
+            ],
+            [
+              1.87981189,
+              3.1608113
+            ],
+            [
+              1.76171532,
+              3.18209984
+            ],
+            [
+              2.0612291,
+              4.84362964
+            ],
+            [
+              2.06122911,
+              4.84362964
+            ],
+            [
+              2.24,
+              4.84362964
+            ],
+            [
+              2.24,
+              7.04362964
+            ],
+            [
+              2.24,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.16362964
+            ],
+            [
+              3.94,
+              7.16362964
+            ],
+            [
+              3.94,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.14362964
+            ],
+            [
+              2.36,
+              9.14362964
+            ],
+            [
+              2.36,
+              8.57862964
+            ],
+            [
+              2.24,
+              8.57862964
+            ],
+            [
+              2.24,
+              9.26362964
+            ],
+            [
+              2.24,
+              9.95756438
+            ],
+            [
+              2.34493317,
+              10.0487966
+            ],
+            [
+              2.83245124,
+              10.47266025
+            ],
+            [
+              2.9111858,
+              10.38210161
+            ],
+            [
+              2.36,
+              9.90288321
+            ],
+            [
+              2.36,
+              9.66362964
+            ],
+            [
+              2.64,
+              9.66362964
+            ],
+            [
+              4.06,
+              9.66362964
+            ],
+            [
+              4.06,
+              7.04362964
+            ],
+            [
+              5.76,
+              7.04362964
+            ],
+            [
+              5.76,
+              5.37768235
+            ],
+            [
+              9.76,
+              5.37768235
+            ],
+            [
+              9.76,
+              7.2354089
+            ],
+            [
+              4.56,
+              7.2354089
+            ],
+            [
+              4.56,
+              11.82733019
+            ],
+            [
+              4.55132887,
+              11.81865906
+            ],
+            [
+              4.48564897,
+              11.75297915
+            ],
+            [
+              4.4696914,
+              11.73851606
+            ],
+            [
+              4.46947241,
+              11.73830593
+            ],
+            [
+              4.45415162,
+              11.72360498
+            ],
+            [
+              3.59037567,
+              10.9726108
+            ],
+            [
+              3.51164112,
+              11.06316945
+            ],
+            [
+              4.37319397,
+              11.8122308
+            ],
+            [
+              4.3878397,
+              11.826284
+            ],
+            [
+              4.39695042,
+              11.83454148
+            ],
+            [
+              4.40287917,
+              11.83991499
+            ],
+            [
+              4.50490042,
+              11.94193624
+            ],
+            [
+              4.56,
+              11.99703582
+            ],
+            [
+              4.56,
+              12.76071114
+            ],
+            [
+              3.79632468,
+              12.76071114
+            ],
+            [
+              3.65148063,
+              12.61586708
+            ],
+            [
+              1.16,
+              10.4496949
+            ],
+            [
+              1.16,
+              8.65715597
+            ],
+            [
+              1.04,
+              8.65715597
+            ],
+            [
+              1.04,
+              10.50437606
+            ],
+            [
+              1.04,
+              10.50437607
+            ],
+            [
+              3.56958743,
+              12.70367952
+            ],
+            [
+              3.62661905,
+              12.76071114
+            ],
+            [
+              1.92,
+              12.76071114
+            ],
+            [
+              1.92,
+              16.01088892
+            ],
+            [
+              0.24,
+              16.01088892
+            ],
+            [
+              0.24,
+              1.50470233
+            ],
+            [
+              1.04,
+              5.94264115
+            ],
+            [
+              1.04,
+              7.75715597
+            ],
+            [
+              1.16,
+              7.75715597
+            ],
+            [
+              1.16,
+              5.93191179
+            ],
+            [
+              0.88988393,
+              4.43346357
+            ],
+            [
+              0.25024308,
+              0.88510484
+            ],
+            [
+              0.24,
+              0.83782909
+            ],
+            [
+              0.24,
+              0.3
+            ],
+            [
+              0.18,
+              0.3
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ]
+          ],
+          [
+            [
+              2.36,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.54362964
+            ]
+          ]
+        ]
+      },
+      "service_shaft": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.6999999999999997,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.20362964
+            ]
+          ]
+        ]
+      },
+      "open_ground": false,
+      "corridor_width_m": 1.2,
+      "score": 0.2071323736518626,
+      "checks": {
+        "connected": true,
+        "coverage_error_m2": 0.0
+      }
+    },
+    {
+      "floor": 2,
+      "bottom_m": 3.2,
+      "envelope": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.18,
+              0.18
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              0.18,
+              0.18
+            ]
+          ]
+        ]
+      },
+      "rooms": [
+        {
+          "id": "floor2/hall",
+          "kind": "circulation",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.4703899405809457,
+                  5.329301920493228
+                ],
+                [
+                  1.4171619579044012,
+                  5.354476881390988
+                ],
+                [
+                  1.3666578601882386,
+                  5.384747872618473
+                ],
+                [
+                  1.3193640295018123,
+                  5.419823367982358
+                ],
+                [
+                  1.2757359312880714,
+                  5.459365571288072
+                ],
+                [
+                  1.2361937279823576,
+                  5.502993669501813
+                ],
+                [
+                  1.2011182326184726,
+                  5.550287500188239
+                ],
+                [
+                  1.170847241390987,
+                  5.600791597904402
+                ],
+                [
+                  1.145672280493228,
+                  5.654019580580947
+                ],
+                [
+                  1.1258357985606746,
+                  5.709458833647323
+                ],
+                [
+                  1.1115288317580618,
+                  5.766575446790323
+                ],
+                [
+                  1.1028891639966818,
+                  5.824819355802264
+                ],
+                [
+                  1.1,
+                  5.8836296400000005
+                ],
+                [
+                  1.1,
+                  10.477035484881917
+                ],
+                [
+                  3.6105340258277296,
+                  12.659773303251589
+                ],
+                [
+                  3.7714718625761416,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  11.972183002576143
+                ],
+                [
+                  4.444264068711928,
+                  11.796447071288071
+                ],
+                [
+                  4.42876554738736,
+                  11.782400030361567
+                ],
+                [
+                  4.41367279762592,
+                  11.767917888714846
+                ],
+                [
+                  2.3,
+                  9.930223795118085
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.351615832616396
+                ],
+                [
+                  2.3,
+                  5.415643447383605
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  1.5499999999999998,
+                  4.78362964
+                ],
+                [
+                  1.5499999999999998,
+                  5.30341096675202
+                ],
+                [
+                  1.5291546135564889,
+                  5.308632464236268
+                ],
+                [
+                  1.5258291936473225,
+                  5.309465438560675
+                ],
+                [
+                  1.4703899405809457,
+                  5.329301920493228
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  8.63033256
+                ],
+                [
+                  1.16,
+                  8.63033256
+                ],
+                [
+                  1.16,
+                  10.4496949
+                ],
+                [
+                  3.65148063,
+                  12.61586708
+                ],
+                [
+                  3.79632468,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  11.99703582
+                ],
+                [
+                  4.50490042,
+                  11.94193624
+                ],
+                [
+                  4.40287917,
+                  11.83991499
+                ],
+                [
+                  4.39695042,
+                  11.83454148
+                ],
+                [
+                  4.3878397,
+                  11.826284
+                ],
+                [
+                  4.37319398,
+                  11.8122308
+                ],
+                [
+                  4.37319397,
+                  11.8122308
+                ],
+                [
+                  2.34493317,
+                  10.0487966
+                ],
+                [
+                  2.24,
+                  9.95756438
+                ],
+                [
+                  2.24,
+                  9.54362964
+                ],
+                [
+                  2.24,
+                  9.26362964
+                ],
+                [
+                  2.24,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.16362964
+                ],
+                [
+                  2.24,
+                  7.04362964
+                ],
+                [
+                  2.24,
+                  6.92362964
+                ],
+                [
+                  2.24,
+                  4.84362964
+                ],
+                [
+                  1.61,
+                  4.84362964
+                ],
+                [
+                  1.61,
+                  5.35023543
+                ],
+                [
+                  1.61,
+                  5.35023545
+                ],
+                [
+                  1.54509968,
+                  5.36649211
+                ],
+                [
+                  1.54373346,
+                  5.36683433
+                ],
+                [
+                  1.54373342,
+                  5.36683434
+                ],
+                [
+                  1.54326732,
+                  5.36695109
+                ],
+                [
+                  1.5432673,
+                  5.3669511
+                ],
+                [
+                  1.54326728,
+                  5.3669511
+                ],
+                [
+                  1.524931,
+                  5.37351193
+                ],
+                [
+                  1.49337864,
+                  5.38480154
+                ],
+                [
+                  1.44547987,
+                  5.40745597
+                ],
+                [
+                  1.40003228,
+                  5.43469621
+                ],
+                [
+                  1.35747353,
+                  5.46625993
+                ],
+                [
+                  1.3182135,
+                  5.50184314
+                ],
+                [
+                  1.28263029,
+                  5.54110317
+                ],
+                [
+                  1.25106657,
+                  5.58366192
+                ],
+                [
+                  1.22382633,
+                  5.62910951
+                ],
+                [
+                  1.2011719,
+                  5.67700828
+                ],
+                [
+                  1.18332146,
+                  5.72689692
+                ],
+                [
+                  1.17820477,
+                  5.7473239
+                ],
+                [
+                  1.17044692,
+                  5.77829498
+                ],
+                [
+                  1.17044692,
+                  5.77829499
+                ],
+                [
+                  1.16267226,
+                  5.83070748
+                ],
+                [
+                  1.16,
+                  5.88510256
+                ],
+                [
+                  1.16,
+                  7.73033256
+                ],
+                [
+                  1.1,
+                  7.73033256
+                ],
+                [
+                  1.1,
+                  8.63033256
+                ]
+              ]
+            ]
+          },
+          "area_m2": 9.459418673192618
+        },
+        {
+          "id": "floor2/bath",
+          "kind": "bathroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.0,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  9.603629640000001
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 3.6514000000000015
+        },
+        {
+          "id": "floor2/stairs",
+          "kind": "stairs",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.699999999999999,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  3.55,
+                  4.78362964
+                ],
+                [
+                  3.55,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  4.84362964
+                ],
+                [
+                  4.45,
+                  4.84362964
+                ],
+                [
+                  4.45,
+                  4.78362964
+                ],
+                [
+                  3.55,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 6.8764
+        },
+        {
+          "id": "floor2/room0",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  9.82,
+                  4.20424929
+                ],
+                [
+                  9.82,
+                  0.18
+                ],
+                [
+                  5.964,
+                  0.18
+                ],
+                [
+                  5.964,
+                  4.20424929
+                ],
+                [
+                  9.82,
+                  4.20424929
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  2.64212465
+                ],
+                [
+                  6.024,
+                  2.64212465
+                ],
+                [
+                  6.024,
+                  4.14424929
+                ],
+                [
+                  9.76,
+                  4.14424929
+                ],
+                [
+                  9.76,
+                  0.24
+                ],
+                [
+                  6.024,
+                  0.24
+                ],
+                [
+                  6.024,
+                  1.74212465
+                ],
+                [
+                  5.964,
+                  1.74212465
+                ],
+                [
+                  5.964,
+                  2.64212465
+                ]
+              ]
+            ]
+          },
+          "area_m2": 14.64027534744
+        },
+        {
+          "id": "floor2/room1",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  4.20424929
+                ],
+                [
+                  5.964,
+                  4.20424929
+                ],
+                [
+                  5.964,
+                  7.2954089
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  6.1998291
+                ],
+                [
+                  6.024,
+                  6.1998291
+                ],
+                [
+                  6.024,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  4.26424929
+                ],
+                [
+                  6.024,
+                  4.26424929
+                ],
+                [
+                  6.024,
+                  5.2998291
+                ],
+                [
+                  5.964,
+                  5.2998291
+                ],
+                [
+                  5.964,
+                  6.1998291
+                ]
+              ]
+            ]
+          },
+          "area_m2": 11.15425230296
+        },
+        {
+          "id": "floor2/room2",
+          "kind": "kitchen_dining",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  0.18,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  12.82071114
+                ],
+                [
+                  3.77147186,
+                  12.82071114
+                ],
+                [
+                  3.61053403,
+                  12.6597733
+                ],
+                [
+                  1.1,
+                  10.47703548
+                ],
+                [
+                  1.1,
+                  5.88362964
+                ],
+                [
+                  1.10288916,
+                  5.82481936
+                ],
+                [
+                  1.11152883,
+                  5.76657545
+                ],
+                [
+                  1.1258358,
+                  5.70945883
+                ],
+                [
+                  1.14567228,
+                  5.65401958
+                ],
+                [
+                  1.17084724,
+                  5.6007916
+                ],
+                [
+                  1.20111823,
+                  5.5502875
+                ],
+                [
+                  1.23619373,
+                  5.50299367
+                ],
+                [
+                  1.27573593,
+                  5.45936557
+                ],
+                [
+                  1.31936403,
+                  5.41982337
+                ],
+                [
+                  1.36665786,
+                  5.38474787
+                ],
+                [
+                  1.41716196,
+                  5.35447688
+                ],
+                [
+                  1.47038994,
+                  5.32930192
+                ],
+                [
+                  1.52582919,
+                  5.30946544
+                ],
+                [
+                  1.52915461,
+                  5.30863246
+                ],
+                [
+                  1.55,
+                  5.30341097
+                ],
+                [
+                  1.55,
+                  4.78362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.9302238
+                ],
+                [
+                  4.4136728,
+                  11.76791789
+                ],
+                [
+                  4.42876555,
+                  11.78240003
+                ],
+                [
+                  4.44426407,
+                  11.79644707
+                ],
+                [
+                  4.62,
+                  11.972183
+                ],
+                [
+                  4.62,
+                  7.2954089
+                ],
+                [
+                  5.964,
+                  7.2954089
+                ],
+                [
+                  5.964,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.18
+                ],
+                [
+                  0.18,
+                  16.07088892
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  7.73033256
+                ],
+                [
+                  1.04,
+                  7.73033256
+                ],
+                [
+                  1.04,
+                  5.88215672
+                ],
+                [
+                  1.04310606,
+                  5.81893124
+                ],
+                [
+                  1.05261074,
+                  5.75485591
+                ],
+                [
+                  1.06230667,
+                  5.71614762
+                ],
+                [
+                  1.06835013,
+                  5.69202075
+                ],
+                [
+                  1.06835014,
+                  5.69202074
+                ],
+                [
+                  1.09017266,
+                  5.63103088
+                ],
+                [
+                  1.11786815,
+                  5.57247369
+                ],
+                [
+                  1.11786815,
+                  5.57247368
+                ],
+                [
+                  1.13434569,
+                  5.54498257
+                ],
+                [
+                  1.15116989,
+                  5.51691309
+                ],
+                [
+                  1.15116989,
+                  5.51691308
+                ],
+                [
+                  1.1689167,
+                  5.49298428
+                ],
+                [
+                  1.18975717,
+                  5.46488417
+                ],
+                [
+                  1.23325836,
+                  5.416888
+                ],
+                [
+                  1.28125453,
+                  5.37338681
+                ],
+                [
+                  1.30935464,
+                  5.35254635
+                ],
+                [
+                  1.33328344,
+                  5.33479953
+                ],
+                [
+                  1.33328345,
+                  5.33479953
+                ],
+                [
+                  1.36135293,
+                  5.31797533
+                ],
+                [
+                  1.38884404,
+                  5.30149779
+                ],
+                [
+                  1.38884405,
+                  5.30149779
+                ],
+                [
+                  1.44740124,
+                  5.2738023
+                ],
+                [
+                  1.49,
+                  5.25856022
+                ],
+                [
+                  1.49,
+                  4.72362964
+                ],
+                [
+                  2.24,
+                  4.72362964
+                ],
+                [
+                  2.36,
+                  4.72362964
+                ],
+                [
+                  3.55,
+                  4.72362964
+                ],
+                [
+                  3.55,
+                  4.78362964
+                ],
+                [
+                  4.45,
+                  4.78362964
+                ],
+                [
+                  4.45,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  5.2998291
+                ],
+                [
+                  5.724,
+                  5.2998291
+                ],
+                [
+                  5.724,
+                  6.1998291
+                ],
+                [
+                  5.76,
+                  6.1998291
+                ],
+                [
+                  5.76,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  9.66362964
+                ],
+                [
+                  2.64,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.90288321
+                ],
+                [
+                  4.45415162,
+                  11.72360498
+                ],
+                [
+                  4.46947241,
+                  11.73830593
+                ],
+                [
+                  4.4696914,
+                  11.73851606
+                ],
+                [
+                  4.48564897,
+                  11.75297915
+                ],
+                [
+                  4.55132887,
+                  11.81865906
+                ],
+                [
+                  4.56,
+                  11.82733019
+                ],
+                [
+                  4.56,
+                  7.2354089
+                ],
+                [
+                  5.904,
+                  7.2354089
+                ],
+                [
+                  5.904,
+                  6.1998291
+                ],
+                [
+                  5.964,
+                  6.1998291
+                ],
+                [
+                  5.964,
+                  5.2998291
+                ],
+                [
+                  5.904,
+                  5.2998291
+                ],
+                [
+                  5.904,
+                  4.26424929
+                ],
+                [
+                  5.904,
+                  4.14424929
+                ],
+                [
+                  5.904,
+                  2.64212465
+                ],
+                [
+                  5.964,
+                  2.64212465
+                ],
+                [
+                  5.964,
+                  1.74212465
+                ],
+                [
+                  5.904,
+                  1.74212465
+                ],
+                [
+                  5.904,
+                  0.24
+                ],
+                [
+                  0.24,
+                  0.24
+                ],
+                [
+                  0.24,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  12.76071114
+                ],
+                [
+                  3.62661905,
+                  12.76071114
+                ],
+                [
+                  3.56958743,
+                  12.70367952
+                ],
+                [
+                  1.04,
+                  10.50437607
+                ],
+                [
+                  1.04,
+                  10.50437606
+                ],
+                [
+                  1.04,
+                  8.63033256
+                ],
+                [
+                  1.1,
+                  8.63033256
+                ],
+                [
+                  1.1,
+                  7.73033256
+                ]
+              ]
+            ]
+          },
+          "area_m2": 45.31044525456671
+        }
+      ],
+      "doors": [
+        {
+          "id": "floor2/door0",
+          "source": "floor2/hall",
+          "target": "floor2/bath",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                2.3,
+                7.72862964
+              ],
+              [
+                2.3,
+                8.57862964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor2/door1",
+          "source": "floor2/hall",
+          "target": "floor2/room2",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                1.1,
+                8.63033256
+              ],
+              [
+                1.1,
+                7.73033256
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.34,
+                  7.73033256
+                ],
+                [
+                  0.8600000000000001,
+                  7.73033256
+                ],
+                [
+                  0.8600000000000001,
+                  8.63033256
+                ],
+                [
+                  1.34,
+                  8.63033256
+                ],
+                [
+                  1.34,
+                  7.73033256
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor2/door2",
+          "source": "floor2/room2",
+          "target": "floor2/room0",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                5.964,
+                2.642124645
+              ],
+              [
+                5.964,
+                1.7421246449999999
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  6.204000000000001,
+                  1.7421246449999999
+                ],
+                [
+                  5.724,
+                  1.7421246449999999
+                ],
+                [
+                  5.724,
+                  2.642124645
+                ],
+                [
+                  6.204000000000001,
+                  2.642124645
+                ],
+                [
+                  6.204000000000001,
+                  1.7421246449999999
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor2/door3",
+          "source": "floor2/room2",
+          "target": "floor2/room1",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                5.964,
+                6.199829095
+              ],
+              [
+                5.964,
+                5.299829095
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  6.204000000000001,
+                  5.299829095
+                ],
+                [
+                  5.724,
+                  5.299829095
+                ],
+                [
+                  5.724,
+                  6.199829095
+                ],
+                [
+                  6.204000000000001,
+                  6.199829095
+                ],
+                [
+                  6.204000000000001,
+                  5.299829095
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor2/door4",
+          "source": "floor2/room2",
+          "target": "floor2/stairs",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                3.55,
+                4.78362964
+              ],
+              [
+                4.45,
+                4.78362964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.45,
+                  5.02362964
+                ],
+                [
+                  4.45,
+                  4.54362964
+                ],
+                [
+                  3.55,
+                  4.54362964
+                ],
+                [
+                  3.55,
+                  5.02362964
+                ],
+                [
+                  4.45,
+                  5.02362964
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "windows": [],
+      "connections": [],
+      "walls": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              0.18,
+              0.18
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ]
+          ],
+          [
+            [
+              5.904,
+              5.2998291
+            ],
+            [
+              6.024,
+              5.2998291
+            ],
+            [
+              6.024,
+              4.26424929
+            ],
+            [
+              9.76,
+              4.26424929
+            ],
+            [
+              9.76,
+              7.2354089
+            ],
+            [
+              6.024,
+              7.2354089
+            ],
+            [
+              6.024,
+              6.1998291
+            ],
+            [
+              5.904,
+              6.1998291
+            ],
+            [
+              5.904,
+              7.2354089
+            ],
+            [
+              4.56,
+              7.2354089
+            ],
+            [
+              4.56,
+              11.82733019
+            ],
+            [
+              4.55132887,
+              11.81865906
+            ],
+            [
+              4.48564897,
+              11.75297915
+            ],
+            [
+              4.4696914,
+              11.73851606
+            ],
+            [
+              4.46947241,
+              11.73830593
+            ],
+            [
+              4.45415162,
+              11.72360498
+            ],
+            [
+              2.36,
+              9.90288321
+            ],
+            [
+              2.36,
+              9.66362964
+            ],
+            [
+              2.64,
+              9.66362964
+            ],
+            [
+              4.06,
+              9.66362964
+            ],
+            [
+              4.06,
+              7.04362964
+            ],
+            [
+              5.76,
+              7.04362964
+            ],
+            [
+              5.76,
+              6.1998291
+            ],
+            [
+              5.724,
+              6.1998291
+            ],
+            [
+              5.724,
+              5.2998291
+            ],
+            [
+              5.76,
+              5.2998291
+            ],
+            [
+              5.76,
+              4.72362964
+            ],
+            [
+              4.45,
+              4.72362964
+            ],
+            [
+              4.45,
+              4.84362964
+            ],
+            [
+              5.64,
+              4.84362964
+            ],
+            [
+              5.64,
+              6.92362964
+            ],
+            [
+              2.36,
+              6.92362964
+            ],
+            [
+              2.36,
+              4.84362964
+            ],
+            [
+              3.55,
+              4.84362964
+            ],
+            [
+              3.55,
+              4.72362964
+            ],
+            [
+              2.36,
+              4.72362964
+            ],
+            [
+              2.24,
+              4.72362964
+            ],
+            [
+              1.49,
+              4.72362964
+            ],
+            [
+              1.49,
+              5.25856022
+            ],
+            [
+              1.44740124,
+              5.2738023
+            ],
+            [
+              1.38884405,
+              5.30149779
+            ],
+            [
+              1.38884404,
+              5.30149779
+            ],
+            [
+              1.36135293,
+              5.31797533
+            ],
+            [
+              1.33328345,
+              5.33479953
+            ],
+            [
+              1.33328344,
+              5.33479953
+            ],
+            [
+              1.30935464,
+              5.35254635
+            ],
+            [
+              1.28125453,
+              5.37338681
+            ],
+            [
+              1.23325836,
+              5.416888
+            ],
+            [
+              1.18975717,
+              5.46488417
+            ],
+            [
+              1.1689167,
+              5.49298428
+            ],
+            [
+              1.15116989,
+              5.51691308
+            ],
+            [
+              1.15116989,
+              5.51691309
+            ],
+            [
+              1.13434569,
+              5.54498257
+            ],
+            [
+              1.11786815,
+              5.57247368
+            ],
+            [
+              1.11786815,
+              5.57247369
+            ],
+            [
+              1.09017266,
+              5.63103088
+            ],
+            [
+              1.06835014,
+              5.69202074
+            ],
+            [
+              1.06835013,
+              5.69202075
+            ],
+            [
+              1.06230667,
+              5.71614762
+            ],
+            [
+              1.05261074,
+              5.75485591
+            ],
+            [
+              1.04310606,
+              5.81893124
+            ],
+            [
+              1.04,
+              5.88215672
+            ],
+            [
+              1.04,
+              7.73033256
+            ],
+            [
+              1.16,
+              7.73033256
+            ],
+            [
+              1.16,
+              5.88510256
+            ],
+            [
+              1.16267226,
+              5.83070748
+            ],
+            [
+              1.17044692,
+              5.77829499
+            ],
+            [
+              1.17044692,
+              5.77829498
+            ],
+            [
+              1.17820477,
+              5.7473239
+            ],
+            [
+              1.18332146,
+              5.72689692
+            ],
+            [
+              1.2011719,
+              5.67700828
+            ],
+            [
+              1.22382633,
+              5.62910951
+            ],
+            [
+              1.25106657,
+              5.58366192
+            ],
+            [
+              1.28263029,
+              5.54110317
+            ],
+            [
+              1.3182135,
+              5.50184314
+            ],
+            [
+              1.35747353,
+              5.46625993
+            ],
+            [
+              1.40003228,
+              5.43469621
+            ],
+            [
+              1.44547987,
+              5.40745597
+            ],
+            [
+              1.49337864,
+              5.38480154
+            ],
+            [
+              1.524931,
+              5.37351193
+            ],
+            [
+              1.54326728,
+              5.3669511
+            ],
+            [
+              1.5432673,
+              5.3669511
+            ],
+            [
+              1.54326732,
+              5.36695109
+            ],
+            [
+              1.54373342,
+              5.36683434
+            ],
+            [
+              1.54373346,
+              5.36683433
+            ],
+            [
+              1.54509968,
+              5.36649211
+            ],
+            [
+              1.61,
+              5.35023545
+            ],
+            [
+              1.61,
+              5.35023543
+            ],
+            [
+              1.61,
+              4.84362964
+            ],
+            [
+              2.24,
+              4.84362964
+            ],
+            [
+              2.24,
+              6.92362964
+            ],
+            [
+              2.24,
+              7.04362964
+            ],
+            [
+              2.24,
+              7.16362964
+            ],
+            [
+              2.24,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.16362964
+            ],
+            [
+              3.94,
+              7.16362964
+            ],
+            [
+              3.94,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.14362964
+            ],
+            [
+              2.36,
+              9.14362964
+            ],
+            [
+              2.36,
+              8.57862964
+            ],
+            [
+              2.24,
+              8.57862964
+            ],
+            [
+              2.24,
+              9.26362964
+            ],
+            [
+              2.24,
+              9.54362964
+            ],
+            [
+              2.24,
+              9.95756438
+            ],
+            [
+              2.34493317,
+              10.0487966
+            ],
+            [
+              4.37319397,
+              11.8122308
+            ],
+            [
+              4.37319398,
+              11.8122308
+            ],
+            [
+              4.3878397,
+              11.826284
+            ],
+            [
+              4.39695042,
+              11.83454148
+            ],
+            [
+              4.40287917,
+              11.83991499
+            ],
+            [
+              4.50490042,
+              11.94193624
+            ],
+            [
+              4.56,
+              11.99703582
+            ],
+            [
+              4.56,
+              12.76071114
+            ],
+            [
+              3.79632468,
+              12.76071114
+            ],
+            [
+              3.65148063,
+              12.61586708
+            ],
+            [
+              1.16,
+              10.4496949
+            ],
+            [
+              1.16,
+              8.63033256
+            ],
+            [
+              1.04,
+              8.63033256
+            ],
+            [
+              1.04,
+              10.50437606
+            ],
+            [
+              1.04,
+              10.50437607
+            ],
+            [
+              3.56958743,
+              12.70367952
+            ],
+            [
+              3.62661905,
+              12.76071114
+            ],
+            [
+              1.92,
+              12.76071114
+            ],
+            [
+              1.92,
+              16.01088892
+            ],
+            [
+              0.24,
+              16.01088892
+            ],
+            [
+              0.24,
+              0.24
+            ],
+            [
+              5.904,
+              0.24
+            ],
+            [
+              5.904,
+              1.74212465
+            ],
+            [
+              6.024,
+              1.74212465
+            ],
+            [
+              6.024,
+              0.24
+            ],
+            [
+              9.76,
+              0.24
+            ],
+            [
+              9.76,
+              4.14424929
+            ],
+            [
+              6.024,
+              4.14424929
+            ],
+            [
+              6.024,
+              2.64212465
+            ],
+            [
+              5.904,
+              2.64212465
+            ],
+            [
+              5.904,
+              4.14424929
+            ],
+            [
+              5.904,
+              4.26424929
+            ],
+            [
+              5.904,
+              5.2998291
+            ]
+          ],
+          [
+            [
+              2.64,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.54362964
+            ]
+          ]
+        ]
+      },
+      "service_shaft": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.6999999999999997,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.20362964
+            ]
+          ]
+        ]
+      },
+      "open_ground": false,
+      "corridor_width_m": 1.2,
+      "score": 0.1465885471980695,
+      "checks": {
+        "connected": true,
+        "coverage_error_m2": 0.0
+      }
+    },
+    {
+      "floor": 3,
+      "bottom_m": 6,
+      "envelope": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.18,
+              0.18
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              0.18,
+              0.18
+            ]
+          ]
+        ]
+      },
+      "rooms": [
+        {
+          "id": "floor3/hall",
+          "kind": "circulation",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.4703899405809457,
+                  5.329301920493228
+                ],
+                [
+                  1.4171619579044012,
+                  5.354476881390988
+                ],
+                [
+                  1.3666578601882386,
+                  5.384747872618473
+                ],
+                [
+                  1.3193640295018123,
+                  5.419823367982358
+                ],
+                [
+                  1.2757359312880714,
+                  5.459365571288072
+                ],
+                [
+                  1.2361937279823576,
+                  5.502993669501813
+                ],
+                [
+                  1.2011182326184726,
+                  5.550287500188239
+                ],
+                [
+                  1.170847241390987,
+                  5.600791597904402
+                ],
+                [
+                  1.145672280493228,
+                  5.654019580580947
+                ],
+                [
+                  1.1258357985606746,
+                  5.709458833647323
+                ],
+                [
+                  1.1115288317580618,
+                  5.766575446790323
+                ],
+                [
+                  1.1028891639966818,
+                  5.824819355802264
+                ],
+                [
+                  1.1,
+                  5.8836296400000005
+                ],
+                [
+                  1.1,
+                  10.477035484881917
+                ],
+                [
+                  3.6105340258277296,
+                  12.659773303251589
+                ],
+                [
+                  3.7714718625761416,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  12.82071114
+                ],
+                [
+                  4.62,
+                  11.972183002576143
+                ],
+                [
+                  4.444264068711928,
+                  11.796447071288071
+                ],
+                [
+                  4.42876554738736,
+                  11.782400030361567
+                ],
+                [
+                  4.41367279762592,
+                  11.767917888714846
+                ],
+                [
+                  2.3,
+                  9.930223795118085
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.351615832616396
+                ],
+                [
+                  2.3,
+                  5.415643447383605
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  1.5499999999999998,
+                  4.78362964
+                ],
+                [
+                  1.5499999999999998,
+                  5.30341096675202
+                ],
+                [
+                  1.5291546135564889,
+                  5.308632464236268
+                ],
+                [
+                  1.5258291936473225,
+                  5.309465438560675
+                ],
+                [
+                  1.4703899405809457,
+                  5.329301920493228
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  8.63033256
+                ],
+                [
+                  1.16,
+                  8.63033256
+                ],
+                [
+                  1.16,
+                  10.4496949
+                ],
+                [
+                  3.65148063,
+                  12.61586708
+                ],
+                [
+                  3.79632468,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  12.76071114
+                ],
+                [
+                  4.56,
+                  11.99703582
+                ],
+                [
+                  4.50490042,
+                  11.94193624
+                ],
+                [
+                  4.40287917,
+                  11.83991499
+                ],
+                [
+                  4.39695042,
+                  11.83454148
+                ],
+                [
+                  4.3878397,
+                  11.826284
+                ],
+                [
+                  4.37319398,
+                  11.8122308
+                ],
+                [
+                  4.37319397,
+                  11.8122308
+                ],
+                [
+                  2.34493317,
+                  10.0487966
+                ],
+                [
+                  2.24,
+                  9.95756438
+                ],
+                [
+                  2.24,
+                  9.54362964
+                ],
+                [
+                  2.24,
+                  9.26362964
+                ],
+                [
+                  2.24,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.72862964
+                ],
+                [
+                  2.24,
+                  7.16362964
+                ],
+                [
+                  2.24,
+                  7.04362964
+                ],
+                [
+                  2.24,
+                  6.92362964
+                ],
+                [
+                  2.24,
+                  4.84362964
+                ],
+                [
+                  1.61,
+                  4.84362964
+                ],
+                [
+                  1.61,
+                  5.35023543
+                ],
+                [
+                  1.61,
+                  5.35023545
+                ],
+                [
+                  1.54509968,
+                  5.36649211
+                ],
+                [
+                  1.54373346,
+                  5.36683433
+                ],
+                [
+                  1.54373342,
+                  5.36683434
+                ],
+                [
+                  1.54326732,
+                  5.36695109
+                ],
+                [
+                  1.5432673,
+                  5.3669511
+                ],
+                [
+                  1.54326728,
+                  5.3669511
+                ],
+                [
+                  1.524931,
+                  5.37351193
+                ],
+                [
+                  1.49337864,
+                  5.38480154
+                ],
+                [
+                  1.44547987,
+                  5.40745597
+                ],
+                [
+                  1.40003228,
+                  5.43469621
+                ],
+                [
+                  1.35747353,
+                  5.46625993
+                ],
+                [
+                  1.3182135,
+                  5.50184314
+                ],
+                [
+                  1.28263029,
+                  5.54110317
+                ],
+                [
+                  1.25106657,
+                  5.58366192
+                ],
+                [
+                  1.22382633,
+                  5.62910951
+                ],
+                [
+                  1.2011719,
+                  5.67700828
+                ],
+                [
+                  1.18332146,
+                  5.72689692
+                ],
+                [
+                  1.17820477,
+                  5.7473239
+                ],
+                [
+                  1.17044692,
+                  5.77829498
+                ],
+                [
+                  1.17044692,
+                  5.77829499
+                ],
+                [
+                  1.16267226,
+                  5.83070748
+                ],
+                [
+                  1.16,
+                  5.88510256
+                ],
+                [
+                  1.16,
+                  7.73033256
+                ],
+                [
+                  1.1,
+                  7.73033256
+                ],
+                [
+                  1.1,
+                  8.63033256
+                ]
+              ]
+            ]
+          },
+          "area_m2": 9.459418673192618
+        },
+        {
+          "id": "floor3/bath",
+          "kind": "bathroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.0,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  7.103629639999999
+                ],
+                [
+                  2.3,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.20362964
+                ],
+                [
+                  2.6999999999999997,
+                  9.603629640000001
+                ],
+                [
+                  4.0,
+                  9.603629640000001
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.3,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  8.57862964
+                ],
+                [
+                  2.36,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.14362964
+                ],
+                [
+                  2.76,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  9.54362964
+                ],
+                [
+                  3.94,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.16362964
+                ],
+                [
+                  2.36,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  7.72862964
+                ],
+                [
+                  2.3,
+                  8.57862964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 3.6514000000000015
+        },
+        {
+          "id": "floor3/stairs",
+          "kind": "stairs",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.699999999999999,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.699999999999999,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  3.55,
+                  4.78362964
+                ],
+                [
+                  3.55,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  4.84362964
+                ],
+                [
+                  2.36,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  6.92362964
+                ],
+                [
+                  5.64,
+                  4.84362964
+                ],
+                [
+                  4.45,
+                  4.84362964
+                ],
+                [
+                  4.45,
+                  4.78362964
+                ],
+                [
+                  3.55,
+                  4.78362964
+                ]
+              ]
+            ]
+          },
+          "area_m2": 6.8764
+        },
+        {
+          "id": "floor3/room0",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  9.82,
+                  3.3059104
+                ],
+                [
+                  9.82,
+                  0.18
+                ],
+                [
+                  5.964,
+                  0.18
+                ],
+                [
+                  5.964,
+                  3.3059104
+                ],
+                [
+                  9.82,
+                  3.3059104
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  2.1929552
+                ],
+                [
+                  6.024,
+                  2.1929552
+                ],
+                [
+                  6.024,
+                  3.2459104
+                ],
+                [
+                  9.76,
+                  3.2459104
+                ],
+                [
+                  9.76,
+                  0.24
+                ],
+                [
+                  6.024,
+                  0.24
+                ],
+                [
+                  6.024,
+                  1.2929552
+                ],
+                [
+                  5.964,
+                  1.2929552
+                ],
+                [
+                  5.964,
+                  2.1929552
+                ]
+              ]
+            ]
+          },
+          "area_m2": 11.2840812544
+        },
+        {
+          "id": "floor3/room1",
+          "kind": "bedroom",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  7.2954089
+                ],
+                [
+                  9.82,
+                  3.3059104
+                ],
+                [
+                  5.964,
+                  3.3059104
+                ],
+                [
+                  5.964,
+                  7.2954089
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  5.964,
+                  5.75065965
+                ],
+                [
+                  6.024,
+                  5.75065965
+                ],
+                [
+                  6.024,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  7.2354089
+                ],
+                [
+                  9.76,
+                  3.3659104
+                ],
+                [
+                  6.024,
+                  3.3659104
+                ],
+                [
+                  6.024,
+                  4.85065965
+                ],
+                [
+                  5.964,
+                  4.85065965
+                ],
+                [
+                  5.964,
+                  5.75065965
+                ]
+              ]
+            ]
+          },
+          "area_m2": 14.510446395999999
+        },
+        {
+          "id": "floor3/room2",
+          "kind": "kitchen_dining",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  0.18,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  16.07088892
+                ],
+                [
+                  1.98,
+                  12.82071114
+                ],
+                [
+                  3.77147186,
+                  12.82071114
+                ],
+                [
+                  3.61053403,
+                  12.6597733
+                ],
+                [
+                  1.1,
+                  10.47703548
+                ],
+                [
+                  1.1,
+                  5.88362964
+                ],
+                [
+                  1.10288916,
+                  5.82481936
+                ],
+                [
+                  1.11152883,
+                  5.76657545
+                ],
+                [
+                  1.1258358,
+                  5.70945883
+                ],
+                [
+                  1.14567228,
+                  5.65401958
+                ],
+                [
+                  1.17084724,
+                  5.6007916
+                ],
+                [
+                  1.20111823,
+                  5.5502875
+                ],
+                [
+                  1.23619373,
+                  5.50299367
+                ],
+                [
+                  1.27573593,
+                  5.45936557
+                ],
+                [
+                  1.31936403,
+                  5.41982337
+                ],
+                [
+                  1.36665786,
+                  5.38474787
+                ],
+                [
+                  1.41716196,
+                  5.35447688
+                ],
+                [
+                  1.47038994,
+                  5.32930192
+                ],
+                [
+                  1.52582919,
+                  5.30946544
+                ],
+                [
+                  1.52915461,
+                  5.30863246
+                ],
+                [
+                  1.55,
+                  5.30341097
+                ],
+                [
+                  1.55,
+                  4.78362964
+                ],
+                [
+                  2.3,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  4.78362964
+                ],
+                [
+                  5.7,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  6.98362964
+                ],
+                [
+                  2.3,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  7.10362964
+                ],
+                [
+                  4.0,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.60362964
+                ],
+                [
+                  2.3,
+                  9.9302238
+                ],
+                [
+                  4.4136728,
+                  11.76791789
+                ],
+                [
+                  4.42876555,
+                  11.78240003
+                ],
+                [
+                  4.44426407,
+                  11.79644707
+                ],
+                [
+                  4.62,
+                  11.972183
+                ],
+                [
+                  4.62,
+                  7.2954089
+                ],
+                [
+                  5.964,
+                  7.2954089
+                ],
+                [
+                  5.964,
+                  0.18
+                ],
+                [
+                  0.18,
+                  0.18
+                ],
+                [
+                  0.18,
+                  16.07088892
+                ]
+              ]
+            ]
+          },
+          "usable_geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.1,
+                  7.73033256
+                ],
+                [
+                  1.04,
+                  7.73033256
+                ],
+                [
+                  1.04,
+                  5.88215672
+                ],
+                [
+                  1.04310606,
+                  5.81893124
+                ],
+                [
+                  1.05261074,
+                  5.75485591
+                ],
+                [
+                  1.06230667,
+                  5.71614762
+                ],
+                [
+                  1.06835013,
+                  5.69202075
+                ],
+                [
+                  1.06835014,
+                  5.69202074
+                ],
+                [
+                  1.09017266,
+                  5.63103088
+                ],
+                [
+                  1.11786815,
+                  5.57247369
+                ],
+                [
+                  1.11786815,
+                  5.57247368
+                ],
+                [
+                  1.13434569,
+                  5.54498257
+                ],
+                [
+                  1.15116989,
+                  5.51691309
+                ],
+                [
+                  1.15116989,
+                  5.51691308
+                ],
+                [
+                  1.1689167,
+                  5.49298428
+                ],
+                [
+                  1.18975717,
+                  5.46488417
+                ],
+                [
+                  1.23325836,
+                  5.416888
+                ],
+                [
+                  1.28125453,
+                  5.37338681
+                ],
+                [
+                  1.30935464,
+                  5.35254635
+                ],
+                [
+                  1.33328344,
+                  5.33479953
+                ],
+                [
+                  1.33328345,
+                  5.33479953
+                ],
+                [
+                  1.36135293,
+                  5.31797533
+                ],
+                [
+                  1.38884404,
+                  5.30149779
+                ],
+                [
+                  1.38884405,
+                  5.30149779
+                ],
+                [
+                  1.44740124,
+                  5.2738023
+                ],
+                [
+                  1.49,
+                  5.25856022
+                ],
+                [
+                  1.49,
+                  4.72362964
+                ],
+                [
+                  2.24,
+                  4.72362964
+                ],
+                [
+                  2.36,
+                  4.72362964
+                ],
+                [
+                  3.55,
+                  4.72362964
+                ],
+                [
+                  3.55,
+                  4.78362964
+                ],
+                [
+                  4.45,
+                  4.78362964
+                ],
+                [
+                  4.45,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  4.72362964
+                ],
+                [
+                  5.76,
+                  4.85065965
+                ],
+                [
+                  5.724,
+                  4.85065965
+                ],
+                [
+                  5.724,
+                  5.75065965
+                ],
+                [
+                  5.76,
+                  5.75065965
+                ],
+                [
+                  5.76,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  7.04362964
+                ],
+                [
+                  4.06,
+                  9.66362964
+                ],
+                [
+                  2.64,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.66362964
+                ],
+                [
+                  2.36,
+                  9.90288321
+                ],
+                [
+                  4.45415162,
+                  11.72360498
+                ],
+                [
+                  4.46947241,
+                  11.73830593
+                ],
+                [
+                  4.4696914,
+                  11.73851606
+                ],
+                [
+                  4.48564897,
+                  11.75297915
+                ],
+                [
+                  4.55132887,
+                  11.81865906
+                ],
+                [
+                  4.56,
+                  11.82733019
+                ],
+                [
+                  4.56,
+                  7.2354089
+                ],
+                [
+                  5.904,
+                  7.2354089
+                ],
+                [
+                  5.904,
+                  5.75065965
+                ],
+                [
+                  5.964,
+                  5.75065965
+                ],
+                [
+                  5.964,
+                  4.85065965
+                ],
+                [
+                  5.904,
+                  4.85065965
+                ],
+                [
+                  5.904,
+                  3.3659104
+                ],
+                [
+                  5.904,
+                  3.2459104
+                ],
+                [
+                  5.904,
+                  2.1929552
+                ],
+                [
+                  5.964,
+                  2.1929552
+                ],
+                [
+                  5.964,
+                  1.2929552
+                ],
+                [
+                  5.904,
+                  1.2929552
+                ],
+                [
+                  5.904,
+                  0.24
+                ],
+                [
+                  0.24,
+                  0.24
+                ],
+                [
+                  0.24,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  16.01088892
+                ],
+                [
+                  1.92,
+                  12.76071114
+                ],
+                [
+                  3.62661905,
+                  12.76071114
+                ],
+                [
+                  3.56958743,
+                  12.70367952
+                ],
+                [
+                  1.04,
+                  10.50437607
+                ],
+                [
+                  1.04,
+                  10.50437606
+                ],
+                [
+                  1.04,
+                  8.63033256
+                ],
+                [
+                  1.1,
+                  8.63033256
+                ],
+                [
+                  1.1,
+                  7.73033256
+                ]
+              ]
+            ]
+          },
+          "area_m2": 45.310445254566716
+        }
+      ],
+      "doors": [
+        {
+          "id": "floor3/door0",
+          "source": "floor3/hall",
+          "target": "floor3/bath",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                2.3,
+                7.72862964
+              ],
+              [
+                2.3,
+                8.57862964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  8.57862964
+                ],
+                [
+                  2.54,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  7.72862964
+                ],
+                [
+                  2.0599999999999996,
+                  8.57862964
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor3/door1",
+          "source": "floor3/hall",
+          "target": "floor3/room2",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                1.1,
+                8.63033256
+              ],
+              [
+                1.1,
+                7.73033256
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  1.34,
+                  7.73033256
+                ],
+                [
+                  0.8600000000000001,
+                  7.73033256
+                ],
+                [
+                  0.8600000000000001,
+                  8.63033256
+                ],
+                [
+                  1.34,
+                  8.63033256
+                ],
+                [
+                  1.34,
+                  7.73033256
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor3/door2",
+          "source": "floor3/room2",
+          "target": "floor3/room0",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                5.964,
+                2.1929552
+              ],
+              [
+                5.964,
+                1.2929552000000002
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  6.204000000000001,
+                  1.2929552000000002
+                ],
+                [
+                  5.724,
+                  1.2929552000000002
+                ],
+                [
+                  5.724,
+                  2.1929552
+                ],
+                [
+                  6.204000000000001,
+                  2.1929552
+                ],
+                [
+                  6.204000000000001,
+                  1.2929552000000002
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor3/door3",
+          "source": "floor3/room2",
+          "target": "floor3/room1",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                5.964,
+                5.75065965
+              ],
+              [
+                5.964,
+                4.85065965
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  6.204000000000001,
+                  4.85065965
+                ],
+                [
+                  5.724,
+                  4.85065965
+                ],
+                [
+                  5.724,
+                  5.75065965
+                ],
+                [
+                  6.204000000000001,
+                  5.75065965
+                ],
+                [
+                  6.204000000000001,
+                  4.85065965
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "id": "floor3/door4",
+          "source": "floor3/room2",
+          "target": "floor3/stairs",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                3.55,
+                4.78362964
+              ],
+              [
+                4.45,
+                4.78362964
+              ]
+            ]
+          },
+          "clearance": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.45,
+                  5.02362964
+                ],
+                [
+                  4.45,
+                  4.54362964
+                ],
+                [
+                  3.55,
+                  4.54362964
+                ],
+                [
+                  3.55,
+                  5.02362964
+                ],
+                [
+                  4.45,
+                  5.02362964
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "windows": [],
+      "connections": [],
+      "walls": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.98,
+              16.07088892
+            ],
+            [
+              1.98,
+              12.82071114
+            ],
+            [
+              4.62,
+              12.82071114
+            ],
+            [
+              4.62,
+              7.2954089
+            ],
+            [
+              9.82,
+              7.2954089
+            ],
+            [
+              9.82,
+              0.18
+            ],
+            [
+              0.18,
+              0.18
+            ],
+            [
+              0.18,
+              16.07088892
+            ],
+            [
+              1.98,
+              16.07088892
+            ]
+          ],
+          [
+            [
+              5.904,
+              4.85065965
+            ],
+            [
+              6.024,
+              4.85065965
+            ],
+            [
+              6.024,
+              3.3659104
+            ],
+            [
+              9.76,
+              3.3659104
+            ],
+            [
+              9.76,
+              7.2354089
+            ],
+            [
+              6.024,
+              7.2354089
+            ],
+            [
+              6.024,
+              5.75065965
+            ],
+            [
+              5.904,
+              5.75065965
+            ],
+            [
+              5.904,
+              7.2354089
+            ],
+            [
+              4.56,
+              7.2354089
+            ],
+            [
+              4.56,
+              11.82733019
+            ],
+            [
+              4.55132887,
+              11.81865906
+            ],
+            [
+              4.48564897,
+              11.75297915
+            ],
+            [
+              4.4696914,
+              11.73851606
+            ],
+            [
+              4.46947241,
+              11.73830593
+            ],
+            [
+              4.45415162,
+              11.72360498
+            ],
+            [
+              2.36,
+              9.90288321
+            ],
+            [
+              2.36,
+              9.66362964
+            ],
+            [
+              2.64,
+              9.66362964
+            ],
+            [
+              4.06,
+              9.66362964
+            ],
+            [
+              4.06,
+              7.04362964
+            ],
+            [
+              5.76,
+              7.04362964
+            ],
+            [
+              5.76,
+              5.75065965
+            ],
+            [
+              5.724,
+              5.75065965
+            ],
+            [
+              5.724,
+              4.85065965
+            ],
+            [
+              5.76,
+              4.85065965
+            ],
+            [
+              5.76,
+              4.72362964
+            ],
+            [
+              4.45,
+              4.72362964
+            ],
+            [
+              4.45,
+              4.84362964
+            ],
+            [
+              5.64,
+              4.84362964
+            ],
+            [
+              5.64,
+              6.92362964
+            ],
+            [
+              2.36,
+              6.92362964
+            ],
+            [
+              2.36,
+              4.84362964
+            ],
+            [
+              3.55,
+              4.84362964
+            ],
+            [
+              3.55,
+              4.72362964
+            ],
+            [
+              2.36,
+              4.72362964
+            ],
+            [
+              2.24,
+              4.72362964
+            ],
+            [
+              1.49,
+              4.72362964
+            ],
+            [
+              1.49,
+              5.25856022
+            ],
+            [
+              1.44740124,
+              5.2738023
+            ],
+            [
+              1.38884405,
+              5.30149779
+            ],
+            [
+              1.38884404,
+              5.30149779
+            ],
+            [
+              1.36135293,
+              5.31797533
+            ],
+            [
+              1.33328345,
+              5.33479953
+            ],
+            [
+              1.33328344,
+              5.33479953
+            ],
+            [
+              1.30935464,
+              5.35254635
+            ],
+            [
+              1.28125453,
+              5.37338681
+            ],
+            [
+              1.23325836,
+              5.416888
+            ],
+            [
+              1.18975717,
+              5.46488417
+            ],
+            [
+              1.1689167,
+              5.49298428
+            ],
+            [
+              1.15116989,
+              5.51691308
+            ],
+            [
+              1.15116989,
+              5.51691309
+            ],
+            [
+              1.13434569,
+              5.54498257
+            ],
+            [
+              1.11786815,
+              5.57247368
+            ],
+            [
+              1.11786815,
+              5.57247369
+            ],
+            [
+              1.09017266,
+              5.63103088
+            ],
+            [
+              1.06835014,
+              5.69202074
+            ],
+            [
+              1.06835013,
+              5.69202075
+            ],
+            [
+              1.06230667,
+              5.71614762
+            ],
+            [
+              1.05261074,
+              5.75485591
+            ],
+            [
+              1.04310606,
+              5.81893124
+            ],
+            [
+              1.04,
+              5.88215672
+            ],
+            [
+              1.04,
+              7.73033256
+            ],
+            [
+              1.16,
+              7.73033256
+            ],
+            [
+              1.16,
+              5.88510256
+            ],
+            [
+              1.16267226,
+              5.83070748
+            ],
+            [
+              1.17044692,
+              5.77829499
+            ],
+            [
+              1.17044692,
+              5.77829498
+            ],
+            [
+              1.17820477,
+              5.7473239
+            ],
+            [
+              1.18332146,
+              5.72689692
+            ],
+            [
+              1.2011719,
+              5.67700828
+            ],
+            [
+              1.22382633,
+              5.62910951
+            ],
+            [
+              1.25106657,
+              5.58366192
+            ],
+            [
+              1.28263029,
+              5.54110317
+            ],
+            [
+              1.3182135,
+              5.50184314
+            ],
+            [
+              1.35747353,
+              5.46625993
+            ],
+            [
+              1.40003228,
+              5.43469621
+            ],
+            [
+              1.44547987,
+              5.40745597
+            ],
+            [
+              1.49337864,
+              5.38480154
+            ],
+            [
+              1.524931,
+              5.37351193
+            ],
+            [
+              1.54326728,
+              5.3669511
+            ],
+            [
+              1.5432673,
+              5.3669511
+            ],
+            [
+              1.54326732,
+              5.36695109
+            ],
+            [
+              1.54373342,
+              5.36683434
+            ],
+            [
+              1.54373346,
+              5.36683433
+            ],
+            [
+              1.54509968,
+              5.36649211
+            ],
+            [
+              1.61,
+              5.35023545
+            ],
+            [
+              1.61,
+              5.35023543
+            ],
+            [
+              1.61,
+              4.84362964
+            ],
+            [
+              2.24,
+              4.84362964
+            ],
+            [
+              2.24,
+              6.92362964
+            ],
+            [
+              2.24,
+              7.04362964
+            ],
+            [
+              2.24,
+              7.16362964
+            ],
+            [
+              2.24,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.72862964
+            ],
+            [
+              2.36,
+              7.16362964
+            ],
+            [
+              3.94,
+              7.16362964
+            ],
+            [
+              3.94,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.54362964
+            ],
+            [
+              2.76,
+              9.14362964
+            ],
+            [
+              2.36,
+              9.14362964
+            ],
+            [
+              2.36,
+              8.57862964
+            ],
+            [
+              2.24,
+              8.57862964
+            ],
+            [
+              2.24,
+              9.26362964
+            ],
+            [
+              2.24,
+              9.54362964
+            ],
+            [
+              2.24,
+              9.95756438
+            ],
+            [
+              2.34493317,
+              10.0487966
+            ],
+            [
+              4.37319397,
+              11.8122308
+            ],
+            [
+              4.37319398,
+              11.8122308
+            ],
+            [
+              4.3878397,
+              11.826284
+            ],
+            [
+              4.39695042,
+              11.83454148
+            ],
+            [
+              4.40287917,
+              11.83991499
+            ],
+            [
+              4.50490042,
+              11.94193624
+            ],
+            [
+              4.56,
+              11.99703582
+            ],
+            [
+              4.56,
+              12.76071114
+            ],
+            [
+              3.79632468,
+              12.76071114
+            ],
+            [
+              3.65148063,
+              12.61586708
+            ],
+            [
+              1.16,
+              10.4496949
+            ],
+            [
+              1.16,
+              8.63033256
+            ],
+            [
+              1.04,
+              8.63033256
+            ],
+            [
+              1.04,
+              10.50437606
+            ],
+            [
+              1.04,
+              10.50437607
+            ],
+            [
+              3.56958743,
+              12.70367952
+            ],
+            [
+              3.62661905,
+              12.76071114
+            ],
+            [
+              1.92,
+              12.76071114
+            ],
+            [
+              1.92,
+              16.01088892
+            ],
+            [
+              0.24,
+              16.01088892
+            ],
+            [
+              0.24,
+              0.24
+            ],
+            [
+              5.904,
+              0.24
+            ],
+            [
+              5.904,
+              1.2929552
+            ],
+            [
+              6.024,
+              1.2929552
+            ],
+            [
+              6.024,
+              0.24
+            ],
+            [
+              9.76,
+              0.24
+            ],
+            [
+              9.76,
+              3.2459104
+            ],
+            [
+              6.024,
+              3.2459104
+            ],
+            [
+              6.024,
+              2.1929552
+            ],
+            [
+              5.904,
+              2.1929552
+            ],
+            [
+              5.904,
+              3.2459104
+            ],
+            [
+              5.904,
+              3.3659104
+            ],
+            [
+              5.904,
+              4.85065965
+            ]
+          ],
+          [
+            [
+              2.64,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.54362964
+            ],
+            [
+              2.36,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.26362964
+            ],
+            [
+              2.64,
+              9.54362964
+            ]
+          ]
+        ]
+      },
+      "service_shaft": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.6999999999999997,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.603629640000001
+            ],
+            [
+              2.3,
+              9.20362964
+            ],
+            [
+              2.6999999999999997,
+              9.20362964
+            ]
+          ]
+        ]
+      },
+      "open_ground": false,
+      "corridor_width_m": 1.2,
+      "score": 0.1465885471980695,
+      "checks": {
+        "connected": true,
+        "coverage_error_m2": 0.0
+      }
+    }
+  ],
+  "core": {
+    "stairs": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            5.699999999999999,
+            4.78362964
+          ],
+          [
+            5.699999999999999,
+            6.98362964
+          ],
+          [
+            2.3,
+            6.98362964
+          ],
+          [
+            2.3,
+            4.78362964
+          ],
+          [
+            5.699999999999999,
+            4.78362964
+          ]
+        ]
+      ]
+    },
+    "shaft": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            2.6999999999999997,
+            9.20362964
+          ],
+          [
+            2.6999999999999997,
+            9.603629640000001
+          ],
+          [
+            2.3,
+            9.603629640000001
+          ],
+          [
+            2.3,
+            9.20362964
+          ],
+          [
+            2.6999999999999997,
+            9.20362964
+          ]
+        ]
+      ]
+    },
+    "services": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            4.0,
+            7.103629639999999
+          ],
+          [
+            4.0,
+            9.603629640000001
+          ],
+          [
+            2.3,
+            9.603629640000001
+          ],
+          [
+            2.3,
+            7.103629639999999
+          ],
+          [
+            4.0,
+            7.103629639999999
+          ]
+        ]
+      ]
+    },
+    "flights": [
+      {
+        "source": "floor1/stairs",
+        "target": "floor2/stairs",
+        "bottom_m": 0,
+        "top_m": 3.2,
+        "risers": 18,
+        "riser_m": 0.17777777777777778,
+        "tread_m": 0.27,
+        "flight_width_m": 0.95,
+        "landing_m": 1.1
+      },
+      {
+        "source": "floor2/stairs",
+        "target": "floor3/stairs",
+        "bottom_m": 3.2,
+        "top_m": 6,
+        "risers": 16,
+        "riser_m": 0.175,
+        "tread_m": 0.27,
+        "flight_width_m": 0.95,
+        "landing_m": 1.1
+      }
+    ],
+    "selected_alternative": 0
+  },
+  "connections": [
+    {
+      "source": "floor1/hall",
+      "target": "floor1/bath",
+      "kind": "door",
+      "id": "floor1/door0"
+    },
+    {
+      "source": "floor1/hall",
+      "target": "floor1/room0",
+      "kind": "door",
+      "id": "floor1/door1"
+    },
+    {
+      "source": "floor1/hall",
+      "target": "floor1/room2",
+      "kind": "door",
+      "id": "floor1/door2"
+    },
+    {
+      "source": "floor1/hall",
+      "target": "floor1/room3",
+      "kind": "door",
+      "id": "floor1/door3"
+    },
+    {
+      "source": "floor1/room0",
+      "target": "floor1/room1",
+      "kind": "door",
+      "id": "floor1/door4"
+    },
+    {
+      "source": "floor1/room0",
+      "target": "floor1/stairs",
+      "kind": "door",
+      "id": "floor1/door5"
+    },
+    {
+      "source": "floor2/hall",
+      "target": "floor2/bath",
+      "kind": "door",
+      "id": "floor2/door0"
+    },
+    {
+      "source": "floor2/hall",
+      "target": "floor2/room2",
+      "kind": "door",
+      "id": "floor2/door1"
+    },
+    {
+      "source": "floor2/room2",
+      "target": "floor2/room0",
+      "kind": "door",
+      "id": "floor2/door2"
+    },
+    {
+      "source": "floor2/room2",
+      "target": "floor2/room1",
+      "kind": "door",
+      "id": "floor2/door3"
+    },
+    {
+      "source": "floor2/room2",
+      "target": "floor2/stairs",
+      "kind": "door",
+      "id": "floor2/door4"
+    },
+    {
+      "source": "floor3/hall",
+      "target": "floor3/bath",
+      "kind": "door",
+      "id": "floor3/door0"
+    },
+    {
+      "source": "floor3/hall",
+      "target": "floor3/room2",
+      "kind": "door",
+      "id": "floor3/door1"
+    },
+    {
+      "source": "floor3/room2",
+      "target": "floor3/room0",
+      "kind": "door",
+      "id": "floor3/door2"
+    },
+    {
+      "source": "floor3/room2",
+      "target": "floor3/room1",
+      "kind": "door",
+      "id": "floor3/door3"
+    },
+    {
+      "source": "floor3/room2",
+      "target": "floor3/stairs",
+      "kind": "door",
+      "id": "floor3/door4"
+    },
+    {
+      "source": "street",
+      "target": "floor1/hall",
+      "kind": "entrance",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.17500000000000004,
+            0.0
+          ],
+          [
+            1.125,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "source": "floor1/stairs",
+      "target": "floor2/stairs",
+      "kind": "stair"
+    },
+    {
+      "source": "floor2/stairs",
+      "target": "floor3/stairs",
+      "kind": "stair"
+    }
+  ],
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.5003094680480016
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.7148429735016811
+    },
+    {
+      "id": 2,
+      "status": "conflict",
+      "code": "room_disconnected",
+      "path": "floor1",
+      "message": "room_disconnected at floor1: floor1/bath"
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.6455676389212643
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.5390959071108647
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.6137818982645967
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.7374239114384662
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.6391399606127512
+    }
+  ],
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.5003094680480016,
+    "exterior_preserved": true
+  }
+}

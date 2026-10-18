@@ -1,8 +1,10 @@
 # Índice vivo: de theta al edificio 3D
 
-> **Primera lectura al retomar el proyecto.** Rutas relativas a la raíz del repositorio. Estado documentado: 15-10-2026, tras el commit `6a1e996`. Este índice describe la **ruta theta vigente**; que un módulo histórico siga en el árbol no significa que forme parte de ella. Actualizar este archivo al cambiar contratos, catálogos, etapas o comandos.
+> **Primera lectura al retomar el proyecto.** Rutas relativas a la raíz del repositorio. Estado documentado: 19-10-2026, tras el commit `b1ee1fd` (5 commits por delante de `6a1e996`: unificaciones de balcones, pilastras y frontones, eliminación de detalles implícitos y la documentación de este índice). Este índice describe la **ruta theta vigente**; que un módulo histórico siga en el árbol no significa que forme parte de ella. Actualizar este archivo al cambiar contratos, catálogos, etapas o comandos.
 
 ## 1. Resumen operativo
+
+**Rediseño adaptable, rama `gramatica_addaptable`:** la Fase 0 añade un contrato independiente `intent-v1` en `house_grammar/src/domain/building_intent.py`, perfiles en `generation_profile.py` y un banco sintético en [`house_grammar/experiments/phase0/`](house_grammar/experiments/phase0/README.md). Valida descripción cualitativa, referencias y precedencia; **todavía no genera mallas ni reemplaza la ruta ejecutable theta descrita abajo**. Evidencia opcional, estilos mezclados y completado por omisión. Plan y seguimiento: [`PLAN_GRAMATICA_ADAPTABLE.md`](PLAN_GRAMATICA_ADAPTABLE.md). Siguiente trabajo: Fase 1, planificación de masas/vacíos; no se exige compatibilidad con el contrato anterior.
 
 ```text
 ReconstructionRequest (JSON)
@@ -20,17 +22,22 @@ La entrada real no es un `theta` aislado: es un `ReconstructionRequest` con `con
 ```text
 forget-the-pixels/
 ├── PIPELINE_GRAMATICA.md                 ← este índice
-├── CATALOGO_VANOS.md                     ← catálogo vigente de vanos
-├── CATALOGO_TECHOS.md                    ← catálogo vigente de techos
+├── CATALOGO_VANOS.md, CATALOGO_TECHOS.md ← catálogos vigentes de vanos y techos
+├── CATALOGO_CERCOS.md, MATERIALES_MUROS.md ← catálogo de cercos y modelo de muro
 ├── README.md, Makefile                   ← contexto y arranque de A/B
 ├── apps/
-│   ├── cadastral_editor/                 ← A: geometría catastral y frentes
+│   ├── cadastral_editor/                 ← A: geometría catastral y frentes (server.py)
 │   ├── theta_author/                     ← B: autoría/evidencia; proveedor mock
-│   └── theta_estimator/                  ← estimaciones parciales, no solicitud completa
+│   │   └── experiments/                  ← haiku_theta/ (pipeline LLM→theta, cli.py),
+│   │                                     ← manual_opus/PROMPTS.md
+│   └── theta_estimator/                  ← estimaciones parciales (cli.py, estimator.py)
 ├── packages/                             ← código compartido por aplicaciones
 ├── data/barranco/                        ← fuentes y estado local; no es catálogo de gramática
 └── house_grammar/
     ├── requirements.txt, README.md, ARCHITECTURE.md
+    ├── ARCHITECTURAL_FAMILIES.md, PROCEDURAL_GENERATION_PLAN.md   ← histórico, no forma la ruta vigente
+    ├── DISENO_{BALCONES,CERCOS,ENTRADAS,FRONTONES,PILASTRAS,PUERTAS,REMATES,TECHOS,VENTANAS}.md
+    │                                     ← diseño por catálogo de pieza; leer antes de tocarla
     ├── assets/pbr/catalog.json           ← catálogo de texturas PBR
     ├── docs/guia_theta/
     │   ├── README.md                     ← tutorial, coordenadas y advertencias
@@ -39,6 +46,8 @@ forget-the-pixels/
     │   ├── MODULOS.md                    ← inventario de módulos de src/
     │   ├── DEMOSTRACION.md, PROMPT.md    ← caso explicado y autoría
     │   ├── revisar_theta.py              ← diagnóstico ampliado
+    │   ├── generar_referencia.py, campos.json ← generador de REFERENCIA_CAMPOS.md
+    │   ├── migrar_techos.py              ← migración de techos antiguos
     │   └── ejemplos/                     ← solicitudes completas
     ├── src/
     │   ├── domain/                       ← contratos de entrada y piezas
@@ -121,7 +130,7 @@ La resolución valida varias combinaciones; otras comprobaciones (p. ej. ciertas
 
 **Eliminación del motor/adaptadores antiguos de pilastras:** se quitaron `vertical_member_assembly.py:facade_member`, `ornaments.py:classical_pilaster` y el despacho de `pilaster`/`classical_pilaster`/`composite_pilaster` de `prefabs_facade.py`. En la ruta V4, `grammar.projection()` traduce esas etiquetas compatibles a `MemberDesign` y llama **directamente** a `vertical_member_assembly.build_member` (catálogo); los pilastres ornamentales de `grammar.facade()` ingresan a la misma lista de proyecciones y ya no se dibujan en un segundo pase. Los solapes entre proyecciones se rechazan; el automático de esquina cede ante uno existente. V4 sigue existiendo para otros sistemas, pero **no hay un segundo constructor de geometría de pilastras**. Las etiquetas de proyección siguen siendo entradas compatibles; para nuevas solicitudes theta preferir `vertical_members`. Pendiente arquitectónico distinto: si se desea suprimir toda la API V4, migrar sus demás consumidores y pruebas; no confundirlo con quitar el motor de pilastras legacy. El punto único para ampliar diseños es `vertical_member_catalog.py` + resolver/assembly.
 
-**Estado de esta migración (15-10-2026):** la unificación de `balcony` en la ruta theta está implementada y probada, pero sus cambios de código y documentación todavía no forman parte de un commit. Queda pendiente migrar los consumidores V4 de `grammar.py:railing` y `prefabs_facade.py`, y las proyecciones `gallery`; no borrar sus constructores hasta sustituir esos consumidores y actualizar sus pruebas. La comprobación ejecutada para la ruta theta/V4 relevante fue de **166 pruebas aprobadas**; el ejemplo `step18_theta_interface/examples/01_simple.json` también produjo un GLB. Al cerrar la migración completa, actualizar este estado y repetir la suite.
+**Estado de esta migración (19-10-2026):** la unificación de `balcony` en la ruta theta está implementada, probada y commiteada (`5aa566b`), junto con pilastras (`51723b3`), frontones (`3cee39b`) y detalles implícitos (`b1ee1fd`). Queda pendiente solo el **lado V4**: migrar los consumidores de `grammar.py:railing` y `prefabs_facade.py`, y las proyecciones `gallery`; no borrar sus constructores hasta sustituirlos y actualizar sus pruebas. No confundir "la unificación de balcones no está cerrada en V4" con "no está en Git": la primera es cierta, la segunda ya no lo es.
 
 **Geometría y entrega.** `mesh_builder.py` construye topología y atributos; `detail.py` controla presupuesto geométrico; `validation.py` revisa contención e índices y diagnostica topología por componente. `exporters/glb_exporter.py` empaqueta PBR y convierte Z-up a Y-up; `obj_exporter.py` ofrece OBJ/MTL alternativo. `src/modeling/version.py` identifica el materializador. En `MeshData`, `vertices` y `faces` comparten índices de posición **dentro de cada componente**; `corner_uv` va por esquina de triángulo; `face_materials`, `materials`, `parts` y `components` preservan apariencia y semántica. No es un sólido booleano único. GLB de autoría conserva identidad de componentes; exportación runtime puede agrupar por semántica.
 

@@ -1,0 +1,132 @@
+[
+  {
+    "id": "solid_high",
+    "form": "solid",
+    "gates": [
+      "pedestrian"
+    ],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.847,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 19,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  },
+  {
+    "id": "open_low",
+    "form": "open",
+    "gates": [
+      "pedestrian"
+    ],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.847,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 81,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  },
+  {
+    "id": "base_and_rail",
+    "form": "base_and_rail",
+    "gates": [
+      "pedestrian"
+    ],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.847,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 78,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  },
+  {
+    "id": "partial",
+    "form": "partial",
+    "gates": [
+      "pedestrian"
+    ],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.847,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 21,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  },
+  {
+    "id": "unfenced",
+    "form": null,
+    "gates": [],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.927,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 1,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  },
+  {
+    "id": "covered_vehicle_portal",
+    "form": "solid",
+    "gates": [
+      "pedestrian",
+      "vehicle"
+    ],
+    "routes": [
+      {
+        "kind": "pedestrian",
+        "length_m": 2.847,
+        "transition": "level"
+      },
+      {
+        "kind": "vehicle",
+        "length_m": 2.847,
+        "transition": "level"
+      }
+    ],
+    "site_parts": 45,
+    "audit": {
+      "watertight": true,
+      "non_watertight": [],
+      "group_overlap_m3": 0.0,
+      "group_overlap_pairs": []
+    }
+  }
+]

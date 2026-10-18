@@ -1,0 +1,121 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 257,
+  "by_kind": {
+    "wall": 13,
+    "partition": 4,
+    "jamb_left": 24,
+    "jamb_right": 24,
+    "head": 24,
+    "leaf0_left": 24,
+    "leaf0_right": 24,
+    "leaf0_bottom": 24,
+    "leaf0_top": 24,
+    "leaf0_infill": 24,
+    "handle0": 18,
+    "sill": 6,
+    "sill_cap": 6,
+    "leaf1_left": 3,
+    "leaf1_right": 3,
+    "leaf1_bottom": 3,
+    "leaf1_top": 3,
+    "leaf1_infill": 3,
+    "slab": 3
+  },
+  "by_material": {
+    "plaster": 17,
+    "metal": 222,
+    "stone": 6,
+    "glass": 9,
+    "concrete": 3
+  },
+  "openings": 24,
+  "windows": 6,
+  "doors": 18,
+  "explicit_windows": 0,
+  "completed_windows": 6,
+  "mechanisms": {
+    "casement": 3,
+    "sliding": 3
+  },
+  "styles": {
+    "moderno": 24
+  },
+  "useful_heights": [
+    3.02,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor1/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor1/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor1/room2/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/room2/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 0.0,
+    "minimum_lintel_m": 0.4123076923076905,
+    "openings": 24,
+    "explicit_windows": 0,
+    "completed_windows": 6,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 17,
+      "metal": 222,
+      "stone": 6,
+      "glass": 9,
+      "concrete": 3
+    }
+  }
+}

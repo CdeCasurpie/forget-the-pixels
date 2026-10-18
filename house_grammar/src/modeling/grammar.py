@@ -362,17 +362,23 @@ def _facade_body(mb, f, total_height, *, managed_trim=False, trim_regions=(), tr
                 if any(portal.intersection(opening_shape(other)).area>1e-8
                        for other in ops if other is not op):
                     raise ValueError('Door portal overlaps another opening')
+    clamped = []
     for region in regions:
         if not np.isfinite((region.u_m,region.v_m,region.width_m,region.height_m)).all() or region.width_m <= 0 or region.height_m <= 0:
             raise ValueError("Invalid facade material region")
-        if (
-            region.u_m < 0
-            or region.u_m + region.width_m > length + 1e-8
-            or region.v_m < 0
-            or (region.v_m + region.height_m > total_height + 1e-8 if f.top_profile is None else
-                not silhouette.buffer(1e-8).covers(box(region.u_m,region.v_m,region.u_m+region.width_m,region.v_m+region.height_m)))
-        ):
-            raise ValueError(f"Material region outside facade {f.edge_id}")
+        # Paint is zero-thickness: an overhanging region is clipped to the
+        # wall instead of rejected, so model-estimated full-facade regions
+        # (e.g. width_m == edge length) do not fail on boundary precision.
+        # WallFinish only ever paints already-clipped triangles.
+        domain = silhouette if f.top_profile is not None else box(0,0,length,total_height)
+        piece = domain.intersection(box(region.u_m,region.v_m,region.u_m+region.width_m,region.v_m+region.height_m))
+        if piece.is_empty:
+            continue
+        lo_x, lo_y, hi_x, hi_y = piece.bounds
+        if hi_x - lo_x <= 1e-9 or hi_y - lo_y <= 1e-9:
+            continue
+        clamped.append(replace(region,u_m=lo_x,v_m=lo_y,width_m=hi_x-lo_x,height_m=hi_y-lo_y))
+    regions = clamped
     for feature in features:
         crown=feature.kind in ('crown_triangular','crown_stepped') and feature.source=='crown_profile'
         if (

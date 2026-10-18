@@ -1,0 +1,114 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 5,
+        "kitchen_dining": 1,
+        "living": 1
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 17.95,
+        "floor1/bath": 3.69,
+        "floor1/stairs": 6.91,
+        "floor1/room0": 15.84,
+        "floor1/room1": 22.43,
+        "floor1/room2": 11.63,
+        "floor1/room3": 13.64,
+        "floor1/room4": 10.48,
+        "floor1/room5": 18.14,
+        "floor1/room6": 12.08
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "living": 1,
+        "bedroom": 5,
+        "kitchen_dining": 1
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 11.22,
+        "floor2/bath": 3.69,
+        "floor2/stairs": 6.91,
+        "floor2/room0": 11.52,
+        "floor2/room1": 11.22,
+        "floor2/room2": 15.06,
+        "floor2/room3": 26.06,
+        "floor2/room4": 11.68,
+        "floor2/room5": 17.39,
+        "floor2/room6": 17.87
+      }
+    }
+  ],
+  "core_flights": 1,
+  "selected_alternative": 4,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.4653673878202518
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.5144735236255109
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.4207410360574564
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.48227457596987094
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.3859367104983331
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.5285756076064065
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.5697220380507693
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.5427468585571698
+    }
+  ],
+  "connections": 20,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.3859367104983331,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

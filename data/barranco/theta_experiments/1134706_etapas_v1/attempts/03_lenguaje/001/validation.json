@@ -1,0 +1,17 @@
+{
+  "vertices": 50,
+  "triangles": 76,
+  "parts": 6,
+  "semantic_types": [
+    "roof_slab",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "wall": 60,
+    "roof_slab": 16
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 2.085753059083382e-05,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

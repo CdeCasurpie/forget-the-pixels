@@ -1,0 +1,117 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -18.251972104015294,
+        -0.6541935410350561
+      ],
+      [
+        -15.043372103769798,
+        -10.353393541648984
+      ],
+      [
+        18.210827895789407,
+        0.5849064588546753
+      ],
+      [
+        18.050627895630896,
+        1.0625064577907324
+      ],
+      [
+        14.973527894646395,
+        10.38530645892024
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      280231.9520058166,
+      8657545.890328353,
+      0
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "family": "quiet_house",
+    "architectural_style": null,
+    "massing": {
+      "pattern": "explicit"
+    },
+    "masses": [
+      {
+        "role": "principal",
+        "footprint": [
+          [
+            -18.251972104015294,
+            -0.6541935410350561
+          ],
+          [
+            -15.043372103769798,
+            -10.353393541648984
+          ],
+          [
+            18.210827895789407,
+            0.5849064588546753
+          ],
+          [
+            18.050627895630896,
+            1.0625064577907324
+          ],
+          [
+            14.973527894646395,
+            10.38530645892024
+          ]
+        ],
+        "levels_m": [
+          0.0,
+          3.0,
+          5.6
+        ]
+      }
+    ],
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "facades": [],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "roofs": [],
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": [],
+      "zones": []
+    },
+    "balconies": [],
+    "vertical_members": [],
+    "crowns": [],
+    "entablatures": [],
+    "roof_assemblies": [],
+    "canopies": [],
+    "entrances": [],
+    "materials": []
+  },
+  "nuisance": {
+    "seed": 23,
+    "curtains": false
+  },
+  "config": {
+    "detail": 2
+  }
+}

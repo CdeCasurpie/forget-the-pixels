@@ -1,0 +1,2115 @@
+{
+  "request": {
+    "context": {
+      "parcel": [
+        [
+          -18.251972104015294,
+          -0.6541935410350561
+        ],
+        [
+          -15.043372103769798,
+          -10.353393541648984
+        ],
+        [
+          18.210827895789407,
+          0.5849064588546753
+        ],
+        [
+          18.050627895630896,
+          1.0625064577907324
+        ],
+        [
+          14.973527894646395,
+          10.38530645892024
+        ]
+      ],
+      "fronts": [
+        0
+      ],
+      "crs": "EPSG:32718",
+      "metric_origin": [
+        280231.9520058166,
+        8657545.890328353,
+        0
+      ]
+    },
+    "theta": {
+      "schema_version": "0.3",
+      "family": "quiet_house",
+      "architectural_style": null,
+      "massing": {
+        "components": [
+          {
+            "id": "principal",
+            "region": {
+              "front_edge": 0,
+              "u": [
+                0.0,
+                1.0
+              ],
+              "depth": [
+                0.0,
+                1.0
+              ],
+              "depth_m": [
+                3.0,
+                14.0
+              ],
+              "fit": "parcel",
+              "width_reference": "parcel"
+            },
+            "levels_m": [
+              0.0,
+              3.0,
+              5.6
+            ],
+            "kind": "enclosed",
+            "cutouts": [],
+            "support": {
+              "kind": "bearing",
+              "spacing_m": 4.0,
+              "column_width_m": 0.25,
+              "inset_m": 0.4,
+              "max_cantilever_m": 0.0,
+              "member": null
+            }
+          }
+        ]
+      },
+      "facade": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      },
+      "facades": [
+        {
+          "mass_role": "principal:0",
+          "edge": 0,
+          "controls": {
+            "mode": "explicit",
+            "openings": [
+              {
+                "kind": "door",
+                "u_m": 4.5,
+                "v_m": 0.0,
+                "width_m": 1.0,
+                "height_m": 2.2,
+                "frame_width_m": 0.06,
+                "recess_m": 0.08,
+                "source": "assumed",
+                "view_id": null,
+                "score": 0.0,
+                "style": "sliding",
+                "grille": false,
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "balcony_depth_m": 0.75,
+                "prefab": "legacy",
+                "curtain": 0.0,
+                "grille_pattern": "vertical",
+                "shape": "rectangle",
+                "arch_rise_m": null,
+                "frame_profile": null,
+                "frame_depth_m": 0.1,
+                "sill": false,
+                "grid_spacing_m": null,
+                "grille_spacing_m": 0.14,
+                "door": {
+                  "model": "madera",
+                  "leaves": 1,
+                  "construction": "boards",
+                  "leaf_material": "wood",
+                  "frame_material": "wood",
+                  "portal_material": "plaster",
+                  "metal_material": "metal",
+                  "glass_material": "glass",
+                  "threshold_material": "stone",
+                  "portal": "none",
+                  "portal_member": null,
+                  "portal_width_m": 0.24,
+                  "portal_gap_m": 0.1,
+                  "portal_depth_m": 0.2,
+                  "cornice": false,
+                  "transom_height_m": 0.0,
+                  "transom_infill": "glass",
+                  "transom_grille": false,
+                  "grille_pattern": "vertical",
+                  "grille_spacing_m": 0.16,
+                  "leaf_grille": false,
+                  "threshold": true,
+                  "opening_angles_deg": []
+                }
+              },
+              {
+                "kind": "window",
+                "u_m": 2.0,
+                "v_m": 3.9,
+                "width_m": 1.3,
+                "height_m": 1.5,
+                "frame_width_m": 0.08,
+                "recess_m": 0.08,
+                "source": "observed",
+                "view_id": "tyQaMS8skCpsOJ0wRHbang",
+                "score": 0.0,
+                "style": "sliding",
+                "grille": true,
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "balcony_depth_m": 0.75,
+                "prefab": "legacy",
+                "curtain": 0.0,
+                "grille_pattern": "vertical",
+                "shape": "rectangle",
+                "arch_rise_m": null,
+                "frame_profile": null,
+                "frame_depth_m": 0.1,
+                "sill": true,
+                "grid_spacing_m": null,
+                "grille_spacing_m": 0.14,
+                "door": null
+              },
+              {
+                "kind": "window",
+                "u_m": 6.9,
+                "v_m": 3.9,
+                "width_m": 1.3,
+                "height_m": 1.5,
+                "frame_width_m": 0.08,
+                "recess_m": 0.08,
+                "source": "observed",
+                "view_id": "oZ1wrA76ZreE0XrMgouLug",
+                "score": 0.0,
+                "style": "sliding",
+                "grille": true,
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "balcony_depth_m": 0.75,
+                "prefab": "legacy",
+                "curtain": 0.0,
+                "grille_pattern": "vertical",
+                "shape": "rectangle",
+                "arch_rise_m": null,
+                "frame_profile": null,
+                "frame_depth_m": 0.1,
+                "sill": true,
+                "grid_spacing_m": null,
+                "grille_spacing_m": 0.14,
+                "door": null
+              }
+            ],
+            "projections": [],
+            "material_regions": []
+          }
+        }
+      ],
+      "roof": {
+        "kind": "flat",
+        "parapet_m": 0,
+        "props": []
+      },
+      "roofs": [],
+      "trim": {
+        "cornice": {
+          "enabled": false
+        },
+        "plinth": {
+          "enabled": false
+        }
+      },
+      "site": {
+        "fence": "none",
+        "garden": false,
+        "runs": [],
+        "zones": []
+      },
+      "balconies": [],
+      "vertical_members": [],
+      "crowns": [],
+      "entablatures": [],
+      "roof_assemblies": [],
+      "canopies": [],
+      "entrances": [],
+      "materials": []
+    },
+    "nuisance": {
+      "seed": 23,
+      "curtains": false
+    },
+    "config": {
+      "detail": 2
+    }
+  },
+  "constraints": {
+    "floors": 2,
+    "height_m": null,
+    "floor_policy": "fixed_by_user_instruction; overrides legacy suggested flag",
+    "style_policy": "suggested",
+    "parcel_policy": "fixed",
+    "fronts_policy": "fixed"
+  },
+  "floor_levels_m": [
+    0.0,
+    3.0,
+    5.6
+  ],
+  "accepted": [
+    "01_lectura",
+    "02_masas",
+    "03_lenguaje",
+    "04_puertas",
+    "05_ventanas",
+    "06_balcones"
+  ],
+  "decisions": [
+    {
+      "stage": "01_lectura",
+      "changes": {
+        "target_description": "Casa objetivo de dos pisos, estilo austero, ubicada en el lote con retiro frontal. Fachada principal en revoque beige con base de piedra en planta baja. Primer piso con dos ventanas rectangulares protegidas por rejas metálicas negras. Planta baja con puerta de acceso peatonal de madera verde y cerco metálico de barras verticales con base de albañilería en el límite frontal. Techo plano con línea de coronación horizontal. Edificios vecinos (gris al izquierdo, azul al derecho) no corresponden al lote.",
+        "inventory": [
+          {
+            "id": "mass_principal",
+            "category": "mass",
+            "location": "cuerpo principal · 2 pisos",
+            "description": "Prisma vertical de dos niveles; planta baja con zócalo pétreo rústico y nivel superior en revoque liso beige. Huella aparentemente rectangular, retirada del frente.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug",
+              "dkKZSdzvoCSMlT3KK2tkvw"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "door_entrance",
+            "category": "door",
+            "location": "fachada frontal · planta baja",
+            "description": "Puerta peatonal de madera color verde, hoja simple, acceso directo a vivienda. Distinta del portón del cerco.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "window_p1_left",
+            "category": "window",
+            "location": "fachada frontal · primer piso",
+            "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "window_p1_right",
+            "category": "window",
+            "location": "fachada frontal · primer piso",
+            "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro. Misma tipología que la ventana izquierda.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "site_fence_front",
+            "category": "site",
+            "location": "límite frontal · interface con calle",
+            "description": "Cerco metálico de barras verticales negras sobre base de albañilería/piedra baja. Delimita el retiro frontal; no es fachada del edificio.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "material_plaster",
+            "category": "material",
+            "location": "fachada frontal · nivel superior",
+            "description": "Revoque liso color beige/crema claro.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug",
+              "dkKZSdzvoCSMlT3KK2tkvw"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "material_base",
+            "category": "material",
+            "location": "fachada frontal · planta baja",
+            "description": "Base/zócalo de piedra o ladrillo visto de textura rústica, altura aproximada de un nivel de piso.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "roof_flat",
+            "category": "roof",
+            "location": "cuerpo principal · coronación",
+            "description": "Techo plano; no se observan pendientes ni tejas. Posible parapeto bajo no confirmado.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang"
+            ],
+            "certainty": "inferred"
+          }
+        ],
+        "occlusions": [
+          "Techo y superficie superior del cuerpo principal no visibles desde las tres cámaras bajas; solo se aprecia la línea de coronación.",
+          "Costado izquierdo del lote oculto por edificio vecino gris de mayor altura.",
+          "Costado derecho parcialmente oculto por edificio vecino azul.",
+          "Posibles vanos de planta baja tapados por el cerco metálico y vegetación del retiro.",
+          "Patio interior, parte posterior del lote y cualquier cuerpo secundario o anexo no son visibles.",
+          "Puerta o portón de acceso vehicular dentro del cerco no distinguible con claridad."
+        ]
+      },
+      "evidence": [
+        {
+          "element": "mass_principal",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "observed",
+          "description": "Dos niveles diferenciados por cambio de material (base pétrea / revoque superior) y línea de losa horizontal."
+        },
+        {
+          "element": "door_entrance",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Hoja verde de madera en planta baja, centrada respecto a los vanos del primer piso."
+        },
+        {
+          "element": "window_p1_left",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Rectángulo vertical con reja de barras negras en fachada frontal."
+        },
+        {
+          "element": "window_p1_right",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Rectángulo vertical con reja de barras negras en fachada frontal."
+        },
+        {
+          "element": "roof_flat",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang"
+          ],
+          "status": "inferred",
+          "description": "Arista superior horizontal sin inclinación ni tejas aparentes."
+        }
+      ],
+      "notes": [
+        "El prisma base del request ocupa toda la parcela, pero la edificación observada presenta retiro frontal y posiblemente no llena la huella del lote; la geometría de masa debe corregirse en la etapa correspondiente.",
+        "El estilo sugerido 'republicano' no se corresponde con la fachada austera observada (sin pilastras, cornisas denticuladas ni ornamentación); se deja constancia para decisión en etapa 03.",
+        "Los parámetros humanos indican primer piso diferenciado y más alto (3.0 m vs 2.6 m); la lectura visual es consistente con una planta baja de mayor altura aparente.",
+        "No se observan balcones, miradas, frontones ni otros ensambles en la fachada frontal.",
+        "El cerco metálico frontal es elemento de sitio, no de fachada; su portón o puerta de acceso no se distingue con certeza.",
+        "Las tres vistas describen la misma casa objetivo (revoque beige, base pétrea, dos ventanas superiores con reja); los edificios gris y azul son vecinos y no se atribuyen al lote."
+      ],
+      "blockers": []
+    },
+    {
+      "stage": "02_masas",
+      "changes": {
+        "floor_levels_m": [
+          0.0,
+          3.0,
+          5.6
+        ],
+        "components": [
+          {
+            "id": "principal",
+            "region": {
+              "front_edge": 0,
+              "u": [
+                0.0,
+                1.0
+              ],
+              "depth_m": [
+                3.0,
+                14.0
+              ],
+              "fit": "parcel"
+            },
+            "levels_m": [
+              0.0,
+              3.0,
+              5.6
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "element": "mass_principal",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "observed",
+          "description": "Cuerpo de dos pisos con cambio de material y retiro frontal; rectangular y ubicado entre edificios vecinos."
+        },
+        {
+          "element": "front_setback_m",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "inferred",
+          "description": "Retiro frontal estimado en 3.0 m; edificio detrás del cerco, sin escala métrica directa en las tomas."
+        },
+        {
+          "element": "building_depth_m",
+          "view_ids": [],
+          "status": "inferred",
+          "description": "Profundidad construida estimada hasta 14.0 m; patio posterior y azotea no visibles desde cámaras bajas."
+        },
+        {
+          "element": "floor_levels_m",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "inferred",
+          "description": "Dos niveles diferenciados; cotas [0, 3.0, 5.6] derivadas de alturas humanas (3.0 + 2.6)."
+        }
+      ],
+      "notes": [
+        "Se reemplaza el prisma de andamiaje que ocupaba toda la parcela por un componente con retiro frontal.",
+        "Retiro frontal de 3.0 m y profundidad total de 14.0 m son supuestos conservadores; techo, patio posterior y laterales profundos no son visibles.",
+        "Pisos fijados en 2; cotas [0, 3.0, 5.6] usando altura humana de planta baja 3.0 m y piso superior 2.6 m.",
+        "No se observan anexos, cuerpos secundarios ni patios internos; se omite cutouts.",
+        "El cerco metálico frontal es elemento de sitio, no masa edificada."
+      ],
+      "blockers": []
+    },
+    {
+      "stage": "03_lenguaje",
+      "changes": {
+        "architectural_style": null
+      },
+      "evidence": [
+        {
+          "element": "material_plaster",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "observed",
+          "description": "Revoque liso beige continuo en el nivel superior; sin pilastras, molduras escalonadas ni relieves articulados en ninguna de las tres vistas."
+        },
+        {
+          "element": "window_p1_left",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Ventana rectangular de perfil sencillo con reja de barras verticales negras; no presenta el perfil de varios escalones ni transiciones de relieve del estilo republicano."
+        },
+        {
+          "element": "window_p1_right",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Ventana rectangular gemela con reja metálica de barras verticales; misma carpintería austera, sin contraventanas ni perfiles ornamentales."
+        },
+        {
+          "element": "door_entrance",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Puerta peatonal de madera verde de hoja simple en planta baja; sin portal de pilastras, cornisa ni cuarterones decorativos visibles."
+        },
+        {
+          "element": "material_base",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Zócalo pétreo rústico en la planta baja; textura de mampostería vista, sin dentículos, molduras ni zócalo de taller fino."
+        },
+        {
+          "element": "roof_flat",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang"
+          ],
+          "status": "inferred",
+          "description": "Línea de coronación horizontal simple al cierre del nivel superior; sin frontón, volutas, dentículos ni cornisas escalonadas."
+        }
+      ],
+      "notes": [
+        "La sugerencia humana de estilo 'republicano' tiene modo suggested y no es vinculante; se aparta de ella por evidencia visual.",
+        "Se fija architectural_style=null: la fachada observada es austera y combina lenguajes (revoque liso, zócalo pétreo rústico, carpintería de madera verde, rejas metálicas de barras), por lo que un estilo global único forzaría piezas incompatibles con la casa mixta.",
+        "family permanece quiet_house; esta decisión solo selecciona perfiles compatibles para puertas/ventanas/ensambles futuros y no altera masa, color ni vanos.",
+        "En etapas futuras los ensambles (rejas, carpintería, cornisas si se confirmaran) deberán declarar estilos locales explícitos, ya que 'auto' no heredará un estilo global.",
+        "La decisión es coherente con la nota de etapa 01 que ya registraba la discrepancia entre 'republicano' y la fachada austera observada."
+      ],
+      "blockers": []
+    },
+    {
+      "stage": "04_puertas",
+      "changes": {
+        "placements": [
+          {
+            "id": "door_entrance_0",
+            "mass_ref": "principal:0",
+            "edge": 0,
+            "opening": {
+              "kind": "door",
+              "u_m": 4.5,
+              "v_m": 0.0,
+              "width_m": 1.0,
+              "height_m": 2.2,
+              "shape": "rectangle",
+              "prefab": "legacy",
+              "grille_pattern": "vertical",
+              "recess_m": 0.08,
+              "frame_width_m": 0.06,
+              "frame_depth_m": 0.1,
+              "sill": false,
+              "door": {
+                "model": "madera",
+                "construction": "boards",
+                "leaf_material": "wood",
+                "frame_material": "wood",
+                "grille_pattern": "vertical",
+                "leaves": 1,
+                "portal": "none",
+                "threshold": true
+              }
+            }
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "element": "door_entrance",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Puerta peatonal de madera verde, hoja simple, en planta baja de la fachada frontal (edge 0); distinta del cerco metálico del límite."
+        }
+      ],
+      "notes": [
+        "u_m inferido (centro aproximado de la fachada de 10.2 m): el inventario no fija posición métrica exacta del acceso.",
+        "architectural_style es null: se escriben valores explícitos en door.model/construction/leaf_material/frame_material y en shape/prefab/grille_pattern del vano.",
+        "No se agrega portón vehicular: el inventario indica que no es distinguible; el cerco metálico corresponde a etapa 10.",
+        "Puerta austera de hoja simple, construcción de tablas y materiales de madera."
+      ],
+      "blockers": []
+    },
+    {
+      "stage": "05_ventanas",
+      "changes": {
+        "placements": [
+          {
+            "id": "window_p1_left",
+            "mass_ref": "principal:0",
+            "edge": 0,
+            "opening": {
+              "kind": "window",
+              "u_m": 2.0,
+              "v_m": 3.9,
+              "width_m": 1.3,
+              "height_m": 1.5,
+              "shape": "rectangle",
+              "prefab": "legacy",
+              "grille": true,
+              "grille_pattern": "vertical",
+              "grille_spacing_m": 0.14,
+              "frame_width_m": 0.08,
+              "recess_m": 0.08,
+              "frame_depth_m": 0.1,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "sill": true,
+              "source": "observed",
+              "view_id": "tyQaMS8skCpsOJ0wRHbang"
+            }
+          },
+          {
+            "id": "window_p1_right",
+            "mass_ref": "principal:0",
+            "edge": 0,
+            "opening": {
+              "kind": "window",
+              "u_m": 6.9,
+              "v_m": 3.9,
+              "width_m": 1.3,
+              "height_m": 1.5,
+              "shape": "rectangle",
+              "prefab": "legacy",
+              "grille": true,
+              "grille_pattern": "vertical",
+              "grille_spacing_m": 0.14,
+              "frame_width_m": 0.08,
+              "recess_m": 0.08,
+              "frame_depth_m": 0.1,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "sill": true,
+              "source": "observed",
+              "view_id": "oZ1wrA76ZreE0XrMgouLug"
+            }
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "element": "window_p1_left",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Ventana rectangular en primer piso con reja metálica negra de barras verticales y marco oscuro."
+        },
+        {
+          "element": "window_p1_right",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Ventana rectangular en primer piso, misma tipología que la izquierda, con reja vertical negra."
+        },
+        {
+          "element": "window_positions",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang"
+          ],
+          "status": "inferred",
+          "description": "Posiciones u_m estimadas por simetría y evitando la puerta aceptada; no medidas métricamente en foto."
+        }
+      ],
+      "notes": [
+        "Prefab legacy, grille_pattern vertical y shape rectangle declarados explícitos porque architectural_style es null.",
+        "Ventanas ubicadas solo en el piso superior (índice 1); v_m=3.9 equivale a ~0.9 m de antepecho sobre la losa de 3.0 m.",
+        "No se observan vanos adicionales en planta baja ni en laterales; no se agregan por esta etapa."
+      ],
+      "blockers": []
+    },
+    {
+      "stage": "06_balcones",
+      "changes": {
+        "balconies": []
+      },
+      "evidence": [
+        {
+          "element": "balconies",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "observed",
+          "description": "Fachada frontal del cuerpo objetivo revisada en las tres vistas: no se observa plataforma saliente, cajón, galería con columnas, terraforma sobre techo ni protección tipo julieta adosada a la fachada."
+        },
+        {
+          "element": "window_p1_left",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Reja metálica de barras verticales situada en el plano de la fachada, sin losa volada, baranda ni soportes inferiores: no constituye balcón."
+        },
+        {
+          "element": "window_p1_right",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Reja metálica idéntica a la izquierda, también al ras del muro; se descarta balcón."
+        }
+      ],
+      "notes": [
+        "La casa objetivo es austera y carece de balcones, galerías, cajas o terrazas visibles en las tres cámaras.",
+        "Las rejas metálicas negras de las ventanas del piso superior 1 son elementos de seguridad en el plano de fachada; no se convierten en balcones ni en barandas.",
+        "No se observan escaleras exteriores ni soportes que requieran baranda derivada (stair), por lo que no se sintetiza ninguna pieza.",
+        "La colección balconies queda vacía de forma intencional; la fidelidad manda sobre el catálogo."
+      ],
+      "blockers": []
+    }
+  ],
+  "inventory": {
+    "target_description": "Casa objetivo de dos pisos, estilo austero, ubicada en el lote con retiro frontal. Fachada principal en revoque beige con base de piedra en planta baja. Primer piso con dos ventanas rectangulares protegidas por rejas metálicas negras. Planta baja con puerta de acceso peatonal de madera verde y cerco metálico de barras verticales con base de albañilería en el límite frontal. Techo plano con línea de coronación horizontal. Edificios vecinos (gris al izquierdo, azul al derecho) no corresponden al lote.",
+    "inventory": [
+      {
+        "id": "mass_principal",
+        "category": "mass",
+        "location": "cuerpo principal · 2 pisos",
+        "description": "Prisma vertical de dos niveles; planta baja con zócalo pétreo rústico y nivel superior en revoque liso beige. Huella aparentemente rectangular, retirada del frente.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug",
+          "dkKZSdzvoCSMlT3KK2tkvw"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "door_entrance",
+        "category": "door",
+        "location": "fachada frontal · planta baja",
+        "description": "Puerta peatonal de madera color verde, hoja simple, acceso directo a vivienda. Distinta del portón del cerco.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "window_p1_left",
+        "category": "window",
+        "location": "fachada frontal · primer piso",
+        "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "window_p1_right",
+        "category": "window",
+        "location": "fachada frontal · primer piso",
+        "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro. Misma tipología que la ventana izquierda.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "site_fence_front",
+        "category": "site",
+        "location": "límite frontal · interface con calle",
+        "description": "Cerco metálico de barras verticales negras sobre base de albañilería/piedra baja. Delimita el retiro frontal; no es fachada del edificio.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "material_plaster",
+        "category": "material",
+        "location": "fachada frontal · nivel superior",
+        "description": "Revoque liso color beige/crema claro.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug",
+          "dkKZSdzvoCSMlT3KK2tkvw"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "material_base",
+        "category": "material",
+        "location": "fachada frontal · planta baja",
+        "description": "Base/zócalo de piedra o ladrillo visto de textura rústica, altura aproximada de un nivel de piso.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "roof_flat",
+        "category": "roof",
+        "location": "cuerpo principal · coronación",
+        "description": "Techo plano; no se observan pendientes ni tejas. Posible parapeto bajo no confirmado.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang"
+        ],
+        "certainty": "inferred"
+      }
+    ],
+    "occlusions": [
+      "Techo y superficie superior del cuerpo principal no visibles desde las tres cámaras bajas; solo se aprecia la línea de coronación.",
+      "Costado izquierdo del lote oculto por edificio vecino gris de mayor altura.",
+      "Costado derecho parcialmente oculto por edificio vecino azul.",
+      "Posibles vanos de planta baja tapados por el cerco metálico y vegetación del retiro.",
+      "Patio interior, parte posterior del lote y cualquier cuerpo secundario o anexo no son visibles.",
+      "Puerta o portón de acceso vehicular dentro del cerco no distinguible con claridad."
+    ]
+  },
+  "opening_ledger": [
+    {
+      "stage": "04_puertas",
+      "id": "door_entrance_0",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "opening": {
+        "kind": "door",
+        "u_m": 4.5,
+        "v_m": 0.0,
+        "width_m": 1.0,
+        "height_m": 2.2,
+        "frame_width_m": 0.06,
+        "recess_m": 0.08,
+        "source": "assumed",
+        "view_id": null,
+        "score": 0.0,
+        "style": "sliding",
+        "grille": false,
+        "mullion_columns": 2,
+        "mullion_rows": 2,
+        "balcony_depth_m": 0.75,
+        "prefab": "legacy",
+        "curtain": 0.0,
+        "grille_pattern": "vertical",
+        "shape": "rectangle",
+        "arch_rise_m": null,
+        "frame_profile": null,
+        "frame_depth_m": 0.1,
+        "sill": false,
+        "grid_spacing_m": null,
+        "grille_spacing_m": 0.14,
+        "door": {
+          "model": "madera",
+          "leaves": 1,
+          "construction": "boards",
+          "leaf_material": "wood",
+          "frame_material": "wood",
+          "portal_material": "plaster",
+          "metal_material": "metal",
+          "glass_material": "glass",
+          "threshold_material": "stone",
+          "portal": "none",
+          "portal_member": null,
+          "portal_width_m": 0.24,
+          "portal_gap_m": 0.1,
+          "portal_depth_m": 0.2,
+          "cornice": false,
+          "transom_height_m": 0.0,
+          "transom_infill": "glass",
+          "transom_grille": false,
+          "grille_pattern": "vertical",
+          "grille_spacing_m": 0.16,
+          "leaf_grille": false,
+          "threshold": true,
+          "opening_angles_deg": []
+        }
+      }
+    },
+    {
+      "stage": "05_ventanas",
+      "id": "window_p1_left",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "opening": {
+        "kind": "window",
+        "u_m": 2.0,
+        "v_m": 3.9,
+        "width_m": 1.3,
+        "height_m": 1.5,
+        "frame_width_m": 0.08,
+        "recess_m": 0.08,
+        "source": "observed",
+        "view_id": "tyQaMS8skCpsOJ0wRHbang",
+        "score": 0.0,
+        "style": "sliding",
+        "grille": true,
+        "mullion_columns": 2,
+        "mullion_rows": 2,
+        "balcony_depth_m": 0.75,
+        "prefab": "legacy",
+        "curtain": 0.0,
+        "grille_pattern": "vertical",
+        "shape": "rectangle",
+        "arch_rise_m": null,
+        "frame_profile": null,
+        "frame_depth_m": 0.1,
+        "sill": true,
+        "grid_spacing_m": null,
+        "grille_spacing_m": 0.14,
+        "door": null
+      }
+    },
+    {
+      "stage": "05_ventanas",
+      "id": "window_p1_right",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "opening": {
+        "kind": "window",
+        "u_m": 6.9,
+        "v_m": 3.9,
+        "width_m": 1.3,
+        "height_m": 1.5,
+        "frame_width_m": 0.08,
+        "recess_m": 0.08,
+        "source": "observed",
+        "view_id": "oZ1wrA76ZreE0XrMgouLug",
+        "score": 0.0,
+        "style": "sliding",
+        "grille": true,
+        "mullion_columns": 2,
+        "mullion_rows": 2,
+        "balcony_depth_m": 0.75,
+        "prefab": "legacy",
+        "curtain": 0.0,
+        "grille_pattern": "vertical",
+        "shape": "rectangle",
+        "arch_rise_m": null,
+        "frame_profile": null,
+        "frame_depth_m": 0.1,
+        "sill": true,
+        "grid_spacing_m": null,
+        "grille_spacing_m": 0.14,
+        "door": null
+      }
+    }
+  ],
+  "walls": [
+    {
+      "id": "principal:0/edge0/z0",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "vertex_a": [
+        -15.4050043,
+        0.2917396
+      ],
+      "vertex_b": [
+        -12.1935758,
+        -9.4160104
+      ],
+      "base_z": 0.0,
+      "width_m": 10.225149537934016,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          10.225149537934016,
+          5.6
+        ]
+      ],
+      "openings": [
+        {
+          "index": 0,
+          "kind": "door",
+          "u_m": 4.5,
+          "v_m": 0.0,
+          "width_m": 1.0,
+          "height_m": 2.2,
+          "frame_width_m": 0.06,
+          "recess_m": 0.08,
+          "source": "assumed",
+          "view_id": null,
+          "score": 0.0,
+          "style": "sliding",
+          "grille": false,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "balcony_depth_m": 0.75,
+          "prefab": "legacy",
+          "curtain": 0.0,
+          "grille_pattern": "vertical",
+          "shape": "rectangle",
+          "arch_rise_m": null,
+          "frame_profile": null,
+          "frame_depth_m": 0.1,
+          "sill": false,
+          "grid_spacing_m": null,
+          "grille_spacing_m": 0.14,
+          "door": {
+            "model": "madera",
+            "leaves": 1,
+            "construction": "boards",
+            "leaf_material": "wood",
+            "frame_material": "wood",
+            "portal_material": "plaster",
+            "metal_material": "metal",
+            "glass_material": "glass",
+            "threshold_material": "stone",
+            "portal": "none",
+            "portal_member": null,
+            "portal_width_m": 0.24,
+            "portal_gap_m": 0.1,
+            "portal_depth_m": 0.2,
+            "cornice": false,
+            "transom_height_m": 0.0,
+            "transom_infill": "glass",
+            "transom_grille": false,
+            "grille_pattern": "vertical",
+            "grille_spacing_m": 0.16,
+            "leaf_grille": false,
+            "threshold": true,
+            "opening_angles_deg": []
+          }
+        },
+        {
+          "index": 1,
+          "kind": "window",
+          "u_m": 2.0,
+          "v_m": 3.9,
+          "width_m": 1.3,
+          "height_m": 1.5,
+          "frame_width_m": 0.08,
+          "recess_m": 0.08,
+          "source": "observed",
+          "view_id": "tyQaMS8skCpsOJ0wRHbang",
+          "score": 0.0,
+          "style": "sliding",
+          "grille": true,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "balcony_depth_m": 0.75,
+          "prefab": "legacy",
+          "curtain": 0.0,
+          "grille_pattern": "vertical",
+          "shape": "rectangle",
+          "arch_rise_m": null,
+          "frame_profile": null,
+          "frame_depth_m": 0.1,
+          "sill": true,
+          "grid_spacing_m": null,
+          "grille_spacing_m": 0.14,
+          "door": null
+        },
+        {
+          "index": 2,
+          "kind": "window",
+          "u_m": 6.9,
+          "v_m": 3.9,
+          "width_m": 1.3,
+          "height_m": 1.5,
+          "frame_width_m": 0.08,
+          "recess_m": 0.08,
+          "source": "observed",
+          "view_id": "oZ1wrA76ZreE0XrMgouLug",
+          "score": 0.0,
+          "style": "sliding",
+          "grille": true,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "balcony_depth_m": 0.75,
+          "prefab": "legacy",
+          "curtain": 0.0,
+          "grille_pattern": "vertical",
+          "shape": "rectangle",
+          "arch_rise_m": null,
+          "frame_profile": null,
+          "frame_depth_m": 0.1,
+          "sill": true,
+          "grid_spacing_m": null,
+          "grille_spacing_m": 0.14,
+          "door": null
+        }
+      ]
+    },
+    {
+      "id": "principal:0/edge1/z0",
+      "mass_ref": "principal:0",
+      "edge": 1,
+      "vertex_a": [
+        -12.1935758,
+        -9.4160104
+      ],
+      "vertex_b": [
+        -1.7443229,
+        -5.9789389
+      ],
+      "base_z": 0.0,
+      "width_m": 11.00001575745556,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          11.00001575745556,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge2/z0",
+      "mass_ref": "principal:0",
+      "edge": 2,
+      "vertex_a": [
+        -1.7443229,
+        -5.9789389
+      ],
+      "vertex_b": [
+        -4.9661222,
+        3.7601611
+      ],
+      "base_z": 0.0,
+      "width_m": 10.258170379725641,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          10.258170379725641,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge3/z0",
+      "mass_ref": "principal:0",
+      "edge": 3,
+      "vertex_a": [
+        -4.9661222,
+        3.7601611
+      ],
+      "vertex_b": [
+        -15.4050043,
+        0.2917396
+      ],
+      "base_z": 0.0,
+      "width_m": 11.000009418148817,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          11.000009418148817,
+          5.6
+        ]
+      ],
+      "openings": []
+    }
+  ],
+  "resolved_architecture": {
+    "boundaries": [],
+    "completed": {
+      "facade.added_openings": "prior/completed",
+      "facade.cladding": "prior/completed",
+      "facade.opening_edits": "prior/completed",
+      "facade.services": "prior/completed",
+      "facade.stairs": "prior/completed",
+      "facades[principal:0,edge:0].controls.added_openings": "prior/completed",
+      "facades[principal:0,edge:0].controls.cladding": "prior/completed",
+      "facades[principal:0,edge:0].controls.opening_edits": "prior/completed",
+      "facades[principal:0,edge:0].controls.services": "prior/completed",
+      "facades[principal:0,edge:0].controls.stairs": "prior/completed",
+      "finish": "prior/completed",
+      "floors": "derived/component_levels",
+      "height_m": "derived/component_levels",
+      "massing.front_setback_m": "prior/completed",
+      "massing.pattern": "prior/completed",
+      "primary_color": "prior/completed",
+      "side_material": "prior/completed"
+    },
+    "completion_details": {
+      "facade.added_openings": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facade.cladding": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "stucco"
+      },
+      "facade.opening_edits": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facade.services": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": false
+      },
+      "facade.stairs": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facades[principal:0,edge:0].controls.added_openings": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facades[principal:0,edge:0].controls.cladding": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "stucco"
+      },
+      "facades[principal:0,edge:0].controls.opening_edits": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facades[principal:0,edge:0].controls.services": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": false
+      },
+      "facades[principal:0,edge:0].controls.stairs": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "finish": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "standard"
+      },
+      "floors": {
+        "policy": null,
+        "source": "derived/component_levels",
+        "value": 2
+      },
+      "height_m": {
+        "policy": null,
+        "source": "derived/component_levels",
+        "value": 5.6
+      },
+      "massing.front_setback_m": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": 0.0
+      },
+      "massing.pattern": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "composition"
+      },
+      "primary_color": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": [
+          0.78,
+          0.78,
+          0.72
+        ]
+      },
+      "side_material": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "brick"
+      }
+    },
+    "context": {
+      "crs": "EPSG:32718",
+      "fronts": [
+        0
+      ],
+      "locked_height_m": null,
+      "metric_origin": [
+        280231.9520058166,
+        8657545.890328353,
+        0.0
+      ],
+      "parcel": [
+        [
+          -18.251972104015294,
+          -0.6541935410350561
+        ],
+        [
+          -15.043372103769798,
+          -10.353393541648984
+        ],
+        [
+          18.210827895789407,
+          0.5849064588546753
+        ],
+        [
+          18.050627895630896,
+          1.0625064577907324
+        ],
+        [
+          14.973527894646395,
+          10.38530645892024
+        ]
+      ]
+    },
+    "masses": [
+      {
+        "base_z": 0.0,
+        "floor_levels": [
+          0.0,
+          3.0,
+          5.6
+        ],
+        "footprint": [
+          [
+            -15.4050043,
+            0.2917396
+          ],
+          [
+            -12.1935758,
+            -9.4160104
+          ],
+          [
+            -1.7443229,
+            -5.9789389
+          ],
+          [
+            -4.9661222,
+            3.7601611
+          ]
+        ],
+        "footprint_holes": [],
+        "id": "principal:0",
+        "kind": "enclosed",
+        "parent_ids": [],
+        "role": "principal",
+        "roof_spec": null,
+        "roof_z": 5.6,
+        "slab_m": 0.18,
+        "support_ids": []
+      }
+    ],
+    "roofs": [
+      {
+        "mass_id": "principal:0",
+        "parapet_height_m": 0.0,
+        "parapet_profile": "cap",
+        "props": [],
+        "roof_z": 5.6,
+        "surfaces": [
+          {
+            "base_z": 5.6,
+            "eave_point": [
+              -12.1936,
+              -9.416
+            ],
+            "holes": [],
+            "inward_normal": [
+              0.9493993201934992,
+              0.3140715377364235
+            ],
+            "kind": "flat",
+            "polygon": [
+              [
+                -15.405,
+                0.2917
+              ],
+              [
+                -12.1936,
+                -9.416
+              ],
+              [
+                -1.7443,
+                -5.9789
+              ],
+              [
+                -4.9661,
+                3.7602
+              ]
+            ],
+            "slope_deg": 0.0,
+            "thickness_m": 0.18
+          }
+        ]
+      }
+    ],
+    "schema_version": "0.3",
+    "site_zones": [
+      {
+        "holes": [],
+        "id": "free:0",
+        "inward": [
+          0.0,
+          1.0
+        ],
+        "kind": "unclassified",
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "polygon": [
+          [
+            -4.9661222,
+            3.7601611
+          ],
+          [
+            -1.7443229,
+            -5.9789389
+          ],
+          [
+            18.2108279,
+            0.5849065
+          ],
+          [
+            18.0506279,
+            1.0625065
+          ],
+          [
+            14.9735279,
+            10.3853065
+          ]
+        ],
+        "slope_deg": 0.0
+      },
+      {
+        "holes": [],
+        "id": "free:1",
+        "inward": [
+          0.0,
+          1.0
+        ],
+        "kind": "unclassified",
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "polygon": [
+          [
+            -18.2519721,
+            -0.6541935
+          ],
+          [
+            -15.0433721,
+            -10.3533935
+          ],
+          [
+            -12.1935758,
+            -9.4160104
+          ],
+          [
+            -15.4050043,
+            0.2917396
+          ]
+        ],
+        "slope_deg": 0.0
+      }
+    ],
+    "structures": [],
+    "theta": {
+      "architectural_style": null,
+      "facade": {
+        "added_openings": [],
+        "awning_depth_m": null,
+        "balconies": null,
+        "balcony_depth_m": null,
+        "bay_axes_m": null,
+        "bay_count": null,
+        "cladding": "stucco",
+        "gallery_depth_m": null,
+        "material_regions": [],
+        "mode": "explicit",
+        "opening_edits": [],
+        "openings": [],
+        "projections": [],
+        "services": false,
+        "sill_m": null,
+        "stairs": [],
+        "window_height_m": null,
+        "window_ratio": null
+      },
+      "facades": [
+        {
+          "controls": {
+            "added_openings": [],
+            "awning_depth_m": null,
+            "balconies": null,
+            "balcony_depth_m": null,
+            "bay_axes_m": null,
+            "bay_count": null,
+            "cladding": "stucco",
+            "gallery_depth_m": null,
+            "material_regions": [],
+            "mode": "explicit",
+            "opening_edits": [],
+            "openings": [
+              {
+                "arch_rise_m": null,
+                "balcony_depth_m": 0.75,
+                "curtain": 0.0,
+                "door": {
+                  "construction": "boards",
+                  "cornice": false,
+                  "frame_material": "wood",
+                  "glass_material": "glass",
+                  "grille_pattern": "vertical",
+                  "grille_spacing_m": 0.16,
+                  "leaf_grille": false,
+                  "leaf_material": "wood",
+                  "leaves": 1,
+                  "metal_material": "metal",
+                  "model": "madera",
+                  "opening_angles_deg": [],
+                  "portal": "none",
+                  "portal_depth_m": 0.2,
+                  "portal_gap_m": 0.1,
+                  "portal_material": "plaster",
+                  "portal_width_m": 0.24,
+                  "threshold": true,
+                  "threshold_material": "stone",
+                  "transom_grille": false,
+                  "transom_height_m": 0.0,
+                  "transom_infill": "glass"
+                },
+                "frame_depth_m": 0.1,
+                "frame_profile": null,
+                "frame_width_m": 0.06,
+                "grid_spacing_m": null,
+                "grille": false,
+                "grille_pattern": "vertical",
+                "grille_spacing_m": 0.14,
+                "height_m": 2.2,
+                "kind": "door",
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "prefab": "legacy",
+                "recess_m": 0.08,
+                "score": 0.0,
+                "shape": "rectangle",
+                "sill": false,
+                "source": "assumed",
+                "style": "sliding",
+                "u_m": 4.5,
+                "v_m": 0.0,
+                "view_id": null,
+                "width_m": 1.0
+              },
+              {
+                "arch_rise_m": null,
+                "balcony_depth_m": 0.75,
+                "curtain": 0.0,
+                "door": null,
+                "frame_depth_m": 0.1,
+                "frame_profile": null,
+                "frame_width_m": 0.08,
+                "grid_spacing_m": null,
+                "grille": true,
+                "grille_pattern": "vertical",
+                "grille_spacing_m": 0.14,
+                "height_m": 1.5,
+                "kind": "window",
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "prefab": "legacy",
+                "recess_m": 0.08,
+                "score": 0.0,
+                "shape": "rectangle",
+                "sill": true,
+                "source": "observed",
+                "style": "sliding",
+                "u_m": 2.0,
+                "v_m": 3.9,
+                "view_id": "tyQaMS8skCpsOJ0wRHbang",
+                "width_m": 1.3
+              },
+              {
+                "arch_rise_m": null,
+                "balcony_depth_m": 0.75,
+                "curtain": 0.0,
+                "door": null,
+                "frame_depth_m": 0.1,
+                "frame_profile": null,
+                "frame_width_m": 0.08,
+                "grid_spacing_m": null,
+                "grille": true,
+                "grille_pattern": "vertical",
+                "grille_spacing_m": 0.14,
+                "height_m": 1.5,
+                "kind": "window",
+                "mullion_columns": 2,
+                "mullion_rows": 2,
+                "prefab": "legacy",
+                "recess_m": 0.08,
+                "score": 0.0,
+                "shape": "rectangle",
+                "sill": true,
+                "source": "observed",
+                "style": "sliding",
+                "u_m": 6.9,
+                "v_m": 3.9,
+                "view_id": "oZ1wrA76ZreE0XrMgouLug",
+                "width_m": 1.3
+              }
+            ],
+            "projections": [],
+            "services": false,
+            "sill_m": null,
+            "stairs": [],
+            "window_height_m": null,
+            "window_ratio": null
+          },
+          "edge": 0,
+          "mass_role": "principal:0"
+        }
+      ],
+      "family": "quiet_house",
+      "finish": "standard",
+      "floors": 2,
+      "height_m": 5.6,
+      "masses": null,
+      "massing": {
+        "components": [
+          {
+            "cutouts": [],
+            "facade": null,
+            "faces": [],
+            "id": "principal",
+            "kind": "enclosed",
+            "levels_m": [
+              0.0,
+              3.0,
+              5.6
+            ],
+            "region": {
+              "depth": [
+                0.0,
+                1.0
+              ],
+              "depth_m": [
+                3.0,
+                14.0
+              ],
+              "fit": "parcel",
+              "front_edge": 0,
+              "u": [
+                0.0,
+                1.0
+              ],
+              "width_reference": "parcel"
+            },
+            "roof": null,
+            "slab_m": 0.18,
+            "support": {
+              "column_width_m": 0.25,
+              "inset_m": 0.4,
+              "kind": "bearing",
+              "max_cantilever_m": 0.0,
+              "spacing_m": 4.0
+            },
+            "trim": null,
+            "zones": []
+          }
+        ],
+        "corner_reach_m": null,
+        "front_depth_m": null,
+        "front_setback_m": 0.0,
+        "low_floors": null,
+        "parcel_tolerance_m": 0.0,
+        "pattern": "composition",
+        "podium_floors": null,
+        "upper_setback_m": null
+      },
+      "materials": [],
+      "primary_color": [
+        0.78,
+        0.78,
+        0.72
+      ],
+      "roof": {
+        "kind": "flat",
+        "parapet_m": 0.0,
+        "props": [],
+        "slope_deg": null
+      },
+      "roofs": [],
+      "schema_version": "0.3",
+      "side_material": "brick",
+      "site": {
+        "fence": "none",
+        "garden": false,
+        "runs": [],
+        "zones": []
+      },
+      "trim": {
+        "cornice": {
+          "anchor": "wall_top",
+          "courtyards": false,
+          "enabled": false,
+          "height_m": 0.24,
+          "material": "cornice",
+          "offset_m": 0.0,
+          "profile": "auto",
+          "projection_m": 0.18,
+          "scope": "exposed"
+        },
+        "plinth": {
+          "block_width_m": 0.5,
+          "course_height_m": 0.2,
+          "courtyards": false,
+          "design": "smooth",
+          "enabled": false,
+          "height_m": 0.6,
+          "joint_width_m": 0.012,
+          "material": "plinth",
+          "relief_m": 0.025,
+          "scope": "exposed"
+        }
+      }
+    },
+    "trims": [],
+    "walls": [
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 0,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge0/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": true,
+          "material_regions": [],
+          "normal_xy": [
+            -0.9493993182188163,
+            -0.3140715437056451
+          ],
+          "observed": false,
+          "openings": [
+            {
+              "arch_rise_m": null,
+              "balcony_depth_m": 0.75,
+              "curtain": 0.0,
+              "door": {
+                "construction": "boards",
+                "cornice": false,
+                "frame_material": "wood",
+                "glass_material": "glass",
+                "grille_pattern": "vertical",
+                "grille_spacing_m": 0.16,
+                "leaf_grille": false,
+                "leaf_material": "wood",
+                "leaves": 1,
+                "metal_material": "metal",
+                "model": "madera",
+                "opening_angles_deg": [],
+                "portal": "none",
+                "portal_depth_m": 0.2,
+                "portal_gap_m": 0.1,
+                "portal_material": "plaster",
+                "portal_width_m": 0.24,
+                "threshold": true,
+                "threshold_material": "stone",
+                "transom_grille": false,
+                "transom_height_m": 0.0,
+                "transom_infill": "glass"
+              },
+              "frame_depth_m": 0.1,
+              "frame_profile": null,
+              "frame_width_m": 0.06,
+              "grid_spacing_m": null,
+              "grille": false,
+              "grille_pattern": "vertical",
+              "grille_spacing_m": 0.14,
+              "height_m": 2.2,
+              "kind": "door",
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "prefab": "legacy",
+              "recess_m": 0.08,
+              "score": 0.0,
+              "shape": "rectangle",
+              "sill": false,
+              "source": "assumed",
+              "style": "sliding",
+              "u_m": 4.5,
+              "v_m": 0.0,
+              "view_id": null,
+              "width_m": 1.0
+            },
+            {
+              "arch_rise_m": null,
+              "balcony_depth_m": 0.75,
+              "curtain": 0.0,
+              "door": null,
+              "frame_depth_m": 0.1,
+              "frame_profile": null,
+              "frame_width_m": 0.08,
+              "grid_spacing_m": null,
+              "grille": true,
+              "grille_pattern": "vertical",
+              "grille_spacing_m": 0.14,
+              "height_m": 1.5,
+              "kind": "window",
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "prefab": "legacy",
+              "recess_m": 0.08,
+              "score": 0.0,
+              "shape": "rectangle",
+              "sill": true,
+              "source": "observed",
+              "style": "sliding",
+              "u_m": 2.0,
+              "v_m": 3.9,
+              "view_id": "tyQaMS8skCpsOJ0wRHbang",
+              "width_m": 1.3
+            },
+            {
+              "arch_rise_m": null,
+              "balcony_depth_m": 0.75,
+              "curtain": 0.0,
+              "door": null,
+              "frame_depth_m": 0.1,
+              "frame_profile": null,
+              "frame_width_m": 0.08,
+              "grid_spacing_m": null,
+              "grille": true,
+              "grille_pattern": "vertical",
+              "grille_spacing_m": 0.14,
+              "height_m": 1.5,
+              "kind": "window",
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "prefab": "legacy",
+              "recess_m": 0.08,
+              "score": 0.0,
+              "shape": "rectangle",
+              "sill": true,
+              "source": "observed",
+              "style": "sliding",
+              "u_m": 6.9,
+              "v_m": 3.9,
+              "view_id": "oZ1wrA76ZreE0XrMgouLug",
+              "width_m": 1.3
+            }
+          ],
+          "ornamented": false,
+          "program_enabled": true,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -15.4050043,
+            0.2917396
+          ],
+          "vertex_b": [
+            -12.1935758,
+            -9.4160104
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "plaster",
+          "width_m": 10.225149537934016,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            10.225149537934016,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 1,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge1/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            0.3124605978560013,
+            -0.9499307210462615
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": true,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -12.1935758,
+            -9.4160104
+          ],
+          "vertex_b": [
+            -1.7443229,
+            -5.9789389
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "plaster",
+          "width_m": 11.00001575745556,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            11.00001575745556,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 2,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge2/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            0.9493993216615375,
+            0.31407153329872534
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": true,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -1.7443229,
+            -5.9789389
+          ],
+          "vertex_b": [
+            -4.9661222,
+            3.7601611
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "plaster",
+          "width_m": 10.258170379725641,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            10.258170379725641,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 3,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge3/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            -0.3153107754869266,
+            0.9489884692986701
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": true,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -4.9661222,
+            3.7601611
+          ],
+          "vertex_b": [
+            -15.4050043,
+            0.2917396
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "plaster",
+          "width_m": 11.000009418148817,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            11.000009418148817,
+            5.6
+          ]
+        ]
+      }
+    ]
+  },
+  "review": null,
+  "last_artifact": "attempts/06_balcones/002"
+}

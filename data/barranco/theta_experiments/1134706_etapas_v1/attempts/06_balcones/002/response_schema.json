@@ -1,0 +1,504 @@
+{
+  "$defs": {
+    "Balconies": {
+      "additionalProperties": false,
+      "properties": {
+        "balconies": {
+          "items": {
+            "$ref": "#/$defs/BalconyControls"
+          },
+          "title": "Balconies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "balconies"
+      ],
+      "title": "Balconies",
+      "type": "object"
+    },
+    "BalconyControls": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "mass_ref": {
+          "title": "Mass Ref",
+          "type": "string"
+        },
+        "edge": {
+          "title": "Edge",
+          "type": "integer"
+        },
+        "floor_m": {
+          "title": "Floor M",
+          "type": "number"
+        },
+        "u_m": {
+          "title": "U M",
+          "type": "number"
+        },
+        "width_m": {
+          "title": "Width M",
+          "type": "number"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "style": {
+          "default": "auto",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "kind": {
+          "default": "projecting",
+          "title": "Kind",
+          "type": "string"
+        },
+        "depth_m": {
+          "default": 0.85,
+          "title": "Depth M",
+          "type": "number"
+        },
+        "slab": {
+          "default": true,
+          "title": "Slab",
+          "type": "boolean"
+        },
+        "slab_m": {
+          "default": 0.18,
+          "title": "Slab M",
+          "type": "number"
+        },
+        "slab_material": {
+          "default": "plaster",
+          "title": "Slab Material",
+          "type": "string"
+        },
+        "brackets": {
+          "default": false,
+          "title": "Brackets",
+          "type": "boolean"
+        },
+        "cover": {
+          "default": false,
+          "title": "Cover",
+          "type": "boolean"
+        },
+        "enclosure_height_m": {
+          "default": 2.5,
+          "title": "Enclosure Height M",
+          "type": "number"
+        },
+        "railing": {
+          "$ref": "#/$defs/RailingControls"
+        },
+        "sides": {
+          "default": [
+            "left",
+            "front",
+            "right"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Sides",
+          "type": "array"
+        },
+        "path": {
+          "default": [],
+          "items": {
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "curved_front_m": {
+          "default": 0.0,
+          "title": "Curved Front M",
+          "type": "number"
+        },
+        "corner_return_m": {
+          "default": 0.0,
+          "title": "Corner Return M",
+          "type": "number"
+        },
+        "planters": {
+          "default": false,
+          "title": "Planters",
+          "type": "boolean"
+        },
+        "fascia": {
+          "default": true,
+          "title": "Fascia",
+          "type": "boolean"
+        },
+        "opening_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opening Index"
+        },
+        "support_mass": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Support Mass"
+        },
+        "stair_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stair Index"
+        },
+        "column_member": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemberDesign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "mass_ref",
+        "edge",
+        "floor_m",
+        "u_m",
+        "width_m"
+      ],
+      "title": "BalconyControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "MemberDesign": {
+      "properties": {
+        "style": {
+          "default": "moderno",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "section": {
+          "default": "auto",
+          "title": "Section",
+          "type": "string"
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base"
+        },
+        "capital": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital"
+        },
+        "collar": {
+          "default": true,
+          "title": "Collar",
+          "type": "boolean"
+        },
+        "abacus": {
+          "default": true,
+          "title": "Abacus",
+          "type": "boolean"
+        },
+        "base_profile": {
+          "default": "auto",
+          "title": "Base Profile",
+          "type": "string"
+        },
+        "pedestal_m": {
+          "default": 0.0,
+          "title": "Pedestal M",
+          "type": "number"
+        },
+        "base_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Height M"
+        },
+        "capital_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Height M"
+        },
+        "taper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taper"
+        },
+        "entasis": {
+          "default": 0.025,
+          "title": "Entasis",
+          "type": "number"
+        },
+        "turns": {
+          "default": 1.5,
+          "title": "Turns",
+          "type": "number"
+        },
+        "flute_count": {
+          "default": 12,
+          "title": "Flute Count",
+          "type": "integer"
+        },
+        "ornament": {
+          "default": true,
+          "title": "Ornament",
+          "type": "boolean"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "base_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Material"
+        },
+        "capital_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Material"
+        }
+      },
+      "title": "MemberDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "RailingControls": {
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "pattern": {
+          "default": "auto",
+          "title": "Pattern",
+          "type": "string"
+        },
+        "height_m": {
+          "default": 1.05,
+          "title": "Height M",
+          "type": "number"
+        },
+        "spacing_m": {
+          "default": 0.14,
+          "title": "Spacing M",
+          "type": "number"
+        },
+        "post_spacing_m": {
+          "default": 1.6,
+          "title": "Post Spacing M",
+          "type": "number"
+        },
+        "post_width_m": {
+          "default": 0.075,
+          "title": "Post Width M",
+          "type": "number"
+        },
+        "handrail": {
+          "default": true,
+          "title": "Handrail",
+          "type": "boolean"
+        },
+        "material": {
+          "default": "auto",
+          "title": "Material",
+          "type": "string"
+        },
+        "glass_material": {
+          "default": "glass",
+          "title": "Glass Material",
+          "type": "string"
+        }
+      },
+      "title": "RailingControls",
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "06_balcones",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Balconies"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_06_balcones",
+  "type": "object"
+}

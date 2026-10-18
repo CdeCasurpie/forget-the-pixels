@@ -1,0 +1,90 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 6,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "bedroom": 3,
+        "kitchen_dining": 1
+      },
+      "doors": 5,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 20.58,
+        "floor1/bath": 3.65,
+        "floor1/room0": 12.26,
+        "floor1/room1": 10.65,
+        "floor1/room2": 14.84,
+        "floor1/room3": 12.74
+      }
+    }
+  ],
+  "core_flights": 0,
+  "selected_alternative": 0,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.27604412082981195
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.28172468898029923
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.28147249962549253
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.28140509409377346
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.31910216948435105
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.29834054701964935
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.2949200279660524
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.2894117392610552
+    },
+    {
+      "id": 8,
+      "status": "valid",
+      "score": 0.2869016398161936
+    },
+    {
+      "id": 9,
+      "status": "valid",
+      "score": 0.28530286727436477
+    }
+  ],
+  "connections": 6,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.27604412082981195,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

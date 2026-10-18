@@ -1,0 +1,10 @@
+{
+  "play-sound-on-stop": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga > /dev/null 2>&1; echo '{}'"
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 350,
+  "by_kind": {
+    "wall": 16,
+    "partition": 6,
+    "jamb_left": 34,
+    "jamb_right": 34,
+    "head": 34,
+    "sill": 8,
+    "sill_cap": 8,
+    "leaf0_left": 34,
+    "leaf0_right": 34,
+    "leaf0_bottom": 34,
+    "leaf0_top": 34,
+    "leaf0_infill": 34,
+    "leaf1_left": 2,
+    "leaf1_right": 2,
+    "leaf1_bottom": 2,
+    "leaf1_top": 2,
+    "leaf1_infill": 2,
+    "handle0": 26,
+    "slab": 4
+  },
+  "by_material": {
+    "plaster": 22,
+    "metal": 306,
+    "stone": 8,
+    "glass": 10,
+    "concrete": 4
+  },
+  "openings": 34,
+  "windows": 8,
+  "doors": 26,
+  "explicit_windows": 6,
+  "completed_windows": 2,
+  "mechanisms": {
+    "awning": 2,
+    "casement": 4,
+    "sliding": 2
+  },
+  "styles": {
+    "moderno": 34
+  },
+  "useful_heights": [
+    3.02,
+    2.62,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor3/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor3/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 5.1484024672269995e-17,
+    "minimum_lintel_m": 0.41230769230769404,
+    "openings": 34,
+    "explicit_windows": 6,
+    "completed_windows": 2,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 22,
+      "metal": 306,
+      "stone": 8,
+      "glass": 10,
+      "concrete": 4
+    }
+  }
+}

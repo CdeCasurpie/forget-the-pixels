@@ -1,0 +1,35 @@
+{
+  "components": 12,
+  "vertices": 202,
+  "triangles": 360,
+  "all_components_watertight": true,
+  "all_components_positive_volume": true,
+  "all_components_winding_consistent": true,
+  "checks": {
+    "parcel_containment": true,
+    "same_floor_overlap": false,
+    "support_collisions": false,
+    "valid_footprints": true,
+    "conceptual_support": true,
+    "engineering_verified": false,
+    "parcel_area_m2": 180.0,
+    "occupied_ground_m2": 156.84909123999998,
+    "free_ground_m2": 23.150908760000018,
+    "covered_free_m2": 1.3453081500000053,
+    "uncovered_m2": 21.80560061000001,
+    "area_balance_error_m2": 0.0
+  },
+  "pending": [
+    {
+      "id": "crown",
+      "kind": "crown",
+      "path": "building.operations",
+      "reason": "phase_2_or_later"
+    },
+    {
+      "path": "building.roof",
+      "reason": "future_stage"
+    }
+  ],
+  "scope": "solid massing study, not a detailed or boolean-unified building"
+}

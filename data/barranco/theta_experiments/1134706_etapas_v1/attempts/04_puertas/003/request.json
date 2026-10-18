@@ -1,0 +1,185 @@
+{
+  "context": {
+    "parcel": [
+      [
+        -18.251972104015294,
+        -0.6541935410350561
+      ],
+      [
+        -15.043372103769798,
+        -10.353393541648984
+      ],
+      [
+        18.210827895789407,
+        0.5849064588546753
+      ],
+      [
+        18.050627895630896,
+        1.0625064577907324
+      ],
+      [
+        14.973527894646395,
+        10.38530645892024
+      ]
+    ],
+    "fronts": [
+      0
+    ],
+    "crs": "EPSG:32718",
+    "metric_origin": [
+      280231.9520058166,
+      8657545.890328353,
+      0
+    ]
+  },
+  "theta": {
+    "schema_version": "0.3",
+    "family": "quiet_house",
+    "architectural_style": null,
+    "massing": {
+      "components": [
+        {
+          "id": "principal",
+          "region": {
+            "front_edge": 0,
+            "u": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "depth_m": [
+              3.0,
+              14.0
+            ],
+            "fit": "parcel",
+            "width_reference": "parcel"
+          },
+          "levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "kind": "enclosed",
+          "cutouts": [],
+          "support": {
+            "kind": "bearing",
+            "spacing_m": 4.0,
+            "column_width_m": 0.25,
+            "inset_m": 0.4,
+            "max_cantilever_m": 0.0,
+            "member": null
+          }
+        }
+      ]
+    },
+    "facade": {
+      "mode": "explicit",
+      "openings": [],
+      "projections": [],
+      "material_regions": []
+    },
+    "facades": [
+      {
+        "mass_role": "principal:0",
+        "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {
+              "kind": "door",
+              "u_m": 4.5,
+              "v_m": 0.0,
+              "width_m": 1.0,
+              "height_m": 2.2,
+              "frame_width_m": 0.06,
+              "recess_m": 0.08,
+              "source": "assumed",
+              "view_id": null,
+              "score": 0.0,
+              "style": "sliding",
+              "grille": false,
+              "mullion_columns": 2,
+              "mullion_rows": 2,
+              "balcony_depth_m": 0.75,
+              "prefab": "legacy",
+              "curtain": 0.0,
+              "grille_pattern": "vertical",
+              "shape": "rectangle",
+              "arch_rise_m": null,
+              "frame_profile": null,
+              "frame_depth_m": 0.1,
+              "sill": false,
+              "grid_spacing_m": null,
+              "grille_spacing_m": 0.14,
+              "door": {
+                "model": "madera",
+                "leaves": 1,
+                "construction": "boards",
+                "leaf_material": "wood",
+                "frame_material": "wood",
+                "portal_material": "plaster",
+                "metal_material": "metal",
+                "glass_material": "glass",
+                "threshold_material": "stone",
+                "portal": "none",
+                "portal_member": null,
+                "portal_width_m": 0.24,
+                "portal_gap_m": 0.1,
+                "portal_depth_m": 0.2,
+                "cornice": false,
+                "transom_height_m": 0.0,
+                "transom_infill": "glass",
+                "transom_grille": false,
+                "grille_pattern": "vertical",
+                "grille_spacing_m": 0.16,
+                "leaf_grille": false,
+                "threshold": true,
+                "opening_angles_deg": []
+              }
+            }
+          ],
+          "projections": [],
+          "material_regions": []
+        }
+      }
+    ],
+    "roof": {
+      "kind": "flat",
+      "parapet_m": 0,
+      "props": []
+    },
+    "roofs": [],
+    "trim": {
+      "cornice": {
+        "enabled": false
+      },
+      "plinth": {
+        "enabled": false
+      }
+    },
+    "site": {
+      "fence": "none",
+      "garden": false,
+      "runs": [],
+      "zones": []
+    },
+    "balconies": [],
+    "vertical_members": [],
+    "crowns": [],
+    "entablatures": [],
+    "roof_assemblies": [],
+    "canopies": [],
+    "entrances": [],
+    "materials": []
+  },
+  "nuisance": {
+    "seed": 23,
+    "curtains": false
+  },
+  "config": {
+    "detail": 2
+  }
+}

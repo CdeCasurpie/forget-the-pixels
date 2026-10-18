@@ -1,0 +1,97 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 238,
+  "by_kind": {
+    "wall": 11,
+    "partition": 4,
+    "jamb_left": 24,
+    "jamb_right": 24,
+    "head": 24,
+    "sill": 4,
+    "sill_cap": 4,
+    "leaf0_left": 24,
+    "leaf0_right": 24,
+    "leaf0_bottom": 24,
+    "leaf0_top": 24,
+    "leaf0_infill": 24,
+    "handle0": 20,
+    "slab": 3
+  },
+  "by_material": {
+    "plaster": 15,
+    "metal": 211,
+    "stone": 4,
+    "glass": 5,
+    "concrete": 3
+  },
+  "openings": 24,
+  "windows": 4,
+  "doors": 20,
+  "explicit_windows": 4,
+  "completed_windows": 0,
+  "mechanisms": {
+    "casement": 4
+  },
+  "styles": {
+    "moderno": 24
+  },
+  "useful_heights": [
+    3.02,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor1/door2",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor2/door1",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor2/door3",
+      "reason": "shift along same shared wall for frame clearance"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 4.2114984440294064e-17,
+    "minimum_lintel_m": 0.3353846153846156,
+    "openings": 24,
+    "explicit_windows": 4,
+    "completed_windows": 0,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 15,
+      "metal": 211,
+      "stone": 4,
+      "glass": 5,
+      "concrete": 3
+    }
+  }
+}

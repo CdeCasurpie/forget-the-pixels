@@ -1,0 +1,21 @@
+{
+  "id": "msg_011qwyr4j0Yfn5VYPguGfMcFzOG",
+  "type": "message",
+  "role": "assistant",
+  "content": [
+    {
+      "type": "thinking",
+      "thinking": "Considering the user's request.",
+      "signature": "b1b39668c92f4357923484654024c6f4"
+    }
+  ],
+  "model": "claude-haiku-4-5-20251001",
+  "stop_reason": "max_tokens",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 875,
+    "output_tokens": 8192,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 32650
+  }
+}

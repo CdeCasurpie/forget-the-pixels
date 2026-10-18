@@ -1,0 +1,4 @@
+{
+  "status": "incomplete_response",
+  "error": "Respuesta no terminada normalmente: max_tokens; revisar límite de salida."
+}

@@ -1,0 +1,79 @@
+```json
+{
+  "stage": "02_masas",
+  "changes": {
+    "floor_levels_m": [
+      0.0,
+      3.0,
+      5.6
+    ],
+    "components": [
+      {
+        "id": "principal",
+        "region": {
+          "front_edge": 0,
+          "u": [
+            0.0,
+            1.0
+          ],
+          "depth_m": [
+            3.0,
+            14.0
+          ],
+          "fit": "parcel"
+        },
+        "levels_m": [
+          0.0,
+          3.0,
+          5.6
+        ]
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "element": "mass_principal",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug",
+        "dkKZSdzvoCSMlT3KK2tkvw"
+      ],
+      "status": "observed",
+      "description": "Cuerpo de dos pisos con cambio de material y retiro frontal; rectangular y ubicado entre edificios vecinos."
+    },
+    {
+      "element": "front_setback_m",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug"
+      ],
+      "status": "inferred",
+      "description": "Retiro frontal estimado en 3.0 m; edificio detrás del cerco, sin escala métrica directa en las tomas."
+    },
+    {
+      "element": "building_depth_m",
+      "view_ids": [],
+      "status": "inferred",
+      "description": "Profundidad construida estimada hasta 14.0 m; patio posterior y azotea no visibles desde cámaras bajas."
+    },
+    {
+      "element": "floor_levels_m",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug",
+        "dkKZSdzvoCSMlT3KK2tkvw"
+      ],
+      "status": "inferred",
+      "description": "Dos niveles diferenciados; cotas [0, 3.0, 5.6] derivadas de alturas humanas (3.0 + 2.6)."
+    }
+  ],
+  "notes": [
+    "Se reemplaza el prisma de andamiaje que ocupaba toda la parcela por un componente con retiro frontal.",
+    "Retiro frontal de 3.0 m y profundidad total de 14.0 m son supuestos conservadores; techo, patio posterior y laterales profundos no son visibles.",
+    "Pisos fijados en 2; cotas [0, 3.0, 5.6] usando altura humana de planta baja 3.0 m y piso superior 2.6 m.",
+    "No se observan anexos, cuerpos secundarios ni patios internos; se omite cutouts.",
+    "El cerco metálico frontal es elemento de sitio, no masa edificada."
+  ],
+  "blockers": []
+}
+```

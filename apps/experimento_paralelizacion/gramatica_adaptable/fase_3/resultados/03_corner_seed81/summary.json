@@ -1,0 +1,116 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 9,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 4,
+        "kitchen_dining": 1,
+        "living": 1
+      },
+      "doors": 8,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 14.41,
+        "floor1/bath": 3.65,
+        "floor1/stairs": 6.93,
+        "floor1/room0": 22.83,
+        "floor1/room1": 9.86,
+        "floor1/room2": 20.99,
+        "floor1/room3": 18.47,
+        "floor1/room4": 20.07,
+        "floor1/room5": 5.66
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 9,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "kitchen_dining": 1,
+        "living": 2,
+        "bedroom": 3
+      },
+      "doors": 8,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 11.52,
+        "floor2/bath": 3.65,
+        "floor2/stairs": 6.88,
+        "floor2/room0": 21.8,
+        "floor2/room1": 19.73,
+        "floor2/room2": 19.67,
+        "floor2/room3": 5.99,
+        "floor2/room4": 12.46,
+        "floor2/room5": 21.1
+      }
+    },
+    {
+      "floor": 3,
+      "rooms": 4,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "kitchen_dining": 1
+      },
+      "doors": 3,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor3/hall": 5.72,
+        "floor3/bath": 3.65,
+        "floor3/stairs": 6.88,
+        "floor3/room0": 22.22
+      }
+    }
+  ],
+  "core_flights": 2,
+  "selected_alternative": 0,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.6053905838052283
+    },
+    {
+      "id": 1,
+      "status": "conflict",
+      "code": "circulation_disconnected",
+      "path": "floor3",
+      "message": "circulation_disconnected at floor3: no clear route at 1.20 m nor 1.00 m"
+    },
+    {
+      "id": 2,
+      "status": "conflict",
+      "code": "room_disconnected",
+      "path": "floor2",
+      "message": "room_disconnected at floor2: floor2/room0,floor2/room2,floor2/room3"
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.7658003127673515
+    }
+  ],
+  "connections": 22,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.6053905838052283,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

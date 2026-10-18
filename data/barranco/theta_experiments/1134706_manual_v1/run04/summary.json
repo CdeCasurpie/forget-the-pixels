@@ -1,0 +1,60 @@
+{
+  "materializer": "grammar-v1.1-dev",
+  "request_sha256": "807a30ec9637bde274839d835f8f26da0a7bb65b46860b477048281cca29ac38",
+  "mesh_sha256": "682075c0d37f50bc34a9e40f0ae796294ef46a67d7ee25498710bd2cf3c9e686",
+  "generation_profiled_s": 0.549,
+  "vertices": 1664,
+  "triangles": 2780,
+  "parts": 150,
+  "masses": [
+    {
+      "id": "principal:0",
+      "levels_m": [
+        0.0,
+        3.0,
+        5.6
+      ]
+    }
+  ],
+  "walls": 4,
+  "openings": 4,
+  "crowns": [],
+  "balconies": 0,
+  "members": 0,
+  "trims": 0,
+  "envelope": "passed",
+  "topology_violations": 0,
+  "visited_modules": [
+    "domain/models.py",
+    "domain/theta.py",
+    "modeling/apertures.py",
+    "modeling/assembly.py",
+    "modeling/balcony_assembly.py",
+    "modeling/balcony_resolver.py",
+    "modeling/boundaries.py",
+    "modeling/crown_resolver.py",
+    "modeling/detail.py",
+    "modeling/door_assembly.py",
+    "modeling/entablature_resolver.py",
+    "modeling/entrances.py",
+    "modeling/exposure.py",
+    "modeling/facade_composition.py",
+    "modeling/facade_top.py",
+    "modeling/fences.py",
+    "modeling/geometry_constraints.py",
+    "modeling/grammar.py",
+    "modeling/materials.py",
+    "modeling/mesh_builder.py",
+    "modeling/railing_assembly.py",
+    "modeling/roof_assembly.py",
+    "modeling/roof_detail_resolver.py",
+    "modeling/roofscape.py",
+    "modeling/site.py",
+    "modeling/theta.py",
+    "modeling/top_composition.py",
+    "modeling/trim_resolver.py",
+    "modeling/vertical_member_resolver.py",
+    "modeling/window_assembly.py",
+    "pipeline/theta.py"
+  ]
+}

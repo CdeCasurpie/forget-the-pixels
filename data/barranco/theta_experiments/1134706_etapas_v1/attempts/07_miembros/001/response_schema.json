@@ -1,0 +1,327 @@
+{
+  "$defs": {
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "MemberDesign": {
+      "properties": {
+        "style": {
+          "default": "moderno",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "section": {
+          "default": "auto",
+          "title": "Section",
+          "type": "string"
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base"
+        },
+        "capital": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital"
+        },
+        "collar": {
+          "default": true,
+          "title": "Collar",
+          "type": "boolean"
+        },
+        "abacus": {
+          "default": true,
+          "title": "Abacus",
+          "type": "boolean"
+        },
+        "base_profile": {
+          "default": "auto",
+          "title": "Base Profile",
+          "type": "string"
+        },
+        "pedestal_m": {
+          "default": 0.0,
+          "title": "Pedestal M",
+          "type": "number"
+        },
+        "base_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Height M"
+        },
+        "capital_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Height M"
+        },
+        "taper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taper"
+        },
+        "entasis": {
+          "default": 0.025,
+          "title": "Entasis",
+          "type": "number"
+        },
+        "turns": {
+          "default": 1.5,
+          "title": "Turns",
+          "type": "number"
+        },
+        "flute_count": {
+          "default": 12,
+          "title": "Flute Count",
+          "type": "integer"
+        },
+        "ornament": {
+          "default": true,
+          "title": "Ornament",
+          "type": "boolean"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "base_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Material"
+        },
+        "capital_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Material"
+        }
+      },
+      "title": "MemberDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Members": {
+      "additionalProperties": false,
+      "properties": {
+        "vertical_members": {
+          "items": {
+            "$ref": "#/$defs/VerticalMemberControls"
+          },
+          "title": "Vertical Members",
+          "type": "array"
+        }
+      },
+      "required": [
+        "vertical_members"
+      ],
+      "title": "Members",
+      "type": "object"
+    },
+    "VerticalMemberControls": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "mass_ref": {
+          "title": "Mass Ref",
+          "type": "string"
+        },
+        "edge": {
+          "title": "Edge",
+          "type": "integer"
+        },
+        "u_m": {
+          "title": "U M",
+          "type": "number"
+        },
+        "bottom_m": {
+          "title": "Bottom M",
+          "type": "number"
+        },
+        "height_m": {
+          "title": "Height M",
+          "type": "number"
+        },
+        "width_m": {
+          "default": 0.45,
+          "title": "Width M",
+          "type": "number"
+        },
+        "depth_m": {
+          "default": 0.3,
+          "title": "Depth M",
+          "type": "number"
+        },
+        "placement": {
+          "default": "attached",
+          "title": "Placement",
+          "type": "string"
+        },
+        "offset_m": {
+          "default": 0.0,
+          "title": "Offset M",
+          "type": "number"
+        },
+        "embed_ratio": {
+          "default": 0.5,
+          "title": "Embed Ratio",
+          "type": "number"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "design": {
+          "$ref": "#/$defs/MemberDesign"
+        }
+      },
+      "required": [
+        "id",
+        "mass_ref",
+        "edge",
+        "u_m",
+        "bottom_m",
+        "height_m"
+      ],
+      "title": "VerticalMemberControls",
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "07_miembros",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Members"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_07_miembros",
+  "type": "object"
+}

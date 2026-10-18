@@ -1,0 +1,90 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 228,
+  "by_kind": {
+    "wall": 9,
+    "partition": 4,
+    "jamb_left": 23,
+    "jamb_right": 23,
+    "head": 23,
+    "sill": 4,
+    "sill_cap": 4,
+    "leaf0_left": 23,
+    "leaf0_right": 23,
+    "leaf0_bottom": 23,
+    "leaf0_top": 23,
+    "leaf0_infill": 23,
+    "handle0": 19,
+    "slab": 3,
+    "plinth": 1
+  },
+  "by_material": {
+    "plaster": 13,
+    "metal": 203,
+    "stone": 4,
+    "glass": 4,
+    "concrete": 4
+  },
+  "openings": 23,
+  "windows": 4,
+  "doors": 19,
+  "explicit_windows": 4,
+  "completed_windows": 0,
+  "mechanisms": {
+    "casement": 4
+  },
+  "styles": {
+    "moderno": 23
+  },
+  "useful_heights": [
+    3.02,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor2/door7",
+      "reason": "shift along same shared wall for frame clearance"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 0.0,
+    "minimum_lintel_m": 0.3353846153846156,
+    "openings": 23,
+    "explicit_windows": 4,
+    "completed_windows": 0,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 13,
+      "metal": 203,
+      "stone": 4,
+      "glass": 4,
+      "concrete": 4
+    }
+  }
+}

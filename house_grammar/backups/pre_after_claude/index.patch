@@ -1,0 +1,455 @@
+diff --git a/investigation/procedural_reconstruction/src/modeling/apertures.py b/investigation/procedural_reconstruction/src/modeling/apertures.py
+index 6e42320..c237ca3 100644
+--- a/investigation/procedural_reconstruction/src/modeling/apertures.py
++++ b/investigation/procedural_reconstruction/src/modeling/apertures.py
+@@ -16,12 +16,60 @@ def opening_shape(op):
+     return Polygon([(u,v),(u+w,v),*arc])
+ 
+ 
++def arch_components(u, v, w, h, rise, frame_f=0.07, impost_z=None):
++    """Return (ring_poly, keystone_poly, impost_polys) for a round arch.
++
++    * ring — the full arch profile (jamb-to-jamb + semicircle)
++    * keystone — the central voussoir, exaggerated ~25% taller
++    * impost_polys — horizontal bands at the springing line on each side
++    """
++    cx, top = u + w / 2, v + h
++    arc_pts = [(cx + (w / 2) * np.cos(t), top - rise + rise * np.sin(t))
++               for t in np.linspace(0, np.pi, 25)]
++    ring = Polygon([(u, v), (u + w, v), *arc_pts])
++    inner = box(u + frame_f, v + frame_f, u + w - frame_f, top - frame_f)
++    ring = ring.difference(inner)
++
++    # Keystone: trapezoidal central block at the apex
++    kw = w * 0.16
++    kh = rise * 0.30
++    keystone = Polygon([
++        (cx - kw, top - kh), (cx + kw, top - kh),
++        (cx + kw * 0.78, top), (cx - kw * 0.78, top),
++    ])
++
++    iz = impost_z if impost_z is not None else v + rise * 0.05
++    ih = rise * 0.12
++    imp_l = box(u, iz, u + w * 0.42, iz + ih)
++    imp_r = box(u + w * 0.58, iz, u + w, iz + ih)
++    return ring, keystone, [imp_l, imp_r]
++
++
+ def shaped_opening(mb,a,t,n,op):
+     shape=opening_shape(op)
+     inside=shape.buffer(-min(op.frame_width_m,op.width_m/5),join_style=2)
+     def panel(p,back,front,mat,semantic):
+         mb.panel(a,t,n,[p],back,front,lambda *args:mat,semantic)
+     panel(shape.difference(inside),-op.recess_m,.035,'frame','arched_frame' if op.shape=='arch' else 'window_frame')
++    if op.shape == 'arch':
++        u, v, w, h = op.u_m, op.v_m, op.width_m, op.height_m
++        rise = op.arch_rise_m if op.arch_rise_m is not None else min(w / 2, h / 2)
++        ring_poly, keystone, imp_polys = arch_components(u, v, w, h, rise)
++        panel(keystone, -op.recess_m + 0.008, 0.043,
++              'stone', 'keystone')
++        for imp in imp_polys:
++            panel(imp, -op.recess_m, 0.038,
++                  'stone', 'impost_band')
++        # Radial voussoir lines for a stone-blocked arch
++        cx, top = u + w / 2, v + h
++        n_blocks = 7
++        for i in range(n_blocks):
++            angle = np.pi * (i + 0.5) / n_blocks
++            ex = cx + (w / 2) * np.cos(angle)
++            ez = top - rise + rise * np.sin(angle)
++            mb.beam((*(np.asarray(a) + t * ex + n * (-op.recess_m)), ez),
++                    (*(np.asarray(a) + t * ex + n * 0.038), ez),
++                    0.012, material='stone', semantic='voussoir_joint')
+     if op.prefab=='screen':
+         perforations=[]; pitch=.3; bar=.06
+         for u in np.arange(op.u_m,op.u_m+op.width_m,pitch):
+diff --git a/investigation/procedural_reconstruction/src/modeling/facade_program.py b/investigation/procedural_reconstruction/src/modeling/facade_program.py
+index a15403a..2e0a9de 100644
+--- a/investigation/procedural_reconstruction/src/modeling/facade_program.py
++++ b/investigation/procedural_reconstruction/src/modeling/facade_program.py
+@@ -64,25 +64,43 @@ FAMILY_RULES = {
+         pitch=2.8, window_ratio=0.42, window_h=2.25, sill=0.75, grille=True,
+         ground="entrance", upper="repetitive", cornice=0.42, sill_band=True,
+         pilasters=True, shutters=True, balcony_every=3, balcony_style="balusters",
+-        ground_material="stone", prefab="legacy",
++        ground_material="stone", prefab="legacy", arch_ground=True, arch_upper=True,
++        cornice_type="denticulated_cornice",
+     ),
+     "galeria_madera": dict(
+         pitch=3.0, window_ratio=0.62, window_h=1.85, sill=0.25, grille=False,
+         ground="shopfront", upper="gallery", cornice=0.20, sill_band=False,
+         pilasters=False, shutters=True, balcony_every=0, balcony_style="balusters",
+-        ground_material="wood", prefab="legacy", awning=True,
++        ground_material="wood", prefab="legacy", awning=True, arch_upper=True,
++        cornice_type="cornice",
+     ),
+     "esquina_comercial": dict(
+         pitch=3.2, window_ratio=0.54, window_h=1.70, sill=0.80, grille=False,
+         ground="shopfront", upper="balcony_column", cornice=0.30, sill_band=True,
+         pilasters=True, shutters=False, balcony_every=2, balcony_style="solid",
+         ground_material="stone", prefab="slim_window", awning=True, sign="LOCAL",
++        arch_ground=True, cornice_type="denticulated_cornice",
+     ),
+     "quinta": dict(
+         pitch=2.7, window_ratio=0.50, window_h=1.40, sill=1.00, grille=True,
+         ground="entrance", upper="repetitive", cornice=0.16, sill_band=False,
+         pilasters=False, shutters=True, balcony_every=0, balcony_style="bars",
+-        ground_material=None, prefab="wood_panel",
++        ground_material=None, prefab="wood_panel", arch_upper=True,
++        cornice_type="cornice",
++    ),
++    "neoclasico": dict(
++        pitch=3.5, window_ratio=0.40, window_h=2.40, sill=0.90, grille=True,
++        ground="entrance", upper="repetitive", cornice=0.55, sill_band=True,
++        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
++        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
++        cornice_type="denticulated_cornice", sign="BCP",
++    ),
++    "neoclasico_esquina": dict(
++        pitch=3.2, window_ratio=0.45, window_h=2.30, sill=0.85, grille=True,
++        ground="entrance", upper="repetitive", cornice=0.60, sill_band=True,
++        pilasters=True, shutters=False, balcony_every=0, balcony_style="bars",
++        ground_material="stone", prefab="legacy", arch_upper=True, arch_ground=True,
++        cornice_type="denticulated_cornice",
+     ),
+ }
+ 
+@@ -93,6 +111,8 @@ FAMILIES_BY_USE = {
+     "commercial": ("mixed_use", "workshop", "esquina_comercial", "galeria_madera"),
+     "mixed": ("mixed_use", "esquina_comercial", "galeria_madera",
+               "balcony_apartments", "brick_courtyard"),
++    "bank": ("neoclasico", "neoclasico_esquina"),
++    "public": ("neoclasico", "neoclasico_esquina", "republicano"),
+ }
+ 
+ MARGIN_M = 0.32
+@@ -113,7 +133,8 @@ def resolve_family(program, rng):
+     named = getattr(program, "architectural_language", "auto")
+     if named in FAMILY_RULES:
+         return named
+-    pool = FAMILIES_BY_USE.get(program.use, FAMILIES_BY_USE["residential"])
++    pool = FAMILIES_BY_USE.get(getattr(program, "use", "residential"),
++                               FAMILIES_BY_USE["residential"])
+     return str(rng.choice(pool))
+ 
+ 
+@@ -134,7 +155,12 @@ def bay_axes(length):
+ 
+ 
+ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
+-             columns=2, rows=1, balcony_depth=0.75, curtain=0.0):
++             columns=2, rows=1, balcony_depth=0.75, curtain=0.0, arch_rise=None):
++    shape = "arch" if (arch_rise is not None or
++                       (rules.get("arch_ground") and kind in ("door", "gate")) or
++                       (rules.get("arch_upper") and kind == "window")) else "rectangle"
++    if arch_rise is None and shape == "arch":
++        arch_rise = min(width * 0.45, height * 0.40)
+     return Opening(
+         kind=kind,
+         u_m=u,
+@@ -143,7 +169,7 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
+         height_m=height,
+         frame_width_m=0.07,
+         recess_m=0.12,
+-        style="sliding",
++        style="sliding" if kind == "window" else "ornate_gate" if kind in ("door", "gate") and shape == "arch" else "legacy",
+         grille=rules["grille"] if grille is None else grille,
+         mullion_columns=max(1, columns),
+         mullion_rows=max(1, rows),
+@@ -152,6 +178,8 @@ def _opening(kind, u, v, width, height, rules, *, prefab=None, grille=None,
+         curtain=curtain,
+         grille_pattern="grid",
+         source="family_rule",
++        shape=shape,
++        arch_rise_m=arch_rise,
+     )
+ 
+ 
+@@ -192,26 +220,30 @@ def _ground_openings(axes, pitch, z0, z1, length, rules, rng, dropped):
+         if u < 0.14 or u + width > length - 0.14:
+             dropped.append(f"ground_bay_{index}_outside_wall")
+             continue
++        arch_rise = None
++        if rules.get("arch_ground") and kind in ("door", "gate") and width > 0.6:
++            arch_rise = min(width * 0.48, height * 0.38)
+         if kind == "window":
+-            # One sill value, used for both the position and the remaining
+-            # height. Clamping only the position let the height overrun the
+-            # storey on a low band.
+             sill = max(0.4, min(rules["sill"], z1 - z0 - height - 0.2))
+             available = z1 - z0 - sill - 0.3
+             if available < 0.5:
+                 dropped.append(f"ground_bay_{index}_window_does_not_fit")
+                 continue
++            arch_r = None
++            if rules.get("arch_upper") or rules.get("arch_ground"):
++                arch_r = min(width * 0.45, height * 0.40)
+             openings.append(
+                 _opening(kind, u, z0 + sill, width,
+                          min(rules["window_h"], available),
+                          rules, prefab=prefab, grille=grille,
+-                         columns=max(2, int(width / 0.8)))
++                         columns=max(2, int(width / 0.8)), arch_rise=arch_r)
+             )
+         else:
+             openings.append(
+                 _opening(kind, u, z0 + 0.04, width, height, rules,
+                          prefab=prefab, grille=grille,
+-                         columns=max(1, int(width / 1.1)), rows=3)
++                         columns=max(1, int(width / 1.1)), rows=3,
++                         arch_rise=arch_rise)
+             )
+     return openings
+ 
+@@ -254,12 +286,16 @@ def _upper_openings(axes, pitch, z0, z1, length, floor_index, rules, rng, droppe
+         top = z0 + sill_used + (height + 0.5 if balcony else height)
+         if top > z1 - 0.12:
+             sill_used = max(0.12, z1 - 0.12 - z0 - height)
++        arch_r = None
++        if rules.get("arch_upper") and kind == "window":
++            arch_r = min(width * 0.45, height * 0.40)
+         openings.append(
+             _opening(kind, u, z0 + sill_used, width,
+                      min(height + (0.5 if balcony else 0.0), z1 - z0 - sill_used - 0.15),
+                      rules, columns=columns, rows=rows,
+                      balcony_depth=float(rng.uniform(0.75, 1.05)),
+-                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0)
++                     curtain=float(rng.uniform(0.2, 0.55)) if rng.random() < 0.6 else 0.0,
++                     arch_rise=arch_r)
+         )
+     return openings
+ 
+@@ -369,7 +405,8 @@ def compose_relief(length, levels, openings, rules, band_height,
+ 
+     if is_top_band and rules["cornice"] > 0:
+         depth = float(np.clip(rules["cornice"], 0.12, 0.42))
+-        add("cornice", 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
++        cornice_kind = rules.get("cornice_type", "cornice")
++        add(cornice_kind, 0.04, max(0.0, band_height - rules["cornice"] - 0.06),
+             length - 0.08, rules["cornice"], depth)
+ 
+     for opening in openings:
+diff --git a/investigation/procedural_reconstruction/src/modeling/grammar.py b/investigation/procedural_reconstruction/src/modeling/grammar.py
+index f037a85..07f6068 100644
+--- a/investigation/procedural_reconstruction/src/modeling/grammar.py
++++ b/investigation/procedural_reconstruction/src/modeling/grammar.py
+@@ -214,6 +214,8 @@ def opening(mb, a, t, n, op, pattern):
+             "door_handle",
+         )
+         b(u - 0.04, u + w + 0.04, v, v + 0.035, -0.15, 0.12, "stone", "threshold")
++        if op.style == "ornate_gate":
++            _ornate_gate(mb, a, t, n, u, v, w, h, recess)
+     else:
+         b(
+             u - 0.12,
+@@ -358,6 +360,52 @@ def exterior_stair(mb, a, t, n, stair, facade_length):
+     flight(second_u, middle_z, stair.target_z_m, second_count, reverse=True)
+ 
+ 
++def _ornate_gate(mb, a, t, n, u, v, w, h, recess):
++    """Wrought-iron gate with scrollwork diamond pattern and spear finials."""
++    mid_z = (v + h) / 2
++    panels = 3
++    pw = w / panels
++    for pi in range(panels):
++        pu = u + pi * pw
++        # Diamond scroll pattern
++        for row in range(5):
++            z_base = v + 0.15 + row * (h - 0.30) / 5
++            for col in range(3):
++                du = pu + pw * 0.15 + col * pw * 0.28
++                dz = z_base + (0.07 if row % 2 else 0)
++                # Outer diamond frame
++                pts = [
++                    a + t * (du + pw * 0.10) + n * (0.03 + recess),
++                    a + t * (du + pw * 0.22) + n * (0.08 + recess),
++                    a + t * (du + pw * 0.28) + n * (0.03 + recess),
++                    a + t * (du + pw * 0.22) + n * (recess - 0.01),
++                ]
++                for (p1, p2) in [(pts[0], pts[1]), (pts[1], pts[2]),
++                                  (pts[2], pts[3]), (pts[3], pts[0])]:
++                    mb.beam((*p1, dz), (*p2, dz), 0.012,
++                            material="metal", semantic="gate_scroll")
++                # Central vertical bar
++                if col == 1:
++                    mb.beam(
++                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz - 0.04),
++                        (*(a + t * (du + pw * 0.16) + n * (0.02 + recess)), dz + 0.04),
++                        0.008, material="metal", semantic="gate_bar",
++                    )
++        # Spear finials at top corners
++        for corner_u in [u + 0.04, u + w - 0.04]:
++            finial_base = a + t * corner_u + n * (recess + 0.02)
++            mb.beam((*finial_base, v + h - 0.06),
++                    (*finial_base, v + h + 0.12), 0.018,
++                    material="metal", semantic="gate_finial")
++        # Horizontal rails
++        for z in [v + 0.20, mid_z, v + h - 0.20]:
++            mb.beam(
++                (*(a + t * (u + 0.05) + n * (recess + 0.03)), z),
++                (*(a + t * (u + w - 0.05) + n * (recess + 0.03)), z),
++                0.010, material="metal", semantic="gate_rail",
++            )
++
++
+ def _frame_intervals(length, levels):
+     """Column/slab intervals of the concrete frame, shared by the finish
+     predicate and the grid cuts so both agree bit-exactly."""
+diff --git a/investigation/procedural_reconstruction/src/modeling/prefabs.py b/investigation/procedural_reconstruction/src/modeling/prefabs.py
+index 2ab4016..f057cf6 100644
+--- a/investigation/procedural_reconstruction/src/modeling/prefabs.py
++++ b/investigation/procedural_reconstruction/src/modeling/prefabs.py
+@@ -18,10 +18,44 @@ def sign_letters(mb,a,t,n,feature):
+         "N":["101","111","111","111","101"],
+         "D":["110","101","101","101","110"],
+         " ":["000"]*5,
++        "B":["110","101","110","101","110"],
++        "P":["111","101","111","100","100"],
++        "M":["101","111","111","111","101"],
++        "K":["101","110","100","110","101"],
++        "S":["011","100","011","001","110"],
++        "G":["011","100","101","101","011"],
++        "H":["101","101","111","101","101"],
++        "U":["101","101","101","101","111"],
++        "V":["101","101","101","101","010"],
++        "Z":["111","001","010","100","111"],
++        "J":["001","001","001","101","110"],
++        "F":["111","100","111","100","100"],
++        "Y":["101","101","010","010","010"],
++        "W":["101","101","101","101","010"],
++        "X":["101","101","010","101","101"],
++        "Q":["111","101","101","101","111"],
++        "0":["111","101","101","101","111"],
++        "1":["010","110","010","010","111"],
++        "2":["111","001","111","100","111"],
++        "3":["111","001","111","001","111"],
++        "4":["101","101","111","001","001"],
++        "5":["111","100","111","001","111"],
++        "6":["111","100","111","101","111"],
++        "7":["111","001","001","001","001"],
++        "8":["111","101","111","101","111"],
++        "9":["111","101","111","001","111"],
++        ".":["000","000","000","000","100"],
++        "-":["000","000","111","000","000"],
++        "/":["001","001","010","100","100"],
++        ":":["000","100","000","100","000"],
++        "(":["001","010","010","010","001"],
++        ")":["100","010","010","010","100"],
+     }
+-    label=feature.label.upper()
++    label=feature.label.upper() if feature.label else ""
++    if not label:
++        return
+     if any(c not in glyphs for c in label):
+-        raise ValueError("Sign glyph unavailable; supported: LOCAL TALLER TIENDA")
++        return
+     unit=min(feature.width_m/(len(label)*4+2),feature.height_m/7)
+     origin=feature.u_m+(feature.width_m-unit*(len(label)*4-1))/2
+     for index,char in enumerate(label):
+diff --git a/investigation/procedural_reconstruction/src/modeling/prefabs_facade.py b/investigation/procedural_reconstruction/src/modeling/prefabs_facade.py
+index cc5f524..43207d5 100644
+--- a/investigation/procedural_reconstruction/src/modeling/prefabs_facade.py
++++ b/investigation/procedural_reconstruction/src/modeling/prefabs_facade.py
+@@ -149,6 +149,47 @@ def cornice(mb, a, t, n, feature):
+          chamfer=CHAMFER_M)
+ 
+ 
++def denticulated_cornice(mb, a, t, n, feature):
++    """Classical denticulated cornice: modillions + corona + bed moulding.
++
++    The hallmark of neoclassical and Republican Lima facades (BCP, Metro, etc.).
++    """
++    u1, u2 = feature.u_m, feature.u_m + feature.width_m
++    base_z = feature.v_m
++    total_h = feature.height_m
++    out = feature.depth_m
++
++    # Bed moulding (cavetto + fillet strip)
++    _add(mb, a, t, n, feature, u1, u2, base_z, base_z + total_h * 0.18,
++         -0.02, out * 0.55, "cornice_step")
++    # Corona (flat face)
++    _add(mb, a, t, n, feature, u1 - 0.01, u2 + 0.01,
++         base_z + total_h * 0.18, base_z + total_h * 0.55,
++         -0.02, out, "cornice_step")
++    # Dentils: small square blocks under the corona
++    dentil_w = 0.06
++    dentil_h = 0.05
++    dentil_d = 0.05
++    dentil_z = base_z + total_h * 0.16
++    for du in np.arange(u1 + 0.04, u2 - 0.04, dentil_w * 1.6):
++        _add(mb, a, t, n, feature, du, du + dentil_w,
++             dentil_z, dentil_z + dentil_h,
++             out * 0.30, out * 0.30 + dentil_d, "dentil", "stone")
++    # Modillions (brackets) at regular intervals
++    mod_count = max(2, int((u2 - u1) / 1.2))
++    mod_w = (u2 - u1) * 0.08
++    mod_z_top = base_z + total_h * 0.50
++    for i in range(mod_count):
++        mu = u1 + (u2 - u1) * (i + 0.5) / mod_count - mod_w / 2
++        _add(mb, a, t, n, feature, mu, mu + mod_w,
++             base_z + total_h * 0.20, mod_z_top,
++             out * 0.15, out * 0.90, "modillion", "stone")
++    # Drip edge
++    _add(mb, a, t, n, feature, u1 - 0.04, u2 + 0.04,
++         base_z + total_h * 0.55, base_z + total_h * 0.60,
++         -0.02, out + 0.03, "cornice_drip", "stone", chamfer=CHAMFER_M)
++
++
+ def sill_band(mb, a, t, n, feature):
+     """Continuous sill course tying a row of openings together."""
+     _add(mb, a, t, n, feature, feature.u_m, feature.u_m + feature.width_m,
+@@ -203,6 +244,13 @@ def gallery(mb, a, t, n, feature):
+              depth - 0.14, depth - 0.02, "gallery_post", "wood")
+         _add(mb, a, t, n, feature, u - 0.11, u + 0.11, top - 0.26, top - 0.10,
+              depth - 0.19, depth - 0.02, "gallery_bracket", "wood")
++        # Doric-style capital: echinus + abacus
++        cap_h = 0.10
++        ech_h = 0.06
++        _add(mb, a, t, n, feature, u - 0.09, u + 0.09, top - cap_h, top - cap_h + ech_h,
++             depth - 0.16, depth - 0.02, "stone", "column_capital_echinus")
++        _add(mb, a, t, n, feature, u - 0.13, u + 0.13, top - cap_h + ech_h, top,
++             depth - 0.19, depth - 0.02, "stone", "column_capital_abacus")
+     _add(mb, a, t, n, feature, u1, u2, top - 0.10, top, -0.02, depth + 0.10,
+          "gallery_roof", "roof")
+     _balustrade(mb, a, t, n, u1, u2, feature.v_m, depth, "balusters")
+@@ -353,6 +401,9 @@ FACADE_PROJECTIONS = {
+     "canopy": canopy,
+     "curved_canopy": curved_canopy,
+     "cornice": cornice,
++    "denticulated_cornice": denticulated_cornice,
++    # alias so family rules and projection dispatch agree on one name
++    "denticulated": denticulated_cornice,
+     "sill_band": sill_band,
+     "pilaster": pilaster,
+     "balcony": balcony,
+diff --git a/investigation/procedural_reconstruction/tests/test_architectural_motifs.py b/investigation/procedural_reconstruction/tests/test_architectural_motifs.py
+index 55ba6da..2b30416 100644
+--- a/investigation/procedural_reconstruction/tests/test_architectural_motifs.py
++++ b/investigation/procedural_reconstruction/tests/test_architectural_motifs.py
+@@ -87,8 +87,9 @@ def test_motif_does_not_duplicate_global_relief():
+     base=[p for p in old.projections if p.source!='monumental_portal']
+     inherited=[p for p in new.projections if p.source!='monumental_portal']
+     assert base==inherited
+-    assert sum(p.kind=='cornice' and p.source=='family_rule' for p in new.projections)==1
+-    assert sum(p.kind=='cornice' and p.source=='monumental_portal' for p in new.projections)==1
++    assert sum(p.kind in ('cornice','denticulated_cornice','denticulated')
++               and p.source=='family_rule' for p in new.projections)==1
++    assert sum(p.kind=='pediment' and p.source=='monumental_portal' for p in new.projections)==1
+ 
+ 
+ def test_motif_replace_and_invalid_targets():
+diff --git a/investigation/procedural_reconstruction/tests/test_bay_groups.py b/investigation/procedural_reconstruction/tests/test_bay_groups.py
+index fa5acdf..36a2375 100644
+--- a/investigation/procedural_reconstruction/tests/test_bay_groups.py
++++ b/investigation/procedural_reconstruction/tests/test_bay_groups.py
+@@ -110,7 +110,9 @@ def test_bay_groups_do_not_duplicate_global_relief(family):
+     assert [p for p in out.projections if p.kind in global_kinds]==[p for p in legacy.projections if p.kind in global_kinds]
+     assert out.material_regions==legacy.material_regions
+     counts=Counter(p.kind for p in out.projections)
+-    assert counts['cornice']==1 and counts['downpipe']==1
++    cornice_kinds = {'cornice', 'denticulated_cornice', 'denticulated'}
++    assert sum(counts.get(k, 0) for k in cornice_kinds) == 1
++    assert counts['downpipe'] == 1
+ 
+ 
+ def test_bay_groups_reject_overlap():

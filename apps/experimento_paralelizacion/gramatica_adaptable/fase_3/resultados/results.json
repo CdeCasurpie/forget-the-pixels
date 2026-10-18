@@ -1,0 +1,2432 @@
+{
+  "scope": "phase3",
+  "seeds": [
+    7,
+    17,
+    81
+  ],
+  "runs": 78,
+  "passed": 78,
+  "conflicts": 0,
+  "mismatches": 0,
+  "results": [
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 2.0839
+    },
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        7,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.7068
+    },
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.6929
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        8,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 1.8524
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        9,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "seconds": 1.9966
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        9,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "seconds": 1.949
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        9,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.7099
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        8,
+        7
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.0
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 1.8028
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        9,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 1.7372
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 6,
+      "alternatives": 8,
+      "seconds": 1.5425
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        7,
+        7
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 1.5991
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        7,
+        7
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 1.6314
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 3.0027
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 3.0572
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 2.8708
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 5,
+      "seconds": 1.3201
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 5,
+      "seconds": 1.3848
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 5,
+      "seconds": 1.4256
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 10,
+      "seconds": 0.5555
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 10,
+      "seconds": 0.5726
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 10,
+      "seconds": 0.5445
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "floors": [
+        1,
+        2
+      ],
+      "rooms": [
+        10,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 1.4421
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "floors": [
+        1,
+        2
+      ],
+      "rooms": [
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 1.4926
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "floors": [
+        1,
+        2
+      ],
+      "rooms": [
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 1.3954
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 1.4172
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        9,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 1.2619
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        9,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 4,
+      "seconds": 1.2687
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.7349
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 1.6615
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "seconds": 1.8136
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 1.9614
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "seconds": 1.9322
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 1.8946
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 2.1588
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        9,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 2.0966
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        9,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 2.0696
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 1.9884
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 2.0887
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "seconds": 1.8827
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        11,
+        8
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 6,
+      "alternatives": 8,
+      "seconds": 1.901
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 2.0214
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 1.8261
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        11
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 2.0609
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 4,
+      "alternatives": 8,
+      "seconds": 1.9333
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "seconds": 2.0135
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 2.1398
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 2.2819
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 6,
+      "alternatives": 8,
+      "seconds": 2.2526
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        5,
+        4,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 6,
+      "seconds": 1.4607
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        5,
+        4,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 6,
+      "seconds": 1.5315
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        5,
+        4,
+        4
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 6,
+      "seconds": 1.453
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        11,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        2,
+        0
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "seconds": 1.7284
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        2,
+        0
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "seconds": 1.7347
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        11,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        2,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "seconds": 1.7369
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.6215
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.6309
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        7,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "seconds": 1.5632
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        4,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 2.0551
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        4,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 2.1307
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        4,
+        6,
+        6
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        0
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "seconds": 2.0931
+    },
+    {
+      "id": "p3_connected_loggia",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "eaa8b4571d25d0a3731928ab085f4c16cc9b90394eec2cb4fbe1ba77805a1eea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        12,
+        10,
+        11
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        0,
+        2
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "loggia_connections": {
+          "1": 0,
+          "2": 1,
+          "3": 0
+        },
+        "loggia_match": true
+      },
+      "seconds": 2.017
+    },
+    {
+      "id": "p3_connected_loggia",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "eaa8b4571d25d0a3731928ab085f4c16cc9b90394eec2cb4fbe1ba77805a1eea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        0,
+        2
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "loggia_connections": {
+          "1": 0,
+          "2": 1,
+          "3": 0
+        },
+        "loggia_match": true
+      },
+      "seconds": 1.9619
+    },
+    {
+      "id": "p3_connected_loggia",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "eaa8b4571d25d0a3731928ab085f4c16cc9b90394eec2cb4fbe1ba77805a1eea",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        11
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        0,
+        2
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "loggia_connections": {
+          "1": 0,
+          "2": 1,
+          "3": 0
+        },
+        "loggia_match": true
+      },
+      "seconds": 2.0239
+    },
+    {
+      "id": "p3_garage_independent",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "c87732948740c6f0ef0716b2dc6b492f37e53baaccc6d965868da1f7559890d2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "garage_present": true,
+        "garage_not_passage": true,
+        "vehicle_entry": true
+      },
+      "seconds": 1.708
+    },
+    {
+      "id": "p3_garage_independent",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "c87732948740c6f0ef0716b2dc6b492f37e53baaccc6d965868da1f7559890d2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        11
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "garage_present": true,
+        "garage_not_passage": true,
+        "vehicle_entry": true
+      },
+      "seconds": 1.7557
+    },
+    {
+      "id": "p3_garage_independent",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "c87732948740c6f0ef0716b2dc6b492f37e53baaccc6d965868da1f7559890d2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 6,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "garage_present": true,
+        "garage_not_passage": true,
+        "vehicle_entry": true
+      },
+      "seconds": 1.7442
+    },
+    {
+      "id": "p3_small_high_window",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "259fb917c29fdba25b024c007ab8aaa3e7565308758e2cf9b61473d10e3ecce9",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        1
+      ],
+      "selected_alternative": 3,
+      "alternatives": 10,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "window_kinds": [
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 0.615
+    },
+    {
+      "id": "p3_small_high_window",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "259fb917c29fdba25b024c007ab8aaa3e7565308758e2cf9b61473d10e3ecce9",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        1
+      ],
+      "selected_alternative": 3,
+      "alternatives": 10,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "window_kinds": [
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 0.582
+    },
+    {
+      "id": "p3_small_high_window",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "259fb917c29fdba25b024c007ab8aaa3e7565308758e2cf9b61473d10e3ecce9",
+      "status": "passed",
+      "floors": [
+        1
+      ],
+      "rooms": [
+        6
+      ],
+      "corridor_widths": [
+        1.2
+      ],
+      "windows": [
+        1
+      ],
+      "selected_alternative": 3,
+      "alternatives": 10,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true,
+        "window_kinds": [
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 0.5787
+    },
+    {
+      "id": "p3_three_unequal_windows",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "a4645845867370e1ae6c09636896dd9160079c32dcf2db74982c1f7132f48af2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        9,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        3,
+        3,
+        0
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true,
+        "window_kinds": [
+          "living",
+          "bedroom",
+          "service",
+          "living",
+          "living",
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 2.0745
+    },
+    {
+      "id": "p3_three_unequal_windows",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "a4645845867370e1ae6c09636896dd9160079c32dcf2db74982c1f7132f48af2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        3,
+        3,
+        0
+      ],
+      "selected_alternative": 3,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true,
+        "window_kinds": [
+          "living",
+          "living",
+          "service",
+          "living",
+          "living",
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 1.9734
+    },
+    {
+      "id": "p3_three_unequal_windows",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "a4645845867370e1ae6c09636896dd9160079c32dcf2db74982c1f7132f48af2",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        10,
+        9
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        3,
+        3,
+        0
+      ],
+      "selected_alternative": 1,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true,
+        "window_kinds": [
+          "living",
+          "bedroom",
+          "service",
+          "living",
+          "living",
+          "service"
+        ],
+        "window_kinds_match": true
+      },
+      "seconds": 1.9819
+    },
+    {
+      "id": "p3_two_large_windows",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "ae93966347e993b0e4495d56c904263883f89337a137a156acff0869fc941be5",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        9,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 0,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.8842
+    },
+    {
+      "id": "p3_two_large_windows",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "ae93966347e993b0e4495d56c904263883f89337a137a156acff0869fc941be5",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        11
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.8768
+    },
+    {
+      "id": "p3_two_large_windows",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "ae93966347e993b0e4495d56c904263883f89337a137a156acff0869fc941be5",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        2,
+        2,
+        0
+      ],
+      "selected_alternative": 2,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.9474
+    },
+    {
+      "id": "p3_upper_floor_different",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "f7a82052f8766e04b1cde23345e61af3584b135a95dd96943fee158f50bd9550",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        11,
+        11,
+        8
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        2
+      ],
+      "selected_alternative": 6,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.8229
+    },
+    {
+      "id": "p3_upper_floor_different",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "f7a82052f8766e04b1cde23345e61af3584b135a95dd96943fee158f50bd9550",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        10,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        2
+      ],
+      "selected_alternative": 5,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.8817
+    },
+    {
+      "id": "p3_upper_floor_different",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "f7a82052f8766e04b1cde23345e61af3584b135a95dd96943fee158f50bd9550",
+      "status": "passed",
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "rooms": [
+        10,
+        11,
+        10
+      ],
+      "corridor_widths": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "windows": [
+        0,
+        0,
+        2
+      ],
+      "selected_alternative": 7,
+      "alternatives": 8,
+      "expectations_checked": {
+        "windows_match": true,
+        "window_rooms_unique": true
+      },
+      "seconds": 1.8713
+    }
+  ]
+}

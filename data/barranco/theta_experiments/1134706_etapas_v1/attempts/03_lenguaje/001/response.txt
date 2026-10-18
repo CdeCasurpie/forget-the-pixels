@@ -1,0 +1,52 @@
+{
+  "stage": "03_lenguaje",
+  "changes": {
+    "architectural_style": null
+  },
+  "evidence": [
+    {
+      "element": "material_plaster",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang", "oZ1wrA76ZreE0XrMgouLug", "dkKZSdzvoCSMlT3KK2tkvw"],
+      "status": "observed",
+      "description": "Revoque liso beige continuo en el nivel superior; sin pilastras, molduras escalonadas ni relieves articulados en ninguna de las tres vistas."
+    },
+    {
+      "element": "window_p1_left",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang", "oZ1wrA76ZreE0XrMgouLug"],
+      "status": "observed",
+      "description": "Ventana rectangular de perfil sencillo con reja de barras verticales negras; no presenta el perfil de varios escalones ni transiciones de relieve del estilo republicano."
+    },
+    {
+      "element": "window_p1_right",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang", "oZ1wrA76ZreE0XrMgouLug"],
+      "status": "observed",
+      "description": "Ventana rectangular gemela con reja metálica de barras verticales; misma carpintería austera, sin contraventanas ni perfiles ornamentales."
+    },
+    {
+      "element": "door_entrance",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang", "oZ1wrA76ZreE0XrMgouLug"],
+      "status": "observed",
+      "description": "Puerta peatonal de madera verde de hoja simple en planta baja; sin portal de pilastras, cornisa ni cuarterones decorativos visibles."
+    },
+    {
+      "element": "material_base",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang", "oZ1wrA76ZreE0XrMgouLug"],
+      "status": "observed",
+      "description": "Zócalo pétreo rústico en la planta baja; textura de mampostería vista, sin dentículos, molduras ni zócalo de taller fino."
+    },
+    {
+      "element": "roof_flat",
+      "view_ids": ["tyQaMS8skCpsOJ0wRHbang"],
+      "status": "inferred",
+      "description": "Línea de coronación horizontal simple al cierre del nivel superior; sin frontón, volutas, dentículos ni cornisas escalonadas."
+    }
+  ],
+  "notes": [
+    "La sugerencia humana de estilo 'republicano' tiene modo suggested y no es vinculante; se aparta de ella por evidencia visual.",
+    "Se fija architectural_style=null: la fachada observada es austera y combina lenguajes (revoque liso, zócalo pétreo rústico, carpintería de madera verde, rejas metálicas de barras), por lo que un estilo global único forzaría piezas incompatibles con la casa mixta.",
+    "family permanece quiet_house; esta decisión solo selecciona perfiles compatibles para puertas/ventanas/ensambles futuros y no altera masa, color ni vanos.",
+    "En etapas futuras los ensambles (rejas, carpintería, cornisas si se confirmaran) deberán declarar estilos locales explícitos, ya que 'auto' no heredará un estilo global.",
+    "La decisión es coherente con la nota de etapa 01 que ya registraba la discrepancia entre 'republicano' y la fachada austera observada."
+  ],
+  "blockers": []
+}

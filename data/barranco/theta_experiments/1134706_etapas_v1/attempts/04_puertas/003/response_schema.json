@@ -1,0 +1,590 @@
+{
+  "$defs": {
+    "DoorControls": {
+      "description": "Opt-in door/gateway assembly; dimensions refer to the parent opening.",
+      "properties": {
+        "model": {
+          "default": "auto",
+          "title": "Model",
+          "type": "string"
+        },
+        "leaves": {
+          "default": 0,
+          "title": "Leaves",
+          "type": "integer"
+        },
+        "construction": {
+          "default": "auto",
+          "title": "Construction",
+          "type": "string"
+        },
+        "leaf_material": {
+          "default": "auto",
+          "title": "Leaf Material",
+          "type": "string"
+        },
+        "frame_material": {
+          "default": "auto",
+          "title": "Frame Material",
+          "type": "string"
+        },
+        "portal_material": {
+          "default": "plaster",
+          "title": "Portal Material",
+          "type": "string"
+        },
+        "metal_material": {
+          "default": "metal",
+          "title": "Metal Material",
+          "type": "string"
+        },
+        "glass_material": {
+          "default": "glass",
+          "title": "Glass Material",
+          "type": "string"
+        },
+        "threshold_material": {
+          "default": "stone",
+          "title": "Threshold Material",
+          "type": "string"
+        },
+        "portal": {
+          "default": "none",
+          "title": "Portal",
+          "type": "string"
+        },
+        "portal_member": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemberDesign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "portal_width_m": {
+          "default": 0.24,
+          "title": "Portal Width M",
+          "type": "number"
+        },
+        "portal_gap_m": {
+          "default": 0.1,
+          "title": "Portal Gap M",
+          "type": "number"
+        },
+        "portal_depth_m": {
+          "default": 0.2,
+          "title": "Portal Depth M",
+          "type": "number"
+        },
+        "cornice": {
+          "default": false,
+          "title": "Cornice",
+          "type": "boolean"
+        },
+        "transom_height_m": {
+          "default": 0.0,
+          "title": "Transom Height M",
+          "type": "number"
+        },
+        "transom_infill": {
+          "default": "glass",
+          "title": "Transom Infill",
+          "type": "string"
+        },
+        "transom_grille": {
+          "default": false,
+          "title": "Transom Grille",
+          "type": "boolean"
+        },
+        "grille_pattern": {
+          "default": "auto",
+          "title": "Grille Pattern",
+          "type": "string"
+        },
+        "grille_spacing_m": {
+          "default": 0.16,
+          "title": "Grille Spacing M",
+          "type": "number"
+        },
+        "leaf_grille": {
+          "default": false,
+          "title": "Leaf Grille",
+          "type": "boolean"
+        },
+        "threshold": {
+          "default": true,
+          "title": "Threshold",
+          "type": "boolean"
+        },
+        "opening_angles_deg": {
+          "default": [],
+          "items": {
+            "type": "number"
+          },
+          "title": "Opening Angles Deg",
+          "type": "array"
+        }
+      },
+      "title": "DoorControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "MemberDesign": {
+      "properties": {
+        "style": {
+          "default": "moderno",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "section": {
+          "default": "auto",
+          "title": "Section",
+          "type": "string"
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base"
+        },
+        "capital": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital"
+        },
+        "collar": {
+          "default": true,
+          "title": "Collar",
+          "type": "boolean"
+        },
+        "abacus": {
+          "default": true,
+          "title": "Abacus",
+          "type": "boolean"
+        },
+        "base_profile": {
+          "default": "auto",
+          "title": "Base Profile",
+          "type": "string"
+        },
+        "pedestal_m": {
+          "default": 0.0,
+          "title": "Pedestal M",
+          "type": "number"
+        },
+        "base_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Height M"
+        },
+        "capital_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Height M"
+        },
+        "taper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taper"
+        },
+        "entasis": {
+          "default": 0.025,
+          "title": "Entasis",
+          "type": "number"
+        },
+        "turns": {
+          "default": 1.5,
+          "title": "Turns",
+          "type": "number"
+        },
+        "flute_count": {
+          "default": 12,
+          "title": "Flute Count",
+          "type": "integer"
+        },
+        "ornament": {
+          "default": true,
+          "title": "Ornament",
+          "type": "boolean"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "base_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Material"
+        },
+        "capital_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Material"
+        }
+      },
+      "title": "MemberDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Opening": {
+      "properties": {
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "u_m": {
+          "title": "U M",
+          "type": "number"
+        },
+        "v_m": {
+          "title": "V M",
+          "type": "number"
+        },
+        "width_m": {
+          "title": "Width M",
+          "type": "number"
+        },
+        "height_m": {
+          "title": "Height M",
+          "type": "number"
+        },
+        "frame_width_m": {
+          "default": 0.06,
+          "title": "Frame Width M",
+          "type": "number"
+        },
+        "recess_m": {
+          "default": 0.08,
+          "title": "Recess M",
+          "type": "number"
+        },
+        "source": {
+          "default": "assumed",
+          "title": "Source",
+          "type": "string"
+        },
+        "view_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "View Id"
+        },
+        "score": {
+          "default": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "style": {
+          "default": "sliding",
+          "title": "Style",
+          "type": "string"
+        },
+        "grille": {
+          "default": false,
+          "title": "Grille",
+          "type": "boolean"
+        },
+        "mullion_columns": {
+          "default": 2,
+          "title": "Mullion Columns",
+          "type": "integer"
+        },
+        "mullion_rows": {
+          "default": 2,
+          "title": "Mullion Rows",
+          "type": "integer"
+        },
+        "balcony_depth_m": {
+          "default": 0.75,
+          "title": "Balcony Depth M",
+          "type": "number"
+        },
+        "prefab": {
+          "default": "legacy",
+          "title": "Prefab",
+          "type": "string"
+        },
+        "curtain": {
+          "default": 0.0,
+          "title": "Curtain",
+          "type": "number"
+        },
+        "grille_pattern": {
+          "default": "vertical",
+          "title": "Grille Pattern",
+          "type": "string"
+        },
+        "shape": {
+          "default": "rectangle",
+          "title": "Shape",
+          "type": "string"
+        },
+        "arch_rise_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arch Rise M"
+        },
+        "frame_profile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frame Profile"
+        },
+        "frame_depth_m": {
+          "default": 0.1,
+          "title": "Frame Depth M",
+          "type": "number"
+        },
+        "sill": {
+          "default": false,
+          "title": "Sill",
+          "type": "boolean"
+        },
+        "grid_spacing_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grid Spacing M"
+        },
+        "grille_spacing_m": {
+          "default": 0.14,
+          "title": "Grille Spacing M",
+          "type": "number"
+        },
+        "door": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DoorControls"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "u_m",
+        "v_m",
+        "width_m",
+        "height_m"
+      ],
+      "title": "Opening",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "OpeningPlacement": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "ID de autoría, fuera del contrato theta; único entre puertas y ventanas.",
+          "title": "Id",
+          "type": "string"
+        },
+        "mass_ref": {
+          "title": "Mass Ref",
+          "type": "string"
+        },
+        "edge": {
+          "minimum": 0,
+          "title": "Edge",
+          "type": "integer"
+        },
+        "opening": {
+          "$ref": "#/$defs/Opening"
+        }
+      },
+      "required": [
+        "id",
+        "mass_ref",
+        "edge",
+        "opening"
+      ],
+      "title": "OpeningPlacement",
+      "type": "object"
+    },
+    "Openings": {
+      "additionalProperties": false,
+      "properties": {
+        "placements": {
+          "items": {
+            "$ref": "#/$defs/OpeningPlacement"
+          },
+          "title": "Placements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "placements"
+      ],
+      "title": "Openings",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "04_puertas",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Openings"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_04_puertas",
+  "type": "object"
+}

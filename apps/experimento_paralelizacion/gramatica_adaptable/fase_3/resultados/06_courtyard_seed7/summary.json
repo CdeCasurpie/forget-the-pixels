@@ -1,0 +1,140 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 9,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 5,
+        "kitchen_dining": 1
+      },
+      "doors": 8,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 23.2,
+        "floor1/bath": 3.65,
+        "floor1/stairs": 6.93,
+        "floor1/room0": 15.52,
+        "floor1/room1": 15.53,
+        "floor1/room2": 8.61,
+        "floor1/room3": 18.76,
+        "floor1/room4": 21.11,
+        "floor1/room5": 15.07
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "living": 1,
+        "kitchen_dining": 1,
+        "bedroom": 5
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 18.12,
+        "floor2/bath": 3.71,
+        "floor2/stairs": 6.99,
+        "floor2/room0": 5.14,
+        "floor2/room1": 21.01,
+        "floor2/room2": 17.1,
+        "floor2/room3": 7.73,
+        "floor2/room4": 13.81,
+        "floor2/room5": 20.11,
+        "floor2/room6": 14.85
+      }
+    },
+    {
+      "floor": 3,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "living": 1,
+        "kitchen_dining": 1,
+        "bedroom": 5
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor3/hall": 18.12,
+        "floor3/bath": 3.71,
+        "floor3/stairs": 6.99,
+        "floor3/room0": 5.06,
+        "floor3/room1": 20.68,
+        "floor3/room2": 16.64,
+        "floor3/room3": 9.25,
+        "floor3/room4": 17.44,
+        "floor3/room5": 16.84,
+        "floor3/room6": 13.86
+      }
+    }
+  ],
+  "core_flights": 2,
+  "selected_alternative": 3,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.6840123806470451
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.8715586046055894
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.8436243180861133
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.6687373033531065
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.7849624948375246
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.7177823043393043
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.7056387426965989
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 1.034919751184766
+    }
+  ],
+  "connections": 29,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.6687373033531065,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

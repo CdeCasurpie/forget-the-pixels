@@ -1,0 +1,170 @@
+{
+  "$defs": {
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "InventoryItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "mass",
+            "door",
+            "window",
+            "balcony",
+            "member",
+            "crown",
+            "roof",
+            "site",
+            "material"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "certainty": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Certainty",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "category",
+        "location",
+        "description",
+        "view_ids",
+        "certainty"
+      ],
+      "title": "InventoryItem",
+      "type": "object"
+    },
+    "Reading": {
+      "additionalProperties": false,
+      "properties": {
+        "target_description": {
+          "title": "Target Description",
+          "type": "string"
+        },
+        "inventory": {
+          "items": {
+            "$ref": "#/$defs/InventoryItem"
+          },
+          "title": "Inventory",
+          "type": "array"
+        },
+        "occlusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Occlusions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "target_description",
+        "inventory",
+        "occlusions"
+      ],
+      "title": "Reading",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "01_lectura",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Reading"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_01_lectura",
+  "type": "object"
+}

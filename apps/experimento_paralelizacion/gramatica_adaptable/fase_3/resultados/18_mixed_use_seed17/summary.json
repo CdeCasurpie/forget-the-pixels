@@ -1,0 +1,132 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 7,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 3,
+        "kitchen_dining": 1
+      },
+      "doors": 6,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 20.77,
+        "floor1/bath": 4.84,
+        "floor1/stairs": 6.88,
+        "floor1/room0": 15.14,
+        "floor1/room1": 32.7,
+        "floor1/room2": 10.37,
+        "floor1/room3": 18.74
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 7,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 2,
+        "living": 1,
+        "kitchen_dining": 1
+      },
+      "doors": 6,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 13.15,
+        "floor2/bath": 4.84,
+        "floor2/stairs": 6.88,
+        "floor2/room0": 11.36,
+        "floor2/room1": 20.83,
+        "floor2/room2": 12.53,
+        "floor2/room3": 39.86
+      }
+    },
+    {
+      "floor": 3,
+      "rooms": 7,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 2,
+        "living": 1,
+        "kitchen_dining": 1
+      },
+      "doors": 6,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor3/hall": 13.15,
+        "floor3/bath": 4.84,
+        "floor3/stairs": 6.88,
+        "floor3/room0": 11.55,
+        "floor3/room1": 21.73,
+        "floor3/room2": 11.45,
+        "floor3/room3": 39.86
+      }
+    }
+  ],
+  "core_flights": 2,
+  "selected_alternative": 4,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.6867307524047719
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.6430562070672148
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.683056207067215
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.7591110315259033
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.5990247088341342
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.6871780863427259
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.6563623224979004
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.6563623224979003
+    }
+  ],
+  "connections": 21,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.5990247088341342,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

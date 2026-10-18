@@ -1,0 +1,4 @@
+{
+  "status": "interrupted",
+  "error": "Local shell timeout (120s); no response captured. Provider completion/billing unknown. New attempt requested explicitly."
+}

@@ -1,0 +1,91 @@
+{
+  "stage": "05_ventanas",
+  "changes": {
+    "placements": [
+      {
+        "id": "window_p1_left",
+        "mass_ref": "principal:0",
+        "edge": 0,
+        "opening": {
+          "kind": "window",
+          "u_m": 2.0,
+          "v_m": 3.9,
+          "width_m": 1.3,
+          "height_m": 1.5,
+          "shape": "rectangle",
+          "prefab": "legacy",
+          "grille": true,
+          "grille_pattern": "vertical",
+          "grille_spacing_m": 0.14,
+          "frame_width_m": 0.08,
+          "recess_m": 0.08,
+          "frame_depth_m": 0.1,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "sill": true,
+          "source": "observed",
+          "view_id": "tyQaMS8skCpsOJ0wRHbang"
+        }
+      },
+      {
+        "id": "window_p1_right",
+        "mass_ref": "principal:0",
+        "edge": 0,
+        "opening": {
+          "kind": "window",
+          "u_m": 6.9,
+          "v_m": 3.9,
+          "width_m": 1.3,
+          "height_m": 1.5,
+          "shape": "rectangle",
+          "prefab": "legacy",
+          "grille": true,
+          "grille_pattern": "vertical",
+          "grille_spacing_m": 0.14,
+          "frame_width_m": 0.08,
+          "recess_m": 0.08,
+          "frame_depth_m": 0.1,
+          "mullion_columns": 2,
+          "mullion_rows": 2,
+          "sill": true,
+          "source": "observed",
+          "view_id": "oZ1wrA76ZreE0XrMgouLug"
+        }
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "element": "window_p1_left",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug"
+      ],
+      "status": "observed",
+      "description": "Ventana rectangular en primer piso con reja metálica negra de barras verticales y marco oscuro."
+    },
+    {
+      "element": "window_p1_right",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug"
+      ],
+      "status": "observed",
+      "description": "Ventana rectangular en primer piso, misma tipología que la izquierda, con reja vertical negra."
+    },
+    {
+      "element": "window_positions",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang"
+      ],
+      "status": "inferred",
+      "description": "Posiciones u_m estimadas por simetría y evitando la puerta aceptada; no medidas métricamente en foto."
+    }
+  ],
+  "notes": [
+    "Prefab legacy, grille_pattern vertical y shape rectangle declarados explícitos porque architectural_style es null.",
+    "Ventanas ubicadas solo en el piso superior (índice 1); v_m=3.9 equivale a ~0.9 m de antepecho sobre la losa de 3.0 m.",
+    "No se observan vanos adicionales en planta baja ni en laterales; no se agregan por esta etapa."
+  ],
+  "blockers": []
+}

@@ -1,0 +1,12 @@
+{
+  "latency_s": 98.31,
+  "usage": {
+    "input_tokens": 25571,
+    "output_tokens": 7020,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "stop_reason": "end_turn",
+  "model": "claude-haiku-4-5-20251001",
+  "id": "msg_011Afr7RB4KnMxO2P8gn5W4hlkI"
+}

@@ -1,0 +1,95 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 6,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "service": 1,
+        "bedroom": 2,
+        "kitchen_dining": 1
+      },
+      "doors": 5,
+      "windows": 1,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 21.0,
+        "floor1/bath": 3.65,
+        "floor1/room0": 15.59,
+        "floor1/room1": 14.24,
+        "floor1/room2": 13.12,
+        "floor1/room3": 6.79
+      }
+    }
+  ],
+  "core_flights": 0,
+  "selected_alternative": 3,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "conflict",
+      "code": "circulation_disconnected",
+      "path": "floor1",
+      "message": "circulation_disconnected at floor1: no clear route at 1.20 m nor 1.00 m"
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.28175863850338784
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.2815056336981032
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.28143802797025763
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.3591317879742771
+    },
+    {
+      "id": 5,
+      "status": "conflict",
+      "code": "circulation_disconnected",
+      "path": "floor1",
+      "message": "circulation_disconnected at floor1: no clear route at 1.20 m nor 1.00 m"
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.29498550994240913
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.2894684955648888
+    },
+    {
+      "id": 8,
+      "status": "valid",
+      "score": 0.32695161915629345
+    },
+    {
+      "id": 9,
+      "status": "valid",
+      "score": 0.2853484011801059
+    }
+  ],
+  "connections": 6,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.28143802797025763,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

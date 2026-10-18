@@ -1,0 +1,43 @@
+{
+  "stage": "06_balcones",
+  "changes": {
+    "balconies": []
+  },
+  "evidence": [
+    {
+      "element": "balconies",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug",
+        "dkKZSdzvoCSMlT3KK2tkvw"
+      ],
+      "status": "observed",
+      "description": "Fachada frontal del cuerpo objetivo revisada en las tres vistas: no se observa plataforma saliente, cajón, galería con columnas, terraforma sobre techo ni protección tipo julieta adosada a la fachada."
+    },
+    {
+      "element": "window_p1_left",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug"
+      ],
+      "status": "observed",
+      "description": "Reja metálica de barras verticales situada en el plano de la fachada, sin losa volada, baranda ni soportes inferiores: no constituye balcón."
+    },
+    {
+      "element": "window_p1_right",
+      "view_ids": [
+        "tyQaMS8skCpsOJ0wRHbang",
+        "oZ1wrA76ZreE0XrMgouLug"
+      ],
+      "status": "observed",
+      "description": "Reja metálica idéntica a la izquierda, también al ras del muro; se descarta balcón."
+    }
+  ],
+  "notes": [
+    "La casa objetivo es austera y carece de balcones, galerías, cajas o terrazas visibles en las tres cámaras.",
+    "Las rejas metálicas negras de las ventanas del piso superior 1 son elementos de seguridad en el plano de fachada; no se convierten en balcones ni en barandas.",
+    "No se observan escaleras exteriores ni soportes que requieran baranda derivada (stair), por lo que no se sintetiza ninguna pieza.",
+    "La colección balconies queda vacía de forma intencional; la fidelidad manda sobre el catálogo."
+  ],
+  "blockers": []
+}

@@ -1,0 +1,11 @@
+{
+  "projection": "angular-enu-v1",
+  "source": "MeshData exported to building.glb",
+  "appearance": "base_color; opaque first hit; no PBR/transparency",
+  "camera_height": "metadata (currently assumed 2.5 m)",
+  "comparisons": [
+    "01_comparison.jpg",
+    "02_comparison.jpg",
+    "03_comparison.jpg"
+  ]
+}

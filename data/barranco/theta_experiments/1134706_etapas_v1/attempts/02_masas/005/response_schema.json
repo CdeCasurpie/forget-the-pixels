@@ -1,0 +1,504 @@
+{
+  "$defs": {
+    "ArchitecturalMass": {
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "footprint": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Footprint",
+          "type": "array"
+        },
+        "levels_m": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Levels M",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "footprint",
+        "levels_m"
+      ],
+      "title": "ArchitecturalMass",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Body": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "region": {
+          "$ref": "#/$defs/PlanRegion"
+        },
+        "levels_m": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Levels M",
+          "type": "array"
+        },
+        "kind": {
+          "default": "enclosed",
+          "enum": [
+            "enclosed",
+            "open"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "cutouts": {
+          "items": {
+            "$ref": "#/$defs/PlanRegion"
+          },
+          "title": "Cutouts",
+          "type": "array"
+        },
+        "support": {
+          "$ref": "#/$defs/SupportControls"
+        }
+      },
+      "required": [
+        "id",
+        "region",
+        "levels_m"
+      ],
+      "title": "Body",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Masses": {
+      "additionalProperties": false,
+      "properties": {
+        "floor_levels_m": {
+          "description": "Cotas globales de pisos: N pisos → N+1 cotas, desde 0.",
+          "items": {
+            "type": "number"
+          },
+          "title": "Floor Levels M",
+          "type": "array"
+        },
+        "components": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Body"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Preferido: regiones relativas al frente; el motor calcula XY.",
+          "title": "Components"
+        },
+        "masses": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/ArchitecturalMass"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Alternativa explícita cuando ya se conocen vértices XY.",
+          "title": "Masses"
+        }
+      },
+      "required": [
+        "floor_levels_m"
+      ],
+      "title": "Masses",
+      "type": "object"
+    },
+    "MemberDesign": {
+      "properties": {
+        "style": {
+          "default": "moderno",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "section": {
+          "default": "auto",
+          "title": "Section",
+          "type": "string"
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base"
+        },
+        "capital": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital"
+        },
+        "collar": {
+          "default": true,
+          "title": "Collar",
+          "type": "boolean"
+        },
+        "abacus": {
+          "default": true,
+          "title": "Abacus",
+          "type": "boolean"
+        },
+        "base_profile": {
+          "default": "auto",
+          "title": "Base Profile",
+          "type": "string"
+        },
+        "pedestal_m": {
+          "default": 0.0,
+          "title": "Pedestal M",
+          "type": "number"
+        },
+        "base_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Height M"
+        },
+        "capital_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Height M"
+        },
+        "taper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taper"
+        },
+        "entasis": {
+          "default": 0.025,
+          "title": "Entasis",
+          "type": "number"
+        },
+        "turns": {
+          "default": 1.5,
+          "title": "Turns",
+          "type": "number"
+        },
+        "flute_count": {
+          "default": 12,
+          "title": "Flute Count",
+          "type": "integer"
+        },
+        "ornament": {
+          "default": true,
+          "title": "Ornament",
+          "type": "boolean"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "base_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Material"
+        },
+        "capital_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Material"
+        }
+      },
+      "title": "MemberDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PlanRegion": {
+      "description": "A box in a street frame, optionally intersected with the parcel.\n\nu spans the parcel's projection along the canonical edge's tangent.\nDepth is inward from that edge, in metres or fractions of parcel depth.\nNull edge selects the longest declared front. No building XY is supplied.",
+      "properties": {
+        "front_edge": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Front Edge"
+        },
+        "u": {
+          "default": [
+            0.0,
+            1.0
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "U",
+          "type": "array"
+        },
+        "depth": {
+          "default": [
+            0.0,
+            1.0
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Depth",
+          "type": "array"
+        },
+        "depth_m": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Depth M"
+        },
+        "fit": {
+          "default": "parcel",
+          "title": "Fit",
+          "type": "string"
+        },
+        "width_reference": {
+          "default": "parcel",
+          "title": "Width Reference",
+          "type": "string"
+        }
+      },
+      "title": "PlanRegion",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "SupportControls": {
+      "properties": {
+        "kind": {
+          "default": "bearing",
+          "title": "Kind",
+          "type": "string"
+        },
+        "spacing_m": {
+          "default": 4.0,
+          "title": "Spacing M",
+          "type": "number"
+        },
+        "column_width_m": {
+          "default": 0.25,
+          "title": "Column Width M",
+          "type": "number"
+        },
+        "inset_m": {
+          "default": 0.4,
+          "title": "Inset M",
+          "type": "number"
+        },
+        "max_cantilever_m": {
+          "default": 0.0,
+          "title": "Max Cantilever M",
+          "type": "number"
+        },
+        "member": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemberDesign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "SupportControls",
+      "type": "object",
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "02_masas",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Masses"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_02_masas",
+  "type": "object"
+}

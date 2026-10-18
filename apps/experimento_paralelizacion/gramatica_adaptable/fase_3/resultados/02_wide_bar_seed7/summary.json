@@ -1,0 +1,112 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "kitchen_dining": 1,
+        "bedroom": 4,
+        "living": 2
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 17.95,
+        "floor1/bath": 3.69,
+        "floor1/stairs": 6.91,
+        "floor1/room0": 16.18,
+        "floor1/room1": 12.35,
+        "floor1/room2": 19.95,
+        "floor1/room3": 8.99,
+        "floor1/room4": 20.81,
+        "floor1/room5": 14.7,
+        "floor1/room6": 11.3
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 9,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 5,
+        "kitchen_dining": 1
+      },
+      "doors": 8,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 11.28,
+        "floor2/bath": 3.69,
+        "floor2/stairs": 6.91,
+        "floor2/room0": 13.44,
+        "floor2/room1": 20.48,
+        "floor2/room2": 23.51,
+        "floor2/room3": 17.12,
+        "floor2/room4": 15.02,
+        "floor2/room5": 22.13
+      }
+    }
+  ],
+  "core_flights": 1,
+  "selected_alternative": 3,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.5052802754353294
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.5544083062195282
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.4606831970368418
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.3858362855759868
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.48215426380972
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.48850783952642657
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.4626516821719046
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.4896828743621935
+    }
+  ],
+  "connections": 19,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.3858362855759868,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

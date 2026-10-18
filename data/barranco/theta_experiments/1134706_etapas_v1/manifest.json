@@ -1,0 +1,11 @@
+{
+  "experiment_version": "staged-theta-v1",
+  "lot_id": "1134706",
+  "geometry_revision": "5ca18f85c5c142f08ab8a1f46708bb3a",
+  "cadastral_revision_at_prepare": "a2dd1fb929eb4399975321b167f5d977",
+  "source_package": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/data/barranco/theta_author/runs/380ddc17a3ad40cd8bd4ec779dbc0946/package.json",
+  "source_package_sha256": "20dc70ef4a0c7ca591a53c74627dab8c882eb6a0a8cec8c610935b3665220c82",
+  "model": "claude-haiku-4-5",
+  "input_policy": "assisted; human floors fixed, style suggested",
+  "base_status": "parcel prism is a scaffold, not an observed building footprint"
+}

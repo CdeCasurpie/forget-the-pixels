@@ -1,0 +1,2950 @@
+# FUENTE: common.md
+# Autoría incremental de una casa real
+
+Trabajas sobre una base humana y catastral ya preparada. Tu tarea es completar
+UNA etapa del theta acumulado, no rediseñar el edificio ni recomenzar el request.
+Las fotos son del entorno del lote; identifica el edificio objetivo usando plano,
+cámaras y las imágenes auxiliares. No atribuyas al lote los pisos/vanos del vecino.
+
+## Jerarquía de información
+
+1. Parcela, frentes y cantidad de pisos fijados por la persona: obligatorios.
+2. Decisiones aceptadas en etapas anteriores: bloqueadas en esta etapa.
+3. Fotografías: evidencia para lo visible; varias vistas deben describir la misma casa.
+4. Estilo humano y alturas marcadas como sugerencias: hipótesis, no órdenes.
+5. Base inicial: un prisma con los pisos humanos. Su huella completa, techo plano,
+   fachada vacía y materiales iniciales son ANDAMIAJE, no observaciones.
+
+El inventario inicial es una lectura provisional, no una verdad bloqueada. Puedes
+refinar una hipótesis de lectura al contrastarla con las fotos, registrándolo en
+evidence/notes. Lo bloqueado son los datos humanos fijos y la geometría ya aceptada.
+Para evitar ambigüedad, llama planta baja (índice 0) al primer nivel sobre suelo,
+y piso superior 1 al segundo nivel. No uses "primer piso" sin aclarar su índice.
+
+El formulario antiguo puede decir floors.mode="suggested". constraints.floors y
+floor_policy son la autoridad del experimento: el usuario declaró esos pisos FIJOS.
+No aumentes pisos por un frontón, parapeto, cerco o tanque. Los cuerpos secundarios
+pueden tener menos pisos. La retícula de niveles debe describir el total fijado.
+
+## Imágenes y correspondencia
+
+- FOTO LIMPIA: evidencia original del encuadre guardado.
+- IDENTIFICACIÓN: mismo encuadre con prisma de referencia; sus líneas y su altura
+  sugerida no son geometría observada ni una medición independiente.
+- PLANO: coordenadas métricas locales, aristas dirigidas, frentes y cámaras.
+- COMPARACIÓN: foto / render geométrico / superposición del theta aceptado.
+  El render usa color base, vidrio opaco y no incluye coches, árboles ni vecinos.
+
+La proyección angular curva líneas rectas. No conviertas esa curvatura en una
+fachada curva sin evidencia multivista. Una cámara baja no revela toda la azotea.
+Las esquinas proyectadas de wall_projection_px ayudan a asociar paredes, pero no
+son segmentos rectos en píxeles. Señala oclusiones e incertidumbre explícitamente.
+
+## Reglas de geometría
+
+Unidades: metros, XY este/norte, Z arriba, coordenadas locales. El origen UTM es
+procedencia; NO lo sumes a los vértices del theta. La parcela no es la huella
+construida: los retiros/patios pertenecen al interior libre de ella.
+
+En paredes, u crece desde vertex_a hacia vertex_b; v desde base_z de esa pared.
+Opening.u_m es borde izquierdo; VerticalMember.u_m es eje. Las paredes expuestas
+pueden tener dominios visibles parciales. Usa las tablas resueltas y sus IDs reales.
+Un índice de abertura es el índice de la tabla resuelta, no el orden que recuerdas
+ni el ID de autoría. No agregues vanos tapados por otra masa.
+
+Esta receta prefiere componentes relativos al frente para la masa y fachadas
+explícitas para los vanos. También permite masas XY cuando los vértices ya son
+conocidos. family queda en quiet_house, sin ornamentación automática;
+architectural_style se decide aparte. No uses controles repeat, height_m/floors de
+theta ni roof_bodies en changes: cotas y modalidad volumétrica se cierran en etapa 02.
+
+## Salida
+
+Responde SOLO un objeto JSON que cumpla response_schema:
+stage, changes, evidence, notes, blockers. No Markdown ni pseudocódigo.
+changes contiene exclusivamente las claves de la etapa, NO un ReconstructionRequest.
+El programa hará la fusión y la validación. No incluyas claves desconocidas dentro
+de objetos anidados. Usa los contratos y catálogos adjuntos, no convenciones de otro motor.
+
+evidence relaciona elementos con view_ids existentes, estado observed/inferred/unknown
+y una justificación visual breve. notes recoge supuestos y decisiones concisas;
+no se pide razonamiento interno paso a paso. Si no existe una pieza, devuelve su
+colección vacía. No adornes para demostrar el catálogo. La fidelidad manda.
+
+Si una etapa previa está equivocada, indícalo en blockers con etapa y corrección
+necesaria; no intentes ocultarlo modificando otra colección. No uses blockers por
+detalles menores desconocidos: represéntalos sobriamente y registra el supuesto.
+Si no puedes identificar el edificio objetivo, sí es un bloqueo real.
+
+Los ejemplos del catálogo enseñan sintaxis, no son una plantilla visual que debas
+copiar sobre esta casa. Los contratos generados contienen defaults estructurales;
+la guía y los resolvers imponen compatibilidad semántica adicional.
+
+
+# FUENTE: 02_masas.md
+# 02 · Solo masas, retiros y cotas de pisos
+
+Parte del prisma base y del inventario. Ajusta la huella construida a los cuerpos
+visibles, dejando patios/retiros cuando corresponda. Entrega floor_levels_m y
+EXACTAMENTE UNA de components o masses (la otra se omite o es null).
+
+**Preferido: components**, regiones relativas al catastro. Parte de parametric_scaffold
+y front_frames ya calculados. No necesitas calcular vértices XY ni normales:
+region.front_edge elige el marco; u=[0,1] ocupa su anchura; depth_m=[retiro,fondo]
+establece distancias hacia dentro. fit=parcel recorta con precisión al polígono
+original. Si usas depth_m, deja depth en su default [0,1]. Cada componente tiene
+id, region, levels_m y opcionalmente cutouts/support/kind. Los demás campos de
+MassComponent (vanos, zonas, trim, techo) no se editan en esta etapa.
+
+Ejemplo SOLO de sintaxis, adaptar dimensiones al lote real:
+{"floor_levels_m":[0,3.0,5.6],"components":[{"id":"principal","region":{"front_edge":0,"u":[0,1],"depth_m":[2.0,16.0],"fit":"parcel"},"levels_m":[0,3.0,5.6]}]}
+
+La alternativa masses usa ArchitecturalMass: role, footprint XY y levels_m. Úsala
+solo si los vértices están conocidos y aportan una forma que las regiones no expresan.
+No gastes el turno haciendo aritmética de coordenadas rotadas que el motor ya resuelve.
+
+floor_levels_m es metadata del experimento, NO una clave nueva de theta. Tiene
+N+1 cotas para N pisos humanos, empieza en 0 y termina en la coronación del cuerpo.
+Las alturas sugeridas/primer piso diferente son el punto de partida; cambia una
+cota sugerida solo con justificación. Alturas fijas no se cambian. Saltos: 2.2–6 m.
+
+Cada masa comienza en una cota de esa retícula y termina como máximo en la última.
+Debe incluir todas las cotas de la retícula interiores a su intervalo y ninguna
+cota interior extra. Un anexo puede tener techo más bajo entre cotas, siempre que
+sus alturas de piso sean válidas. Al menos un cuerpo llega a la coronación total;
+todos los pisos deben tener volumen construido. Esto evita añadir pisos ocultos
+mediante masas apiladas. Las masas elevadas deben estar apoyadas y no interpenetrarse.
+
+Usa roles estables (principal, anexo, superior...). Puedes representar retiros
+superiores mediante masas apiladas apoyadas. Conserva el perímetro catastral y el
+marco de orientación. No supongas que el borde inferior de una foto es el frente 0.
+No generes aún huecos, balcones, molduras, cercos ni materiales. El techo plano de
+andamiaje se reemplazará después. Frontones y parapetos no se cuentan como piso.
+
+El motor calculará IDs, aristas, exposición y dominios de pared para las siguientes
+etapas. No inventes referencias principal:0 sin consultar ese resultado después.
+
+
+# REFERENCIA COMPLETA DE SECCIONES PERTINENTES: README.md
+## 1. Qué es theta
+
+Theta es una **descripción declarativa de decisiones arquitectónicas**. No es código Python, una malla, una imagen ni el formulario reducido de B. El motor interpreta esas decisiones y produce piezas geométricas.
+
+La solicitud completa tiene esta estructura:
+
+```text
+ReconstructionRequest
+├── context       parcela métrica, frentes, origen y altura bloqueada
+├── theta         arquitectura que se solicita
+├── nuisance      semilla y cortinas
+├── config        implementación, política de completado y detalle
+├── observations  referencias a imágenes/cámaras
+└── evidence      procedencia y confianza por parámetro
+```
+
+Distinciones fundamentales:
+
+| Concepto | Control | Significado |
+|---|---|---|
+| Composición de fachada | `theta.family` | Ritmo, proporciones y programa predeterminado: vivienda, comercio, galería, etc. |
+| Lenguaje de piezas | `theta.architectural_style` | `republicano`, `barroco`, `clasico`, `madera`, `moderno`. Perfiles y variantes compatibles. |
+| Forma construida | `massing`, `masses`, `roof_bodies` | Volúmenes, niveles, vacíos y cuerpos sobre azotea. |
+| Distribución en pared | `facade`, `facades`, `faces`, `zones` | Vanos, materiales y relieve de cada superficie. |
+| Ensambles | `balconies`, `vertical_members`, `crowns`, etc. | Objetos paramétricos anclados a entidades existentes. |
+| Apariencia física | `materials`, `primary_color`, `side_material` | Materiales y color; no sustituyen la forma. |
+| Azar secundario | `nuisance` | Variación de cortinas/vegetación y detalles; no decide pisos ni masas. |
+
+**No existe `theta.style`, ni `floor_height_m`, ni `first_floor_different` en este contrato.** Esos últimos pertenecen al formulario del estimador/autor. Para un primer piso de 3.1 m y dos superiores de 2.3 m, escribir niveles `[0, 3.1, 5.4, 7.7]` en una masa o componente.
+
+
+
+## 2. Coordenadas: dónde queda cada cosa
+
+- Geometría en **metros**, plano XY y Z hacia arriba. `crs` predeterminado: `EPSG:32718`.
+- Entregar geometría local; `metric_origin` registra el origen, pero `reconstruct()` no resta automáticamente grandes coordenadas UTM ni coloca la malla exportada sobre un mapa.
+- `context.parcel`: anillo sin huecos, válido; el motor lo orienta antihorario y lo comienza en el vértice lexicográficamente menor.
+- `context.fronts`: índices de aristas del anillo recibido; se remapean al normalizar. Los índices de `PlanRegion.front_edge`, `FenceRun.edge` y de las masas se interpretan sobre sus anillos canónicos.
+- En fachada, `u_m` recorre la arista **desde `vertex_a` hacia `vertex_b`**, y `v_m` sube desde la base de la pared/banda. No es izquierda en la pantalla de una foto arbitraria.
+- Profundidad positiva = hacia afuera. `FacadeZone.offset_m < 0` retranquea la pared.
+- `PlanRegion.u` y `FacadeZone.u` son fracciones de 0 a 1; no metros. `depth_m` es métrico; `depth` es fracción de profundidad.
+- `levels_m` contiene cotas absolutas locales: primera = base, última = coronación de la masa. `floor_m` de un balcón y `bottom_m` de un miembro son relativos a la base de su masa.
+- Los índices `floor`, `bay`, `group`, `opening_index`, `edge` empiezan en **0**. `opening_index` refiere al orden resuelto, no a un identificador de ventana.
+
+Ejemplo de parcela `[[0,0],[12,0],[12,16],[0,16]]`: frente 0 va de `(0,0)` a `(12,0)`, interior hacia +Y y calle hacia −Y. En esa fachada `u_m=2` está a 2 m de `(0,0)`.
+
+Las masas obtienen IDs como `principal:0`. En `masses`, el orden canónico usa rol, centroide, base y geometría; no asumir que el primer objeto del JSON recibe el índice 0 global. En componentes, el ID proviene de `component.id` y del fragmento resultante. Usar las referencias del resultado de `resolve_theta()`.
+
+
+
+## 3. Elegir una de tres formas de volumetría
+
+### A. Patrón compacto
+
+Se suministran `height_m`, `floors` y un patrón. Sirve para edificios sencillos con pisos uniformes.
+
+```json
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "schema_version": "0.3",
+    "height_m": 6.4,
+    "floors": 2,
+    "family": "quiet_house",
+    "architectural_style": "moderno",
+    "massing": {"pattern": "single_block"},
+    "facade": {"bay_count": 3, "balconies": false, "projections": [], "material_regions": []},
+    "roof": {"kind": "flat", "parapet_m": 0.4, "props": []}
+  },
+  "nuisance": {"seed": 23, "curtains": false}
+}
+```
+
+Otros patrones: `stepped_back`, `podium_tower`, `front_tall_rear_low`, `front_low_rear_tall`, `corner_accent`. Sus parámetros activos se describen en el catálogo.
+
+### B. Masas explícitas
+
+Se escriben huellas XY y niveles. Adecuado cuando ya se conoce la geometría, como la casa de demostración.
+
+```json
+{
+  "schema_version": "0.3",
+  "massing": {"pattern": "explicit"},
+  "masses": [{
+    "role": "principal",
+    "footprint": [[0,0],[12,0],[12,12],[0,12]],
+    "levels_m": [0,3.1,5.4,7.7]
+  }]
+}
+```
+
+Este fragmento va en `theta`. **Omitir `height_m` y `floors`**: se derivan de los niveles. No añadir retiros a `massing`; en esta modalidad debe ser exactamente `pattern="explicit"` con los otros campos en sus defaults. Las masas no pueden interpenetrarse y las elevadas deben estar apoyadas. Aquí las alturas entre niveles deben estar entre 2.2 y 6 m.
+
+### C. Composición relativa al catastro
+
+Usa `schema_version="0.3"` y `massing.components`. Describe franjas/rectángulos en el marco de un frente, que se intersectan con la parcela. Es útil para inferir una organización sin inventar cada vértice XY.
+
+```json
+{
+  "schema_version": "0.3",
+  "family": "quiet_house",
+  "massing": {
+    "components": [{
+      "id": "principal",
+      "region": {"front_edge": 0, "u": [0,1], "depth_m": [3,13]},
+      "levels_m": [0,3.1,5.8],
+      "faces": [{"face": "front", "controls": {"bay_count": 3, "balconies": false}}]
+    }]
+  }
+}
+```
+
+- `kind="enclosed"`: volumen cerrado. `kind="open"`: losas y apoyos, sin fachadas cerradas.
+- `cutouts`: regiones que se restan; permiten patios y fragmentar un componente.
+- `support.kind`: `bearing`, `columns`, `cantilever`; comprueba apoyo geométrico, **no es cálculo estructural**.
+- `region.fit="parcel"` recorta al catastro; `rectangle` conserva el rectángulo y exige caber dentro de la tolerancia.
+- `parcel_tolerance_m`: 0–2 m, solo en composición. No aumentarlo como reparación automática de un theta erróneo.
+- `depth_m` reemplaza a `depth`: dejar este último en su default `[0,1]`.
+- Un componente con `facade=null` es **ciego**, incluso frente a calle. Dar `facade`, `faces` o `zones` explícitamente.
+- `levels_m` admite incrementos ≥0.5 m en esta vía; no confundir esta flexibilidad con el límite 2.2–6 m de masas explícitas.
+- `roof_bodies`: añade un cuerpo encima de un componente padre. Requiere composición 0.3 y un `parent` existente. Altura 2.2–6 m; su región tiene que estar sostenida por ese padre.
+
+Existe además el adaptador Python `modeling.base_massing.with_base()`: transforma `BaseFloor`, `Setback` y `Bite` en componentes por piso. **No son claves JSON adicionales de theta.**
+
+
+
+## 7. Camino real hasta la malla
+
+```text
+JSON
+  → domain.theta.from_json / decode
+  → pipeline.theta.reconstruct
+      valida observations y evidence
+      → modeling.theta.resolve_theta
+          expande roof_bodies
+          normaliza parcela y completa defaults
+          resuelve masas e IDs
+          calcula exposición y compone fachadas
+          resuelve techos básicos, cercos, apoyos y sitio
+          resuelve trim, balcones, miembros, frontones,
+                    entablamentos, entradas y cubiertas detalladas
+          → ResolvedArchitecture
+      → modeling.theta.generate_resolved
+          resuelve materiales y semilla secundaria
+          grammar.facade → pared perforada + abertura + relieve
+          construye estructuras, suelo, techos y piezas ancladas
+          → MeshBuilder.finish → MeshData
+  → validate_mesh / analyze_topology
+  → export_glb o export_obj
+```
+
+`ResolvedArchitecture` conserva `completed` y `completion_details`: valores completados, heredados o derivados. Es el lugar para auditar qué inventó/completó el motor. No enviar ese resultado completo como si fuera otro `ThetaCandidate`.
+
+`observations` y `evidence` **no disparan visión ni inferencia de fotografías** dentro de `reconstruct()`. El futuro flujo IA tiene que observar y construir theta antes de llamar al motor.
+
+La ruta `from modeling import generate_mesh` exporta actualmente **`generate_v4_mesh`**, no el generador theta. Para esta guía usar `pipeline.theta.reconstruct` o `modeling.theta.generate_from_theta`.
+
+
+
+## 9. Hallazgos que afectan a un prompt
+
+1. **Dos pipelines conviven.** Documentación/nombres de V4 no son automáticamente claves de theta.
+2. **Familia no equivale a estilo.** `family="madera"`, `family="moderno"` o `family="clasico"` no están en `FAMILY_RULES`; usar las familias del catálogo.
+3. **El esquema 0.3 hay que pedirlo:** el default del contrato aún es `0.2`.
+4. **`auto` depende del contexto:** sin estilo global, muchos ensambles necesitan estilo explícito. No usar `auto` en cualquier string.
+5. **`RoofBody.trim` se declara pero no se copia** al `MassComponent` en `expand_roof_bodies()` actual. No prometer que ese override funcione.
+6. **No todos los controles de ventana llegan al mismo constructor.** `architectural_style` fuerza perfiles vinculados en `kind="window"`; estos aceptan relleno `legacy/slim_window/storefront/open`, no `wood_panel/screen/louver`. `family="quinta"` + estilo global puede producir esta incompatibilidad en repetición.
+7. **Cortinas:** `nuisance.curtains` asigna cobertura a ciertos vanos, pero el constructor de ventana vinculada no la dibuja; el constructor prefab tradicional sí. No prometer cortinas visibles en todos los estilos.
+8. **La declaración de estilo no convierte puertas simples en ensambles completos.** Hace falta `Opening.door`; además evitar `frame_profile` en una puerta sin ese bloque, pues el despacho intenta el constructor de ventanas.
+9. **Los rótulos tienen alfabeto limitado.** Los caracteres no soportados hacen que no se genere el texto, aunque el docstring diga “rejected”.
+10. **Validación por fases:** varias comprobaciones (puertas, ventanas, geometría final) ocurren al materializar, no solo al resolver.
+11. **`trim` y `top_profile` no combinan actualmente** en una masa con remates perimetrales: el resolver exige coronaciones horizontales.
+12. **No es un sólido booleano único ni un plano estructural.** Es un ensamble de componentes; validar sus identidades y topología por separado.
+
+Los hallazgos describen el código revisado; no cambian el comportamiento de la gramática.
+
+
+# REFERENCIA COMPLETA DE SECCIONES PERTINENTES: CATALOGOS.md
+## 3. Volúmenes, regiones y soportes
+
+| `massing.pattern` | Forma | Controles particulares |
+|---|---|---|
+| `single_block` | Un prisma de varios pisos | `front_setback_m` |
+| `stepped_back` | Cuerpo inferior y último piso retirado | `upper_setback_m`, ≥2 pisos |
+| `podium_tower` | Podio ancho con torre retirada | `podium_floors`, `upper_setback_m` |
+| `front_tall_rear_low` | Frente alto y cuerpo posterior bajo | `front_depth_m`, `low_floors` |
+| `front_low_rear_tall` | Frente bajo y cuerpo posterior alto | Los mismos |
+| `corner_accent` | Mirador/cuerpo alto en encuentro de dos frentes | `corner_reach_m`, ≥2 frentes y ≥2 pisos |
+| `explicit` | Huellas y cotas suministradas | `theta.masses`; sustituye altura/pisos |
+| `composition` | Regiones relativas al catastro | `massing.components`; se infiere si hay componentes |
+
+No existe `auto` como patrón válido de theta: `null` pide completado. `auto` sí aparece en el generador histórico `massing.py`.
+
+Otras palabras:
+
+- `MassComponent.kind`: `enclosed` (cerrado), `open` (losas/apoyos).
+- `PlanRegion.fit`: `parcel` (intersección), `rectangle` (rectángulo completo validado).
+- `PlanRegion.width_reference`: `parcel` (proyección total de parcela), `edge` (longitud del frente).
+- `SupportControls.kind`: `bearing` (apoyo sobre volumen inferior), `columns` (columnas), `cantilever` (vuelo limitado; apoyo ≥25% del área).
+- Orientaciones de bandas/zonas: `front`, `back`, `left`, `right`, `all`, relativas al marco de su componente.
+
+
+
+# EJEMPLO DE SINTAXIS (otra casa, no copiar apariencia)
+{
+  "context": {"parcel": [[0,0],[12,0],[12,16],[0,16]], "fronts": [0]},
+  "theta": {
+    "schema_version": "0.3",
+    "family": "quiet_house",
+    "architectural_style": "republicano",
+    "massing": {"pattern": "explicit"},
+    "masses": [
+      {"role": "principal", "footprint": [[1,6],[11,6],[11,15],[1,15]], "levels_m": [0,3.1,6.2]},
+      {"role": "anexo", "footprint": [[8,2],[11,2],[11,6],[8,6]], "levels_m": [0,2.8]}
+    ],
+    "facade": {"mode": "explicit", "openings": [], "projections": [], "material_regions": []},
+    "facades": [
+      {
+        "mass_role": "principal:0", "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {"kind": "window", "u_m": 1.0, "v_m": 0.8, "width_m": 1.5, "height_m": 1.8, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true, "grille": true},
+            {"kind": "door", "u_m": 4.4, "v_m": 0.12, "width_m": 1.2, "height_m": 2.5, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "sill": false, "door": {"model": "auto", "leaves": 1, "construction": "panelled", "portal": "pilasters", "leaf_material": "wood"}},
+            {"kind": "window", "u_m": 7.5, "v_m": 0.8, "width_m": 1.5, "height_m": 1.8, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true, "grille": true},
+            {"kind": "window", "u_m": 1.0, "v_m": 3.9, "width_m": 1.5, "height_m": 1.7, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true},
+            {"kind": "door", "u_m": 4.4, "v_m": 3.22, "width_m": 1.2, "height_m": 2.3, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "sill": false, "door": {"model": "auto", "leaves": 1, "construction": "glazed", "leaf_material": "wood"}},
+            {"kind": "window", "u_m": 7.5, "v_m": 3.9, "width_m": 1.5, "height_m": 1.7, "recess_m": 0.12, "frame_width_m": 0.1, "frame_depth_m": 0.12, "frame_profile": "auto", "mullion_columns": 2, "mullion_rows": 2, "sill": true}
+          ],
+          "projections": [], "material_regions": []
+        }
+      },
+      {
+        "mass_role": "anexo:0", "edge": 0,
+        "controls": {
+          "mode": "explicit",
+          "openings": [
+            {"kind": "window", "u_m": 0.6, "v_m": 0.8, "width_m": 1.2, "height_m": 1.2, "recess_m": 0.1, "frame_width_m": 0.08, "frame_depth_m": 0.1, "frame_profile": "auto", "sill": true, "grille": true}
+          ],
+          "projections": [], "material_regions": []
+        }
+      }
+    ],
+    "roof": {"kind": "flat", "parapet_m": 0.4, "props": []},
+    "site": {
+      "fence": "none",
+      "runs": [
+        {"edge": 0, "start_m": 0.5, "end_m": 11.5, "kind": "republicano", "height_m": 1.6, "height_mode": "high", "gate_u": 4.6, "gate_width": 1.4, "base_height_m": 0.4, "wall_material": "plaster"}
+      ],
+      "zones": [
+        {"id": "jardin", "kind": "garden", "region": {"front_edge": 0, "u": [0.05, 0.3], "depth_m": [0.6, 2.4], "width_reference": "edge"}},
+        {"id": "patio", "kind": "patio", "region": {"front_edge": 0, "u": [0.35, 0.7], "depth_m": [0.5, 5.8], "width_reference": "edge"}}
+      ]
+    },
+    "trim": {
+      "cornice": {"enabled": false},
+      "plinth": {"design": "horizontal_joints", "height_m": 0.5, "relief_m": 0.025, "material": "stone"}
+    },
+    "primary_color": [0.85, 0.7, 0.45],
+    "materials": [
+      {"slot": "frame", "template": "plaster", "color": [0.95, 0.92, 0.83]},
+      {"slot": "wood", "template": "wood", "color": [0.55, 0.38, 0.22]},
+      {"slot": "metal", "template": "metal", "color": [0.12, 0.25, 0.23]},
+      {"slot": "glass", "template": "glass", "color": [0.31, 0.44, 0.43]},
+      {"slot": "stone", "template": "stone", "color": [0.5, 0.5, 0.48]}
+    ],
+    "entablatures": [
+      {"id": "coronacion", "mass_refs": ["principal:0"], "height_m": 0.4, "projection_m": 0.2, "scope": "exposed", "ornament": "dentils"},
+      {"id": "cinturon", "mass_refs": ["principal:0"], "anchor": "absolute", "top_m": 3.1, "height_m": 0.2, "projection_m": 0.1, "scope": "exposed"}
+    ],
+    "crowns": [
+      {
+        "id": "fronton", "mass_ref": "principal:0", "edge": 0, "u_m": 2.5, "width_m": 5.0, "height_m": 1.2,
+        "design": {"family": "triangular", "thickness_m": 0.32, "moulding_width_m": 0.14, "projection_m": 0.18, "ornament": "keystone"},
+        "aperture": "oculus", "aperture_width_m": 0.5, "aperture_height_m": 0.5, "aperture_sill_m": 0.35
+      }
+    ],
+    "balconies": [
+      {
+        "id": "balcon", "mass_ref": "principal:0", "edge": 0, "floor_m": 3.1, "u_m": 3.4, "width_m": 3.2, "depth_m": 0.9,
+        "kind": "projecting", "variant": "iron_rings", "brackets": true, "slab_material": "stone",
+        "railing": {"pattern": "rings", "material": "metal", "height_m": 1.0}
+      }
+    ],
+    "vertical_members": [
+      {"id": "pilastra_0", "mass_ref": "principal:0", "edge": 0, "u_m": 0.3, "bottom_m": 0.3, "height_m": 5.4, "width_m": 0.3, "depth_m": 0.12, "design": {"style": "auto", "variant": "recessed_panel", "material": "frame"}},
+      {"id": "pilastra_1", "mass_ref": "principal:0", "edge": 0, "u_m": 2.95, "bottom_m": 0.3, "height_m": 5.4, "width_m": 0.3, "depth_m": 0.12, "design": {"style": "auto", "variant": "recessed_panel", "material": "frame"}}
+    ]
+  },
+  "nuisance": {"seed": 7, "curtains": false}
+}
+
+
+# PAQUETE ACTUAL Y CONTRATO DE ESTA ETAPA
+{
+  "stage": "02_masas",
+  "constraints": {
+    "floors": 2,
+    "height_m": null,
+    "floor_policy": "fixed_by_user_instruction; overrides legacy suggested flag",
+    "style_policy": "suggested",
+    "parcel_policy": "fixed",
+    "fronts_policy": "fixed"
+  },
+  "human_parameters": {
+    "geometry_revision": "5ca18f85c5c142f08ab8a1f46708bb3a",
+    "height": {
+      "value": 5.6,
+      "mode": "suggested"
+    },
+    "floors": {
+      "value": 2.0,
+      "mode": "suggested"
+    },
+    "style": {
+      "value": "republicano",
+      "mode": "suggested"
+    },
+    "height_reference": "main_body",
+    "massing": {
+      "corner": false,
+      "delegate_complex": false,
+      "cuts": []
+    },
+    "massing_mode": "suggested",
+    "photo_ids": [
+      "tyQaMS8skCpsOJ0wRHbang",
+      "oZ1wrA76ZreE0XrMgouLug",
+      "dkKZSdzvoCSMlT3KK2tkvw"
+    ],
+    "notes": "",
+    "floor_height_m": 2.6,
+    "first_floor_different": true,
+    "first_floor_height_m": 3.0
+  },
+  "manifest": {
+    "experiment_version": "staged-theta-v1",
+    "lot_id": "1134706",
+    "geometry_revision": "5ca18f85c5c142f08ab8a1f46708bb3a",
+    "cadastral_revision_at_prepare": "a2dd1fb929eb4399975321b167f5d977",
+    "source_package": "/home/cesar/Escritorio/UTEC/PFC1_Lima/forget-the-pixels/data/barranco/theta_author/runs/380ddc17a3ad40cd8bd4ec779dbc0946/package.json",
+    "source_package_sha256": "20dc70ef4a0c7ca591a53c74627dab8c882eb6a0a8cec8c610935b3665220c82",
+    "model": "claude-haiku-4-5",
+    "input_policy": "assisted; human floors fixed, style suggested",
+    "base_status": "parcel prism is a scaffold, not an observed building footprint"
+  },
+  "front_frames": [
+    {
+      "front_edge": 0,
+      "origin_xy": [
+        -18.251972104015294,
+        -0.6541935410350561
+      ],
+      "along_unit": [
+        0.3140715377364235,
+        -0.9493993201934992
+      ],
+      "inward_unit": [
+        0.9493993201934992,
+        0.3140715377364235
+      ],
+      "edge_length_m": 10.216143823061842,
+      "parcel_in_front_frame_m": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          10.216143823061842,
+          -4.440892098500626e-16
+        ],
+        [
+          10.275526968567249,
+          35.00692357454067
+        ],
+        [
+          9.771779593857781,
+          35.004830369383946
+        ],
+        [
+          -0.04570991859247897,
+          35.01145985264572
+        ]
+      ],
+      "max_depth_m": 35.01145985264572
+    }
+  ],
+  "parametric_scaffold": {
+    "id": "principal",
+    "region": {
+      "front_edge": 0,
+      "u": [
+        0,
+        1
+      ],
+      "depth": [
+        0,
+        1
+      ],
+      "fit": "parcel"
+    },
+    "levels_m": [
+      0.0,
+      3.0,
+      5.6
+    ]
+  },
+  "current_request": {
+    "context": {
+      "parcel": [
+        [
+          -18.251972104015294,
+          -0.6541935410350561
+        ],
+        [
+          -15.043372103769798,
+          -10.353393541648984
+        ],
+        [
+          18.210827895789407,
+          0.5849064588546753
+        ],
+        [
+          18.050627895630896,
+          1.0625064577907324
+        ],
+        [
+          14.973527894646395,
+          10.38530645892024
+        ]
+      ],
+      "fronts": [
+        0
+      ],
+      "crs": "EPSG:32718",
+      "metric_origin": [
+        280231.9520058166,
+        8657545.890328353,
+        0
+      ]
+    },
+    "theta": {
+      "schema_version": "0.3",
+      "family": "quiet_house",
+      "architectural_style": null,
+      "massing": {
+        "pattern": "explicit"
+      },
+      "masses": [
+        {
+          "role": "principal",
+          "footprint": [
+            [
+              -18.251972104015294,
+              -0.6541935410350561
+            ],
+            [
+              -15.043372103769798,
+              -10.353393541648984
+            ],
+            [
+              18.210827895789407,
+              0.5849064588546753
+            ],
+            [
+              18.050627895630896,
+              1.0625064577907324
+            ],
+            [
+              14.973527894646395,
+              10.38530645892024
+            ]
+          ],
+          "levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ]
+        }
+      ],
+      "facade": {
+        "mode": "explicit",
+        "openings": [],
+        "projections": [],
+        "material_regions": []
+      },
+      "facades": [],
+      "roof": {
+        "kind": "flat",
+        "parapet_m": 0,
+        "props": []
+      },
+      "roofs": [],
+      "trim": {
+        "cornice": {
+          "enabled": false
+        },
+        "plinth": {
+          "enabled": false
+        }
+      },
+      "site": {
+        "fence": "none",
+        "garden": false,
+        "runs": [],
+        "zones": []
+      },
+      "balconies": [],
+      "vertical_members": [],
+      "crowns": [],
+      "entablatures": [],
+      "roof_assemblies": [],
+      "canopies": [],
+      "entrances": [],
+      "materials": []
+    },
+    "nuisance": {
+      "seed": 23,
+      "curtains": false
+    },
+    "config": {
+      "detail": 2
+    }
+  },
+  "floor_levels_m": [
+    0.0,
+    3.0,
+    5.6
+  ],
+  "inventory": {
+    "target_description": "Casa objetivo de dos pisos, estilo austero, ubicada en el lote con retiro frontal. Fachada principal en revoque beige con base de piedra en planta baja. Primer piso con dos ventanas rectangulares protegidas por rejas metálicas negras. Planta baja con puerta de acceso peatonal de madera verde y cerco metálico de barras verticales con base de albañilería en el límite frontal. Techo plano con línea de coronación horizontal. Edificios vecinos (gris al izquierdo, azul al derecho) no corresponden al lote.",
+    "inventory": [
+      {
+        "id": "mass_principal",
+        "category": "mass",
+        "location": "cuerpo principal · 2 pisos",
+        "description": "Prisma vertical de dos niveles; planta baja con zócalo pétreo rústico y nivel superior en revoque liso beige. Huella aparentemente rectangular, retirada del frente.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug",
+          "dkKZSdzvoCSMlT3KK2tkvw"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "door_entrance",
+        "category": "door",
+        "location": "fachada frontal · planta baja",
+        "description": "Puerta peatonal de madera color verde, hoja simple, acceso directo a vivienda. Distinta del portón del cerco.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "window_p1_left",
+        "category": "window",
+        "location": "fachada frontal · primer piso",
+        "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "window_p1_right",
+        "category": "window",
+        "location": "fachada frontal · primer piso",
+        "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro. Misma tipología que la ventana izquierda.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "site_fence_front",
+        "category": "site",
+        "location": "límite frontal · interface con calle",
+        "description": "Cerco metálico de barras verticales negras sobre base de albañilería/piedra baja. Delimita el retiro frontal; no es fachada del edificio.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "material_plaster",
+        "category": "material",
+        "location": "fachada frontal · nivel superior",
+        "description": "Revoque liso color beige/crema claro.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug",
+          "dkKZSdzvoCSMlT3KK2tkvw"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "material_base",
+        "category": "material",
+        "location": "fachada frontal · planta baja",
+        "description": "Base/zócalo de piedra o ladrillo visto de textura rústica, altura aproximada de un nivel de piso.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang",
+          "oZ1wrA76ZreE0XrMgouLug"
+        ],
+        "certainty": "observed"
+      },
+      {
+        "id": "roof_flat",
+        "category": "roof",
+        "location": "cuerpo principal · coronación",
+        "description": "Techo plano; no se observan pendientes ni tejas. Posible parapeto bajo no confirmado.",
+        "view_ids": [
+          "tyQaMS8skCpsOJ0wRHbang"
+        ],
+        "certainty": "inferred"
+      }
+    ],
+    "occlusions": [
+      "Techo y superficie superior del cuerpo principal no visibles desde las tres cámaras bajas; solo se aprecia la línea de coronación.",
+      "Costado izquierdo del lote oculto por edificio vecino gris de mayor altura.",
+      "Costado derecho parcialmente oculto por edificio vecino azul.",
+      "Posibles vanos de planta baja tapados por el cerco metálico y vegetación del retiro.",
+      "Patio interior, parte posterior del lote y cualquier cuerpo secundario o anexo no son visibles.",
+      "Puerta o portón de acceso vehicular dentro del cerco no distinguible con claridad."
+    ]
+  },
+  "accepted_decisions": [
+    {
+      "stage": "01_lectura",
+      "changes": {
+        "target_description": "Casa objetivo de dos pisos, estilo austero, ubicada en el lote con retiro frontal. Fachada principal en revoque beige con base de piedra en planta baja. Primer piso con dos ventanas rectangulares protegidas por rejas metálicas negras. Planta baja con puerta de acceso peatonal de madera verde y cerco metálico de barras verticales con base de albañilería en el límite frontal. Techo plano con línea de coronación horizontal. Edificios vecinos (gris al izquierdo, azul al derecho) no corresponden al lote.",
+        "inventory": [
+          {
+            "id": "mass_principal",
+            "category": "mass",
+            "location": "cuerpo principal · 2 pisos",
+            "description": "Prisma vertical de dos niveles; planta baja con zócalo pétreo rústico y nivel superior en revoque liso beige. Huella aparentemente rectangular, retirada del frente.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug",
+              "dkKZSdzvoCSMlT3KK2tkvw"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "door_entrance",
+            "category": "door",
+            "location": "fachada frontal · planta baja",
+            "description": "Puerta peatonal de madera color verde, hoja simple, acceso directo a vivienda. Distinta del portón del cerco.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "window_p1_left",
+            "category": "window",
+            "location": "fachada frontal · primer piso",
+            "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "window_p1_right",
+            "category": "window",
+            "location": "fachada frontal · primer piso",
+            "description": "Ventana rectangular con reja metálica negra de barras verticales; marco oscuro. Misma tipología que la ventana izquierda.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "site_fence_front",
+            "category": "site",
+            "location": "límite frontal · interface con calle",
+            "description": "Cerco metálico de barras verticales negras sobre base de albañilería/piedra baja. Delimita el retiro frontal; no es fachada del edificio.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "material_plaster",
+            "category": "material",
+            "location": "fachada frontal · nivel superior",
+            "description": "Revoque liso color beige/crema claro.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug",
+              "dkKZSdzvoCSMlT3KK2tkvw"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "material_base",
+            "category": "material",
+            "location": "fachada frontal · planta baja",
+            "description": "Base/zócalo de piedra o ladrillo visto de textura rústica, altura aproximada de un nivel de piso.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang",
+              "oZ1wrA76ZreE0XrMgouLug"
+            ],
+            "certainty": "observed"
+          },
+          {
+            "id": "roof_flat",
+            "category": "roof",
+            "location": "cuerpo principal · coronación",
+            "description": "Techo plano; no se observan pendientes ni tejas. Posible parapeto bajo no confirmado.",
+            "view_ids": [
+              "tyQaMS8skCpsOJ0wRHbang"
+            ],
+            "certainty": "inferred"
+          }
+        ],
+        "occlusions": [
+          "Techo y superficie superior del cuerpo principal no visibles desde las tres cámaras bajas; solo se aprecia la línea de coronación.",
+          "Costado izquierdo del lote oculto por edificio vecino gris de mayor altura.",
+          "Costado derecho parcialmente oculto por edificio vecino azul.",
+          "Posibles vanos de planta baja tapados por el cerco metálico y vegetación del retiro.",
+          "Patio interior, parte posterior del lote y cualquier cuerpo secundario o anexo no son visibles.",
+          "Puerta o portón de acceso vehicular dentro del cerco no distinguible con claridad."
+        ]
+      },
+      "evidence": [
+        {
+          "element": "mass_principal",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug",
+            "dkKZSdzvoCSMlT3KK2tkvw"
+          ],
+          "status": "observed",
+          "description": "Dos niveles diferenciados por cambio de material (base pétrea / revoque superior) y línea de losa horizontal."
+        },
+        {
+          "element": "door_entrance",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Hoja verde de madera en planta baja, centrada respecto a los vanos del primer piso."
+        },
+        {
+          "element": "window_p1_left",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Rectángulo vertical con reja de barras negras en fachada frontal."
+        },
+        {
+          "element": "window_p1_right",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang",
+            "oZ1wrA76ZreE0XrMgouLug"
+          ],
+          "status": "observed",
+          "description": "Rectángulo vertical con reja de barras negras en fachada frontal."
+        },
+        {
+          "element": "roof_flat",
+          "view_ids": [
+            "tyQaMS8skCpsOJ0wRHbang"
+          ],
+          "status": "inferred",
+          "description": "Arista superior horizontal sin inclinación ni tejas aparentes."
+        }
+      ],
+      "notes": [
+        "El prisma base del request ocupa toda la parcela, pero la edificación observada presenta retiro frontal y posiblemente no llena la huella del lote; la geometría de masa debe corregirse en la etapa correspondiente.",
+        "El estilo sugerido 'republicano' no se corresponde con la fachada austera observada (sin pilastras, cornisas denticuladas ni ornamentación); se deja constancia para decisión en etapa 03.",
+        "Los parámetros humanos indican primer piso diferenciado y más alto (3.0 m vs 2.6 m); la lectura visual es consistente con una planta baja de mayor altura aparente.",
+        "No se observan balcones, miradas, frontones ni otros ensambles en la fachada frontal.",
+        "El cerco metálico frontal es elemento de sitio, no de fachada; su portón o puerta de acceso no se distingue con certeza.",
+        "Las tres vistas describen la misma casa objetivo (revoque beige, base pétrea, dos ventanas superiores con reja); los edificios gris y azul son vecinos y no se atribuyen al lote."
+      ],
+      "blockers": []
+    }
+  ],
+  "resolved_architecture": {
+    "boundaries": [],
+    "completed": {
+      "facade.added_openings": "prior/completed",
+      "facade.cladding": "prior/completed",
+      "facade.opening_edits": "prior/completed",
+      "facade.services": "prior/completed",
+      "facade.stairs": "prior/completed",
+      "finish": "prior/completed",
+      "floors": "derived/explicit_mass_levels",
+      "height_m": "derived/explicit_mass_levels",
+      "massing.front_setback_m": "prior/completed",
+      "primary_color": "prior/completed",
+      "side_material": "prior/completed"
+    },
+    "completion_details": {
+      "facade.added_openings": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facade.cladding": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "stucco"
+      },
+      "facade.opening_edits": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "facade.services": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": false
+      },
+      "facade.stairs": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": []
+      },
+      "finish": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "standard"
+      },
+      "floors": {
+        "policy": null,
+        "source": "derived/explicit_mass_levels",
+        "value": 2
+      },
+      "height_m": {
+        "policy": null,
+        "source": "derived/explicit_mass_levels",
+        "value": 5.6
+      },
+      "massing.front_setback_m": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": 0.0
+      },
+      "primary_color": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": [
+          0.78,
+          0.78,
+          0.72
+        ]
+      },
+      "side_material": {
+        "policy": "conservative-0.2",
+        "source": "prior/completed",
+        "value": "brick"
+      }
+    },
+    "context": {
+      "crs": "EPSG:32718",
+      "fronts": [
+        0
+      ],
+      "locked_height_m": null,
+      "metric_origin": [
+        280231.9520058166,
+        8657545.890328353,
+        0.0
+      ],
+      "parcel": [
+        [
+          -18.251972104015294,
+          -0.6541935410350561
+        ],
+        [
+          -15.043372103769798,
+          -10.353393541648984
+        ],
+        [
+          18.210827895789407,
+          0.5849064588546753
+        ],
+        [
+          18.050627895630896,
+          1.0625064577907324
+        ],
+        [
+          14.973527894646395,
+          10.38530645892024
+        ]
+      ]
+    },
+    "masses": [
+      {
+        "base_z": 0.0,
+        "floor_levels": [
+          0.0,
+          3.0,
+          5.6
+        ],
+        "footprint": [
+          [
+            -18.251972104015294,
+            -0.6541935410350561
+          ],
+          [
+            -15.043372103769798,
+            -10.353393541648984
+          ],
+          [
+            18.210827895789407,
+            0.5849064588546753
+          ],
+          [
+            18.050627895630896,
+            1.0625064577907324
+          ],
+          [
+            14.973527894646395,
+            10.38530645892024
+          ]
+        ],
+        "footprint_holes": [],
+        "id": "principal:0",
+        "kind": "enclosed",
+        "parent_ids": [],
+        "role": "principal",
+        "roof_spec": null,
+        "roof_z": 5.6,
+        "slab_m": 0.18,
+        "support_ids": []
+      }
+    ],
+    "roofs": [
+      {
+        "mass_id": "principal:0",
+        "parapet_height_m": 0.0,
+        "parapet_profile": "cap",
+        "props": [],
+        "roof_z": 5.6,
+        "surfaces": [
+          {
+            "base_z": 5.6,
+            "eave_point": [
+              -15.0434,
+              -10.3534
+            ],
+            "holes": [],
+            "inward_normal": [
+              0.9493993201934992,
+              0.3140715377364235
+            ],
+            "kind": "flat",
+            "polygon": [
+              [
+                -18.252,
+                -0.6542
+              ],
+              [
+                -15.0434,
+                -10.3534
+              ],
+              [
+                18.2108,
+                0.5849
+              ],
+              [
+                18.0506,
+                1.0625
+              ],
+              [
+                14.9735,
+                10.3853
+              ]
+            ],
+            "slope_deg": 0.0,
+            "thickness_m": 0.14
+          }
+        ]
+      }
+    ],
+    "schema_version": "0.3",
+    "site_zones": [],
+    "structures": [],
+    "theta": {
+      "architectural_style": null,
+      "facade": {
+        "added_openings": [],
+        "awning_depth_m": null,
+        "balconies": null,
+        "balcony_depth_m": null,
+        "bay_axes_m": null,
+        "bay_count": null,
+        "cladding": "stucco",
+        "gallery_depth_m": null,
+        "material_regions": [],
+        "mode": "explicit",
+        "opening_edits": [],
+        "openings": [],
+        "projections": [],
+        "services": false,
+        "sill_m": null,
+        "stairs": [],
+        "window_height_m": null,
+        "window_ratio": null
+      },
+      "facades": [],
+      "family": "quiet_house",
+      "finish": "standard",
+      "floors": 2,
+      "height_m": 5.6,
+      "masses": [
+        {
+          "footprint": [
+            [
+              -18.251972104015294,
+              -0.6541935410350561
+            ],
+            [
+              -15.043372103769798,
+              -10.353393541648984
+            ],
+            [
+              18.210827895789407,
+              0.5849064588546753
+            ],
+            [
+              18.050627895630896,
+              1.0625064577907324
+            ],
+            [
+              14.973527894646395,
+              10.38530645892024
+            ]
+          ],
+          "levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "role": "principal"
+        }
+      ],
+      "massing": {
+        "components": [],
+        "corner_reach_m": null,
+        "front_depth_m": null,
+        "front_setback_m": 0.0,
+        "low_floors": null,
+        "parcel_tolerance_m": 0.0,
+        "pattern": "explicit",
+        "podium_floors": null,
+        "upper_setback_m": null
+      },
+      "materials": [],
+      "primary_color": [
+        0.78,
+        0.78,
+        0.72
+      ],
+      "roof": {
+        "kind": "flat",
+        "parapet_m": 0.0,
+        "props": [],
+        "slope_deg": null
+      },
+      "roofs": [],
+      "schema_version": "0.3",
+      "side_material": "brick",
+      "site": {
+        "fence": "none",
+        "garden": false,
+        "runs": [],
+        "zones": []
+      },
+      "trim": {
+        "cornice": {
+          "anchor": "wall_top",
+          "courtyards": false,
+          "enabled": false,
+          "height_m": 0.24,
+          "material": "cornice",
+          "offset_m": 0.0,
+          "profile": "auto",
+          "projection_m": 0.18,
+          "scope": "exposed"
+        },
+        "plinth": {
+          "block_width_m": 0.5,
+          "course_height_m": 0.2,
+          "courtyards": false,
+          "design": "smooth",
+          "enabled": false,
+          "height_m": 0.6,
+          "joint_width_m": 0.012,
+          "material": "plinth",
+          "relief_m": 0.025,
+          "scope": "exposed"
+        }
+      }
+    },
+    "trims": [],
+    "walls": [
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 0,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge0/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": true,
+          "material_regions": [],
+          "normal_xy": [
+            -0.9493993201934992,
+            -0.3140715377364235
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": true,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -18.251972104015294,
+            -0.6541935410350561
+          ],
+          "vertex_b": [
+            -15.043372103769798,
+            -10.353393541648984
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "plaster",
+          "width_m": 10.216143823061842,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            10.216143823061842,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 1,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge1/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            0.3124605976772723,
+            -0.9499307211050507
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": false,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            -15.043372103769798,
+            -10.353393541648984
+          ],
+          "vertex_b": [
+            18.210827895789407,
+            0.5849064588546753
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "brick",
+          "width_m": 35.00697394108354,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            35.00697394108354,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 2,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge2/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            0.9480860839912904,
+            0.31801380055283796
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": false,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            18.210827895789407,
+            0.5849064588546753
+          ],
+          "vertex_b": [
+            18.050627895630896,
+            1.0625064577907324
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "brick",
+          "width_m": 0.503751723604504,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            0.503751723604504,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 3,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge3/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            0.9496111876401948,
+            0.31343036277389996
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": false,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            18.050627895630896,
+            1.0625064577907324
+          ],
+          "vertex_b": [
+            14.973527894646395,
+            10.38530645892024
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "brick",
+          "width_m": 9.817491750804743,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            9.817491750804743,
+            5.6
+          ]
+        ]
+      },
+      {
+        "axes_m": [],
+        "base_z": 0.0,
+        "edge": 4,
+        "facade": {
+          "assigned_views": [],
+          "balcony_pattern": "vertical",
+          "cladding": "stucco",
+          "edge_id": "principal:0/edge4/z0",
+          "exterior_stairs": [],
+          "floor_levels_m": [
+            0.0,
+            3.0,
+            5.6
+          ],
+          "ground_floor_material": null,
+          "has_window_subdivisions": false,
+          "is_front": false,
+          "material_regions": [],
+          "normal_xy": [
+            -0.3153107764697926,
+            0.9489884689721033
+          ],
+          "observed": false,
+          "openings": [],
+          "ornamented": false,
+          "program_enabled": false,
+          "projections": [],
+          "services": false,
+          "style": "standard",
+          "vertex_a": [
+            14.973527894646395,
+            10.38530645892024
+          ],
+          "vertex_b": [
+            -18.251972104015294,
+            -0.6541935410350561
+          ],
+          "wall_color_rgb": [
+            200,
+            190,
+            170
+          ],
+          "wall_material": "brick",
+          "width_m": 35.01148969138675,
+          "window_style": "recessed",
+          "window_subdiv_type": "horizontal_bar"
+        },
+        "height_m": 5.6,
+        "mass_role": "principal:0",
+        "visible_domains": [
+          [
+            0.0,
+            0.0,
+            35.01148969138675,
+            5.6
+          ]
+        ]
+      }
+    ]
+  },
+  "resolved_walls": [
+    {
+      "id": "principal:0/edge0/z0",
+      "mass_ref": "principal:0",
+      "edge": 0,
+      "vertex_a": [
+        -18.251972104015294,
+        -0.6541935410350561
+      ],
+      "vertex_b": [
+        -15.043372103769798,
+        -10.353393541648984
+      ],
+      "base_z": 0.0,
+      "width_m": 10.216143823061842,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          10.216143823061842,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge1/z0",
+      "mass_ref": "principal:0",
+      "edge": 1,
+      "vertex_a": [
+        -15.043372103769798,
+        -10.353393541648984
+      ],
+      "vertex_b": [
+        18.210827895789407,
+        0.5849064588546753
+      ],
+      "base_z": 0.0,
+      "width_m": 35.00697394108354,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          35.00697394108354,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge2/z0",
+      "mass_ref": "principal:0",
+      "edge": 2,
+      "vertex_a": [
+        18.210827895789407,
+        0.5849064588546753
+      ],
+      "vertex_b": [
+        18.050627895630896,
+        1.0625064577907324
+      ],
+      "base_z": 0.0,
+      "width_m": 0.503751723604504,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          0.503751723604504,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge3/z0",
+      "mass_ref": "principal:0",
+      "edge": 3,
+      "vertex_a": [
+        18.050627895630896,
+        1.0625064577907324
+      ],
+      "vertex_b": [
+        14.973527894646395,
+        10.38530645892024
+      ],
+      "base_z": 0.0,
+      "width_m": 9.817491750804743,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          9.817491750804743,
+          5.6
+        ]
+      ],
+      "openings": []
+    },
+    {
+      "id": "principal:0/edge4/z0",
+      "mass_ref": "principal:0",
+      "edge": 4,
+      "vertex_a": [
+        14.973527894646395,
+        10.38530645892024
+      ],
+      "vertex_b": [
+        -18.251972104015294,
+        -0.6541935410350561
+      ],
+      "base_z": 0.0,
+      "width_m": 35.01148969138675,
+      "height_m": 5.6,
+      "visible_domains": [
+        [
+          0.0,
+          0.0,
+          35.01148969138675,
+          5.6
+        ]
+      ],
+      "openings": []
+    }
+  ],
+  "opening_ledger": [],
+  "cameras": [
+    {
+      "id": "tyQaMS8skCpsOJ0wRHbang",
+      "date": "2024-05",
+      "camera_xy": [
+        280210.3387461066,
+        8657539.887804966
+      ],
+      "camera_lonlat": [
+        -77.0196669871731,
+        -12.13648032286817
+      ],
+      "pose": {
+        "heading_deg": 342.0627136230469,
+        "pitch_deg": 0.015472412109375,
+        "roll_deg": 0.07327686250209808
+      },
+      "image_path": "fotos_barranco/tyQaMS8skCpsOJ0wRHbang.jpg",
+      "projection": {
+        "version": "angular-enu-v1",
+        "width": 960,
+        "height": 640,
+        "yaw_rad": 1.2998992975337273,
+        "fov_rad": 1.9909160663219914,
+        "bottom_rad": -0.6108652381980153,
+        "top_rad": 1.4835298641951802,
+        "camera_height_m": 2.5,
+        "camera_xy": [
+          280210.3387461066,
+          8657539.887804966
+        ],
+        "vertices_relative_xy": [
+          [
+            39.824087605811656,
+            6.587429845705628
+          ],
+          [
+            39.663887605653144,
+            7.0650298446416855
+          ],
+          [
+            36.58678760466864,
+            16.387829845771194
+          ],
+          [
+            3.361287606006954,
+            5.348329845815897
+          ],
+          [
+            6.5698876062524505,
+            -4.350870154798031
+          ],
+          [
+            39.824087605811656,
+            6.587429845705628
+          ]
+        ],
+        "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+      },
+      "attachment": "evidence/001.jpg",
+      "sha256": "0802bd6b40afd281168b6fc3e852cfbf4b505e47d5624483597c0ea7ba5cd225",
+      "image_role": "clean_projected_image"
+    },
+    {
+      "id": "oZ1wrA76ZreE0XrMgouLug",
+      "date": "2024-05",
+      "camera_xy": [
+        280213.4807184496,
+        8657530.275448693
+      ],
+      "camera_lonlat": [
+        -77.01963878245286,
+        -12.1365674064714
+      ],
+      "pose": {
+        "heading_deg": 341.87731933593756,
+        "pitch_deg": 0.00846099853515625,
+        "roll_deg": 359.88119506835943
+      },
+      "image_path": "fotos_barranco/oZ1wrA76ZreE0XrMgouLug.jpg",
+      "projection": {
+        "version": "angular-enu-v1",
+        "width": 960,
+        "height": 640,
+        "yaw_rad": 0.8690024442774246,
+        "fov_rad": 1.9879407911417881,
+        "bottom_rad": -0.6108652381980153,
+        "top_rad": 1.4835298641951802,
+        "camera_height_m": 2.5,
+        "camera_xy": [
+          280213.4807184496,
+          8657530.275448693
+        ],
+        "vertices_relative_xy": [
+          [
+            36.68211526283994,
+            16.199786119163036
+          ],
+          [
+            36.52191526268143,
+            16.677386118099093
+          ],
+          [
+            33.44481526169693,
+            26.0001861192286
+          ],
+          [
+            0.21931526303524151,
+            14.960686119273305
+          ],
+          [
+            3.427915263280738,
+            5.261486118659377
+          ],
+          [
+            36.68211526283994,
+            16.199786119163036
+          ]
+        ],
+        "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+      },
+      "attachment": "evidence/002.jpg",
+      "sha256": "d0d0d49ea077c08681566caee82d86352a70cb864c4f4e4e82628af7018315f8",
+      "image_role": "clean_projected_image"
+    },
+    {
+      "id": "dkKZSdzvoCSMlT3KK2tkvw",
+      "date": "2024-05",
+      "camera_xy": [
+        280207.32430422294,
+        8657549.072266717
+      ],
+      "camera_lonlat": [
+        -77.01969404963994,
+        -12.13639711496896
+      ],
+      "pose": {
+        "heading_deg": 341.9928283691406,
+        "pitch_deg": 359.87520599365234,
+        "roll_deg": 0.09029965847730637
+      },
+      "image_path": "fotos_barranco/dkKZSdzvoCSMlT3KK2tkvw.jpg",
+      "projection": {
+        "version": "angular-enu-v1",
+        "width": 960,
+        "height": 640,
+        "yaw_rad": 1.6992861161047668,
+        "fov_rad": 1.931586507493264,
+        "bottom_rad": -0.6108652381980153,
+        "top_rad": 1.4835298641951802,
+        "camera_height_m": 2.5,
+        "camera_xy": [
+          280207.32430422294,
+          8657549.072266717
+        ],
+        "vertices_relative_xy": [
+          [
+            42.83852948946878,
+            -2.597031904384494
+          ],
+          [
+            42.67832948931027,
+            -2.1194319054484367
+          ],
+          [
+            39.60122948832577,
+            7.203368095681071
+          ],
+          [
+            6.3757294896640815,
+            -3.8361319042742252
+          ],
+          [
+            9.584329489909578,
+            -13.535331904888153
+          ],
+          [
+            42.83852948946878,
+            -2.597031904384494
+          ]
+        ],
+        "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+      },
+      "attachment": "evidence/003.jpg",
+      "sha256": "06fdeda29944febc56f5978f746e80085f0b08210d376b4cd8787dab3755e1f8",
+      "image_role": "clean_projected_image"
+    }
+  ],
+  "wall_projection_px": {
+    "tyQaMS8skCpsOJ0wRHbang": [
+      {
+        "wall_id": "principal:0/edge0/z0",
+        "corners_px": [
+          [
+            123.75528772602291,
+            568.4903820736329
+          ],
+          [
+            892.6735622758865,
+            547.2118027261408
+          ],
+          [
+            892.6735622758865,
+            338.80069906860484
+          ],
+          [
+            123.75528772602291,
+            313.9229044021017
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge1/z0",
+        "corners_px": [
+          [
+            892.6735622758865,
+            547.2118027261408
+          ],
+          [
+            531.5789996164546,
+            472.2349741264514
+          ],
+          [
+            531.5789996164546,
+            429.91133667522064
+          ],
+          [
+            892.6735622758865,
+            338.80069906860484
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge2/z0",
+        "corners_px": [
+          [
+            531.5789996164546,
+            472.2349741264514
+          ],
+          [
+            525.6264111301725,
+            472.2710259942417
+          ],
+          [
+            525.6264111301725,
+            429.86672418081787
+          ],
+          [
+            531.5789996164546,
+            429.91133667522064
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge3/z0",
+        "corners_px": [
+          [
+            525.6264111301725,
+            472.2710259942417
+          ],
+          [
+            407.5639592178927,
+            472.3647272743537
+          ],
+          [
+            407.5639592178927,
+            429.75077487868305
+          ],
+          [
+            525.6264111301725,
+            429.86672418081787
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge4/z0",
+        "corners_px": [
+          [
+            407.5639592178927,
+            472.3647272743537
+          ],
+          [
+            123.75528772602291,
+            568.4903820736329
+          ],
+          [
+            123.75528772602291,
+            313.9229044021017
+          ],
+          [
+            407.5639592178927,
+            429.75077487868305
+          ]
+        ]
+      }
+    ],
+    "oZ1wrA76ZreE0XrMgouLug": [
+      {
+        "wall_id": "principal:0/edge0/z0",
+        "corners_px": [
+          [
+            67.42720263623993,
+            503.92392195460815
+          ],
+          [
+            339.1994192888303,
+            569.1098906472031
+          ],
+          [
+            339.1994192888303,
+            313.2070932103703
+          ],
+          [
+            67.42720263623993,
+            390.90478212552466
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge1/z0",
+        "corners_px": [
+          [
+            339.1994192888303,
+            569.1098906472031
+          ],
+          [
+            618.0767038111231,
+            472.35967027469457
+          ],
+          [
+            618.0767038111231,
+            429.75703252982566
+          ],
+          [
+            339.1994192888303,
+            313.2070932103703
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge2/z0",
+        "corners_px": [
+          [
+            618.0767038111231,
+            472.35967027469457
+          ],
+          [
+            612.0432621975053,
+            472.3362586249656
+          ],
+          [
+            612.0432621975053,
+            429.7860027495489
+          ],
+          [
+            618.0767038111231,
+            429.75703252982566
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge3/z0",
+        "corners_px": [
+          [
+            612.0432621975053,
+            472.3362586249656
+          ],
+          [
+            499.7910093555183,
+            471.3460124265931
+          ],
+          [
+            499.7910093555183,
+            431.01149364585433
+          ],
+          [
+            612.0432621975053,
+            429.7860027495489
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge4/z0",
+        "corners_px": [
+          [
+            499.7910093555183,
+            471.3460124265931
+          ],
+          [
+            67.42720263623993,
+            503.92392195460815
+          ],
+          [
+            67.42720263623993,
+            390.90478212552466
+          ],
+          [
+            499.7910093555183,
+            431.01149364585433
+          ]
+        ]
+      }
+    ],
+    "dkKZSdzvoCSMlT3KK2tkvw": [
+      {
+        "wall_id": "principal:0/edge0/z0",
+        "corners_px": [
+          [
+            685.341900775292,
+            552.3815689612497
+          ],
+          [
+            890.6056000944436,
+            499.0512718248888
+          ],
+          [
+            890.6056000944436,
+            396.8678560460438
+          ],
+          [
+            685.341900775292,
+            332.7060411986889
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge1/z0",
+        "corners_px": [
+          [
+            890.6056000944436,
+            499.0512718248888
+          ],
+          [
+            446.23369042910167,
+            471.11365875059795
+          ],
+          [
+            446.23369042910167,
+            431.2990824987764
+          ],
+          [
+            890.6056000944436,
+            396.8678560460438
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge2/z0",
+        "corners_px": [
+          [
+            446.23369042910167,
+            471.11365875059795
+          ],
+          [
+            440.80157721171133,
+            471.19098344183885
+          ],
+          [
+            440.80157721171133,
+            431.2033746402404
+          ],
+          [
+            446.23369042910167,
+            431.2990824987764
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge3/z0",
+        "corners_px": [
+          [
+            440.80157721171133,
+            471.19098344183885
+          ],
+          [
+            326.71494378891845,
+            472.2884640108448
+          ],
+          [
+            326.71494378891845,
+            429.84514557889844
+          ],
+          [
+            440.80157721171133,
+            431.2033746402404
+          ]
+        ]
+      },
+      {
+        "wall_id": "principal:0/edge4/z0",
+        "corners_px": [
+          [
+            326.71494378891845,
+            472.2884640108448
+          ],
+          [
+            685.341900775292,
+            552.3815689612497
+          ],
+          [
+            685.341900775292,
+            332.7060411986889
+          ],
+          [
+            326.71494378891845,
+            429.84514557889844
+          ]
+        ]
+      }
+    ]
+  },
+  "response_schema": {
+    "$defs": {
+      "ArchitecturalMass": {
+        "properties": {
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "footprint": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Footprint",
+            "type": "array"
+          },
+          "levels_m": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Levels M",
+            "type": "array"
+          }
+        },
+        "required": [
+          "role",
+          "footprint",
+          "levels_m"
+        ],
+        "title": "ArchitecturalMass",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Body": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "region": {
+            "$ref": "#/$defs/PlanRegion"
+          },
+          "levels_m": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Levels M",
+            "type": "array"
+          },
+          "kind": {
+            "default": "enclosed",
+            "enum": [
+              "enclosed",
+              "open"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "cutouts": {
+            "items": {
+              "$ref": "#/$defs/PlanRegion"
+            },
+            "title": "Cutouts",
+            "type": "array"
+          },
+          "support": {
+            "$ref": "#/$defs/SupportControls"
+          }
+        },
+        "required": [
+          "id",
+          "region",
+          "levels_m"
+        ],
+        "title": "Body",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "element": {
+            "title": "Element",
+            "type": "string"
+          },
+          "view_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "View Ids",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "observed",
+              "inferred",
+              "unknown"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "element",
+          "view_ids",
+          "status",
+          "description"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Masses": {
+        "additionalProperties": false,
+        "properties": {
+          "floor_levels_m": {
+            "description": "Cotas globales de pisos: N pisos → N+1 cotas, desde 0.",
+            "items": {
+              "type": "number"
+            },
+            "title": "Floor Levels M",
+            "type": "array"
+          },
+          "components": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/Body"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Preferido: regiones relativas al frente; el motor calcula XY.",
+            "title": "Components"
+          },
+          "masses": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/ArchitecturalMass"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Alternativa explícita cuando ya se conocen vértices XY.",
+            "title": "Masses"
+          }
+        },
+        "required": [
+          "floor_levels_m"
+        ],
+        "title": "Masses",
+        "type": "object"
+      },
+      "MemberDesign": {
+        "properties": {
+          "style": {
+            "default": "moderno",
+            "title": "Style",
+            "type": "string"
+          },
+          "variant": {
+            "default": "auto",
+            "title": "Variant",
+            "type": "string"
+          },
+          "section": {
+            "default": "auto",
+            "title": "Section",
+            "type": "string"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Base"
+          },
+          "capital": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Capital"
+          },
+          "collar": {
+            "default": true,
+            "title": "Collar",
+            "type": "boolean"
+          },
+          "abacus": {
+            "default": true,
+            "title": "Abacus",
+            "type": "boolean"
+          },
+          "base_profile": {
+            "default": "auto",
+            "title": "Base Profile",
+            "type": "string"
+          },
+          "pedestal_m": {
+            "default": 0.0,
+            "title": "Pedestal M",
+            "type": "number"
+          },
+          "base_height_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Base Height M"
+          },
+          "capital_height_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Capital Height M"
+          },
+          "taper": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Taper"
+          },
+          "entasis": {
+            "default": 0.025,
+            "title": "Entasis",
+            "type": "number"
+          },
+          "turns": {
+            "default": 1.5,
+            "title": "Turns",
+            "type": "number"
+          },
+          "flute_count": {
+            "default": 12,
+            "title": "Flute Count",
+            "type": "integer"
+          },
+          "ornament": {
+            "default": true,
+            "title": "Ornament",
+            "type": "boolean"
+          },
+          "detail": {
+            "default": 2,
+            "title": "Detail",
+            "type": "integer"
+          },
+          "material": {
+            "default": "plaster",
+            "title": "Material",
+            "type": "string"
+          },
+          "base_material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Base Material"
+          },
+          "capital_material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Capital Material"
+          }
+        },
+        "title": "MemberDesign",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PlanRegion": {
+        "description": "A box in a street frame, optionally intersected with the parcel.\n\nu spans the parcel's projection along the canonical edge's tangent.\nDepth is inward from that edge, in metres or fractions of parcel depth.\nNull edge selects the longest declared front. No building XY is supplied.",
+        "properties": {
+          "front_edge": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Front Edge"
+          },
+          "u": {
+            "default": [
+              0.0,
+              1.0
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "U",
+            "type": "array"
+          },
+          "depth": {
+            "default": [
+              0.0,
+              1.0
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Depth",
+            "type": "array"
+          },
+          "depth_m": {
+            "anyOf": [
+              {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Depth M"
+          },
+          "fit": {
+            "default": "parcel",
+            "title": "Fit",
+            "type": "string"
+          },
+          "width_reference": {
+            "default": "parcel",
+            "title": "Width Reference",
+            "type": "string"
+          }
+        },
+        "title": "PlanRegion",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "SupportControls": {
+        "properties": {
+          "kind": {
+            "default": "bearing",
+            "title": "Kind",
+            "type": "string"
+          },
+          "spacing_m": {
+            "default": 4.0,
+            "title": "Spacing M",
+            "type": "number"
+          },
+          "column_width_m": {
+            "default": 0.25,
+            "title": "Column Width M",
+            "type": "number"
+          },
+          "inset_m": {
+            "default": 0.4,
+            "title": "Inset M",
+            "type": "number"
+          },
+          "max_cantilever_m": {
+            "default": 0.0,
+            "title": "Max Cantilever M",
+            "type": "number"
+          },
+          "member": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MemberDesign"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "title": "SupportControls",
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "stage": {
+        "const": "02_masas",
+        "title": "Stage",
+        "type": "string"
+      },
+      "changes": {
+        "$ref": "#/$defs/Masses"
+      },
+      "evidence": {
+        "items": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "title": "Evidence",
+        "type": "array"
+      },
+      "notes": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Notes",
+        "type": "array"
+      },
+      "blockers": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Blockers",
+        "type": "array"
+      }
+    },
+    "required": [
+      "stage",
+      "changes",
+      "evidence",
+      "notes",
+      "blockers"
+    ],
+    "title": "Response_02_masas",
+    "type": "object"
+  },
+  "field_reference": {
+    "ArchitecturalMass": {
+      "source": "src/domain/theta.py",
+      "line": 161,
+      "fields": {
+        "role": {
+          "type": "str",
+          "required": true,
+          "default": null,
+          "description": "Rol descriptivo; en masa explícita también origina su referencia."
+        },
+        "footprint": {
+          "type": "tuple[tuple[float, float], ...]",
+          "required": true,
+          "default": null,
+          "description": "Vértices XY explícitos de una masa."
+        },
+        "levels_m": {
+          "type": "tuple[float, ...]",
+          "required": true,
+          "default": null,
+          "description": "Cotas de base, entrepisos y techo; no alturas individuales."
+        }
+      }
+    },
+    "Evidence": {
+      "source": "src/domain/theta.py",
+      "line": 42,
+      "fields": {
+        "state": {
+          "type": "str",
+          "required": true,
+          "default": null,
+          "description": "observed/inferred/prior/unknown/externally_known."
+        },
+        "confidence": {
+          "type": "float | None",
+          "required": false,
+          "default": null,
+          "description": "Confianza nula o de 0 a 1."
+        },
+        "view_ids": {
+          "type": "tuple[str, ...]",
+          "required": false,
+          "default": [],
+          "description": "IDs de observaciones que respaldan el valor."
+        }
+      }
+    },
+    "MemberDesign": {
+      "source": "src/domain/vertical_members.py",
+      "line": 6,
+      "fields": {
+        "style": {
+          "type": "str",
+          "required": false,
+          "default": "moderno",
+          "description": "Selector local; Opening.style es carpintería legacy, no lenguaje global."
+        },
+        "variant": {
+          "type": "str",
+          "required": false,
+          "default": "auto",
+          "description": "Variante del catálogo del estilo; auto elige primera entrada."
+        },
+        "section": {
+          "type": "str",
+          "required": false,
+          "default": "auto",
+          "description": "En zona: sección espacial; en miembro: forma de sección transversal."
+        },
+        "base": {
+          "type": "bool | None",
+          "required": false,
+          "default": null,
+          "description": "Base del miembro o cornisa inferior de frontón."
+        },
+        "capital": {
+          "type": "bool | None",
+          "required": false,
+          "default": null,
+          "description": "Activar capitel; null usa preset."
+        },
+        "collar": {
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "description": "Activar collarín del capitel."
+        },
+        "abacus": {
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "description": "Activar ábaco superior del capitel."
+        },
+        "base_profile": {
+          "type": "str",
+          "required": false,
+          "default": "auto",
+          "description": "Perfil de basa: auto/attic/simple/minimal."
+        },
+        "pedestal_m": {
+          "type": "float",
+          "required": false,
+          "default": 0.0,
+          "description": "Altura del pedestal bajo la basa."
+        },
+        "base_height_m": {
+          "type": "float | None",
+          "required": false,
+          "default": null,
+          "description": "Altura de base maciza de cerco o base de miembro según contrato."
+        },
+        "capital_height_m": {
+          "type": "float | None",
+          "required": false,
+          "default": null,
+          "description": "Altura explícita de capitel; null usa proporciones."
+        },
+        "taper": {
+          "type": "float | None",
+          "required": false,
+          "default": null,
+          "description": "Fracción de estrechamiento del fuste."
+        },
+        "entasis": {
+          "type": "float",
+          "required": false,
+          "default": 0.025,
+          "description": "Abombamiento del fuste."
+        },
+        "turns": {
+          "type": "float",
+          "required": false,
+          "default": 1.5,
+          "description": "Vueltas de fuste torsionado."
+        },
+        "flute_count": {
+          "type": "int",
+          "required": false,
+          "default": 12,
+          "description": "Cantidad de acanaladuras."
+        },
+        "ornament": {
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "description": "Booleano de ornato en miembro; nombre de ornato en frontón/entablamento."
+        },
+        "detail": {
+          "type": "int",
+          "required": false,
+          "default": 2,
+          "description": "Resolución local/global; techo usa light/medium/full, otros entero 1–3."
+        },
+        "material": {
+          "type": "str",
+          "required": false,
+          "default": "plaster",
+          "description": "Slot de material principal."
+        },
+        "base_material": {
+          "type": "str | None",
+          "required": false,
+          "default": null,
+          "description": "Material opcional de basa."
+        },
+        "capital_material": {
+          "type": "str | None",
+          "required": false,
+          "default": null,
+          "description": "Material opcional de capitel."
+        }
+      }
+    },
+    "PlanRegion": {
+      "source": "src/domain/theta.py",
+      "line": 62,
+      "fields": {
+        "front_edge": {
+          "type": "int | None",
+          "required": false,
+          "default": null,
+          "description": "Arista del anillo canónico usada como marco; null elige frente más largo."
+        },
+        "u": {
+          "type": "tuple[float, float]",
+          "required": false,
+          "default": [
+            0.0,
+            1.0
+          ],
+          "description": "Intervalo normalizado de 0 a 1."
+        },
+        "depth": {
+          "type": "tuple[float, float]",
+          "required": false,
+          "default": [
+            0.0,
+            1.0
+          ],
+          "description": "Intervalo fraccional de profundidad de parcela."
+        },
+        "depth_m": {
+          "type": "tuple[float, float] | None",
+          "required": false,
+          "default": null,
+          "description": "Profundidad métrica; en PlanRegion es un intervalo."
+        },
+        "fit": {
+          "type": "str",
+          "required": false,
+          "default": "parcel",
+          "description": "parcel recorta la región; rectangle conserva y valida el rectángulo."
+        },
+        "width_reference": {
+          "type": "str",
+          "required": false,
+          "default": "parcel",
+          "description": "Referencia horizontal: proyección de parcela o longitud de arista."
+        }
+      }
+    },
+    "SupportControls": {
+      "source": "src/domain/theta.py",
+      "line": 78,
+      "fields": {
+        "kind": {
+          "type": "str",
+          "required": false,
+          "default": "bearing",
+          "description": "Selector de tipo; su vocabulario depende del contrato."
+        },
+        "spacing_m": {
+          "type": "float",
+          "required": false,
+          "default": 4.0,
+          "description": "Separación métrica de elementos repetidos."
+        },
+        "column_width_m": {
+          "type": "float",
+          "required": false,
+          "default": 0.25,
+          "description": "Ancho de columnas de apoyo/sección."
+        },
+        "inset_m": {
+          "type": "float",
+          "required": false,
+          "default": 0.4,
+          "description": "Separación de apoyos respecto al borde."
+        },
+        "max_cantilever_m": {
+          "type": "float",
+          "required": false,
+          "default": 0.0,
+          "description": "Vuelo máximo permitido respecto a apoyo inferior."
+        },
+        "member": {
+          "type": "MemberDesign | None",
+          "required": false,
+          "default": null,
+          "description": "Diseño común de columna/pilastra en este elemento."
+        }
+      }
+    }
+  }
+}

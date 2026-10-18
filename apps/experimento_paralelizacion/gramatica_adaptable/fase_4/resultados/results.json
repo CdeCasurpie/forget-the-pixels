@@ -1,0 +1,2218 @@
+{
+  "scope": "phase4",
+  "seeds": [
+    7,
+    17,
+    81
+  ],
+  "runs": 90,
+  "passed": 90,
+  "conflicts": 0,
+  "mismatches": 0,
+  "results": [
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "parts": 267,
+      "openings": 26,
+      "windows": 6,
+      "doors": 20,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 26
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.1583
+    },
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "parts": 295,
+      "openings": 29,
+      "windows": 7,
+      "doors": 22,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.1425
+    },
+    {
+      "id": "15_upper_shift",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "de6099ec5516a61d7d6333f380952c338c8730883d4dfa59e212c0742fbba2f9",
+      "status": "passed",
+      "parts": 269,
+      "openings": 27,
+      "windows": 6,
+      "doors": 21,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 6
+      },
+      "styles": {
+        "moderno": 27
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 3.9233
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "parts": 317,
+      "openings": 30,
+      "windows": 6,
+      "doors": 24,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.4433
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "parts": 337,
+      "openings": 33,
+      "windows": 6,
+      "doors": 27,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5122
+    },
+    {
+      "id": "16_irregular_bite",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "812d9e3ebd62fc371c2383df9efb8c0acfcd4d4f76e922fdd9570293633c4c24",
+      "status": "passed",
+      "parts": 328,
+      "openings": 32,
+      "windows": 6,
+      "doors": 26,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 32
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5939
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "parts": 279,
+      "openings": 26,
+      "windows": 6,
+      "doors": 20,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 26
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.3184
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "parts": 325,
+      "openings": 30,
+      "windows": 7,
+      "doors": 23,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.7315
+    },
+    {
+      "id": "17_corrugated_addition",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "92f7beeae3ca03e2c09b9f525a110c9fb3a9c717094d7008823e69c4056f4969",
+      "status": "passed",
+      "parts": 288,
+      "openings": 27,
+      "windows": 6,
+      "doors": 21,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 27
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 3.8721
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "parts": 230,
+      "openings": 21,
+      "windows": 4,
+      "doors": 17,
+      "completed_windows": 4,
+      "mechanisms": {
+        "casement": 1,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 21
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 3.5338
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "parts": 265,
+      "openings": 25,
+      "windows": 6,
+      "doors": 19,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.0396
+    },
+    {
+      "id": "18_mixed_use",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "c2810407a841ffad4a66154ae8b8a6dc57114bbd808e638f06909a898d9c5d6d",
+      "status": "passed",
+      "parts": 265,
+      "openings": 25,
+      "windows": 6,
+      "doors": 19,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.1405
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "parts": 301,
+      "openings": 29,
+      "windows": 7,
+      "doors": 22,
+      "completed_windows": 3,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846174,
+      "seconds": 6.8867
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "parts": 326,
+      "openings": 31,
+      "windows": 9,
+      "doors": 22,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 7,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 31
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846174,
+      "seconds": 7.3275
+    },
+    {
+      "id": "19_corner_loggia",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "1230ef56e04f128f42b4f640efb6979ecd7a35dfa42d0daf3c6216d378919b40",
+      "status": "passed",
+      "parts": 301,
+      "openings": 29,
+      "windows": 7,
+      "doors": 22,
+      "completed_windows": 3,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846174,
+      "seconds": 7.227
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "parts": 330,
+      "openings": 30,
+      "windows": 8,
+      "doors": 22,
+      "completed_windows": 8,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.4116
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "parts": 321,
+      "openings": 29,
+      "windows": 8,
+      "doors": 21,
+      "completed_windows": 8,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.2313
+    },
+    {
+      "id": "20_complex_combination",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "75884aadfd3c26985bea82e126c74d7ccde39e69f194fc0c8abbb4a6c891db5c",
+      "status": "passed",
+      "parts": 306,
+      "openings": 28,
+      "windows": 7,
+      "doors": 21,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 28
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.029
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "parts": 60,
+      "openings": 6,
+      "windows": 0,
+      "doors": 6,
+      "completed_windows": 0,
+      "mechanisms": {},
+      "styles": {
+        "moderno": 6
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.8700000000000001,
+      "seconds": 1.2685
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "parts": 60,
+      "openings": 6,
+      "windows": 0,
+      "doors": 6,
+      "completed_windows": 0,
+      "mechanisms": {},
+      "styles": {
+        "moderno": 6
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.8700000000000001,
+      "seconds": 1.1999
+    },
+    {
+      "id": "01_compact_narrow",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "ae8fa4b88fc4c35ceff60c60da868a1e0479e74a84ad7cc4f41dcfcd8015c8e2",
+      "status": "passed",
+      "parts": 60,
+      "openings": 6,
+      "windows": 0,
+      "doors": 6,
+      "completed_windows": 0,
+      "mechanisms": {},
+      "styles": {
+        "moderno": 6
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.8700000000000001,
+      "seconds": 1.2661
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "parts": 257,
+      "openings": 24,
+      "windows": 6,
+      "doors": 18,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 3.5314
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "parts": 249,
+      "openings": 24,
+      "windows": 5,
+      "doors": 19,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 3.4106
+    },
+    {
+      "id": "02_wide_bar",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "933abf38a1a32b2981f9b78799d69be30b264576dcc4d40c91367b9542c32c47",
+      "status": "passed",
+      "parts": 266,
+      "openings": 25,
+      "windows": 6,
+      "doors": 19,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 3.57
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "parts": 359,
+      "openings": 33,
+      "windows": 11,
+      "doors": 22,
+      "completed_windows": 11,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.7319
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "parts": 323,
+      "openings": 29,
+      "windows": 9,
+      "doors": 20,
+      "completed_windows": 9,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.7057
+    },
+    {
+      "id": "03_corner",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f5679d84db338f0ac1cde0ee32f14d1b5499d8280f3b39860c26bec17a004022",
+      "status": "passed",
+      "parts": 323,
+      "openings": 29,
+      "windows": 9,
+      "doors": 20,
+      "completed_windows": 9,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 29
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5988
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "parts": 357,
+      "openings": 34,
+      "windows": 5,
+      "doors": 29,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 2,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5044
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "parts": 357,
+      "openings": 34,
+      "windows": 5,
+      "doors": 29,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 2,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.315
+    },
+    {
+      "id": "04_high_fence",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e23b2be9cc5b86f33f188e47b9823e8f245984b2fb8c6ad7a3619f52e4ff8b3d",
+      "status": "passed",
+      "parts": 371,
+      "openings": 35,
+      "windows": 5,
+      "doors": 30,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 1,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 35
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769404,
+      "seconds": 4.3894
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "parts": 344,
+      "openings": 33,
+      "windows": 6,
+      "doors": 27,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.6138
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "parts": 336,
+      "openings": 33,
+      "windows": 5,
+      "doors": 28,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.4793
+    },
+    {
+      "id": "05_open_setback",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e702eef4e1f48b8f04359e9632353b5eda7b0ae4735c50e575dfb9af6fb12bc1",
+      "status": "passed",
+      "parts": 376,
+      "openings": 36,
+      "windows": 6,
+      "doors": 30,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 2,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.7444
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "parts": 408,
+      "openings": 38,
+      "windows": 11,
+      "doors": 27,
+      "completed_windows": 11,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 38
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 5.8372
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "parts": 435,
+      "openings": 39,
+      "windows": 12,
+      "doors": 27,
+      "completed_windows": 12,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 8
+      },
+      "styles": {
+        "moderno": 39
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 6.1685
+    },
+    {
+      "id": "06_courtyard",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "2d335fa6e585160f86adcfbadc17e2c1c8824e494ef4b67335e416d00999d9ba",
+      "status": "passed",
+      "parts": 390,
+      "openings": 36,
+      "windows": 11,
+      "doors": 25,
+      "completed_windows": 11,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 5.7094
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "parts": 337,
+      "openings": 33,
+      "windows": 6,
+      "doors": 27,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.4816
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "parts": 337,
+      "openings": 33,
+      "windows": 6,
+      "doors": 27,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.3097
+    },
+    {
+      "id": "07_left_bite",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "e4a9f552677408c89054a007e5d6e9c2ecdbbb9afd652d369f19b165d7a5d4dc",
+      "status": "passed",
+      "parts": 353,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5342
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "parts": 346,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.1972
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "parts": 358,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 2,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 4.5658
+    },
+    {
+      "id": "08_upper_setback",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "58162d29eba58f5601a55b8a10c963440e9a8c8126d7726409fcb5df55f3f023",
+      "status": "passed",
+      "parts": 358,
+      "openings": 36,
+      "windows": 7,
+      "doors": 29,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.1877
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "parts": 359,
+      "openings": 36,
+      "windows": 6,
+      "doors": 30,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 5.0704
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "parts": 369,
+      "openings": 37,
+      "windows": 7,
+      "doors": 30,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 37
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.975
+    },
+    {
+      "id": "09_loggia",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f924ada844988e6547d23a7ef95914d265f2c7d021b8f85687cb91089265ccea",
+      "status": "passed",
+      "parts": 368,
+      "openings": 36,
+      "windows": 6,
+      "doors": 30,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.1999999999999993,
+      "seconds": 4.5315
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "parts": 348,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.5725
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "parts": 350,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 35
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.6528
+    },
+    {
+      "id": "10_depth_rhythm",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "f868c6ba5c9d15f7970ad0db3ea10e87c3d4066a53b3eb44f26f3cae46434ab4",
+      "status": "passed",
+      "parts": 374,
+      "openings": 36,
+      "windows": 7,
+      "doors": 29,
+      "completed_windows": 7,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "seconds": 4.7754
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "parts": 160,
+      "openings": 12,
+      "windows": 2,
+      "doors": 10,
+      "completed_windows": 2,
+      "mechanisms": {
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 12
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 2.8533
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "parts": 160,
+      "openings": 12,
+      "windows": 2,
+      "doors": 10,
+      "completed_windows": 2,
+      "mechanisms": {
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 12
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 2.9119
+    },
+    {
+      "id": "11_open_ground",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "2c300564c27b0922cbf9e68d693ce9c1194ffb92eeb8c7709c66786a42b7d0ff",
+      "status": "passed",
+      "parts": 160,
+      "openings": 12,
+      "windows": 2,
+      "doors": 10,
+      "completed_windows": 2,
+      "mechanisms": {
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 12
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 3.0953
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "parts": 343,
+      "openings": 32,
+      "windows": 6,
+      "doors": 26,
+      "completed_windows": 4,
+      "mechanisms": {
+        "casement": 1,
+        "sliding": 5
+      },
+      "styles": {
+        "moderno": 2,
+        "republicano": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 4.141
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "parts": 339,
+      "openings": 32,
+      "windows": 7,
+      "doors": 25,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 3,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 2,
+        "republicano": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "seconds": 4.0739
+    },
+    {
+      "id": "12_mixed_styles",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "5e3a7bf2aacfc17419d924c094fd5b30c874bc52ce43d12fdceb7db6751503f9",
+      "status": "passed",
+      "parts": 336,
+      "openings": 32,
+      "windows": 6,
+      "doors": 26,
+      "completed_windows": 4,
+      "mechanisms": {
+        "casement": 2,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 2,
+        "republicano": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.47000000000000064,
+      "seconds": 4.1419
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "parts": 281,
+      "openings": 25,
+      "windows": 8,
+      "doors": 17,
+      "completed_windows": 8,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 3.4106
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "parts": 281,
+      "openings": 25,
+      "windows": 8,
+      "doors": 17,
+      "completed_windows": 8,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 3.5857
+    },
+    {
+      "id": "13_L_rear_wing",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "248a1ab1c55a1bcec97bef07a34ebbd47d9e7a5e1bd85c0a6b78b4995335d41c",
+      "status": "passed",
+      "parts": 281,
+      "openings": 25,
+      "windows": 8,
+      "doors": 17,
+      "completed_windows": 8,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 3.2946
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 7,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "parts": 218,
+      "openings": 20,
+      "windows": 6,
+      "doors": 14,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 20
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.1655
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 17,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "parts": 218,
+      "openings": 20,
+      "windows": 6,
+      "doors": 14,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 20
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.4708
+    },
+    {
+      "id": "14_U_courtyard",
+      "group": "bank",
+      "seed": 81,
+      "fixture_sha256": "4faaec84166c6f961f9a992ed4d0fbd195fc38d0ab6adb83cec04014601064df",
+      "status": "passed",
+      "parts": 218,
+      "openings": 20,
+      "windows": 6,
+      "doors": 14,
+      "completed_windows": 6,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 20
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769315,
+      "seconds": 5.3639
+    },
+    {
+      "id": "p4_completion_upper_floor",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "b5334c4e27fd87fa24c213092d511e021ee58882030d43cbb0077142ed382aca",
+      "status": "passed",
+      "parts": 365,
+      "openings": 36,
+      "windows": 7,
+      "doors": 29,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "expectations_checked": {
+        "windows_match": true,
+        "closed_floors": true,
+        "completion_present": true
+      },
+      "seconds": 4.6718
+    },
+    {
+      "id": "p4_completion_upper_floor",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "b5334c4e27fd87fa24c213092d511e021ee58882030d43cbb0077142ed382aca",
+      "status": "passed",
+      "parts": 348,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 4,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "expectations_checked": {
+        "windows_match": true,
+        "closed_floors": true,
+        "completion_present": true
+      },
+      "seconds": 4.6197
+    },
+    {
+      "id": "p4_completion_upper_floor",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "b5334c4e27fd87fa24c213092d511e021ee58882030d43cbb0077142ed382aca",
+      "status": "passed",
+      "parts": 383,
+      "openings": 37,
+      "windows": 7,
+      "doors": 30,
+      "completed_windows": 5,
+      "mechanisms": {
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 37
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "expectations_checked": {
+        "windows_match": true,
+        "closed_floors": true,
+        "completion_present": true
+      },
+      "seconds": 4.7284
+    },
+    {
+      "id": "p4_door_materials",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "a20ad8ea17cbfb6e1f2926a20633ad48df68ed12f1f11e3a3967d139bae6db2f",
+      "status": "passed",
+      "parts": 332,
+      "openings": 33,
+      "windows": 6,
+      "doors": 27,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "clasico": 1,
+        "moderno": 32
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "materials_present": true,
+        "entrance_design": true
+      },
+      "seconds": 4.4192
+    },
+    {
+      "id": "p4_door_materials",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "a20ad8ea17cbfb6e1f2926a20633ad48df68ed12f1f11e3a3967d139bae6db2f",
+      "status": "passed",
+      "parts": 350,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "clasico": 1,
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "materials_present": true,
+        "entrance_design": true
+      },
+      "seconds": 4.6634
+    },
+    {
+      "id": "p4_door_materials",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "a20ad8ea17cbfb6e1f2926a20633ad48df68ed12f1f11e3a3967d139bae6db2f",
+      "status": "passed",
+      "parts": 348,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "clasico": 1,
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "materials_present": true,
+        "entrance_design": true
+      },
+      "seconds": 4.6525
+    },
+    {
+      "id": "p4_fixed_count_narrow",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "b5b461e37f22693135e80d46cbc69ae4ddc11c1f876aad272d44ea50836f8d96",
+      "status": "passed",
+      "parts": 342,
+      "openings": 33,
+      "windows": 8,
+      "doors": 25,
+      "completed_windows": 2,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 33
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 6.4049
+    },
+    {
+      "id": "p4_fixed_count_narrow",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "b5b461e37f22693135e80d46cbc69ae4ddc11c1f876aad272d44ea50836f8d96",
+      "status": "passed",
+      "parts": 351,
+      "openings": 34,
+      "windows": 8,
+      "doors": 26,
+      "completed_windows": 2,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 6.7147
+    },
+    {
+      "id": "p4_fixed_count_narrow",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "b5b461e37f22693135e80d46cbc69ae4ddc11c1f876aad272d44ea50836f8d96",
+      "status": "passed",
+      "parts": 350,
+      "openings": 34,
+      "windows": 8,
+      "doors": 26,
+      "completed_windows": 2,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 2
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769404,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 6.6921
+    },
+    {
+      "id": "p4_fixed_count_wide",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "be02b9604a95e605e18bbc6bee3c5ff482bb62dac6e58dabc845ae539d1f33d2",
+      "status": "passed",
+      "parts": 377,
+      "openings": 36,
+      "windows": 9,
+      "doors": 27,
+      "completed_windows": 3,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3200000000000003,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 5.0806
+    },
+    {
+      "id": "p4_fixed_count_wide",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "be02b9604a95e605e18bbc6bee3c5ff482bb62dac6e58dabc845ae539d1f33d2",
+      "status": "passed",
+      "parts": 394,
+      "openings": 38,
+      "windows": 9,
+      "doors": 29,
+      "completed_windows": 3,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 38
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3200000000000003,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 5.6044
+    },
+    {
+      "id": "p4_fixed_count_wide",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "be02b9604a95e605e18bbc6bee3c5ff482bb62dac6e58dabc845ae539d1f33d2",
+      "status": "passed",
+      "parts": 368,
+      "openings": 35,
+      "windows": 9,
+      "doors": 26,
+      "completed_windows": 3,
+      "mechanisms": {
+        "awning": 2,
+        "casement": 4,
+        "sliding": 3
+      },
+      "styles": {
+        "moderno": 35
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3200000000000003,
+      "expectations_checked": {
+        "windows_match": true,
+        "proportions_match": true
+      },
+      "seconds": 5.0408
+    },
+    {
+      "id": "p4_guillotine_tracks",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "2481b2c40957b54cbdca67d4c161b8d5e893d207961b1f8aa1d4fce7f0a910cd",
+      "status": "passed",
+      "parts": 378,
+      "openings": 36,
+      "windows": 7,
+      "doors": 29,
+      "completed_windows": 3,
+      "mechanisms": {
+        "casement": 2,
+        "guillotine": 4,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.4123076923076905,
+      "expectations_checked": {
+        "windows_match": true,
+        "mechanisms_present": true,
+        "materials_present": true
+      },
+      "seconds": 5.1145
+    },
+    {
+      "id": "p4_guillotine_tracks",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "2481b2c40957b54cbdca67d4c161b8d5e893d207961b1f8aa1d4fce7f0a910cd",
+      "status": "passed",
+      "parts": 359,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 1,
+        "guillotine": 4,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769226,
+      "expectations_checked": {
+        "windows_match": true,
+        "mechanisms_present": true,
+        "materials_present": true
+      },
+      "seconds": 5.2868
+    },
+    {
+      "id": "p4_guillotine_tracks",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "2481b2c40957b54cbdca67d4c161b8d5e893d207961b1f8aa1d4fce7f0a910cd",
+      "status": "passed",
+      "parts": 368,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 1,
+        "guillotine": 4,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 35
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.41230769230769404,
+      "expectations_checked": {
+        "windows_match": true,
+        "mechanisms_present": true,
+        "materials_present": true
+      },
+      "seconds": 4.8788
+    },
+    {
+      "id": "p4_low_ceiling",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "47c74e58dc59b1f5aadfed886c1dd326547d7f742adb3728fba86c34c13f7f0e",
+      "status": "passed",
+      "parts": 227,
+      "openings": 23,
+      "windows": 4,
+      "doors": 19,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 23
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.23538461538461508,
+      "expectations_checked": {
+        "windows_match": true,
+        "max_window_head": true
+      },
+      "seconds": 2.9428
+    },
+    {
+      "id": "p4_low_ceiling",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "47c74e58dc59b1f5aadfed886c1dd326547d7f742adb3728fba86c34c13f7f0e",
+      "status": "passed",
+      "parts": 238,
+      "openings": 24,
+      "windows": 4,
+      "doors": 20,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.23538461538461508,
+      "expectations_checked": {
+        "windows_match": true,
+        "max_window_head": true
+      },
+      "seconds": 3.169
+    },
+    {
+      "id": "p4_low_ceiling",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "47c74e58dc59b1f5aadfed886c1dd326547d7f742adb3728fba86c34c13f7f0e",
+      "status": "passed",
+      "parts": 238,
+      "openings": 24,
+      "windows": 4,
+      "doors": 20,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.23538461538461508,
+      "expectations_checked": {
+        "windows_match": true,
+        "max_window_head": true
+      },
+      "seconds": 2.9967
+    },
+    {
+      "id": "p4_modern_frame_republican",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "427e9c5984b250fb9417a4e9b606a8c0e7a42e3174b1194ee8a0513efdf16b38",
+      "status": "passed",
+      "parts": 360,
+      "openings": 36,
+      "windows": 7,
+      "doors": 29,
+      "completed_windows": 3,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 4,
+        "republicano": 32
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "completion_present": true,
+        "styles_present": true,
+        "materials_present": true,
+        "frame_widths": true
+      },
+      "seconds": 4.9125
+    },
+    {
+      "id": "p4_modern_frame_republican",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "427e9c5984b250fb9417a4e9b606a8c0e7a42e3174b1194ee8a0513efdf16b38",
+      "status": "passed",
+      "parts": 343,
+      "openings": 34,
+      "windows": 6,
+      "doors": 28,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 4,
+        "republicano": 30
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "completion_present": true,
+        "styles_present": true,
+        "materials_present": true,
+        "frame_widths": true
+      },
+      "seconds": 4.6541
+    },
+    {
+      "id": "p4_modern_frame_republican",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "427e9c5984b250fb9417a4e9b606a8c0e7a42e3174b1194ee8a0513efdf16b38",
+      "status": "passed",
+      "parts": 352,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 4,
+        "republicano": 31
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "completion_present": true,
+        "styles_present": true,
+        "materials_present": true,
+        "frame_widths": true
+      },
+      "seconds": 4.393
+    },
+    {
+      "id": "p4_raised_ground",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "8146385d7aa1f854a6cd78f0b8e45248f0db47b843447de74664068d4d20defa",
+      "status": "passed",
+      "parts": 228,
+      "openings": 23,
+      "windows": 4,
+      "doors": 19,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 23
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "floor_relative": true
+      },
+      "seconds": 2.9532
+    },
+    {
+      "id": "p4_raised_ground",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "8146385d7aa1f854a6cd78f0b8e45248f0db47b843447de74664068d4d20defa",
+      "status": "passed",
+      "parts": 239,
+      "openings": 24,
+      "windows": 4,
+      "doors": 20,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "floor_relative": true
+      },
+      "seconds": 3.195
+    },
+    {
+      "id": "p4_raised_ground",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "8146385d7aa1f854a6cd78f0b8e45248f0db47b843447de74664068d4d20defa",
+      "status": "passed",
+      "parts": 239,
+      "openings": 24,
+      "windows": 4,
+      "doors": 20,
+      "completed_windows": 0,
+      "mechanisms": {
+        "casement": 4
+      },
+      "styles": {
+        "moderno": 24
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "floor_relative": true
+      },
+      "seconds": 2.9324
+    },
+    {
+      "id": "p4_staggered_distribution",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "960ffa9f6e7fca32240690680a3dd45e56eb030091097b43890d51a6f3d2425a",
+      "status": "passed",
+      "parts": 344,
+      "openings": 34,
+      "windows": 7,
+      "doors": 27,
+      "completed_windows": 3,
+      "mechanisms": {
+        "casement": 6,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 34
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "staggered": true
+      },
+      "seconds": 4.6111
+    },
+    {
+      "id": "p4_staggered_distribution",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "960ffa9f6e7fca32240690680a3dd45e56eb030091097b43890d51a6f3d2425a",
+      "status": "passed",
+      "parts": 359,
+      "openings": 36,
+      "windows": 6,
+      "doors": 30,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 36
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "staggered": true
+      },
+      "seconds": 4.7749
+    },
+    {
+      "id": "p4_staggered_distribution",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "960ffa9f6e7fca32240690680a3dd45e56eb030091097b43890d51a6f3d2425a",
+      "status": "passed",
+      "parts": 350,
+      "openings": 35,
+      "windows": 6,
+      "doors": 29,
+      "completed_windows": 2,
+      "mechanisms": {
+        "casement": 5,
+        "sliding": 1
+      },
+      "styles": {
+        "moderno": 35
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 0.3353846153846156,
+      "expectations_checked": {
+        "windows_match": true,
+        "staggered": true
+      },
+      "seconds": 4.9958
+    },
+    {
+      "id": "p4_tall_floor",
+      "group": "fixture",
+      "seed": 7,
+      "fixture_sha256": "f87f29d7ffdbb5d2ee586cd181bf04fa8262fa69312760b739d966f99dfa6cc2",
+      "status": "passed",
+      "parts": 263,
+      "openings": 25,
+      "windows": 4,
+      "doors": 21,
+      "completed_windows": 0,
+      "mechanisms": {
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 1.4699999999999998,
+      "expectations_checked": {
+        "windows_match": true,
+        "min_window_height": true
+      },
+      "seconds": 3.0143
+    },
+    {
+      "id": "p4_tall_floor",
+      "group": "fixture",
+      "seed": 17,
+      "fixture_sha256": "f87f29d7ffdbb5d2ee586cd181bf04fa8262fa69312760b739d966f99dfa6cc2",
+      "status": "passed",
+      "parts": 236,
+      "openings": 22,
+      "windows": 4,
+      "doors": 18,
+      "completed_windows": 0,
+      "mechanisms": {
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 22
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 1.4699999999999998,
+      "expectations_checked": {
+        "windows_match": true,
+        "min_window_height": true
+      },
+      "seconds": 2.9581
+    },
+    {
+      "id": "p4_tall_floor",
+      "group": "fixture",
+      "seed": 81,
+      "fixture_sha256": "f87f29d7ffdbb5d2ee586cd181bf04fa8262fa69312760b739d966f99dfa6cc2",
+      "status": "passed",
+      "parts": 263,
+      "openings": 25,
+      "windows": 4,
+      "doors": 21,
+      "completed_windows": 0,
+      "mechanisms": {
+        "sliding": 4
+      },
+      "styles": {
+        "moderno": 25
+      },
+      "watertight": true,
+      "group_overlap_m3": 0.0,
+      "minimum_lintel_m": 1.4699999999999998,
+      "expectations_checked": {
+        "windows_match": true,
+        "min_window_height": true
+      },
+      "seconds": 3.0605
+    }
+  ]
+}

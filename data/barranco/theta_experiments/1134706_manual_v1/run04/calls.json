@@ -1,0 +1,2346 @@
+[
+  {
+    "file": "pipeline/theta.py",
+    "line": 67,
+    "function": "reconstruct",
+    "calls": 1,
+    "self_s": 0.000625371,
+    "cumulative_s": 0.5491722960000001
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 802,
+    "function": "generate_resolved",
+    "calls": 1,
+    "self_s": 0.0013833720000000001,
+    "cumulative_s": 0.508681559
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 526,
+    "function": "solid",
+    "calls": 135,
+    "self_s": 0.010923889,
+    "cumulative_s": 0.34140971800000003
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 658,
+    "function": "box",
+    "calls": 125,
+    "self_s": 0.0026335530000000003,
+    "cumulative_s": 0.30958728300000005
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 574,
+    "function": "facade",
+    "calls": 4,
+    "self_s": 3.5924000000000004e-05,
+    "cumulative_s": 0.236453073
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 582,
+    "function": "_facade_body",
+    "calls": 4,
+    "self_s": 0.00023902700000000003,
+    "cumulative_s": 0.236364128
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 452,
+    "function": "tri",
+    "calls": 2780,
+    "self_s": 0.034655745,
+    "cumulative_s": 0.236080586
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 87,
+    "function": "opening",
+    "calls": 4,
+    "self_s": 0.000254117,
+    "cumulative_s": 0.19264446400000002
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 113,
+    "function": "b",
+    "calls": 74,
+    "self_s": 0.00013417800000000002,
+    "cumulative_s": 0.17139552000000002
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 1219,
+    "function": "box",
+    "calls": 74,
+    "self_s": 0.00027542800000000003,
+    "cumulative_s": 0.171261342
+  },
+  {
+    "file": "modeling/site.py",
+    "line": 24,
+    "function": "draw_fence",
+    "calls": 1,
+    "self_s": 0.00018682800000000002,
+    "cumulative_s": 0.13939653500000002
+  },
+  {
+    "file": "modeling/site.py",
+    "line": 130,
+    "function": "plant_garden",
+    "calls": 1,
+    "self_s": 0.0011286380000000002,
+    "cumulative_s": 0.092596616
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 786,
+    "function": "panel",
+    "calls": 9,
+    "self_s": 0.00012957000000000002,
+    "cumulative_s": 0.060722072
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 883,
+    "function": "panel",
+    "calls": 12,
+    "self_s": 0.0008048020000000001,
+    "cumulative_s": 0.059829742000000005
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 196,
+    "function": "triangulate_rings",
+    "calls": 144,
+    "self_s": 0.001770167,
+    "cumulative_s": 0.052490607
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 590,
+    "function": "cap_uv",
+    "calls": 752,
+    "self_s": 0.000855307,
+    "cumulative_s": 0.051527364000000006
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 483,
+    "function": "_cap_uvs",
+    "calls": 756,
+    "self_s": 0.00520183,
+    "cumulative_s": 0.050941021
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 476,
+    "function": "quad",
+    "calls": 178,
+    "self_s": 0.000318835,
+    "cumulative_s": 0.049514186
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 490,
+    "function": "_emit_wall_shells",
+    "calls": 4,
+    "self_s": 0.000128278,
+    "cumulative_s": 0.042584451
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1044,
+    "function": "_panel_poly",
+    "calls": 9,
+    "self_s": 0.002052218,
+    "cumulative_s": 0.042526459
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 538,
+    "function": "emit",
+    "calls": 5,
+    "self_s": 4.9087000000000006e-05,
+    "cumulative_s": 0.040781656
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 825,
+    "function": "foliage",
+    "calls": 4,
+    "self_s": 0.002329049,
+    "cumulative_s": 0.035466507
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 461,
+    "function": "resolve_theta",
+    "calls": 1,
+    "self_s": 0.000526512,
+    "cumulative_s": 0.026798467000000003
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 714,
+    "function": "_chamfered_box",
+    "calls": 2,
+    "self_s": 0.00011142600000000001,
+    "cumulative_s": 0.026420667000000002
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 220,
+    "function": "<listcomp>",
+    "calls": 144,
+    "self_s": 0.0015214900000000001,
+    "cumulative_s": 0.024931992
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 417,
+    "function": "decode",
+    "calls": 1075,
+    "self_s": 0.0023660350000000003,
+    "cumulative_s": 0.022453979000000002
+  },
+  {
+    "file": "modeling/roofscape.py",
+    "line": 315,
+    "function": "build_roof",
+    "calls": 1,
+    "self_s": 1.5135000000000002e-05,
+    "cumulative_s": 0.021227722
+  },
+  {
+    "file": "modeling/roofscape.py",
+    "line": 321,
+    "function": "_build_roof_body",
+    "calls": 1,
+    "self_s": 5.7389e-05,
+    "cumulative_s": 0.021197429
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 442,
+    "function": "<dictcomp>",
+    "calls": 57,
+    "self_s": 0.000476981,
+    "cumulative_s": 0.020984158000000003
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 172,
+    "function": "_clean_ring",
+    "calls": 314,
+    "self_s": 0.008435963000000001,
+    "cumulative_s": 0.01830897
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 447,
+    "function": "<genexpr>",
+    "calls": 119,
+    "self_s": 8.8744e-05,
+    "cumulative_s": 0.014423668
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 358,
+    "function": "end_component",
+    "calls": 150,
+    "self_s": 0.0034956780000000003,
+    "cumulative_s": 0.010281123000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 246,
+    "function": "polygons",
+    "calls": 349,
+    "self_s": 0.0006075400000000001,
+    "cumulative_s": 0.008053174
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 627,
+    "function": "_wall_edge_uv",
+    "calls": 640,
+    "self_s": 0.0053434960000000005,
+    "cumulative_s": 0.007862832
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 436,
+    "function": "vert",
+    "calls": 1968,
+    "self_s": 0.003391208,
+    "cumulative_s": 0.007593581
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 651,
+    "function": "_level_ids",
+    "calls": 138,
+    "self_s": 0.00022956000000000002,
+    "cumulative_s": 0.006955126000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 227,
+    "function": "_oriented",
+    "calls": 288,
+    "self_s": 0.006276278000000001,
+    "cumulative_s": 0.006373467000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1235,
+    "function": "finish",
+    "calls": 1,
+    "self_s": 8.971800000000001e-05,
+    "cumulative_s": 0.0056742220000000005
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 652,
+    "function": "<listcomp>",
+    "calls": 138,
+    "self_s": 0.000560982,
+    "cumulative_s": 0.0036969790000000004
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1048,
+    "function": "W",
+    "calls": 456,
+    "self_s": 0.0018621330000000002,
+    "cumulative_s": 0.0033729320000000004
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 240,
+    "function": "_pos_key",
+    "calls": 1968,
+    "self_s": 0.0019141420000000002,
+    "cumulative_s": 0.003343551
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 653,
+    "function": "<listcomp>",
+    "calls": 138,
+    "self_s": 0.000415077,
+    "cumulative_s": 0.003028587
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1073,
+    "function": "at",
+    "calls": 304,
+    "self_s": 0.000147751,
+    "cumulative_s": 0.002303861
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 676,
+    "function": "<listcomp>",
+    "calls": 125,
+    "self_s": 0.002124265,
+    "cumulative_s": 0.0022492320000000003
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 1260,
+    "function": "street_envelope",
+    "calls": 3,
+    "self_s": 1.7507e-05,
+    "cumulative_s": 0.0021030650000000003
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 379,
+    "function": "<listcomp>",
+    "calls": 150,
+    "self_s": 0.002096905,
+    "cumulative_s": 0.002096905
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 487,
+    "function": "<listcomp>",
+    "calls": 756,
+    "self_s": 0.000814872,
+    "cumulative_s": 0.002025215
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 689,
+    "function": "<listcomp>",
+    "calls": 123,
+    "self_s": 0.001638088,
+    "cumulative_s": 0.001638088
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 572,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 0.00044562800000000005,
+    "cumulative_s": 0.001610904
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1239,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 0.0008253970000000001,
+    "cumulative_s": 0.00156152
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 413,
+    "function": "_ensure_component",
+    "calls": 141,
+    "self_s": 0.00011566400000000001,
+    "cumulative_s": 0.0015474360000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 348,
+    "function": "begin_component",
+    "calls": 150,
+    "self_s": 0.00042684200000000003,
+    "cumulative_s": 0.0015105860000000002
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 97,
+    "function": "_is_rectilinear",
+    "calls": 12,
+    "self_s": 0.000193895,
+    "cumulative_s": 0.0014658750000000002
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 72,
+    "function": "projection_envelope",
+    "calls": 3,
+    "self_s": 8.3268e-05,
+    "cumulative_s": 0.0014648950000000001
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 170,
+    "function": "resolve_zones",
+    "calls": 1,
+    "self_s": 5.0388000000000006e-05,
+    "cumulative_s": 0.001448501
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 233,
+    "function": "_masses",
+    "calls": 1,
+    "self_s": 1.582e-05,
+    "cumulative_s": 0.0014428610000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 564,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 0.000831742,
+    "cumulative_s": 0.00141643
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 219,
+    "function": "<dictcomp>",
+    "calls": 144,
+    "self_s": 0.001307295,
+    "cumulative_s": 0.001307295
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 67,
+    "function": "compose_masses",
+    "calls": 1,
+    "self_s": 3.0631e-05,
+    "cumulative_s": 0.0012465780000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 559,
+    "function": "height",
+    "calls": 2810,
+    "self_s": 0.000744093,
+    "cumulative_s": 0.001111201
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 852,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 0.000294613,
+    "cumulative_s": 0.0010620220000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1061,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 3.7061e-05,
+    "cumulative_s": 0.000939259
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 124,
+    "function": "_context",
+    "calls": 1,
+    "self_s": 2.6828e-05,
+    "cumulative_s": 0.00084267
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 48,
+    "function": "region_polygon",
+    "calls": 2,
+    "self_s": 4.8947000000000004e-05,
+    "cumulative_s": 0.000796535
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 343,
+    "function": "_auto_id",
+    "calls": 142,
+    "self_s": 0.000683972,
+    "cumulative_s": 0.000791033
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 125,
+    "function": "wall_domains",
+    "calls": 4,
+    "self_s": 5.3382000000000005e-05,
+    "cumulative_s": 0.000771973
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 496,
+    "function": "<listcomp>",
+    "calls": 756,
+    "self_s": 0.0007627290000000001,
+    "cumulative_s": 0.0007627290000000001
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 788,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 1.515e-05,
+    "cumulative_s": 0.0007549480000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 373,
+    "function": "<listcomp>",
+    "calls": 150,
+    "self_s": 0.000701126,
+    "cumulative_s": 0.000701126
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1052,
+    "function": "scale_of",
+    "calls": 232,
+    "self_s": 9.7959e-05,
+    "cumulative_s": 0.000692303
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 221,
+    "function": "<listcomp>",
+    "calls": 454,
+    "self_s": 0.000678765,
+    "cumulative_s": 0.000678765
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 450,
+    "function": "<genexpr>",
+    "calls": 114,
+    "self_s": 5.8222000000000006e-05,
+    "cumulative_s": 0.000655627
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 573,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 0.000139367,
+    "cumulative_s": 0.000647305
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1068,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 1.4593e-05,
+    "cumulative_s": 0.000645313
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 426,
+    "function": "uv_scale_for",
+    "calls": 234,
+    "self_s": 0.0005085980000000001,
+    "cumulative_s": 0.000601456
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 599,
+    "function": "<listcomp>",
+    "calls": 752,
+    "self_s": 0.0005986380000000001,
+    "cumulative_s": 0.0005986380000000001
+  },
+  {
+    "file": "modeling/balcony_assembly.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 2.8130000000000003e-05,
+    "cumulative_s": 0.000573233
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 25,
+    "function": "parcel_polygon",
+    "calls": 3,
+    "self_s": 9.172000000000001e-06,
+    "cumulative_s": 0.0005265900000000001
+  },
+  {
+    "file": "modeling/facade_top.py",
+    "line": 39,
+    "function": "wall_domain",
+    "calls": 8,
+    "self_s": 1.0812e-05,
+    "cumulative_s": 0.0005056230000000001
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 57,
+    "function": "outward_normal",
+    "calls": 5,
+    "self_s": 9.069300000000001e-05,
+    "cumulative_s": 0.0004471
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 173,
+    "function": "<listcomp>",
+    "calls": 314,
+    "self_s": 0.00042918800000000005,
+    "cumulative_s": 0.00042918800000000005
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 305,
+    "function": "_facade_controls",
+    "calls": 9,
+    "self_s": 0.000100301,
+    "cumulative_s": 0.0004177
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 149,
+    "function": "<genexpr>",
+    "calls": 12,
+    "self_s": 2.9945000000000002e-05,
+    "cumulative_s": 0.000404837
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 374,
+    "function": "<listcomp>",
+    "calls": 150,
+    "self_s": 0.000403753,
+    "cumulative_s": 0.000403753
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 117,
+    "function": "_polygon",
+    "calls": 1,
+    "self_s": 1.1948000000000001e-05,
+    "cumulative_s": 0.000383563
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 675,
+    "function": "track",
+    "calls": 329,
+    "self_s": 0.000311012,
+    "cumulative_s": 0.000383146
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 31,
+    "function": "region_frame",
+    "calls": 7,
+    "self_s": 0.00018539900000000002,
+    "cumulative_s": 0.000382485
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 21,
+    "function": "ring",
+    "calls": 5,
+    "self_s": 4.2269000000000005e-05,
+    "cumulative_s": 0.00037120100000000004
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1066,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 2.1965e-05,
+    "cumulative_s": 0.000364957
+  },
+  {
+    "file": "modeling/materials.py",
+    "line": 48,
+    "function": "resolve_materials",
+    "calls": 4,
+    "self_s": 6.438e-05,
+    "cumulative_s": 0.00033648
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 24,
+    "function": "calculate_mass_exposures",
+    "calls": 1,
+    "self_s": 4.5173e-05,
+    "cumulative_s": 0.00033048
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 797,
+    "function": "_rng",
+    "calls": 3,
+    "self_s": 0.00014973000000000002,
+    "cumulative_s": 0.00032393200000000003
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1067,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 1.5899e-05,
+    "cumulative_s": 0.00029272600000000004
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 854,
+    "function": "uv_of",
+    "calls": 800,
+    "self_s": 0.00027860300000000004,
+    "cumulative_s": 0.00027860300000000004
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 297,
+    "function": "__init__",
+    "calls": 1,
+    "self_s": 9.513e-06,
+    "cumulative_s": 0.000275534
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 71,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 3.185e-06,
+    "cumulative_s": 0.00025563
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 421,
+    "function": "mat_index",
+    "calls": 603,
+    "self_s": 0.000254572,
+    "cumulative_s": 0.000254572
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 17,
+    "function": "mass_polygon",
+    "calls": 4,
+    "self_s": 7.185000000000001e-06,
+    "cumulative_s": 0.000254411
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 27,
+    "function": "holes",
+    "calls": 5,
+    "self_s": 1.8834e-05,
+    "cumulative_s": 0.000247737
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 17,
+    "function": "snap",
+    "calls": 3,
+    "self_s": 5.013e-06,
+    "cumulative_s": 0.00024337000000000002
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 109,
+    "function": "_ring",
+    "calls": 1,
+    "self_s": 2.8644000000000002e-05,
+    "cumulative_s": 0.000227912
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 914,
+    "function": "<listcomp>",
+    "calls": 12,
+    "self_s": 2.1398e-05,
+    "cumulative_s": 0.00022006100000000002
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 137,
+    "function": "_complete",
+    "calls": 1,
+    "self_s": 6.4033e-05,
+    "cumulative_s": 0.000219583
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 283,
+    "function": "__init__",
+    "calls": 150,
+    "self_s": 0.00021519300000000002,
+    "cumulative_s": 0.00021519300000000002
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 511,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 8.27e-06,
+    "cumulative_s": 0.00021458700000000002
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 504,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 4.3820000000000006e-06,
+    "cumulative_s": 0.000203481
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 394,
+    "function": "component",
+    "calls": 6,
+    "self_s": 1.3262000000000001e-05,
+    "cumulative_s": 0.000202857
+  },
+  {
+    "file": "modeling/apertures.py",
+    "line": 7,
+    "function": "opening_shape",
+    "calls": 4,
+    "self_s": 8.343000000000001e-06,
+    "cumulative_s": 0.000199099
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 617,
+    "function": "<genexpr>",
+    "calls": 10,
+    "self_s": 1.3272000000000001e-05,
+    "cumulative_s": 0.00019551800000000002
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 728,
+    "function": "P",
+    "calls": 24,
+    "self_s": 8.7736e-05,
+    "cumulative_s": 0.000180115
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 794,
+    "function": "<lambda>",
+    "calls": 235,
+    "self_s": 0.000146216,
+    "cumulative_s": 0.00018000200000000002
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 918,
+    "function": "<genexpr>",
+    "calls": 24,
+    "self_s": 2.2009000000000002e-05,
+    "cumulative_s": 0.000179065
+  },
+  {
+    "file": "modeling/materials.py",
+    "line": 31,
+    "function": "validate_material",
+    "calls": 23,
+    "self_s": 9.3102e-05,
+    "cumulative_s": 0.000176508
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 922,
+    "function": "<listcomp>",
+    "calls": 12,
+    "self_s": 0.00016344000000000002,
+    "cumulative_s": 0.00016344000000000002
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 33,
+    "function": "front_lines",
+    "calls": 5,
+    "self_s": 2.3246e-05,
+    "cumulative_s": 0.000159578
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 323,
+    "function": "limit_for",
+    "calls": 153,
+    "self_s": 0.00013381000000000002,
+    "cumulative_s": 0.00013381000000000002
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 85,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 3.659e-06,
+    "cumulative_s": 0.00013134
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 583,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 3.1898000000000005e-05,
+    "cumulative_s": 0.00013065
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 60,
+    "function": "emits",
+    "calls": 260,
+    "self_s": 0.00012815100000000001,
+    "cumulative_s": 0.00012815100000000001
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 919,
+    "function": "<genexpr>",
+    "calls": 24,
+    "self_s": 1.3626000000000001e-05,
+    "cumulative_s": 0.00012337
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 339,
+    "function": "_assembly",
+    "calls": 284,
+    "self_s": 0.000111546,
+    "cumulative_s": 0.000111546
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 110,
+    "function": "resolve_supports",
+    "calls": 1,
+    "self_s": 7.588000000000001e-06,
+    "cumulative_s": 0.000101308
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1002,
+    "function": "to_u",
+    "calls": 18,
+    "self_s": 8.0077e-05,
+    "cumulative_s": 9.8459e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 976,
+    "function": "<setcomp>",
+    "calls": 3,
+    "self_s": 1.4733000000000001e-05,
+    "cumulative_s": 9.4857e-05
+  },
+  {
+    "file": "modeling/site.py",
+    "line": 49,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 1.0383e-05,
+    "cumulative_s": 9.3715e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 939,
+    "function": "<listcomp>",
+    "calls": 6,
+    "self_s": 8.575000000000001e-05,
+    "cumulative_s": 8.575000000000001e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 960,
+    "function": "top",
+    "calls": 15,
+    "self_s": 6.5683e-05,
+    "cumulative_s": 8.5425e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 933,
+    "function": "<listcomp>",
+    "calls": 3,
+    "self_s": 4.4528000000000005e-05,
+    "cumulative_s": 8.1628e-05
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 438,
+    "function": "<setcomp>",
+    "calls": 57,
+    "self_s": 7.9898e-05,
+    "cumulative_s": 7.9898e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1060,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 2.6135000000000003e-05,
+    "cumulative_s": 7.479600000000001e-05
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 9,
+    "function": "filter_lines",
+    "calls": 1,
+    "self_s": 4.535000000000001e-06,
+    "cumulative_s": 6.791800000000001e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 650,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 1.151e-06,
+    "cumulative_s": 6.1883e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 218,
+    "function": "<listcomp>",
+    "calls": 144,
+    "self_s": 4.8865e-05,
+    "cumulative_s": 6.0164e-05
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 84,
+    "function": "<lambda>",
+    "calls": 1,
+    "self_s": 5.7050000000000004e-06,
+    "cumulative_s": 5.6026e-05
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 1253,
+    "function": "assembly",
+    "calls": 8,
+    "self_s": 1.4459000000000002e-05,
+    "cumulative_s": 5.6018000000000005e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 737,
+    "function": "wuv",
+    "calls": 72,
+    "self_s": 3.3829000000000004e-05,
+    "cumulative_s": 5.3879000000000004e-05
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 549,
+    "function": "<genexpr>",
+    "calls": 5,
+    "self_s": 3.123e-06,
+    "cumulative_s": 5.3667000000000006e-05
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 171,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 1.119e-06,
+    "cumulative_s": 4.8414e-05
+  },
+  {
+    "file": "modeling/door_assembly.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 4.2113e-05,
+    "cumulative_s": 4.7435e-05
+  },
+  {
+    "file": "modeling/window_assembly.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 1.9695e-05,
+    "cumulative_s": 4.7183000000000005e-05
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 341,
+    "function": "compose_facade",
+    "calls": 4,
+    "self_s": 2.2299e-05,
+    "cumulative_s": 4.2127000000000005e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 984,
+    "function": "<listcomp>",
+    "calls": 3,
+    "self_s": 4.0003e-05,
+    "cumulative_s": 4.0003e-05
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 150,
+    "function": "resolve_trims",
+    "calls": 1,
+    "self_s": 7.568e-06,
+    "cumulative_s": 3.9696e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 606,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 3.9529e-05,
+    "cumulative_s": 3.9529e-05
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 24,
+    "function": "mass_trim",
+    "calls": 6,
+    "self_s": 2.9157000000000002e-05,
+    "cumulative_s": 3.4887e-05
+  },
+  {
+    "file": "modeling/entablature_resolver.py",
+    "line": 22,
+    "function": "resolve_entablatures",
+    "calls": 1,
+    "self_s": 2.6117e-05,
+    "cumulative_s": 3.3051e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 327,
+    "function": "<genexpr>",
+    "calls": 90,
+    "self_s": 2.451e-05,
+    "cumulative_s": 3.1926e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 315,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 6.291e-06,
+    "cumulative_s": 2.9996000000000002e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 575,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 2.9249e-05,
+    "cumulative_s": 2.9622000000000002e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 585,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 2.8334e-05,
+    "cumulative_s": 2.8334e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 403,
+    "function": "assembly",
+    "calls": 22,
+    "self_s": 2.0356e-05,
+    "cumulative_s": 2.8173000000000003e-05
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 58,
+    "function": "<listcomp>",
+    "calls": 2,
+    "self_s": 2.7436000000000003e-05,
+    "cumulative_s": 2.7436000000000003e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 524,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 2.4653000000000003e-05,
+    "cumulative_s": 2.5636000000000003e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 587,
+    "function": "<listcomp>",
+    "calls": 135,
+    "self_s": 2.5101000000000002e-05,
+    "cumulative_s": 2.5101000000000002e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 531,
+    "function": "<lambda>",
+    "calls": 16,
+    "self_s": 2.2212e-05,
+    "cumulative_s": 2.5017e-05
+  },
+  {
+    "file": "modeling/window_assembly.py",
+    "line": 16,
+    "function": "<genexpr>",
+    "calls": 26,
+    "self_s": 1.9375e-05,
+    "cumulative_s": 2.4416e-05
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 81,
+    "function": "<listcomp>",
+    "calls": 3,
+    "self_s": 3.5850000000000004e-06,
+    "cumulative_s": 2.4294e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 104,
+    "function": "_check",
+    "calls": 181,
+    "self_s": 2.4114e-05,
+    "cumulative_s": 2.4114e-05
+  },
+  {
+    "file": "modeling/materials.py",
+    "line": 83,
+    "function": "material_to_dict",
+    "calls": 23,
+    "self_s": 2.3705e-05,
+    "cumulative_s": 2.3705e-05
+  },
+  {
+    "file": "modeling/roof_assembly.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 1.8889e-05,
+    "cumulative_s": 2.3177000000000002e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 735,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 3.475e-06,
+    "cumulative_s": 2.1862000000000002e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1012,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 1.1073e-05,
+    "cumulative_s": 2.1423e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 510,
+    "function": "_uv_for_wall",
+    "calls": 72,
+    "self_s": 2.0050000000000003e-05,
+    "cumulative_s": 2.0050000000000003e-05
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 540,
+    "function": "<lambda>",
+    "calls": 139,
+    "self_s": 1.9228e-05,
+    "cumulative_s": 1.9228e-05
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 47,
+    "function": "validate_trim",
+    "calls": 1,
+    "self_s": 5.868e-06,
+    "cumulative_s": 1.8860000000000002e-05
+  },
+  {
+    "file": "modeling/geometry_constraints.py",
+    "line": 43,
+    "function": "largest_polygon",
+    "calls": 1,
+    "self_s": 2.0890000000000002e-06,
+    "cumulative_s": 1.83e-05
+  },
+  {
+    "file": "modeling/materials.py",
+    "line": 39,
+    "function": "<genexpr>",
+    "calls": 92,
+    "self_s": 1.7152e-05,
+    "cumulative_s": 1.7152e-05
+  },
+  {
+    "file": "modeling/materials.py",
+    "line": 50,
+    "function": "<dictcomp>",
+    "calls": 4,
+    "self_s": 1.5683000000000002e-05,
+    "cumulative_s": 1.5683000000000002e-05
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 122,
+    "function": "<lambda>",
+    "calls": 96,
+    "self_s": 1.4558e-05,
+    "cumulative_s": 1.4558e-05
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 28,
+    "function": "<genexpr>",
+    "calls": 5,
+    "self_s": 5.707000000000001e-06,
+    "cumulative_s": 1.4242e-05
+  },
+  {
+    "file": "modeling/railing_assembly.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 1.0094e-05,
+    "cumulative_s": 1.3650000000000001e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 562,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 7.537000000000001e-06,
+    "cumulative_s": 1.3213e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 611,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 1.3690000000000001e-06,
+    "cumulative_s": 1.3056e-05
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 595,
+    "function": "<lambda>",
+    "calls": 4,
+    "self_s": 1.1464e-05,
+    "cumulative_s": 1.2146e-05
+  },
+  {
+    "file": "domain/models.py",
+    "line": 256,
+    "function": "has_program",
+    "calls": 33,
+    "self_s": 1.1752e-05,
+    "cumulative_s": 1.1752e-05
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 48,
+    "function": "grille_spacing_m",
+    "calls": 4,
+    "self_s": 5.808e-06,
+    "cumulative_s": 1.0916e-05
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 845,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 9.903e-06,
+    "cumulative_s": 9.903e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 56,
+    "function": "_crown_projections",
+    "calls": 4,
+    "self_s": 7.179e-06,
+    "cumulative_s": 9.757e-06
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 31,
+    "function": "validate_plinth",
+    "calls": 1,
+    "self_s": 4.051e-06,
+    "cumulative_s": 8.33e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 230,
+    "function": "validate_opening_programs",
+    "calls": 9,
+    "self_s": 8.221e-06,
+    "cumulative_s": 8.221e-06
+  },
+  {
+    "file": "modeling/fences.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 5.378e-06,
+    "cumulative_s": 7.534e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1063,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 5.961e-06,
+    "cumulative_s": 7.041000000000001e-06
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 29,
+    "function": "_pick",
+    "calls": 5,
+    "self_s": 6.885e-06,
+    "cumulative_s": 6.885e-06
+  },
+  {
+    "file": "modeling/top_composition.py",
+    "line": 1,
+    "function": "<module>",
+    "calls": 1,
+    "self_s": 6.222000000000001e-06,
+    "cumulative_s": 6.222000000000001e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 41,
+    "function": "validate_crowns",
+    "calls": 13,
+    "self_s": 5.815e-06,
+    "cumulative_s": 5.815e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 908,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 5.715e-06,
+    "cumulative_s": 5.715e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1070,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 5.57e-06,
+    "cumulative_s": 5.57e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 133,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 5.022e-06,
+    "cumulative_s": 5.382e-06
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 1256,
+    "function": "__getattr__",
+    "calls": 4,
+    "self_s": 3.5440000000000003e-06,
+    "cumulative_s": 4.4140000000000004e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1013,
+    "function": "<genexpr>",
+    "calls": 18,
+    "self_s": 4.4140000000000004e-06,
+    "cumulative_s": 4.4140000000000004e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1071,
+    "function": "<listcomp>",
+    "calls": 9,
+    "self_s": 4.369e-06,
+    "cumulative_s": 4.369e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 132,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 4.222e-06,
+    "cumulative_s": 4.3310000000000005e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 1014,
+    "function": "<genexpr>",
+    "calls": 18,
+    "self_s": 3.9520000000000004e-06,
+    "cumulative_s": 3.9520000000000004e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 789,
+    "function": "<genexpr>",
+    "calls": 9,
+    "self_s": 3.932000000000001e-06,
+    "cumulative_s": 3.932000000000001e-06
+  },
+  {
+    "file": "modeling/site.py",
+    "line": 34,
+    "function": "spans_gate",
+    "calls": 3,
+    "self_s": 3.761e-06,
+    "cumulative_s": 3.761e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 157,
+    "function": "validate_order",
+    "calls": 9,
+    "self_s": 3.74e-06,
+    "cumulative_s": 3.74e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 741,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 3.7080000000000003e-06,
+    "cumulative_s": 3.7080000000000003e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 516,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 3.3250000000000004e-06,
+    "cumulative_s": 3.695e-06
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 23,
+    "function": "<lambda>",
+    "calls": 21,
+    "self_s": 3.672e-06,
+    "cumulative_s": 3.672e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 124,
+    "function": "validate_bay_groups",
+    "calls": 11,
+    "self_s": 3.6510000000000003e-06,
+    "cumulative_s": 3.6510000000000003e-06
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 1215,
+    "function": "__init__",
+    "calls": 4,
+    "self_s": 3.621e-06,
+    "cumulative_s": 3.621e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 316,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 3.48e-06,
+    "cumulative_s": 3.48e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 922,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 3.3740000000000002e-06,
+    "cumulative_s": 3.3740000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 571,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 3.309e-06,
+    "cumulative_s": 3.309e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 225,
+    "function": "<genexpr>",
+    "calls": 16,
+    "self_s": 3.2290000000000003e-06,
+    "cumulative_s": 3.2290000000000003e-06
+  },
+  {
+    "file": "modeling/roof_detail_resolver.py",
+    "line": 100,
+    "function": "resolve_roof_assemblies",
+    "calls": 1,
+    "self_s": 2.939e-06,
+    "cumulative_s": 3.022e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 140,
+    "function": "fill",
+    "calls": 13,
+    "self_s": 2.971e-06,
+    "cumulative_s": 2.971e-06
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 36,
+    "function": "fence_bar_spacing_m",
+    "calls": 1,
+    "self_s": 1.1e-06,
+    "cumulative_s": 2.877e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 546,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 2.8620000000000003e-06,
+    "cumulative_s": 2.8620000000000003e-06
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 53,
+    "function": "<genexpr>",
+    "calls": 3,
+    "self_s": 2.2360000000000003e-06,
+    "cumulative_s": 2.825e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 221,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 2.797e-06,
+    "cumulative_s": 2.797e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 380,
+    "function": "_validate_facade_zones",
+    "calls": 1,
+    "self_s": 2.572e-06,
+    "cumulative_s": 2.7770000000000003e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 853,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 2.736e-06,
+    "cumulative_s": 2.736e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 809,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 2.68e-06,
+    "cumulative_s": 2.68e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 312,
+    "function": "<setcomp>",
+    "calls": 9,
+    "self_s": 2.6470000000000002e-06,
+    "cumulative_s": 2.6470000000000002e-06
+  },
+  {
+    "file": "modeling/facade_top.py",
+    "line": 13,
+    "function": "validate_top_profile",
+    "calls": 9,
+    "self_s": 2.498e-06,
+    "cumulative_s": 2.498e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 759,
+    "function": "<listcomp>",
+    "calls": 2,
+    "self_s": 2.3200000000000002e-06,
+    "cumulative_s": 2.3200000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 833,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 2.176e-06,
+    "cumulative_s": 2.176e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 149,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 2.046e-06,
+    "cumulative_s": 2.15e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 820,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 2.0830000000000002e-06,
+    "cumulative_s": 2.0830000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 844,
+    "function": "<setcomp>",
+    "calls": 4,
+    "self_s": 2.0450000000000003e-06,
+    "cumulative_s": 2.0450000000000003e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 547,
+    "function": "<genexpr>",
+    "calls": 8,
+    "self_s": 2.0220000000000003e-06,
+    "cumulative_s": 2.0220000000000003e-06
+  },
+  {
+    "file": "modeling/mesh_builder.py",
+    "line": 762,
+    "function": "<listcomp>",
+    "calls": 2,
+    "self_s": 2.0000000000000003e-06,
+    "cumulative_s": 2.0000000000000003e-06
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 36,
+    "function": "<genexpr>",
+    "calls": 5,
+    "self_s": 1.5720000000000002e-06,
+    "cumulative_s": 1.945e-06
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 157,
+    "function": "<genexpr>",
+    "calls": 5,
+    "self_s": 1.8660000000000002e-06,
+    "cumulative_s": 1.8660000000000002e-06
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 133,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 1.813e-06,
+    "cumulative_s": 1.813e-06
+  },
+  {
+    "file": "modeling/balcony_resolver.py",
+    "line": 89,
+    "function": "resolve_balconies",
+    "calls": 1,
+    "self_s": 1.6540000000000002e-06,
+    "cumulative_s": 1.6540000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 825,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.59e-06,
+    "cumulative_s": 1.59e-06
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 79,
+    "function": "<genexpr>",
+    "calls": 3,
+    "self_s": 1.571e-06,
+    "cumulative_s": 1.571e-06
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 36,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 1.503e-06,
+    "cumulative_s": 1.503e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 556,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 1.492e-06,
+    "cumulative_s": 1.492e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 181,
+    "function": "_order_projections",
+    "calls": 4,
+    "self_s": 1.4200000000000002e-06,
+    "cumulative_s": 1.4200000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 839,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.3580000000000002e-06,
+    "cumulative_s": 1.3580000000000002e-06
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 118,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 1.072e-06,
+    "cumulative_s": 1.3490000000000001e-06
+  },
+  {
+    "file": "modeling/boundaries.py",
+    "line": 47,
+    "function": "generate_boundaries",
+    "calls": 1,
+    "self_s": 1.117e-06,
+    "cumulative_s": 1.331e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 130,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.221e-06,
+    "cumulative_s": 1.3240000000000002e-06
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 153,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.2360000000000001e-06,
+    "cumulative_s": 1.2360000000000001e-06
+  },
+  {
+    "file": "modeling/vertical_member_resolver.py",
+    "line": 20,
+    "function": "resolve_members",
+    "calls": 1,
+    "self_s": 1.235e-06,
+    "cumulative_s": 1.235e-06
+  },
+  {
+    "file": "modeling/facade_composition.py",
+    "line": 58,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.229e-06,
+    "cumulative_s": 1.229e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 216,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.218e-06,
+    "cumulative_s": 1.218e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 113,
+    "function": "<lambda>",
+    "calls": 5,
+    "self_s": 1.216e-06,
+    "cumulative_s": 1.216e-06
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 113,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.1970000000000001e-06,
+    "cumulative_s": 1.1970000000000001e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 152,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.0930000000000002e-06,
+    "cumulative_s": 1.181e-06
+  },
+  {
+    "file": "modeling/entrances.py",
+    "line": 25,
+    "function": "resolve_entrances",
+    "calls": 1,
+    "self_s": 1.179e-06,
+    "cumulative_s": 1.179e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 150,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.142e-06,
+    "cumulative_s": 1.142e-06
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 175,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 1.125e-06,
+    "cumulative_s": 1.125e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 769,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 1.1240000000000002e-06,
+    "cumulative_s": 1.1240000000000002e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 532,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 1.122e-06,
+    "cumulative_s": 1.122e-06
+  },
+  {
+    "file": "modeling/grammar.py",
+    "line": 525,
+    "function": "<genexpr>",
+    "calls": 5,
+    "self_s": 1.103e-06,
+    "cumulative_s": 1.103e-06
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 78,
+    "function": "wants_mortar_courses",
+    "calls": 2,
+    "self_s": 1.0980000000000001e-06,
+    "cumulative_s": 1.0980000000000001e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 894,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 1.0500000000000001e-06,
+    "cumulative_s": 1.0500000000000001e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 514,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.048e-06,
+    "cumulative_s": 1.048e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 474,
+    "function": "<genexpr>",
+    "calls": 2,
+    "self_s": 1.012e-06,
+    "cumulative_s": 1.012e-06
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 811,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 9.9e-07,
+    "cumulative_s": 9.9e-07
+  },
+  {
+    "file": "modeling/facade_top.py",
+    "line": 32,
+    "function": "resolve_top_profile",
+    "calls": 4,
+    "self_s": 9.78e-07,
+    "cumulative_s": 9.78e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 583,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 9.73e-07,
+    "cumulative_s": 9.73e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 930,
+    "function": "<genexpr>",
+    "calls": 4,
+    "self_s": 9.570000000000001e-07,
+    "cumulative_s": 9.570000000000001e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 222,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 9.35e-07,
+    "cumulative_s": 9.35e-07
+  },
+  {
+    "file": "modeling/crown_resolver.py",
+    "line": 23,
+    "function": "resolve_crowns",
+    "calls": 1,
+    "self_s": 9.11e-07,
+    "cumulative_s": 9.11e-07
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 143,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 8.930000000000001e-07,
+    "cumulative_s": 8.930000000000001e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 535,
+    "function": "<listcomp>",
+    "calls": 4,
+    "self_s": 8.49e-07,
+    "cumulative_s": 8.49e-07
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 78,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 8.200000000000001e-07,
+    "cumulative_s": 8.200000000000001e-07
+  },
+  {
+    "file": "pipeline/theta.py",
+    "line": 69,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 7.85e-07,
+    "cumulative_s": 7.85e-07
+  },
+  {
+    "file": "modeling/detail.py",
+    "line": 25,
+    "function": "__post_init__",
+    "calls": 1,
+    "self_s": 7.06e-07,
+    "cumulative_s": 7.06e-07
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 83,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 7.040000000000001e-07,
+    "cumulative_s": 7.040000000000001e-07
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 199,
+    "function": "emit_trims",
+    "calls": 1,
+    "self_s": 6.890000000000001e-07,
+    "cumulative_s": 6.890000000000001e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 967,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 5.830000000000001e-07,
+    "cumulative_s": 5.830000000000001e-07
+  },
+  {
+    "file": "modeling/exposure.py",
+    "line": 105,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 5.490000000000001e-07,
+    "cumulative_s": 5.490000000000001e-07
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 70,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 5.39e-07,
+    "cumulative_s": 5.39e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 771,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 4.99e-07,
+    "cumulative_s": 4.99e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 770,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 4.91e-07,
+    "cumulative_s": 4.91e-07
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 161,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 4.800000000000001e-07,
+    "cumulative_s": 4.800000000000001e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 772,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 4.4600000000000005e-07,
+    "cumulative_s": 4.4600000000000005e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 773,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 4.37e-07,
+    "cumulative_s": 4.37e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 971,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 4.2600000000000003e-07,
+    "cumulative_s": 4.2600000000000003e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 471,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 4.2400000000000004e-07,
+    "cumulative_s": 4.2400000000000004e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 736,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 3.7100000000000003e-07,
+    "cumulative_s": 3.7100000000000003e-07
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 96,
+    "function": "<lambda>",
+    "calls": 1,
+    "self_s": 3.54e-07,
+    "cumulative_s": 3.54e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 495,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 3.39e-07,
+    "cumulative_s": 3.39e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 635,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 3.1700000000000005e-07,
+    "cumulative_s": 3.1700000000000005e-07
+  },
+  {
+    "file": "modeling/top_composition.py",
+    "line": 11,
+    "function": "expand_roof_bodies",
+    "calls": 1,
+    "self_s": 3.1700000000000005e-07,
+    "cumulative_s": 3.1700000000000005e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 497,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 3.11e-07,
+    "cumulative_s": 3.11e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 500,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 3.0700000000000004e-07,
+    "cumulative_s": 3.0700000000000004e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 737,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 2.8800000000000004e-07,
+    "cumulative_s": 2.8800000000000004e-07
+  },
+  {
+    "file": "domain/theta.py",
+    "line": 454,
+    "function": "<dictcomp>",
+    "calls": 1,
+    "self_s": 2.85e-07,
+    "cumulative_s": 2.85e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 632,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 2.8300000000000003e-07,
+    "cumulative_s": 2.8300000000000003e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 670,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 2.79e-07,
+    "cumulative_s": 2.79e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 633,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 2.75e-07,
+    "cumulative_s": 2.75e-07
+  },
+  {
+    "file": "modeling/entablature_resolver.py",
+    "line": 73,
+    "function": "<setcomp>",
+    "calls": 1,
+    "self_s": 2.6400000000000003e-07,
+    "cumulative_s": 2.6400000000000003e-07
+  },
+  {
+    "file": "modeling/trim_resolver.py",
+    "line": 163,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 2.5200000000000003e-07,
+    "cumulative_s": 2.5200000000000003e-07
+  },
+  {
+    "file": "modeling/assembly.py",
+    "line": 172,
+    "function": "<listcomp>",
+    "calls": 1,
+    "self_s": 2.46e-07,
+    "cumulative_s": 2.46e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 499,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 1.8700000000000002e-07,
+    "cumulative_s": 1.8700000000000002e-07
+  },
+  {
+    "file": "modeling/theta.py",
+    "line": 502,
+    "function": "<genexpr>",
+    "calls": 1,
+    "self_s": 1.36e-07,
+    "cumulative_s": 1.36e-07
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "vertices": 516,
+  "triangles": 952,
+  "parts": 42,
+  "semantic_types": [
+    "door_board",
+    "door_handle",
+    "door_hinge",
+    "door_leaf_frame",
+    "door_moulding",
+    "door_reveal",
+    "door_threshold",
+    "entrance_step",
+    "roof_slab",
+    "wall"
+  ],
+  "faces_by_semantic": {
+    "door_moulding": 640,
+    "wall": 88,
+    "door_board": 72,
+    "door_reveal": 32,
+    "door_leaf_frame": 32,
+    "door_hinge": 24,
+    "entrance_step": 24,
+    "roof_slab": 16,
+    "door_handle": 12,
+    "door_threshold": 12
+  },
+  "max_outside_triangle_area_m2": 0.0,
+  "min_triangle_area_m2": 8.194029874970429e-06,
+  "envelope_test": "passed",
+  "topology": "assembly of intersecting closed components; not Boolean-unioned"
+}

@@ -1,0 +1,144 @@
+{
+  "version": "interior-plan-v1",
+  "floors": [
+    {
+      "floor": 1,
+      "rooms": 11,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "living": 1,
+        "bedroom": 6,
+        "kitchen_dining": 1
+      },
+      "doors": 10,
+      "windows": 2,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor1/hall": 22.08,
+        "floor1/bath": 4.84,
+        "floor1/stairs": 6.88,
+        "floor1/room0": 6.47,
+        "floor1/room1": 17.99,
+        "floor1/room2": 7.93,
+        "floor1/room3": 12.8,
+        "floor1/room4": 15.18,
+        "floor1/room5": 11.34,
+        "floor1/room6": 21.59,
+        "floor1/room7": 15.35
+      }
+    },
+    {
+      "floor": 2,
+      "rooms": 10,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 4,
+        "living": 2,
+        "kitchen_dining": 1
+      },
+      "doors": 9,
+      "windows": 0,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor2/hall": 14.04,
+        "floor2/bath": 4.84,
+        "floor2/stairs": 6.88,
+        "floor2/room0": 13.07,
+        "floor2/room1": 20.68,
+        "floor2/room2": 11.14,
+        "floor2/room3": 18.33,
+        "floor2/room4": 11.25,
+        "floor2/room5": 21.65,
+        "floor2/room6": 14.19
+      }
+    },
+    {
+      "floor": 3,
+      "rooms": 11,
+      "kinds": {
+        "circulation": 1,
+        "bathroom": 1,
+        "stairs": 1,
+        "bedroom": 5,
+        "living": 2,
+        "kitchen_dining": 1
+      },
+      "doors": 10,
+      "windows": 2,
+      "corridor_width_m": 1.2,
+      "coverage_error_m2": 0.0,
+      "room_areas": {
+        "floor3/hall": 14.08,
+        "floor3/bath": 4.84,
+        "floor3/stairs": 6.88,
+        "floor3/room0": 15.56,
+        "floor3/room1": 15.61,
+        "floor3/room2": 12.93,
+        "floor3/room3": 16.97,
+        "floor3/room4": 13.6,
+        "floor3/room5": 8.62,
+        "floor3/room6": 17.91,
+        "floor3/room7": 16.24
+      }
+    }
+  ],
+  "core_flights": 2,
+  "selected_alternative": 1,
+  "alternatives": [
+    {
+      "id": 0,
+      "status": "valid",
+      "score": 0.6763117930944206
+    },
+    {
+      "id": 1,
+      "status": "valid",
+      "score": 0.5626587141636578
+    },
+    {
+      "id": 2,
+      "status": "valid",
+      "score": 0.7396559957372897
+    },
+    {
+      "id": 3,
+      "status": "valid",
+      "score": 0.6227473089212783
+    },
+    {
+      "id": 4,
+      "status": "valid",
+      "score": 0.8270160850171151
+    },
+    {
+      "id": 5,
+      "status": "valid",
+      "score": 0.6849257655132371
+    },
+    {
+      "id": 6,
+      "status": "valid",
+      "score": 0.5709830194715635
+    },
+    {
+      "id": 7,
+      "status": "valid",
+      "score": 0.6952732316881193
+    }
+  ],
+  "connections": 33,
+  "checks": {
+    "connected": true,
+    "continuous_core": true,
+    "engineering_verified": false,
+    "score": 0.5626587141636578,
+    "exterior_preserved": true
+  },
+  "scope": "schematic interior zones and circulation, not construction documents"
+}

@@ -1,0 +1,118 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 160,
+  "by_kind": {
+    "partition": 6,
+    "jamb_left": 12,
+    "jamb_right": 12,
+    "head": 12,
+    "leaf0_left": 12,
+    "leaf0_right": 12,
+    "leaf0_bottom": 12,
+    "leaf0_top": 12,
+    "leaf0_infill": 12,
+    "handle0": 10,
+    "wall": 6,
+    "sill": 2,
+    "sill_cap": 2,
+    "leaf1_left": 2,
+    "leaf1_right": 2,
+    "leaf1_bottom": 2,
+    "leaf1_top": 2,
+    "leaf1_infill": 2,
+    "slab": 4,
+    "column": 24
+  },
+  "by_material": {
+    "plaster": 12,
+    "metal": 114,
+    "stone": 2,
+    "glass": 4,
+    "concrete": 28
+  },
+  "openings": 12,
+  "windows": 2,
+  "doors": 10,
+  "explicit_windows": 0,
+  "completed_windows": 2,
+  "mechanisms": {
+    "sliding": 2
+  },
+  "styles": {
+    "moderno": 12
+  },
+  "useful_heights": [
+    3.02,
+    2.62,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor1/door0",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor1/door2",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor2/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/door1",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor3/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor3/door1",
+      "reason": "shift along same shared wall for frame clearance"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 0.0,
+    "minimum_lintel_m": 0.47000000000000064,
+    "openings": 12,
+    "explicit_windows": 0,
+    "completed_windows": 2,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 12,
+      "metal": 114,
+      "stone": 2,
+      "glass": 4,
+      "concrete": 28
+    }
+  }
+}

@@ -1,0 +1,188 @@
+[
+  {
+    "id": "tyQaMS8skCpsOJ0wRHbang",
+    "date": "2024-05",
+    "camera_xy": [
+      280210.3387461066,
+      8657539.887804966
+    ],
+    "camera_lonlat": [
+      -77.0196669871731,
+      -12.13648032286817
+    ],
+    "pose": {
+      "heading_deg": 342.0627136230469,
+      "pitch_deg": 0.015472412109375,
+      "roll_deg": 0.07327686250209808
+    },
+    "image_path": "fotos_barranco/tyQaMS8skCpsOJ0wRHbang.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": 1.2998992975337273,
+      "fov_rad": 1.9909160663219914,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280210.3387461066,
+        8657539.887804966
+      ],
+      "vertices_relative_xy": [
+        [
+          39.824087605811656,
+          6.587429845705628
+        ],
+        [
+          39.663887605653144,
+          7.0650298446416855
+        ],
+        [
+          36.58678760466864,
+          16.387829845771194
+        ],
+        [
+          3.361287606006954,
+          5.348329845815897
+        ],
+        [
+          6.5698876062524505,
+          -4.350870154798031
+        ],
+        [
+          39.824087605811656,
+          6.587429845705628
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/001.jpg",
+    "sha256": "0802bd6b40afd281168b6fc3e852cfbf4b505e47d5624483597c0ea7ba5cd225",
+    "image_role": "clean_projected_image"
+  },
+  {
+    "id": "oZ1wrA76ZreE0XrMgouLug",
+    "date": "2024-05",
+    "camera_xy": [
+      280213.4807184496,
+      8657530.275448693
+    ],
+    "camera_lonlat": [
+      -77.01963878245286,
+      -12.1365674064714
+    ],
+    "pose": {
+      "heading_deg": 341.87731933593756,
+      "pitch_deg": 0.00846099853515625,
+      "roll_deg": 359.88119506835943
+    },
+    "image_path": "fotos_barranco/oZ1wrA76ZreE0XrMgouLug.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": 0.8690024442774246,
+      "fov_rad": 1.9879407911417881,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280213.4807184496,
+        8657530.275448693
+      ],
+      "vertices_relative_xy": [
+        [
+          36.68211526283994,
+          16.199786119163036
+        ],
+        [
+          36.52191526268143,
+          16.677386118099093
+        ],
+        [
+          33.44481526169693,
+          26.0001861192286
+        ],
+        [
+          0.21931526303524151,
+          14.960686119273305
+        ],
+        [
+          3.427915263280738,
+          5.261486118659377
+        ],
+        [
+          36.68211526283994,
+          16.199786119163036
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/002.jpg",
+    "sha256": "d0d0d49ea077c08681566caee82d86352a70cb864c4f4e4e82628af7018315f8",
+    "image_role": "clean_projected_image"
+  },
+  {
+    "id": "dkKZSdzvoCSMlT3KK2tkvw",
+    "date": "2024-05",
+    "camera_xy": [
+      280207.32430422294,
+      8657549.072266717
+    ],
+    "camera_lonlat": [
+      -77.01969404963994,
+      -12.13639711496896
+    ],
+    "pose": {
+      "heading_deg": 341.9928283691406,
+      "pitch_deg": 359.87520599365234,
+      "roll_deg": 0.09029965847730637
+    },
+    "image_path": "fotos_barranco/dkKZSdzvoCSMlT3KK2tkvw.jpg",
+    "projection": {
+      "version": "angular-enu-v1",
+      "width": 960,
+      "height": 640,
+      "yaw_rad": 1.6992861161047668,
+      "fov_rad": 1.931586507493264,
+      "bottom_rad": -0.6108652381980153,
+      "top_rad": 1.4835298641951802,
+      "camera_height_m": 2.5,
+      "camera_xy": [
+        280207.32430422294,
+        8657549.072266717
+      ],
+      "vertices_relative_xy": [
+        [
+          42.83852948946878,
+          -2.597031904384494
+        ],
+        [
+          42.67832948931027,
+          -2.1194319054484367
+        ],
+        [
+          39.60122948832577,
+          7.203368095681071
+        ],
+        [
+          6.3757294896640815,
+          -3.8361319042742252
+        ],
+        [
+          9.584329489909578,
+          -13.535331904888153
+        ],
+        [
+          42.83852948946878,
+          -2.597031904384494
+        ]
+      ],
+      "coordinate_system": "EPSG:32718; east,north metres; flat ground; z up"
+    },
+    "attachment": "evidence/003.jpg",
+    "sha256": "06fdeda29944febc56f5978f746e80085f0b08210d376b4cd8787dab3755e1f8",
+    "image_role": "clean_projected_image"
+  }
+]

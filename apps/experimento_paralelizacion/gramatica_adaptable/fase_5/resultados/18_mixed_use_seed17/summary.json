@@ -1,0 +1,68 @@
+{
+  "version": "site-plan-v1",
+  "site_parts": 0,
+  "building_parts": 265,
+  "fence": null,
+  "gates": [],
+  "accesses": [
+    {
+      "id": "site/pedestrian_access",
+      "kind": "pedestrian",
+      "from_id": "street/F1",
+      "to_id": "floor1/entrance0",
+      "route_id": "site/pedestrian_access/route",
+      "clear_width_m": 0.8599999999999993
+    }
+  ],
+  "routes": [
+    {
+      "id": "site/pedestrian_access/route",
+      "kind": "pedestrian",
+      "axis": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            3.9,
+            0.0
+          ],
+          [
+            3.9,
+            0.0
+          ]
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": []
+      },
+      "width_m": 0.82,
+      "length_m": 0.0,
+      "rise_m": 0,
+      "transition": "direct"
+    }
+  ],
+  "decisions": [],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "parcel_containment": true,
+    "accesses_connected": true,
+    "fence_absent": true,
+    "ground_routes": 1,
+    "engineering_verified": false
+  },
+  "audit": {
+    "watertight": true,
+    "non_watertight": [],
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": []
+  }
+}

@@ -363,8 +363,8 @@
       }
      ],
      "roof": {
-      "kind": "gable",
-      "slope_deg": 22,
+      "kind": "flat",
+      "slope_deg": null,
       "parapet_m": 0,
       "props": []
      }

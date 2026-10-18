@@ -1,0 +1,854 @@
+{
+  "$defs": {
+    "CorniceControls": {
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "profile": {
+          "default": "auto",
+          "title": "Profile",
+          "type": "string"
+        },
+        "height_m": {
+          "default": 0.24,
+          "title": "Height M",
+          "type": "number"
+        },
+        "projection_m": {
+          "default": 0.18,
+          "title": "Projection M",
+          "type": "number"
+        },
+        "anchor": {
+          "default": "wall_top",
+          "title": "Anchor",
+          "type": "string"
+        },
+        "offset_m": {
+          "default": 0.0,
+          "title": "Offset M",
+          "type": "number"
+        },
+        "material": {
+          "default": "cornice",
+          "title": "Material",
+          "type": "string"
+        },
+        "scope": {
+          "default": "exposed",
+          "title": "Scope",
+          "type": "string"
+        },
+        "courtyards": {
+          "default": false,
+          "title": "Courtyards",
+          "type": "boolean"
+        }
+      },
+      "title": "CorniceControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "CrownControls": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "mass_ref": {
+          "title": "Mass Ref",
+          "type": "string"
+        },
+        "edge": {
+          "title": "Edge",
+          "type": "integer"
+        },
+        "u_m": {
+          "title": "U M",
+          "type": "number"
+        },
+        "width_m": {
+          "title": "Width M",
+          "type": "number"
+        },
+        "height_m": {
+          "title": "Height M",
+          "type": "number"
+        },
+        "design": {
+          "$ref": "#/$defs/CrownDesign"
+        },
+        "anchor": {
+          "default": "wall_top",
+          "title": "Anchor",
+          "type": "string"
+        },
+        "opening_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opening Index"
+        },
+        "base_m": {
+          "default": 0.0,
+          "title": "Base M",
+          "type": "number"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "aperture": {
+          "default": "none",
+          "title": "Aperture",
+          "type": "string"
+        },
+        "aperture_width_m": {
+          "default": 0.55,
+          "title": "Aperture Width M",
+          "type": "number"
+        },
+        "aperture_height_m": {
+          "default": 0.7,
+          "title": "Aperture Height M",
+          "type": "number"
+        },
+        "aperture_sill_m": {
+          "default": 0.3,
+          "title": "Aperture Sill M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "mass_ref",
+        "edge",
+        "u_m",
+        "width_m",
+        "height_m"
+      ],
+      "title": "CrownControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "CrownDesign": {
+      "properties": {
+        "family": {
+          "default": "auto",
+          "title": "Family",
+          "type": "string"
+        },
+        "style": {
+          "default": "auto",
+          "title": "Style",
+          "type": "string"
+        },
+        "silhouette": {
+          "default": "angular",
+          "title": "Silhouette",
+          "type": "string"
+        },
+        "stepped": {
+          "default": false,
+          "title": "Stepped",
+          "type": "boolean"
+        },
+        "concave_shoulders": {
+          "default": false,
+          "title": "Concave Shoulders",
+          "type": "boolean"
+        },
+        "central_block": {
+          "default": false,
+          "title": "Central Block",
+          "type": "boolean"
+        },
+        "open_center": {
+          "default": false,
+          "title": "Open Center",
+          "type": "boolean"
+        },
+        "thickness_m": {
+          "default": 0.3,
+          "title": "Thickness M",
+          "type": "number"
+        },
+        "recess_m": {
+          "default": 0.055,
+          "title": "Recess M",
+          "type": "number"
+        },
+        "moulding_width_m": {
+          "default": 0.16,
+          "title": "Moulding Width M",
+          "type": "number"
+        },
+        "projection_m": {
+          "default": 0.16,
+          "title": "Projection M",
+          "type": "number"
+        },
+        "base": {
+          "default": true,
+          "title": "Base",
+          "type": "boolean"
+        },
+        "ornament": {
+          "default": "none",
+          "title": "Ornament",
+          "type": "string"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "moulding_material": {
+          "default": "cornice",
+          "title": "Moulding Material",
+          "type": "string"
+        },
+        "field_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field Material"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        }
+      },
+      "title": "CrownDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Crowns": {
+      "additionalProperties": false,
+      "properties": {
+        "crowns": {
+          "items": {
+            "$ref": "#/$defs/CrownControls"
+          },
+          "title": "Crowns",
+          "type": "array"
+        },
+        "entablatures": {
+          "items": {
+            "$ref": "#/$defs/EntablatureControls"
+          },
+          "title": "Entablatures",
+          "type": "array"
+        },
+        "trim": {
+          "$ref": "#/$defs/TrimControls"
+        },
+        "wall_details": {
+          "items": {
+            "$ref": "#/$defs/WallDetail"
+          },
+          "title": "Wall Details",
+          "type": "array"
+        }
+      },
+      "required": [
+        "crowns",
+        "entablatures",
+        "trim",
+        "wall_details"
+      ],
+      "title": "Crowns",
+      "type": "object"
+    },
+    "EntablatureControls": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "mass_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Mass Refs",
+          "type": "array"
+        },
+        "anchor": {
+          "default": "wall_top",
+          "title": "Anchor",
+          "type": "string"
+        },
+        "top_m": {
+          "default": 0.0,
+          "title": "Top M",
+          "type": "number"
+        },
+        "height_m": {
+          "default": 0.55,
+          "title": "Height M",
+          "type": "number"
+        },
+        "projection_m": {
+          "default": 0.18,
+          "title": "Projection M",
+          "type": "number"
+        },
+        "style": {
+          "default": "auto",
+          "title": "Style",
+          "type": "string"
+        },
+        "material": {
+          "default": "cornice",
+          "title": "Material",
+          "type": "string"
+        },
+        "frieze_material": {
+          "default": "plaster",
+          "title": "Frieze Material",
+          "type": "string"
+        },
+        "scope": {
+          "default": "street",
+          "title": "Scope",
+          "type": "string"
+        },
+        "ornament": {
+          "default": "none",
+          "title": "Ornament",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "EntablatureControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "element": {
+          "title": "Element",
+          "type": "string"
+        },
+        "view_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "View Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "view_ids",
+        "status",
+        "description"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "FacadeProjection": {
+      "description": "Secondary mass attached to a facade, including curved canopy slabs.",
+      "properties": {
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "u_m": {
+          "title": "U M",
+          "type": "number"
+        },
+        "v_m": {
+          "title": "V M",
+          "type": "number"
+        },
+        "width_m": {
+          "title": "Width M",
+          "type": "number"
+        },
+        "height_m": {
+          "title": "Height M",
+          "type": "number"
+        },
+        "depth_m": {
+          "title": "Depth M",
+          "type": "number"
+        },
+        "material_slot": {
+          "default": "accent",
+          "title": "Material Slot",
+          "type": "string"
+        },
+        "border_width_m": {
+          "default": 0.18,
+          "title": "Border Width M",
+          "type": "number"
+        },
+        "source": {
+          "default": "assumed",
+          "title": "Source",
+          "type": "string"
+        },
+        "score": {
+          "default": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "label": {
+          "default": "",
+          "title": "Label",
+          "type": "string"
+        },
+        "arch_rise_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arch Rise M"
+        },
+        "member": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemberDesign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "crown": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CrownDesign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "u_m",
+        "v_m",
+        "width_m",
+        "height_m",
+        "depth_m"
+      ],
+      "title": "FacadeProjection",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "FacadeTopProfile": {
+      "description": "Ordered (normalized u, rise in metres) silhouette above a chart's top.\n\nVertical segments use repeated u. A compact polyline can describe slopes,\nshoulders and sampled curved crests without creating another storey.",
+      "properties": {
+        "points": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Points",
+          "type": "array"
+        },
+        "depth_m": {
+          "default": 0.3,
+          "title": "Depth M",
+          "type": "number"
+        },
+        "trim_width_m": {
+          "default": 0.16,
+          "title": "Trim Width M",
+          "type": "number"
+        },
+        "trim_depth_m": {
+          "default": 0.12,
+          "title": "Trim Depth M",
+          "type": "number"
+        },
+        "trim_material_slot": {
+          "default": "frame",
+          "title": "Trim Material Slot",
+          "type": "string"
+        },
+        "trim_profile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trim Profile"
+        }
+      },
+      "required": [
+        "points"
+      ],
+      "title": "FacadeTopProfile",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "MemberDesign": {
+      "properties": {
+        "style": {
+          "default": "moderno",
+          "title": "Style",
+          "type": "string"
+        },
+        "variant": {
+          "default": "auto",
+          "title": "Variant",
+          "type": "string"
+        },
+        "section": {
+          "default": "auto",
+          "title": "Section",
+          "type": "string"
+        },
+        "base": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base"
+        },
+        "capital": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital"
+        },
+        "collar": {
+          "default": true,
+          "title": "Collar",
+          "type": "boolean"
+        },
+        "abacus": {
+          "default": true,
+          "title": "Abacus",
+          "type": "boolean"
+        },
+        "base_profile": {
+          "default": "auto",
+          "title": "Base Profile",
+          "type": "string"
+        },
+        "pedestal_m": {
+          "default": 0.0,
+          "title": "Pedestal M",
+          "type": "number"
+        },
+        "base_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Height M"
+        },
+        "capital_height_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Height M"
+        },
+        "taper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taper"
+        },
+        "entasis": {
+          "default": 0.025,
+          "title": "Entasis",
+          "type": "number"
+        },
+        "turns": {
+          "default": 1.5,
+          "title": "Turns",
+          "type": "number"
+        },
+        "flute_count": {
+          "default": 12,
+          "title": "Flute Count",
+          "type": "integer"
+        },
+        "ornament": {
+          "default": true,
+          "title": "Ornament",
+          "type": "boolean"
+        },
+        "detail": {
+          "default": 2,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "material": {
+          "default": "plaster",
+          "title": "Material",
+          "type": "string"
+        },
+        "base_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Material"
+        },
+        "capital_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capital Material"
+        }
+      },
+      "title": "MemberDesign",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "PlinthControls": {
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "design": {
+          "default": "smooth",
+          "title": "Design",
+          "type": "string"
+        },
+        "height_m": {
+          "default": 0.6,
+          "title": "Height M",
+          "type": "number"
+        },
+        "relief_m": {
+          "default": 0.025,
+          "title": "Relief M",
+          "type": "number"
+        },
+        "material": {
+          "default": "plinth",
+          "title": "Material",
+          "type": "string"
+        },
+        "course_height_m": {
+          "default": 0.2,
+          "title": "Course Height M",
+          "type": "number"
+        },
+        "block_width_m": {
+          "default": 0.5,
+          "title": "Block Width M",
+          "type": "number"
+        },
+        "joint_width_m": {
+          "default": 0.012,
+          "title": "Joint Width M",
+          "type": "number"
+        },
+        "scope": {
+          "default": "exposed",
+          "title": "Scope",
+          "type": "string"
+        },
+        "courtyards": {
+          "default": false,
+          "title": "Courtyards",
+          "type": "boolean"
+        }
+      },
+      "title": "PlinthControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "TrimControls": {
+      "properties": {
+        "cornice": {
+          "$ref": "#/$defs/CorniceControls"
+        },
+        "plinth": {
+          "$ref": "#/$defs/PlinthControls"
+        }
+      },
+      "title": "TrimControls",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "WallDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "mass_ref": {
+          "title": "Mass Ref",
+          "type": "string"
+        },
+        "edge": {
+          "minimum": 0,
+          "title": "Edge",
+          "type": "integer"
+        },
+        "top_profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FacadeTopProfile"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "projections": {
+          "items": {
+            "$ref": "#/$defs/FacadeProjection"
+          },
+          "title": "Projections",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mass_ref",
+        "edge"
+      ],
+      "title": "WallDetail",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stage": {
+      "const": "08_remates",
+      "title": "Stage",
+      "type": "string"
+    },
+    "changes": {
+      "$ref": "#/$defs/Crowns"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stage",
+    "changes",
+    "evidence",
+    "notes",
+    "blockers"
+  ],
+  "title": "Response_08_remates",
+  "type": "object"
+}

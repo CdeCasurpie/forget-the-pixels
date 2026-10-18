@@ -1,0 +1,137 @@
+{
+  "version": "envelope-plan-v1",
+  "parts": 306,
+  "by_kind": {
+    "wall": 17,
+    "partition": 6,
+    "jamb_left": 28,
+    "jamb_right": 28,
+    "head": 28,
+    "leaf0_left": 28,
+    "leaf0_right": 28,
+    "leaf0_bottom": 28,
+    "leaf0_top": 28,
+    "leaf0_infill": 28,
+    "handle0": 21,
+    "sill": 7,
+    "sill_cap": 7,
+    "leaf1_left": 3,
+    "leaf1_right": 3,
+    "leaf1_bottom": 3,
+    "leaf1_top": 3,
+    "leaf1_infill": 3,
+    "parapet": 1,
+    "slab": 4,
+    "column": 4
+  },
+  "by_material": {
+    "plaster": 24,
+    "metal": 256,
+    "stone": 7,
+    "glass": 11,
+    "concrete": 8
+  },
+  "openings": 28,
+  "windows": 7,
+  "doors": 21,
+  "explicit_windows": 0,
+  "completed_windows": 7,
+  "mechanisms": {
+    "casement": 4,
+    "sliding": 3
+  },
+  "styles": {
+    "moderno": 28
+  },
+  "useful_heights": [
+    3.02,
+    2.62,
+    2.62
+  ],
+  "decisions": [
+    {
+      "id": "floor1/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor1/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor1/room5/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor2/door0",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor2/door1",
+      "reason": "shift along same shared wall for frame clearance"
+    },
+    {
+      "id": "floor3/room0/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    },
+    {
+      "id": "floor3/room1/auto_window",
+      "reason": "perimeter room on unspecified exposed wall",
+      "source": "completion"
+    }
+  ],
+  "pending": [
+    {
+      "path": "roof",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.fence",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "site.access_route",
+      "reason": "later architectural phase"
+    },
+    {
+      "path": "interior.furniture",
+      "reason": "later architectural phase"
+    }
+  ],
+  "checks": {
+    "aperture_intrusion_m3": 1.8535377221614152e-16,
+    "minimum_lintel_m": 0.41230769230769315,
+    "openings": 28,
+    "explicit_windows": 0,
+    "completed_windows": 7,
+    "floor_relative_elevations": true,
+    "engineering_verified": false
+  },
+  "scope": "constructive envelope with metric apertures, joinery and slabs; no finishes, furniture or roof",
+  "audit": {
+    "group_overlap_m3": 0.0,
+    "group_overlap_pairs": [],
+    "watertight": true,
+    "non_watertight": [],
+    "materials": {
+      "plaster": 24,
+      "metal": 256,
+      "stone": 7,
+      "glass": 11,
+      "concrete": 8
+    }
+  }
+}
