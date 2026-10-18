@@ -14,3 +14,8 @@ Esto es el **puente**, no la aceptación completa de R3: faltan expresiones
 automáticas de arcos, rejas, mecanismos, portales y sobreluces desde la
 intención de fachada, más banco visual por familia. No reemplazar sus perfiles
 de catálogo por geometría simplificada.
+
+Comparación visual (las imágenes R2 permanecen inalteradas):
+[balcón con puerta de catálogo](review/balcony_access/front.png) y
+[comercio con vitrina de catálogo](review/mixed_use/front.png), ambos también
+con `preview.png` oblicua en sus carpetas.
