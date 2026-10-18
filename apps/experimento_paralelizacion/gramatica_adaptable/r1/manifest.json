@@ -1,0 +1,181 @@
+{
+  "version": "r1-reference",
+  "cases": [
+    {
+      "name": "r1_republicano_two_floors",
+      "style": "republicano",
+      "seconds": 2.68,
+      "found": true,
+      "semantics": [
+        "balcony_bar",
+        "balcony_fascia",
+        "balcony_handrail",
+        "balcony_lower_rail",
+        "balcony_platform",
+        "balcony_post",
+        "crown_base_cornice",
+        "crown_body",
+        "crown_inner_bead",
+        "crown_moulding",
+        "crown_rim"
+      ],
+      "crowns": [
+        {
+          "id": "fronton",
+          "base_z": 6.4,
+          "reason": "explicit family override"
+        }
+      ],
+      "balconies": [
+        {
+          "id": "balcon",
+          "floor_z": 3.2,
+          "upper": "none",
+          "ornate": false
+        }
+      ],
+      "catalogue_faces": 1416,
+      "envelope_parts": 238,
+      "massing_footprints": 2,
+      "silhouette_drift_m2": {
+        "main/floor1": 0.0,
+        "main/floor2": 0.0
+      },
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_republicano_two_floors/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_republicano_two_floors/front.png"
+    },
+    {
+      "name": "r1_moderno_three_floors",
+      "style": "moderno",
+      "seconds": 3.73,
+      "found": true,
+      "semantics": [
+        "balcony_bar",
+        "balcony_fascia",
+        "balcony_handrail",
+        "balcony_lower_rail",
+        "balcony_platform",
+        "balcony_post",
+        "crown_base_cornice",
+        "crown_body",
+        "crown_moulding",
+        "crown_rim"
+      ],
+      "crowns": [
+        {
+          "id": "fronton",
+          "base_z": 9.6,
+          "reason": "explicit family override"
+        }
+      ],
+      "balconies": [
+        {
+          "id": "balcon",
+          "floor_z": 3.2,
+          "upper": "none",
+          "ornate": false
+        }
+      ],
+      "catalogue_faces": 1204,
+      "envelope_parts": 338,
+      "massing_footprints": 3,
+      "silhouette_drift_m2": {
+        "main/floor1": 0.0,
+        "main/floor2": 0.0,
+        "main/floor3": 0.0
+      },
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_moderno_three_floors/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_moderno_three_floors/front.png"
+    },
+    {
+      "name": "r1_clasico_two_floors",
+      "style": "clasico",
+      "seconds": 3.09,
+      "found": true,
+      "semantics": [
+        "balcony_baluster",
+        "balcony_fascia",
+        "balcony_handrail",
+        "balcony_lower_rail",
+        "balcony_platform",
+        "balcony_post",
+        "balcony_post_cap",
+        "crown_base_cornice",
+        "crown_body",
+        "crown_inner_bead",
+        "crown_moulding",
+        "crown_rim"
+      ],
+      "crowns": [
+        {
+          "id": "fronton",
+          "base_z": 6.4,
+          "reason": "explicit family override"
+        }
+      ],
+      "balconies": [
+        {
+          "id": "balcon",
+          "floor_z": 3.2,
+          "upper": "none",
+          "ornate": false
+        }
+      ],
+      "catalogue_faces": 5764,
+      "envelope_parts": 238,
+      "massing_footprints": 2,
+      "silhouette_drift_m2": {
+        "main/floor1": 0.0,
+        "main/floor2": 0.0
+      },
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_clasico_two_floors/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_clasico_two_floors/front.png"
+    },
+    {
+      "name": "r1_barroco_three_floors",
+      "style": "barroco",
+      "seconds": 5.43,
+      "found": true,
+      "semantics": [
+        "balcony_bar",
+        "balcony_fascia",
+        "balcony_handrail",
+        "balcony_lower_rail",
+        "balcony_ornament",
+        "balcony_platform",
+        "balcony_post",
+        "balcony_post_cap",
+        "crown_base_cornice",
+        "crown_body",
+        "crown_inner_bead",
+        "crown_moulding",
+        "crown_rim"
+      ],
+      "crowns": [
+        {
+          "id": "fronton",
+          "base_z": 9.6,
+          "reason": "explicit family override"
+        }
+      ],
+      "balconies": [
+        {
+          "id": "balcon",
+          "floor_z": 3.2,
+          "upper": "none",
+          "ornate": true
+        }
+      ],
+      "catalogue_faces": 19524,
+      "envelope_parts": 368,
+      "massing_footprints": 3,
+      "silhouette_drift_m2": {
+        "main/floor1": 0.0,
+        "main/floor2": 0.0,
+        "main/floor3": 0.0
+      },
+      "preview": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_barroco_three_floors/preview.png",
+      "front": "apps/experimento_paralelizacion/gramatica_adaptable/r1/r1_barroco_three_floors/front.png"
+    }
+  ]
+}
