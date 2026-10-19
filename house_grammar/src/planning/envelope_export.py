@@ -93,7 +93,7 @@ def export_envelope(plan, output, preview=True):
     (output/'plan.json').write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
     report=summary(plan)
     meshes,audit=solids(plan)
-    catalogue=None
+    walls=None;catalogue=None;site=None
     if 'interior' not in data:
         from planning.catalogue_openings import (materialize_openings,
                                                 materialize_contoured_walls, mesh_items)
@@ -105,14 +105,19 @@ def export_envelope(plan, output, preview=True):
         report['catalogue_openings']=dict(
             faces=len(catalogue.faces),
             semantics=sorted({part['name'] for part in catalogue.parts}))
+        from planning.site_catalogue import materialize_site, mesh_items as site_items
+        site=materialize_site(plan)
+        meshes+=list(site_items(site, prefix='site'))
+        report['site']=dict(faces=len(site.faces),
+                            semantics=sorted({part['name'] for part in site.parts}))
     report['audit']=audit
     (output/'summary.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     scene=trimesh.Scene()
     palette=dict(MATERIAL_COLORS)
-    if catalogue is not None:
-        for material in walls.materials:
-            palette[material['name']]=tuple(round(255*c) for c in material['color'])+(255,)
-        for material in catalogue.materials:
+    for model in (walls, catalogue, site):
+        if model is None:
+            continue
+        for material in model.materials:
             palette[material['name']]=tuple(round(255*c) for c in material['color'])+(255,)
     for name,material,mesh in meshes:
         mesh.visual.face_colors=np.tile(np.asarray(palette.get(material,(200,200,200,255))),(len(mesh.faces),1))

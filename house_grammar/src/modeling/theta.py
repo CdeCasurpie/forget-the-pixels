@@ -72,6 +72,7 @@ class ResolvedBoundary:
     planters: bool = False
     plinth: PlinthControls | None = None
     base_height_m: float | None = None
+    form: str = 'auto'
 
 
 @dataclass(frozen=True)

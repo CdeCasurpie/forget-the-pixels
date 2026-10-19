@@ -33,6 +33,7 @@ class ExteriorEnvelopePlan:
     parts: list
     decisions: list
     checks: dict
+    site: dict | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -165,6 +166,47 @@ def _entrance(row, surfaces, request):
         start = min(max((host['length_m']-width)/2, margin),
                     host['length_m']-margin-width)
     return [(host, _segment(host, start, width), 'entrance', 'ground_entry')]
+
+
+def _vehicle(row, surfaces, request, access):
+    """A shared cochera opening, placed so it never crowds the pedestrian door.
+
+    A requested garage does not force a second pedestrian leaf: this is the
+    vehicle access the site plan routes a driveway to.
+    """
+    site = request['building'].get('site', {})
+    if row['floor'] != 1 or not site.get('garage'):
+        return []
+    width = 2.72
+    margin = openings_plan.margin_for(kind='door', portal='none')
+    available = [s for s in surfaces if s['front'] is not None
+                 and s['length_m'] >= width+2*margin]
+    if not available:
+        fail('door_capacity', 'garage', 'no facade panel fits the vehicle entrance')
+    front = next((host['front'] for host, _, kind, _ in access if kind == 'entrance'), None)
+    hosts = [s for s in available if front is not None and s['front'] == front] or available
+    host = max(hosts, key=lambda s: (s['length_m'], s['id']))
+    free = [(0., host['length_m'])]
+    for other, door, kind, _ in access:
+        if kind != 'entrance' or other['id'] != host['id']:
+            continue
+        line = LineString(host['line'])
+        u = sorted(line.project(Point(p)) for p in door.coords)
+        free = [piece for a, b in free
+                for piece in ((a, u[0]-openings_plan.PIER_M), (u[1]+openings_plan.PIER_M, b))
+                if piece[1]-piece[0] >= width]
+    if not free:
+        fail('door_capacity', 'garage', 'no facade span fits the vehicle door beside the entrance')
+    position = site['garage'] if isinstance(site['garage'], str) else (
+        'right' if _door_intent(request).get('position', 'left') != 'right' else 'left')
+    a, b = max(free, key=lambda piece: (piece[1]-piece[0], -piece[0]))
+    if position == 'left':
+        start = a+margin
+    elif position == 'right':
+        start = b-margin-width
+    else:
+        start = min(max((a+b-width)/2, a+margin), b-margin-width)
+    return [(host, _segment(host, start, width), 'vehicle_entry', 'garage')]
 
 
 def _window_families(windows, default_proportion='vertical'):
@@ -350,6 +392,7 @@ def plan_exterior_envelope(request):
         for row in rows:
             surfaces = [dict(s, body=row['body']) for s in row['surfaces'] if s['enclosure']]
             access = _accesses(row, surfaces) + _entrance(row, surfaces, request)
+            access = access + _vehicle(row, surfaces, request, access)
             blocked = [(door, _door_clearance(kind, request)) for _, door, kind, _ in access]
             requested = _windows(row, surfaces, blocked, request, uses[row['id']],
                                  program_plan.program['residential'])
@@ -385,7 +428,7 @@ def plan_exterior_envelope(request):
                 if outer.intersection(cut).area < width*.04:
                     fail('opening_out_of_wall', surface['id'], 'opening has no exterior masonry')
                 op = dict(id=f'{row["id"]}/{kind}{index}', kind=kind, floor=floor,
-                           room=None, source='balcony_access' if kind == 'exterior_space' else 'entry' if kind == 'entrance' else provenance,
+                           room=None, source='balcony_access' if kind == 'exterior_space' else 'entry' if kind == 'entrance' else 'garage' if kind == 'vehicle_entry' else provenance,
                            access_for=source if kind == 'exterior_space' else None,
                           geometry=encode(line), axis=encode(line), inward=inward.tolist(),
                           cut_geometry=encode(cut), width_m=width, bottom_m=bottom+sill,
@@ -483,4 +526,6 @@ def plan_exterior_envelope(request):
                                 contoured_walls,
                                 openings, parts, decisions, {})
     plan.checks = validate_envelope(plan)
+    from planning.site_plan import plan_site
+    plan.site = plan_site(plan).to_dict()
     return plan

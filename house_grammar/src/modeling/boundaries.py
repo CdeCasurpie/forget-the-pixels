@@ -35,6 +35,10 @@ class BoundarySpec:
     planters: bool = False
     plinth: PlinthControls | None = None
     base_height_m: float | None = None
+    # Physical topology, independent of ``kind`` (the local style). 'auto' keeps
+    # the style-driven choice; 'solid' is a plain wall, 'open' a thin base with
+    # open infill, 'base_and_rail' a tall base with infill on top.
+    form: str = 'auto'
 
 
 def _segments(geometry):

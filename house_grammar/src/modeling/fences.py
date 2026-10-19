@@ -15,6 +15,7 @@ def build_fence(mb, a, t, n, length, boundary):
     wall = boundary.wall_material
     metal = 'wood' if style == 'madera' else 'metal'
     openness = boundary.openness
+    form = getattr(boundary, 'form', 'auto')
     a, t, n = map(np.asarray, (a, t, n))
 
     def point(u, z, d=-.08):
@@ -44,6 +45,9 @@ def build_fence(mb, a, t, n, length, boundary):
 
     def infill(lo,hi,bottom,top,leaf=False):
         if hi-lo < .12:return
+        if form == 'solid' and not leaf:
+            box(lo,hi,bottom,top,.16,wall,'fence_wall')
+            return
         if style == 'clasico':
             box(lo,hi,bottom,top,.10,metal if leaf else wall,
                 'gate_panel' if leaf else 'fence_wall')
@@ -92,6 +96,9 @@ def build_fence(mb, a, t, n, length, boundary):
     for u,w,mode,kind in ((boundary.gate_u,boundary.gate_width,boundary.gate_mode,'pedestrian'),
                           (boundary.garage_u,boundary.garage_width,boundary.garage_mode,'garage')):
         if u is not None:gates.append((u,u+w,mode,kind))
+    if form == 'partial':
+        # A partial fence leaves one supported span open, like an open gate.
+        gates.append((length*.38,length*.62,'open','pedestrian'))
     cuts=sorted({0.,length,*[x for g in gates for x in g[:2]]})
     posts={0.,length,*[x for g in gates for x in g[:2]]}
     for lo,hi in zip(cuts,cuts[1:]):
@@ -111,8 +118,13 @@ def build_fence(mb, a, t, n, length, boundary):
             for i in range(count):
                 left=lo+(hi-lo)*i/count; right=lo+(hi-lo)*(i+1)/count
                 posts.update((left,right))
+                if form == 'solid':
+                    box(left,right,0,h,.16,wall,'fence_wall')
+                    continue
                 base=getattr(boundary,'base_height_m',None)
                 if base is None:base=.40 if high else .24
+                if form == 'open':base=min(base,.18)
+                elif form == 'base_and_rail':base=max(base,.75)
                 if style!='madera':box(left,right,0,base,.20,wall,'boundary_base')
                 infill(left+.08,right-.08,base if style!='madera' else .06,h-.04)
                 if style=='moderno':
