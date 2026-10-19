@@ -35,6 +35,7 @@ class ExteriorEnvelopePlan:
     checks: dict
     site: dict | None = None
     crowns: list | None = None
+    pilasters: list | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -531,4 +532,6 @@ def plan_exterior_envelope(request):
     plan.site = plan_site(plan).to_dict()
     from planning.crown_plan import plan_crowns
     plan.crowns = plan_crowns(plan)
+    from planning.pilaster_plan import plan_pilasters
+    plan.pilasters = plan_pilasters(plan)
     return plan

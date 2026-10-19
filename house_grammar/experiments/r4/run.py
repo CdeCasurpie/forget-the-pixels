@@ -9,8 +9,9 @@ Every case re-uses the exterior route. R4 adds: a fence whose *form* is a
 physical axis independent of the local style, an explicit absence respected, a
 pedestrian gate aligned to the building entrance, a shared cochera that adds no
 second pedestrian leaf, exterior routes kept inside the free ground, fence
-remates (coping and a supported portal roof) and a fronton anchored to its
-reserved sector axes rather than a fixed triangle centred on the facade.
+remates (coping and a supported portal roof), a fronton anchored to its
+reserved sector axes rather than a fixed triangle centred on the facade, and
+the facade order that frames the bays of the local languages.
 """
 import argparse
 import json
@@ -121,6 +122,23 @@ def audit(name, plan):
                 if o['floor'] == floor and o['surface'] == crown['host_surface_id']]
         if tops and crown['base_z_m'] < max(tops)-1e-6:
             raise ValueError(f'{name}: {crown["id"]} intersects a window of its sector')
+    style = data['request']['building'].get('style', 'republicano')
+    if style in ('republicano', 'clasico', 'barroco') and not data['pilasters']:
+        raise ValueError(f'{name}: an ordered language carries no pilaster')
+    if style in ('moderno', 'madera') and data['pilasters']:
+        raise ValueError(f'{name}: a plain language was stamped with pilasters')
+    for pilaster in data['pilasters']:
+        host = next(s for row in data['massing']['storeys'] for s in row.get('surfaces', [])
+                    if s['id'] == pilaster['surface_id'])
+        line = LineString(host['line'])
+        left = pilaster['u_m']-pilaster['width_m']/2
+        right = pilaster['u_m']+pilaster['width_m']/2
+        for opening in data['openings']:
+            if opening['surface'] != host['id']:
+                continue
+            ends = sorted(line.project(Point(p)) for p in opening['geometry']['coordinates'])
+            if not (ends[1] <= left or ends[0] >= right):
+                raise ValueError(f'{name}: {pilaster["id"]} intersects an opening')
     return data
 
 
@@ -145,10 +163,12 @@ def main(argv=None):
             decisions=[d['path'] for d in data['site']['decisions']],
             crowns=[(c['design']['family'], round(c['width_m'], 2)) for c in data['crowns']],
             site_faces=report['site']['faces'], crown_faces=report['crowns']['faces'],
+            pilaster_faces=report['pilasters']['faces'],
             site_semantics=report['site']['semantics'],
             watertight=report['audit']['watertight']))
         print(f'{name}: fence {manifest[-1]["fence"]} gates {manifest[-1]["gates"]} '
-              f'crowns {manifest[-1]["crowns"]} watertight {manifest[-1]["watertight"]}')
+              f'crowns {manifest[-1]["crowns"]} pilasters {manifest[-1]["pilaster_faces"]} '
+              f'watertight {manifest[-1]["watertight"]}')
     (output/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
 
 
