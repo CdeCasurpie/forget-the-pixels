@@ -204,10 +204,13 @@ def _validate_intent(data):
         if key in site:
             if key=='door' and isinstance(site[key],dict):
                 door=site[key]
-                _object(door,('position','style','material'),(),'site.door')
+                _object(door,('position','style','material','shape','transom','portal'),(),'site.door')
                 if 'position' in door:_enum(door['position'],('left','center','right'),'site.door.position')
                 if 'style' in door:_enum(door['style'],STYLES,'site.door.style')
                 if 'material' in door:_enum(door['material'],('wood','metal','glass'),'site.door.material')
+                if 'shape' in door:_enum(door['shape'],('rectangle','arch'),'site.door.shape')
+                if 'transom' in door:_enum(door['transom'],('none','glass','open'),'site.door.transom')
+                if 'portal' in door:_enum(door['portal'],('none','pilasters','columns'),'site.door.portal')
                 continue
             _check(type(site[key]) is bool or site[key] in ('left','center','right'), 'site.'+key,'boolean or horizontal position required')
     facade_scopes=set()
@@ -225,7 +228,8 @@ def _validate_intent(data):
         if 'alignment' in facade:_enum(facade['alignment'],('aligned','staggered','independent'),'facade.alignment')
         if 'windows' in facade:
             w=facade['windows']
-            _object(w,('count','proportion','proportions','weights','distribution','style','frame','mechanism'),('count',),'windows')
+            _object(w,('count','proportion','proportions','weights','distribution','style','frame','mechanism',
+                       'shape','grille','grille_pattern','sill'),('count',),'windows')
             _check(type(w['count']) is int and w['count']>=0,'windows.count','nonnegative integer required')
             if 'proportion' in w:_enum(w['proportion'],('horizontal','vertical','square','small_high'),'windows.proportion')
             if 'proportions' in w:
@@ -237,6 +241,10 @@ def _validate_intent(data):
             if 'style' in w:_enum(w['style'],STYLES,'windows.style')
             if 'frame' in w:_enum(w['frame'],('wood','metal','pvc'),'windows.frame')
             if 'mechanism' in w:_enum(w['mechanism'],('guillotine','sliding','casement','awning','fixed'),'windows.mechanism')
+            if 'shape' in w:_enum(w['shape'],('rectangle','arch','circle','ellipse'),'windows.shape')
+            if 'grille' in w:_check(type(w['grille']) is bool,'windows.grille','expected boolean')
+            if 'grille_pattern' in w:_enum(w['grille_pattern'],('vertical','grid','diamond'),'windows.grille_pattern')
+            if 'sill' in w:_check(type(w['sill']) is bool,'windows.sill','expected boolean')
     roof=b.get('roof',{})
     _object(roof,('cover','objects','shade'),(),'roof')
     if 'cover' in roof:_enum(roof['cover'],('slab','corrugated','tile','mixed'),'roof.cover')

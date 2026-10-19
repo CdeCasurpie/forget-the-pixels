@@ -27,6 +27,7 @@ class ExteriorEnvelopePlan:
     program: dict
     core: dict
     facade: dict
+    contoured_walls: list
     openings: list
     parts: list
     decisions: list
@@ -261,7 +262,7 @@ def plan_exterior_envelope(request):
     massing = program_plan.massing; request = program_plan.request
     levels = request['context']['levels_m']
     stair = _stair_footprint(massing)
-    parts = []; openings = []; decisions = list(program_plan.decisions)
+    parts = []; openings = []; contoured_walls = []; decisions = list(program_plan.decisions)
     uses = {s['id']: {'floor': s['use'], **s['sectors']} for s in program_plan.storeys}
     for floor in range(1, len(levels)):
         rows = [r for r in massing['storeys'] if r['floor'] == floor and r['kind'] == 'enclosed']
@@ -289,6 +290,18 @@ def plan_exterior_envelope(request):
                     if adapted:decisions.append(dict(path=surface['id'], reason='window height limited by lintel'))
                 else:
                     sill = 0.; head = min(2.15, top-bottom-LINTEL)
+                authored = next((fac.get('windows', {}) for fac in request['building'].get('facades', [])
+                                 if fac['body'] == row['body'] and fac['front'] == surface['front']
+                                 and floor in fac['floors']), {}) if kind == 'window' else {}
+                door_intent = request['building'].get('site', {}).get('door', {})
+                if not isinstance(door_intent, dict) or kind != 'entrance':door_intent = {}
+                shape_kind = (authored.get('shape', 'rectangle') if kind == 'window' else
+                              door_intent.get('shape', 'rectangle'))
+                if shape_kind == 'circle':
+                    head = sill + width
+                    if head > top-bottom-LINTEL+1e-6:
+                        fail('window_capacity', surface['id'], 'circular opening cannot fit its equal axes')
+                arch_rise = min(width*.28, (head-sill)*.25, .9) if shape_kind == 'arch' else None
                 inward = -np.asarray(surface['normal'], float)
                 cut = strip(line, 0., width, -.01, EXTERIOR+.08, inward)
                 if outer.intersection(cut).area < width*.04:
@@ -300,8 +313,14 @@ def plan_exterior_envelope(request):
                           cut_geometry=encode(cut), width_m=width, bottom_m=bottom+sill,
                           top_m=bottom+head, sill_m=sill, head_m=head,
                           wall_thickness_m=EXTERIOR, frame_width_m=frame,
-                          surface=surface['id'], body=row['body'], front=surface['front'],
+                           surface=surface['id'], body=row['body'], front=surface['front'],
                            proportion=proportion,
+                           shape=shape_kind, arch_rise_m=arch_rise,
+                           grille=authored.get('grille', False),
+                           grille_pattern=authored.get('grille_pattern', 'vertical'),
+                           sill=authored.get('sill', True),
+                           transom=door_intent.get('transom', 'none'),
+                           portal=door_intent.get('portal', 'none'),
                            use=uses[row['id']].get(surface['front'], uses[row['id']]['floor']), **design)
                 if kind != 'window' and width-2*frame < .70:
                     fail('door_clear_width', op['id'], 'insufficient pedestrian clearance')
@@ -312,6 +331,26 @@ def plan_exterior_envelope(request):
                     continue
                 if shape(op['cut_geometry']).intersection(shape(other['cut_geometry'])).area > 1e-5:
                     fail('opening_overlap', op['id'], other['id'])
+        from modeling.apertures import opening_shape
+        from planning.catalogue_openings import opening_for_record
+        hosts = {s['id']: s for row in rows for s in row['surfaces']}
+        for host_id in sorted({op['surface'] for op in current if op['shape'] != 'rectangle'}):
+            host = hosts[host_id]
+            line = LineString(host['line'])
+            if line.length <= 2*EXTERIOR+.2:
+                fail('contour_host', host_id, 'no wall span left after corner returns')
+            inward = -np.asarray(host['normal'], float)
+            band = strip(line, EXTERIOR, line.length-EXTERIOR, 0., EXTERIOR, inward)
+            if not outer.buffer(1e-7).covers(band):
+                fail('contour_host', host_id, 'exterior wall does not support an exact contour shell')
+            domain = box(EXTERIOR, bottom, line.length-EXTERIOR, top)
+            for op in current:
+                if op['surface'] == host_id:
+                    domain = domain.difference(opening_shape(opening_for_record(op, host)))
+            contoured_walls.append(dict(id=host_id, line=host['line'], normal=host['normal'],
+                                        domain=encode(domain), bottom_m=bottom, top_m=top,
+                                        opening_ids=[op['id'] for op in current if op['surface']==host_id]))
+            outer = clean(outer.difference(band))
         heights = sorted({bottom, top, *[v for op in current for v in (op['bottom_m'], op['top_m'])]})
         for i, (low, high) in enumerate(zip(heights, heights[1:])):
             active = [shape(op['cut_geometry']) for op in current
@@ -359,6 +398,7 @@ def plan_exterior_envelope(request):
     facade = _facade_axes(massing, program_plan.storeys, openings)
     plan = ExteriorEnvelopePlan('exterior-envelope-v1', request, massing,
                                 program_plan.program, dict(stairs=encode(stair)), facade,
+                                contoured_walls,
                                 openings, parts, decisions, {})
     plan.checks = validate_envelope(plan)
     return plan

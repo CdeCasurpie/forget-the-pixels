@@ -95,7 +95,11 @@ def export_envelope(plan, output, preview=True):
     meshes,audit=solids(plan)
     catalogue=None
     if 'interior' not in data:
-        from planning.catalogue_openings import materialize_openings, mesh_items
+        from planning.catalogue_openings import (materialize_openings,
+                                                materialize_contoured_walls, mesh_items)
+        walls=materialize_contoured_walls(plan)
+        meshes+=list(mesh_items(walls, prefix='contoured_wall'))
+        report['contoured_walls']=dict(faces=len(walls.faces), hosts=len(data.get('contoured_walls', ())))
         catalogue=materialize_openings(plan)
         meshes+=list(mesh_items(catalogue))
         report['catalogue_openings']=dict(
@@ -106,6 +110,8 @@ def export_envelope(plan, output, preview=True):
     scene=trimesh.Scene()
     palette=dict(MATERIAL_COLORS)
     if catalogue is not None:
+        for material in walls.materials:
+            palette[material['name']]=tuple(round(255*c) for c in material['color'])+(255,)
         for material in catalogue.materials:
             palette[material['name']]=tuple(round(255*c) for c in material['color'])+(255,)
     for name,material,mesh in meshes:

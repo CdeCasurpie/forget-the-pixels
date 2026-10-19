@@ -7,6 +7,7 @@ from planning import catalogue_openings
 from planning.envelope import plan_envelope
 from planning.envelope_export import export_envelope
 from planning.envelope import strip
+from modeling.apertures import opening_shape
 
 
 def request():
@@ -70,3 +71,36 @@ def test_export_combines_cut_wall_and_catalogue_pieces(tmp_path):
     assert 'door_glass' in report['catalogue_openings']['semantics']
     assert (tmp_path/'catalogue/envelope.glb').exists()
     assert plan.checks['aperture_intrusion_m3'] == pytest.approx(0.)
+
+
+def test_arch_cut_uses_the_same_catalogue_contour_as_window(tmp_path):
+    intent = request()
+    intent['building']['facades'] = [dict(body='main', front='street', floors=[1, 2],
+                                           windows=dict(count=2, shape='arch', grille=True))]
+    plan = plan_envelope(intent)
+    hosts = {s['id']: s for row in plan.massing['storeys'] for s in row['surfaces']}
+    from planning.catalogue_openings import opening_for_record, materialize_contoured_walls
+    for wall in plan.contoured_walls:
+        domain = shape(wall['domain'])
+        for op in plan.openings:
+            if op['surface'] != wall['id']:continue
+            aperture = opening_shape(opening_for_record(op, hosts[op['surface']]))
+            assert domain.intersection(aperture).area < 1e-7
+            if op['kind'] == 'window':
+                assert op['arch_rise_m'] is not None
+    shell = materialize_contoured_walls(plan)
+    assert shell.faces.size and all(shape(w['domain']).is_valid for w in plan.contoured_walls)
+    report = export_envelope(plan, tmp_path/'arched', preview=False)
+    assert report['contoured_walls']['hosts'] == len(plan.contoured_walls)
+    assert report['catalogue_openings']['faces'] > 0
+    assert report['audit']['watertight']
+
+
+def test_door_arch_and_transom_are_catalogued_without_changing_legacy_defaults():
+    intent = request()
+    intent['building']['site']['door'] = dict(shape='arch', transom='glass')
+    plan = plan_envelope(intent)
+    mesh = catalogue_openings.materialize_openings(plan)
+    assert 'transom_glass' in {part['name'] for part in mesh.parts}
+    assert len(plan.contoured_walls) == 1
+    assert all(op['shape'] == 'rectangle' for op in plan.openings if op['kind'] == 'window')

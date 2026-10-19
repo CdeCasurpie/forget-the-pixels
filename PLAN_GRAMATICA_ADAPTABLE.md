@@ -115,10 +115,16 @@ El umbral de catálogo tiene reserva real en la losa. La ruta histórica
 `interiors=True` conserva `_joinery` para sus regresiones. Los PNG guardados en
 `experiments/r2/review/` documentan el estado **anterior** al puente R3.
 
-**Aún pendiente para cerrar R3:** ampliar la selección de formas, rejas,
-sobreluz y mecanismos por intención exterior; reserva volumétrica de portales
-y molduras, tipologías estrechas/anchas y banco visual de cada familia. El
-puente de despacho no equivale a aprobar todas las capacidades del catálogo.
+**Avance en `gramatica_adaptable_r3`:** formas de ventana (`rectangle`,
+`arch`, `circle`, `ellipse`), rejas y alféizar locales; arco, sobreluz y portal
+de puerta a petición. Los paños con contorno curvo ahora se perforan con la
+misma función `opening_shape` del catálogo y se exportan como paneles cerrados
+sin rellenar el arco con un muro rectangular. La ruta interior no se modificó.
+
+**Aún pendiente para cerrar R3:** selección tipológica automática, reserva
+volumétrica de portales y molduras, banco visual de cada familia y aceptación
+arquitectónica. El puente de despacho no equivale a aprobar todas las
+capacidades del catálogo.
 
 **Trabajo:** resolver conjuntamente conteo, ejes, ancho, alto, antepecho, dintel, padding, separación entre vanos y profundidad. Aplicar reglas anteriores, respetar solicitudes explícitas y evaluar ocupación del paño. Reservar huella completa de portales, pilastras y molduras. Adaptar `Opening` y el despacho existente a la escena resuelta y a estilos locales; conservar formas curvas, rejas, sobreluces, hojas y perfiles. Retirar `_joinery` duplicado después de verificar equivalencia de capacidades requeridas.
 

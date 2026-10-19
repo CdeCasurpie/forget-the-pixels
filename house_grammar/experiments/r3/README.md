@@ -10,10 +10,21 @@ la ruta nueva. La ruta interior histórica (`interiors=True`) no cambia.
 semántica de ventana/puerta, cotas reales de pisos superiores, profundidad y
 reserva del umbral en losa.
 
-Esto es el **puente**, no la aceptación completa de R3: faltan expresiones
-automáticas de arcos, rejas, mecanismos, portales y sobreluces desde la
-intención de fachada, más banco visual por familia. No reemplazar sus perfiles
-de catálogo por geometría simplificada.
+En `gramatica_adaptable_r3`, las fachadas pueden pedir `windows.shape`
+(`rectangle`, `arch`, `circle`, `ellipse`), `windows.grille`,
+`windows.grille_pattern` y `windows.sill`; la entrada acepta `site.door.shape`
+(`rectangle`, `arch`), `site.door.transom` (`none`, `glass`, `open`) y
+`site.door.portal` (`none`, `pilasters`, `columns`). Los paños que contienen
+algún vano no rectangular se reemplazan por una extrusión cerrada del dominio
+vertical: **la abertura se sustrae con `opening_shape` del mismo `Opening`
+que construye el catálogo**. Los paños rectos conservan el camino original.
+`tests/test_catalogue_openings_exterior.py` comprueba el contorno, la
+estanqueidad, la sobreluz y la exportación.
+
+No equivale aún a la aceptación completa de R3: quedan selección tipológica
+automática de familias, reservas volumétricas para portales/molduras y banco
+visual por familia, además de revisión arquitectónica de los renders. No
+reemplazar sus perfiles de catálogo por geometría simplificada.
 
 Comparación visual (las imágenes R2 permanecen inalteradas):
 [balcón con puerta de catálogo](review/balcony_access/front.png) y
