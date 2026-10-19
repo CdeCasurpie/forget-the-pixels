@@ -7,8 +7,11 @@ places it. It mirrors ``crown_catalogue`` and ``pilaster_catalogue``.
 """
 from shapely.geometry import Polygon
 
+import numpy as np
+
 from domain.roof_details import EaveDesign, RoofDesign
 from modeling.mesh_builder import MeshBuilder
+from modeling.prefabs_roof import BUILDERS
 from modeling.roof_assembly import build_roof_assembly
 from modeling.roof_detail_resolver import ResolvedRoofAssembly
 from modeling.roof_planes import RoofFace
@@ -39,6 +42,13 @@ def materialize_roofs(plan):
         # A parapet coping lips a few centimetres past its flush wall head; the
         # roof face itself is already clipped to the envelope.
         build_roof_assembly(builder, resolved, envelope.buffer(.2, join_style=2))
+        for index, prop in enumerate(spec.get('props', ())):
+            build_prop = BUILDERS.get(prop['kind'])
+            if build_prop is None:
+                continue
+            with builder.assembly(f"{spec['id']}/prop_{prop['kind']}_{index:02d}"):
+                build_prop(builder, prop['position'], spec['datum_m'], prop['rotation_deg'],
+                           prop['scale'], np.random.default_rng(prop['seed']))
     return builder.finish()
 
 

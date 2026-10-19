@@ -43,6 +43,16 @@ def cases():
     result['crowned_roof'] = _case(operations=[dict(id='c0', kind='crown', body='main',
                                                     front='street')])
     result['tall_house'] = _case(style='barroco', levels=(0, 3.2, 6.2, 9.4))
+    result['azotea_moderno'] = _case(style='moderno')
+    explicit = _case(style='moderno')
+    explicit['building']['roof'] = dict(objects=['water_tank', 'laundry'])
+    result['azotea_objects'] = explicit
+    absent = _case(style='moderno')
+    absent['building']['roof'] = dict(objects=[])
+    result['azotea_absent'] = absent
+    slab = _case(style='republicano')
+    slab['building']['roof'] = dict(cover='slab')
+    result['slab_republicano'] = slab
     return result
 
 
@@ -53,16 +63,27 @@ def audit(name, plan):
     assert roofs, f'{name}: an enclosed building has no roof'
     assert {r['floor'] for r in roofs} <= enclosed, f'{name}: a roof floats over no storey'
     style = data['request']['building'].get('style', 'republicano')
+    controls = data['request']['building'].get('roof', {}) or {}
     top = max(r['floor'] for r in roofs)
-    assert next(r for r in roofs if r['floor'] == top)['design']['form'] == STYLE_FORM[style], \
-        f'{name}: the top roof leaves its language form'
+    main = next(r for r in roofs if r['floor'] == top)
+    if 'cover' not in controls:
+        assert main['design']['form'] == STYLE_FORM[style], \
+            f'{name}: the top roof leaves its language form'
     for roof in roofs:
         assert roof['faces'], f'{name}: {roof["id"]} has no face'
         assert all(Polygon(f['polygon'], f['holes']).is_valid for f in roof['faces'])
         if roof['floor'] < top:
             assert roof['design']['form'] == 'flat', f'{name}: a ledge is not a flat terrace'
+        kinds = [p['kind'] for p in roof['props']]
+        assert kinds.count('stair_bulkhead') <= 1, f'{name}: the stair head is doubled'
+        if roof['design']['form'] == 'flat':
+            field = Polygon(roof['support'])
+            for prop in roof['props']:
+                assert field.buffer(1e-6).contains(Point(*prop['position'])), \
+                    f'{name}: {prop["kind"]} floats beyond the azotea'
+    if (data['request']['building'].get('roof', {}) or {}).get('objects') == []:
+        assert all(not r['props'] for r in roofs), f'{name}: explicit absence ignored'
     if any(c['base_z_m'] > 0 for c in data.get('crowns', ())):
-        main = next(r for r in roofs if r['floor'] == top)
         assert main['junction'] == 'behind', f'{name}: the fronton is not met behind'
         assert main['wall_joints'], f'{name}: the fronton junction is not flashed'
     envelope = _street_envelope(data['request']['context'])
@@ -88,10 +109,11 @@ def main(argv=None):
             name=name,
             roofs=[(r['floor'], r['design']['form'], r['design']['covering'], r['junction'])
                    for r in roofs],
+            props=[[p['kind'] for p in r['props']] for r in roofs],
             faces=report['roofs']['faces'], watertight=report['audit']['watertight'],
             semantics=report['roofs']['semantics']))
-        print(f'{name}: roofs {manifest[-1]["roofs"]} faces {report["roofs"]["faces"]} '
-              f'watertight {manifest[-1]["watertight"]}')
+        print(f'{name}: roofs {manifest[-1]["roofs"]} props {manifest[-1]["props"]} '
+              f'faces {report["roofs"]["faces"]} watertight {manifest[-1]["watertight"]}')
     (output/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
 
 

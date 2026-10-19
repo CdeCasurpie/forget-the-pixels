@@ -93,3 +93,51 @@ def test_export_reports_the_roofs(tmp_path):
     assert report['roofs']['count'] == 1
     assert report['roofs']['faces'] > 0
     assert report['roofs']['semantics']
+
+
+def _plan(roof, style='moderno'):
+    data = request(style=style)
+    if roof is not None:
+        data['building']['roof'] = roof
+    return plan_envelope(data)
+
+
+def test_azotea_carries_its_stair_head_and_objects():
+    props = plan_roofs(_plan(None))[0]['props']
+    kinds = [p['kind'] for p in props]
+    assert kinds.count('stair_bulkhead') == 1
+    assert len(props) > 1
+    names = {part['name'] for part in materialize_roofs(_plan(None)).parts}
+    assert 'stair_bulkhead' in names and 'water_tank' in names
+
+
+def test_explicit_roof_objects_are_respected():
+    props = plan_roofs(_plan(dict(objects=['water_tank', 'laundry'])))[0]['props']
+    assert {p['kind'] for p in props} <= {'water_tank', 'laundry'}
+    assert props
+
+
+def test_explicit_absence_of_roof_objects_is_respected():
+    assert plan_roofs(_plan(dict(objects=[])))[0]['props'] == []
+    names = {part['name'] for part in materialize_roofs(_plan(dict(objects=[]))).parts}
+    assert not (names & {'water_tank', 'caseta_wall', 'laundry_line', 'stair_bulkhead'})
+
+
+def test_roof_cover_can_force_a_slab():
+    roof = plan_roofs(_plan(dict(cover='slab'), style='republicano'))[0]
+    assert roof['design']['form'] == 'flat'
+    assert roof['design']['parapet_m'] > 0.
+
+
+def test_props_stand_on_the_roof_not_beyond_it():
+    plan = _plan(None)
+    spec = plan_roofs(plan)[0]
+    field = Polygon(spec['support'])
+    for prop in spec['props']:
+        assert field.buffer(1e-6).contains(Point(*prop['position']))
+
+
+def test_roof_props_are_deterministic():
+    first = plan_roofs(_plan(None))[0]['props']
+    second = plan_roofs(_plan(None))[0]['props']
+    assert first == second

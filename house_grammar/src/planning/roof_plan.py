@@ -12,6 +12,7 @@ roof behind it and the junction is flashed. Matching the roof to the crown as a
 true gable end is a later refinement.
 """
 from dataclasses import asdict, replace
+import hashlib
 
 import numpy as np
 from shapely.geometry import LineString, Polygon, shape
@@ -22,6 +23,7 @@ from domain.roof_details import EaveDesign, RoofDesign
 from modeling.grammar import street_envelope
 from modeling.mesh_builder import polygons
 from modeling.roof_planes import faces, geometry, plan_faces
+from modeling.roofscape import PROP_WEIGHTS, scatter_props
 from planning.envelope import SLAB
 
 ROOF_PRESET = {
@@ -47,20 +49,44 @@ def _style(request, body):
     return request['building'].get('style', 'republicano')
 
 
-def _design(style, main, area):
+def _design(style, main, area, controls=None):
     preset = ROOF_PRESET.get(style, ROOF_PRESET['republicano'])
+    controls = controls or {}
     if not main:
+        cover = controls.get('cover')
+        if cover == 'tile':
+            return RoofDesign(form='shed', covering='curved_tile', style=style, slope_deg=14.,
+                              material='roof_tile', substrate_material='wood', detail='medium',
+                              eave=EaveDesign(kind='exposed', overhang_m=.3, material='wood',
+                                              fascia_material='wood'))
+        if cover == 'corrugated':
+            return RoofDesign(form='shed', covering='corrugated', style=style, slope_deg=12.,
+                              material='roof', substrate_material='wood', detail='medium',
+                              eave=EaveDesign(kind='exposed', overhang_m=.3, material='wood',
+                                              fascia_material='wood'))
         return RoofDesign(form='flat', covering='panel', style=style, slope_deg=4.,
                           material='concrete', substrate_material='concrete', detail='medium',
                           eave=EaveDesign(kind='clean', overhang_m=0., fascia=False))
     overhang = 0. if preset['form'] == 'flat' else .45
     eave = EaveDesign(kind=preset['eave'], overhang_m=overhang, material='wood',
                       fascia_material='wood', fascia=overhang > 0.)
+    form, covering = preset['form'], preset['covering']
+    parapet, cap = preset.get('parapet_m', 0.), preset.get('cap', 'none')
+    cover = controls.get('cover')
+    if cover == 'slab' and form != 'flat':
+        form, covering = 'flat', 'panel'
+        parapet, cap = parapet or .55, 'moulded'
+        eave = EaveDesign(kind='clean', overhang_m=0., fascia=False)
+    elif cover == 'corrugated':
+        covering = 'corrugated'
+    elif cover == 'tile' and form != 'flat':
+        covering = 'curved_tile'
     module = .24 if area <= 60. else .30 if area <= 150. else .38
-    return RoofDesign(form=preset['form'], covering=preset['covering'], construction='solid',
+    return RoofDesign(form=form, covering=covering, construction='solid',
                       style=style, slope_deg=preset['slope_deg'], material=preset['material'],
                       substrate_material=preset['substrate'], eave=eave,
-                      parapet_m=preset.get('parapet_m', 0.), cap=preset.get('cap', 'none'),
+                      parapet_m=parapet if form == 'flat' else 0.,
+                      cap=cap if form == 'flat' else 'none',
                       cap_material='stone', detail='medium', tile_width_m=module,
                       tile_length_m=round(module*1.9, 3), overlap_m=round(module*.35, 3))
 
@@ -108,6 +134,41 @@ def _street_envelope(context):
         explicit_fronts=tuple(sorted(set(context['fronts'].values())))))
 
 
+def _flat_props(data, flat, roof_id):
+    """Azotea objects, with the stair head where the stair arrives."""
+    controls = data['request']['building'].get('roof', {}) or {}
+    if 'objects' in controls:
+        kinds = controls['objects']
+        if not kinds:
+            return []
+        weights = {kind: 1.0 for kind in kinds if kind != 'stair_bulkhead'}
+    else:
+        use = data['program'].get('use', 'residential')
+        weights = {kind: weight for kind, weight in
+                   PROP_WEIGHTS.get(use, PROP_WEIGHTS['residential']).items()
+                   if kind != 'stair_bulkhead'}
+    seed = int.from_bytes(hashlib.sha256(
+        (str(data['request'].get('seed', 0))+roof_id).encode()).digest()[:4], 'little')
+    rng = np.random.default_rng(seed)
+    props = []
+    usable = flat
+    stair = data['core'].get('stairs')
+    explicit = controls.get('objects')
+    if stair is not None and (explicit is None or 'stair_bulkhead' in explicit):
+        core = shape(stair)
+        if core.intersects(flat) and core.intersection(flat).area > 1.0:
+            centre = core.intersection(flat).representative_point()
+            props.append(dict(kind='stair_bulkhead', position=[float(centre.x), float(centre.y)],
+                              rotation_deg=0., scale=1., seed=int(rng.integers(0, 2**31-1))))
+            usable = usable.difference(core.buffer(.25))
+    if usable.area > 1.0:
+        for prop in scatter_props(usable, weights, rng, density=.04, limit=6):
+            props.append(dict(kind=prop.kind, position=[float(prop.position[0]), float(prop.position[1])],
+                              rotation_deg=float(prop.rotation_deg), scale=float(prop.scale),
+                              seed=int(prop.seed)))
+    return props
+
+
 def plan_roofs(plan):
     data = plan.to_dict() if hasattr(plan, 'to_dict') else plan
     massing = data['massing']
@@ -129,7 +190,8 @@ def plan_roofs(plan):
             continue
         datum = max(r['top_m'] for r in floors[floor])-SLAB
         style = _style(data['request'], floors[floor][0]['body'])
-        design = _design(style, floor == highest, union[floor].area)
+        controls = data['request']['building'].get('roof', {}) or {}
+        design = _design(style, floor == highest, union[floor].area, controls)
         parts = list(exposed.geoms) if hasattr(exposed, 'geoms') else [exposed]
         for part in parts:
             if part.area < (MAIN_MIN_AREA if floor == highest else LEDGE_MIN_AREA):
@@ -161,9 +223,11 @@ def plan_roofs(plan):
                   for patch in faces(piece, [f.plane])]
             if not ff:
                 continue
-            roofs.append(dict(id=f'{floors[floor][0]["body"]}/roof{floor}', body=floors[floor][0]['body'],
+            roof_id = f'{floors[floor][0]["body"]}/roof{floor}'
+            props = _flat_props(data, available, roof_id) if design.form == 'flat' else []
+            roofs.append(dict(id=roof_id, body=floors[floor][0]['body'],
                               floor=floor, datum_m=round(datum, 6), style=style, junction=junction,
-                              design=asdict(design),
+                              design=asdict(design), props=props,
                               support=tuple(tuple(p) for p in part.exterior.coords[:-1]),
                               faces=[dict(polygon=f.polygon, holes=f.holes, plane=f.plane) for f in ff],
                               wall_joints=joints))
