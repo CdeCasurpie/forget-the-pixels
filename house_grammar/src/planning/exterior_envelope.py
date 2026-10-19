@@ -34,6 +34,7 @@ class ExteriorEnvelopePlan:
     decisions: list
     checks: dict
     site: dict | None = None
+    crowns: list | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -528,4 +529,6 @@ def plan_exterior_envelope(request):
     plan.checks = validate_envelope(plan)
     from planning.site_plan import plan_site
     plan.site = plan_site(plan).to_dict()
+    from planning.crown_plan import plan_crowns
+    plan.crowns = plan_crowns(plan)
     return plan
