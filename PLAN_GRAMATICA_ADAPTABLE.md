@@ -207,11 +207,12 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
   y cortinas detrás de ventanas; macetas de catálogo agrupadas sólo en
   jardines/patios frontales solicitados y en esquinas de balcones amplios,
   fuera de las rutas de acceso y puertas. Un cerco sin jardín solicitado no
-  activa macetas. La teja
+  activa macetas. Cubiertas por cuerpo: un ala baja conserva su propia cubierta
+  sin convertirse en la terraza del cuerpo principal. La teja
   explícita obliga una pendiente incluso en estilo moderno; la cubierta mixta
   reserva banda frontal de teja. Los techos con patio conservan su hueco.
-  Pendiente: encuentros de masas múltiples, detalle de balcones/fachadas y
-  aceptación visual.
+  Pendiente: aceptación visual de los encuentros complejos y costes geométricos,
+  afinado de fachada y contraste con referencias (R6).
 - [ ] R6: aceptación arquitectónica sobre referencias.
 - [ ] R7: flujo compacto, ruta única y limpieza.
 

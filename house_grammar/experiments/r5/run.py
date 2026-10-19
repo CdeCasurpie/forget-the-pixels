@@ -72,6 +72,12 @@ def cases():
                               body='main', front='street', floors=[2], width='wide', depth='medium')])
     balcony['building']['site'] = dict(front_space=dict(front='street', depth='medium', use='garden'))
     result['planted_balcony'] = balcony
+    wing = _case(style='republicano', levels=(0, 3.2, 6.2, 9.4))
+    wing['context']['parcel'] = [[0, 0], [14, 0], [14, 20], [0, 20]]
+    wing['building']['bodies'] = [dict(id='main', floors=[1, 2, 3]),
+                                  dict(id='wing', floors=[1], position='rear', width='narrow')]
+    wing['building']['roof'] = dict(cover='mixed')
+    result['secondary_wing'] = wing
     return result
 
 
@@ -91,7 +97,9 @@ def audit(name, plan):
     for roof in roofs:
         assert roof['faces'], f'{name}: {roof["id"]} has no face'
         assert all(Polygon(f['polygon'], f['holes']).is_valid for f in roof['faces'])
-        if roof['floor'] < top:
+        body_top = max(r['floor'] for r in data['massing']['storeys']
+                       if r['kind'] == 'enclosed' and r['body'] == roof['body'])
+        if roof['floor'] < body_top:
             assert roof['design']['form'] == 'flat', f'{name}: a ledge is not a flat terrace'
         kinds = [p['kind'] for p in roof['props']]
         assert kinds.count('stair_bulkhead') <= 1, f'{name}: the stair head is doubled'

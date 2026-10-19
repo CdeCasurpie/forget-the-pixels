@@ -1,5 +1,6 @@
 """R5: roofs and eaves drawn from the catalog on the exposed storey tops."""
 import json
+from pathlib import Path
 
 import pytest
 from shapely.geometry import Point, Polygon
@@ -49,6 +50,17 @@ def test_courtyard_roof_keeps_its_open_court():
     assert all(not Polygon(f['polygon'], f['holes']).covers(court.representative_point())
                for f in roof['faces'])
     assert len(materialize_roofs(plan).faces) > 0
+
+
+def test_a_shorter_secondary_body_gets_its_own_cover_not_the_main_terrace():
+    case = Path(__file__).parents[1]/'experiments/phase0/cases/evaluation/20_complex_combination.json'
+    plan = plan_envelope(json.loads(case.read_text())['request'])
+    roofs = plan_roofs(plan)
+    main_ledge = next(r for r in roofs if r['body'] == 'main' and r['floor'] == 1)
+    wing = next(r for r in roofs if r['body'] == 'wing' and r['floor'] == 1)
+    assert main_ledge['design']['form'] == 'flat'
+    assert wing['design']['form'] == 'band'
+    assert main_ledge['id'] != wing['id']
 
 
 @pytest.mark.parametrize('style,form', [

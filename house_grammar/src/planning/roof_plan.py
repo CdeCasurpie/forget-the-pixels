@@ -193,27 +193,28 @@ def plan_roofs(plan):
     massing = data['massing']
     envelope = _street_envelope(data['request']['context'])
     storeys = [row for row in massing['storeys'] if row['kind'] == 'enclosed']
-    floors = {}
-    for row in storeys:
-        floors.setdefault(row['floor'], []).append(row)
-    order = sorted(floors)
-    if not order:
+    if not storeys:
         return []
-    union = {f: unary_union([shape(r['enclosed_geometry']) for r in floors[f]]) for f in order}
-    highest = order[-1]
+    highest = {body: max(r['floor'] for r in storeys if r['body'] == body)
+               for body in {r['body'] for r in storeys}}
     roofs = []
-    for index, floor in enumerate(order):
-        upper = unary_union([union[f] for f in order[index+1:]]) if index+1 < len(order) else Polygon()
-        exposed = union[floor].difference(upper) if not upper.is_empty else union[floor]
+    for row in sorted(storeys, key=lambda r: (r['floor'], r['body'])):
+        floor = row['floor']
+        owner = shape(row['enclosed_geometry'])
+        upper = unary_union([shape(r['enclosed_geometry']) for r in storeys
+                             if r['floor'] > floor])
+        exposed = owner.difference(upper) if not upper.is_empty else owner
         if exposed.area < LEDGE_MIN_AREA:
             continue
-        datum = max(r['top_m'] for r in floors[floor])-SLAB
-        style = _style(data['request'], floors[floor][0]['body'])
+        datum = row['top_m']-SLAB
+        style = _style(data['request'], row['body'])
         controls = data['request']['building'].get('roof', {}) or {}
-        design = _design(style, floor == highest, union[floor].area, controls)
+        design = _design(style, floor == highest[row['body']], owner.area, controls)
+        neighbors = unary_union([shape(r['enclosed_geometry']) for r in storeys
+                                 if r['floor'] == floor and r['id'] != row['id']])
         parts = list(exposed.geoms) if hasattr(exposed, 'geoms') else [exposed]
         for part_index, part in enumerate(parts):
-            if part.area < (MAIN_MIN_AREA if floor == highest else LEDGE_MIN_AREA):
+            if part.area < (MAIN_MIN_AREA if floor == highest[row['body']] else LEDGE_MIN_AREA):
                 continue
             part_design = design
             if part_design.form == 'band':
@@ -227,6 +228,8 @@ def plan_roofs(plan):
                 part_design = replace(part_design, form='gable')
             poly = part.buffer(part_design.eave.overhang_m, join_style=2)
             available = poly.difference(upper.buffer(.02)) if not upper.is_empty else poly
+            if not neighbors.is_empty:
+                available = available.difference(neighbors.buffer(.02))
             available = available.intersection(envelope)
             joints = []
             junction = 'none'
@@ -239,7 +242,7 @@ def plan_roofs(plan):
                 junction = 'behind'
                 available = available.difference(cut)
                 joints += _lines(available.boundary.intersection(cut.boundary))
-            roof_id = f'{floors[floor][0]["body"]}/roof{floor}/part{part_index}'
+            roof_id = f'{row["body"]}/roof{floor}/part{part_index}'
             if available.is_empty or available.geom_type != 'Polygon':
                 fail('roof_capacity', roof_id, 'no connected roof remains after crown and upper-mass reservations')
             try:
@@ -252,7 +255,7 @@ def plan_roofs(plan):
             if not ff:
                 fail('roof_capacity', roof_id, 'no roof faces remain inside the permitted envelope')
             props = _flat_props(data, available, roof_id) if part_design.form == 'flat' else []
-            roofs.append(dict(id=roof_id, body=floors[floor][0]['body'],
+            roofs.append(dict(id=roof_id, body=row['body'],
                               floor=floor, datum_m=round(datum, 6), style=style, junction=junction,
                               design=asdict(part_design), props=props,
                               support=tuple(tuple(p) for p in part.exterior.coords[:-1]),
