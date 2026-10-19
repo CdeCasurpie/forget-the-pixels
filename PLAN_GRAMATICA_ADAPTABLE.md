@@ -150,6 +150,8 @@ aceptación arquitectónica.
 
 **Trabajo:** conectar planificación de sitio con `boundaries.py`, `fences.py`, `entrances.py` y catálogos asociados. Mantener forma independiente del estilo, ausencia explícita, posición de accesos y rutas exteriores. Resolver acceso compartido por cochera cuando se solicite, sin exigir siempre otra puerta peatonal. Retirar `_fence_parts` duplicado al integrar el catálogo.
 
+*Estado:* el cerco público se materializa con el catálogo (`site_plan` + `site_catalogue` → `build_fence`); `_fence_parts` queda aislado en la ruta histórica Phase-5 y se retirará en R7 junto con el resto de emisores duplicados, porque sus dos consumidores (`experiments/phase5`, `tests/test_intent_site.py`) y las capacidades de remate que aún conserva (copa de muro y toldo de cochera ya migradas al materializador) exigen un barrido mayor.
+
 Integrar todos los balcones, pilastras, frontones, cornisas, zócalos y remates conservados. Selección explícita o autocompletado compatible con lenguaje local; no ornamentar todas las casas. Remates sobre cerco usan su propio anclaje y cubierta apoyada.
 
 **Corrección visual solicitada — frontones:** no colocar un triángulo de ancho fijo en el centro de cualquier fachada. R2 debe reservar su paño anfitrión, eje, ancho y relación con acceso/balcón/cornisa; R4 resolverá la continuidad de base, molduras, espesor y retornos con esa fachada, y R5 el encuentro con cubierta. Ajustar proporciones al sector coronado, sin estirar arbitrariamente perfiles del catálogo ni imponer frontón a casas que no lo requieren. Verificar apoyo y continuidad en frente y oblicua, incluyendo fachadas asimétricas, retiros y distintos anchos.
@@ -188,7 +190,13 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 - [ ] R3: cierre técnico hecho — vanos de catálogo dimensionados conjuntamente
   (bandas, márgenes desde el borde, reserva de portal, tipología automática,
   contorno compartido muro/pieza); pendiente la revisión visual del usuario.
-- [ ] R4: cercos, entradas y ornamentación conservada.
+- [ ] R4: cercos, entradas y ornamentación conservada. Hecho: cerco de catálogo
+  (forma independiente del estilo, ausencia explícita, cap/toldo de remate),
+  puerta peatonal alineada al ingreso, cochera compartida sin segunda hoja
+  peatonal, rutas exteriores contenidas en el suelo libre y frontón anclado a
+  su sector/eje (no triángulo fijo). Pendiente: pilastras y cornisas de fachada
+  entre ejes; el retiro físico de `_fence_parts` se posterga a R7 (sigue como
+  emisor de la ruta histórica Phase-5, igual que `_joinery` en interiores).
 - [ ] R5: cubiertas y detalle cotidiano contextual.
 - [ ] R6: aceptación arquitectónica sobre referencias.
 - [ ] R7: flujo compacto, ruta única y limpieza.
