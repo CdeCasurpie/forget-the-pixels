@@ -93,7 +93,7 @@ def export_envelope(plan, output, preview=True):
     (output/'plan.json').write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n')
     report=summary(plan)
     meshes,audit=solids(plan)
-    walls=None;catalogue=None;site=None;crowns=None;pilasters=None;roofs=None;dressings=None
+    walls=None;catalogue=None;site=None;crowns=None;pilasters=None;roofs=None;dressings=None;outdoor=None
     if 'interior' not in data:
         from planning.catalogue_openings import (materialize_openings,
                                                 materialize_contoured_walls, mesh_items)
@@ -130,11 +130,17 @@ def export_envelope(plan, output, preview=True):
         meshes+=list(dressing_items(dressings, prefix='dressing'))
         report['dressings']=dict(count=len(data.get('dressings', ())), faces=len(dressings.faces),
                                  semantics=sorted({part['name'] for part in dressings.parts}))
+        from planning.outdoor_detail import materialize_outdoor_details, mesh_items as outdoor_items
+        outdoor=materialize_outdoor_details(plan)
+        meshes+=list(outdoor_items(outdoor, prefix='outdoor'))
+        report['outdoor_details']=dict(count=len(data.get('outdoor_details', ())),
+                                       faces=len(outdoor.faces),
+                                       semantics=sorted({part['name'] for part in outdoor.parts}))
     report['audit']=audit
     (output/'summary.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
     scene=trimesh.Scene()
     palette=dict(MATERIAL_COLORS)
-    for model in (walls, catalogue, site, crowns, pilasters, roofs, dressings):
+    for model in (walls, catalogue, site, crowns, pilasters, roofs, dressings, outdoor):
         if model is None:
             continue
         for material in model.materials:

@@ -38,6 +38,7 @@ class ExteriorEnvelopePlan:
     pilasters: list | None = None
     roofs: list | None = None
     dressings: list | None = None
+    outdoor_details: list | None = None
 
     def to_dict(self):
         return asdict(self)
@@ -540,4 +541,6 @@ def plan_exterior_envelope(request):
     plan.roofs = plan_roofs(plan)
     from planning.dressing_plan import plan_dressings
     plan.dressings = plan_dressings(plan)
+    from planning.outdoor_detail import plan_outdoor_details
+    plan.outdoor_details = plan_outdoor_details(plan)
     return plan

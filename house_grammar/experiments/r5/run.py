@@ -14,7 +14,7 @@ import argparse
 import json
 from pathlib import Path
 
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, shape
 
 from planning.envelope import plan_envelope
 from planning.envelope_export import export_envelope
@@ -62,6 +62,16 @@ def cases():
     patio = _case(style='republicano', operations=[dict(id='patio', kind='courtyard', body='main')])
     patio['context']['parcel'] = [[0, 0], [14, 0], [14, 20], [0, 20]]
     result['courtyard'] = patio
+    garden = _case(style='republicano')
+    garden['building']['site'] = dict(front_space=dict(front='street', depth='medium', use='garden'))
+    result['front_garden'] = garden
+    driveway = _case(style='republicano')
+    driveway['building']['site'] = dict(front_space=dict(front='street', depth='medium', use='driveway'))
+    result['front_driveway'] = driveway
+    balcony = _case(style='republicano', operations=[dict(id='bal', kind='balcony',
+                              body='main', front='street', floors=[2], width='wide', depth='medium')])
+    balcony['building']['site'] = dict(front_space=dict(front='street', depth='medium', use='garden'))
+    result['planted_balcony'] = balcony
     return result
 
 
@@ -102,6 +112,22 @@ def audit(name, plan):
     allowed = envelope.buffer(.2, join_style=2)
     for vertex in mesh.vertices:
         assert allowed.contains(Point(vertex[0], vertex[1])), f'{name}: roof outside the envelope'
+    free = shape(data['massing']['site']['free'])
+    for prop in data['outdoor_details']:
+        footprint = shape(prop['footprint'])
+        if 'space_id' in prop:
+            space = next(s for row in data['massing']['storeys']
+                         for s in row.get('spaces', ()) if s['id'] == prop['space_id'])
+            assert shape(space['geometry']).covers(footprint), f'{name}: planter leaves balcony'
+            door = next(o for o in data['openings'] if o.get('access_for') == space['id'])
+            assert footprint.distance(shape(door['geometry'])) >= .55-1e-6, \
+                f'{name}: planter blocks a balcony door'
+        else:
+            assert free.covers(footprint), f'{name}: planter outside free ground'
+            for route in data['site']['routes']:
+                passage = shape(route['geometry'])
+                assert footprint.distance(passage) >= .45-1e-6, \
+                    f'{name}: planter blocks an access'
     return data, roofs, mesh
 
 
@@ -123,9 +149,11 @@ def main(argv=None):
             props=[[p['kind'] for p in r['props']] for r in roofs],
             faces=report['roofs']['faces'], watertight=report['audit']['watertight'],
             dressing_faces=report['dressings']['faces'],
+            outdoor_faces=report['outdoor_details']['faces'],
             semantics=report['roofs']['semantics']))
         print(f'{name}: roofs {manifest[-1]["roofs"]} props {manifest[-1]["props"]} '
               f'faces {report["roofs"]["faces"]} dressing {report["dressings"]["faces"]} '
+              f'outdoor {report["outdoor_details"]["faces"]} '
               f'watertight {manifest[-1]["watertight"]}')
     (output/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
 
