@@ -9,7 +9,7 @@ from dataclasses import dataclass, asdict
 import math
 
 import numpy as np
-from shapely.geometry import LineString, Polygon, box, shape
+from shapely.geometry import LineString, Point, Polygon, box, shape
 from shapely.ops import unary_union
 
 from planning.envelope import (EXTERIOR, SLAB, LINTEL, PROFILE_WIDTH, _design,
@@ -17,6 +17,7 @@ from planning.envelope import (EXTERIOR, SLAB, LINTEL, PROFILE_WIDTH, _design,
                                window_dimensions)
 from planning.exterior_program import plan_exterior_program
 from planning.massing import clean, encode, fail, local, world
+from planning import openings_plan
 
 
 @dataclass
@@ -80,6 +81,33 @@ def _segment(surface, u, width):
     return LineString([a+tangent*u, a+tangent*(u+width)])
 
 
+def _segment_of_piece(coords, start, width):
+    """Same segment on a free piece produced by subtracting a door from a wall."""
+    a = np.asarray(coords[0], float)
+    b = np.asarray(coords[-1], float)
+    length = float(np.hypot(*(b-a)))
+    tangent = (b-a)/length
+    return LineString([a+tangent*start, a+tangent*(start+width)])
+
+
+def _door_intent(request):
+    """Door request as a mapping; the legacy string form only sets its position."""
+    door = request['building'].get('site', {}).get('door', {})
+    if isinstance(door, dict):
+        return door
+    if isinstance(door, str) and door not in ('', 'none'):
+        return {'position': door}
+    return {}
+
+
+def _door_clearance(kind, request):
+    """Masonry to leave clear beside a door, including its catalogue portal."""
+    reserve = openings_plan.portal_reserve(
+        _door_intent(request).get('portal', 'none')) if kind == 'entrance' else 0.
+    return openings_plan.PIER_M+reserve
+
+
+
 def _accesses(row, surfaces):
     """Reserve a facade door at each outdoor-space landing, by actual contact."""
     found = []
@@ -106,76 +134,122 @@ def _accesses(row, surfaces):
 
 
 def _entrance(row, surfaces, request):
-    """One ground entrance, independently of any interior room arrangement."""
-    if row['floor'] != 1 or request['building'].get('site', {}).get('door') is False:
+    """One ground entrance; its own margin reserves the catalogue portal volume.
+
+    An authored position is honoured inside the admissible interval. When no
+    panel fits the requested door plus portal, an explicit request reports the
+    conflict instead of silently dropping the portal; a completed default may
+    simply omit the entrance.
+    """
+    site = request['building'].get('site', {})
+    if row['floor'] != 1 or site.get('door') is False:
         return []
-    available = [s for s in surfaces if s['front'] is not None and s['length_m'] >= 3.1]
-    if not available:return []
-    host = max(available, key=lambda s: (s['length_m'], s['id']))
-    door = request['building'].get('site', {}).get('door', 'left')
-    position = door.get('position', 'left') if isinstance(door, dict) else door
+    door = _door_intent(request)
+    explicit = 'door' in site
+    position = door.get('position', 'left')
+    portal = door.get('portal', 'none')
     width = 1.05
-    start = (1.0 if position == 'left' else
-             host['length_m']-1.0-width if position == 'right' else
-             (host['length_m']-width)/2)
+    margin = openings_plan.margin_for(kind='door', portal=portal)
+    available = [s for s in surfaces if s['front'] is not None
+                 and s['length_m'] >= width+2*margin]
+    if not available:
+        if explicit:
+            fail('door_capacity', 'entrance', 'no facade panel fits the door and its portal')
+        return []
+    host = max(available, key=lambda s: (s['length_m'], s['id']))
+    if position == 'left':
+        start = margin
+    elif position == 'right':
+        start = host['length_m']-margin-width
+    else:
+        start = min(max((host['length_m']-width)/2, margin),
+                    host['length_m']-margin-width)
     return [(host, _segment(host, start, width), 'entrance', 'ground_entry')]
 
 
+def _window_families(windows, default_proportion='vertical'):
+    """Requested proportions, one family per bay, honouring order and weights."""
+    return ([windows['proportions'][i] for i in range(windows['count'])]
+            if 'proportions' in windows else
+            [windows.get('proportion', default_proportion)]*windows['count'])
+
+
 def _windows(row, surfaces, blocked, request, usage, residential_type):
-    """Small R2 facade prior. R3 will resolve full bay sizes and catalog frames."""
+    """Resolve bays jointly: count, sizes, margins, piers and rhythm.
+
+    Widths come from disjoint family bands, so a main window stays wider than a
+    ventilator. Margins are measured from the opening edge to the panel end and
+    the pier between apertures never becomes the edge margin. The wall cut and
+    the catalogue piece share the resulting line.
+    """
     floor = row['floor']; body = row['body']; selected = []
     declarations = [fac for fac in request['building'].get('facades', [])
                     if fac['body'] == body and floor in fac['floors']]
     for front in sorted({s['front'] for s in surfaces if s['front'] is not None}):
         matched = next((fac for fac in declarations if fac['front'] == front), None)
         if matched is not None and 'windows' in matched:
-            count = matched['windows']['count']; proportions = matched['windows'].get('proportions')
-            default_proportion = matched['windows'].get('proportion', 'vertical')
+            explicit = True
+            windows = matched['windows']
+            if windows['count'] == 0:continue
+            families = _window_families(windows)
+            weights = windows.get('weights')
+            distribution = windows.get('distribution', 'balanced')
         elif declarations:  # explicit facade scopes close unlisted fronts
             continue
         else:
+            explicit = False
             local_use = usage.get(front, usage['floor'])
-            count = (1 if local_use == 'commercial' else 3 if local_use == 'office' else
-                     3 if residential_type == 'multi_family' and
-                          sum(s['length_m'] for s in surfaces if s['front'] == front) >= 9. else 2)
-            proportions = None
-            default_proportion = 'horizontal' if local_use in ('commercial', 'office') else 'vertical'
-        if count == 0:continue
+            exposed = sum(s['length_m'] for s in surfaces if s['front'] == front)
+            if local_use == 'commercial':families = ['storefront']
+            elif local_use == 'office':families = ['horizontal']*3
+            elif residential_type == 'multi_family' and exposed >= 9.:families = ['vertical']*3
+            else:families = ['vertical']*2
+            weights = None;distribution = 'balanced'
+        margin = openings_plan.WINDOW_EDGE_M
+        smallest = min(openings_plan.band(family)[0] for family in families)
         candidates = []
         for surface in surfaces:
             if surface['front'] != front:continue
-            free = LineString(surface['line']).difference(
-                unary_union([door.buffer(.35, cap_style=2) for door in blocked])) if blocked else LineString(surface['line'])
+            surface_line = LineString(surface['line'])
+            free = (surface_line.difference(unary_union(
+                        [door.buffer(clear, cap_style=3) for door, clear in blocked]))
+                    if blocked else surface_line)
             pieces = ([free] if free.geom_type == 'LineString' else
                       [p for p in getattr(free, 'geoms', ()) if p.geom_type == 'LineString'])
             for part in sorted(pieces, key=lambda p: p.wkt):
-                if part.length >= 2.55:
-                    candidates.append(dict(surface, line=list(part.coords), length_m=part.length,
+                coords = list(part.coords)
+                d0 = surface_line.project(Point(coords[0]))
+                d1 = surface_line.project(Point(coords[-1]))
+                if d0 > d1:
+                    coords = coords[::-1]; d0, d1 = d1, d0
+                # Only a genuine panel end carries the edge margin. The end cut
+                # by a door already has the door clearance inside the piece.
+                piece_margin = (margin if d0 <= 1e-6 else 0.,
+                                margin if d1 >= surface_line.length-1e-6 else 0.)
+                if part.length >= sum(piece_margin)+smallest:
+                    candidates.append(dict(surface, line=coords, length_m=part.length,
+                                           margin=piece_margin,
                                            slot_id=f'{surface["id"]}/free{len(candidates)}'))
-        allocation = {s['slot_id']: 0 for s in candidates}
-        for _ in range(count):
-            eligible = [s for s in candidates if
-                        (s['length_m']-1.7)/(allocation[s['slot_id']]+1) >= .85]
-            if not eligible:
-                if matched is not None:fail('window_capacity', front, 'facade too short for requested windows')
-                break
-            chosen = max(eligible, key=lambda s: ((s['length_m']-1.7)/(allocation[s['slot_id']]+1), s['slot_id']))
-            allocation[chosen['slot_id']] += 1
-        index = 0
-        for surface in candidates:
-            n = allocation[surface['slot_id']]
-            if not n:continue
-            line = LineString(surface['line'])
-            local_use = usage.get(front, usage['floor'])
-            maximum = 4.5 if local_use == 'commercial' else 1.65 if local_use == 'office' else 1.35
-            window_width = min(maximum, (line.length-1.7)/n)
-            for i in range(n):
-                start = .85 + (line.length-1.7)*(i+.5)/n-window_width/2
-                candidate = _segment(surface, start, window_width)
-                proportion = proportions[index] if proportions is not None else default_proportion
-                selected.append((surface, candidate, 'window',
-                                 (proportion, 'explicit' if matched is not None else 'completion')))
-                index += 1
+        if not candidates:continue
+        loads = openings_plan.assign([c['length_m'] for c in candidates], families,
+                                     margins=[c['margin'] for c in candidates])
+        if loads is None:
+            if explicit:
+                fail('window_capacity', front, 'facade too short for the requested windows')
+            continue
+        for candidate, load in zip(candidates, loads):
+            if not load:continue
+            bays = openings_plan.solve_bays(candidate['length_m'], load, weights=weights,
+                                            margin=candidate['margin'],
+                                            distribution=distribution)
+            if bays is None:
+                if explicit:fail('window_capacity', front, 'requested windows exceed the panel')
+                continue
+            for bay in bays:
+                candidate_line = _segment_of_piece(candidate['line'], bay['start'], bay['width'])
+                selected.append((candidate, candidate_line, 'window',
+                                 (openings_plan.proportion_of(bay['family']),
+                                  'explicit' if explicit else 'completion', bay['family'])))
     return selected
 
 
@@ -276,11 +350,15 @@ def plan_exterior_envelope(request):
         for row in rows:
             surfaces = [dict(s, body=row['body']) for s in row['surfaces'] if s['enclosure']]
             access = _accesses(row, surfaces) + _entrance(row, surfaces, request)
-            requested = _windows(row, surfaces, [door for _, door, _, _ in access],
-                                 request, uses[row['id']], program_plan.program['residential'])
+            blocked = [(door, _door_clearance(kind, request)) for _, door, kind, _ in access]
+            requested = _windows(row, surfaces, blocked, request, uses[row['id']],
+                                 program_plan.program['residential'])
             for index, (surface, line, kind, source) in enumerate(access+requested):
                 width = line.length
-                proportion, provenance = source if kind == 'window' else (None, None)
+                if kind == 'window':
+                    proportion, provenance, family = source
+                else:
+                    proportion, provenance, family = None, None, None
                 design = _design(request, surface, floor, kind,
                                  proportion)
                 frame = PROFILE_WIDTH[design['style']]
@@ -315,6 +393,10 @@ def plan_exterior_envelope(request):
                           wall_thickness_m=EXTERIOR, frame_width_m=frame,
                            surface=surface['id'], body=row['body'], front=surface['front'],
                            proportion=proportion,
+                           family=family,
+                           reserve_m=openings_plan.margin_for(
+                               kind='window' if kind == 'window' else 'door',
+                               portal=door_intent.get('portal', 'none')),
                            shape=shape_kind, arch_rise_m=arch_rise,
                            grille=authored.get('grille', False),
                            grille_pattern=authored.get('grille_pattern', 'vertical'),

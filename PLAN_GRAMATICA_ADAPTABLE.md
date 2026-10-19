@@ -121,10 +121,26 @@ de puerta a petición. Los paños con contorno curvo ahora se perforan con la
 misma función `opening_shape` del catálogo y se exportan como paneles cerrados
 sin rellenar el arco con un muro rectangular. La ruta interior no se modificó.
 
-**Aún pendiente para cerrar R3:** selección tipológica automática, reserva
-volumétrica de portales y molduras, banco visual de cada familia y aceptación
-arquitectónica. El puente de despacho no equivale a aprobar todas las
-capacidades del catálogo.
+**Cierre técnico de R3 en `gramatica_adaptable_r3`:** un solucionador
+determinista (`planning/openings_plan.py`) resuelve conjuntamente bandas de
+ancho por familia, ejes, ritmo, pilastra entre vanos y margen de extremo
+(ventana ≥ 0.85 m, puerta ≥ 1.00 m medidos desde el borde del vano). La reserva
+volumétrica del portal o columnata se suma al margen de la puerta y al hueco
+libre entre la puerta y las ventanas, así las pilastras no cruzan el extremo ni
+pisan un vano vecino. La tipología se autocompleta (comercio→vitrina continua,
+oficina→tres `horizontal`, multifamiliar ancho→tres `vertical`, vivienda→dos
+`vertical`); una petición imposible falla con `window_capacity` en vez de
+comprimir la ventana. El catálogo se barre hacia la calle y se recorta contra el
+sobre-ancho de fachada, de modo que marcos y alféizares sobreviven al recorte
+catastral (antes se perdían y la ventana salía sin marco). `tests/test_openings_plan.py`
+y `tests/test_catalogue_openings_exterior.py` cubren bandas, márgenes, reserva
+de portal, principales vs respiraderos, lotes estrecho/ancho, contorno por
+familia, ejes/dinteles repetidos y ausencia de carpintería duplicada; el banco
+`experiments/r3/run.py` audita cada caso antes de exportar.
+
+**Aún pendiente para cerrar R3:** sólo la revisión visual del usuario sobre los
+renders por familia. La puerta de despacho y los números no equivalen a la
+aceptación arquitectónica.
 
 **Trabajo:** resolver conjuntamente conteo, ejes, ancho, alto, antepecho, dintel, padding, separación entre vanos y profundidad. Aplicar reglas anteriores, respetar solicitudes explícitas y evaluar ocupación del paño. Reservar huella completa de portales, pilastras y molduras. Adaptar `Opening` y el despacho existente a la escena resuelta y a estilos locales; conservar formas curvas, rejas, sobreluces, hojas y perfiles. Retirar `_joinery` duplicado después de verificar equivalencia de capacidades requeridas.
 
@@ -169,7 +185,9 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 - [x] R0: inventario y render fiable. Véase `house_grammar/experiments/r0/README.md`.
 - [ ] R1: puente implementado y cierre técnico hecho (anclaje de superficie, pisos entre cuerpos, estilo local, paleta y cobertura geométrica). La aceptación arquitectónica —frente y oblicua— pasa a R2/R6. Véase `house_grammar/experiments/r1/AUDITORIA_Y_R2.md`. Las cuatro imágenes no constituyen aceptación arquitectónica.
 - [ ] R2: R2.1–R2.5 tienen una ruta exterior funcional (paños, ejes/pisos tipo, puerta vinculada al balcón y envolvente sin BSP). Pendiente la aceptación visual del usuario y completar composición/zonas de acceso en casos complejos; cerco y piezas finales pertenecen a R3–R5.
-- [ ] R3: vanos de catálogo con tamaño, profundidad y padding.
+- [ ] R3: cierre técnico hecho — vanos de catálogo dimensionados conjuntamente
+  (bandas, márgenes desde el borde, reserva de portal, tipología automática,
+  contorno compartido muro/pieza); pendiente la revisión visual del usuario.
 - [ ] R4: cercos, entradas y ornamentación conservada.
 - [ ] R5: cubiertas y detalle cotidiano contextual.
 - [ ] R6: aceptación arquitectónica sobre referencias.

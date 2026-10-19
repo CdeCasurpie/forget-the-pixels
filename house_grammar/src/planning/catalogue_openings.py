@@ -24,15 +24,19 @@ def opening_for_record(record, host):
         raise ValueError(f'{record["id"]}: opening does not lie on its catalog facade')
     window = record['kind'] == 'window'
     style = record['style']
+    height = record['top_m']-record['bottom_m']
+    columns = max(1, min(64, int(round(record['width_m']/.75))))
+    rows = max(1, min(64, int(round(height/1.10))))
     catalogue = Opening(
         kind='window' if window else 'door', u_m=u[0],
         v_m=record['bottom_m'],  # MeshBuilder panels use absolute world Z.
-        width_m=record['width_m'], height_m=record['top_m']-record['bottom_m'],
+        width_m=record['width_m'], height_m=height,
         frame_width_m=record['frame_width_m'], frame_depth_m=.10 if window else .12,
         recess_m=.08 if window else .12,
         frame_profile=style if window else None,
         frame_material=({'wood':'wood','metal':'metal','pvc':'plastic'}
                         .get(record['material']) if window else None),
+        mullion_columns=columns, mullion_rows=rows,
         prefab='catalog', source=record['source'], sill=record.get('sill', window),
         shape=record.get('shape','rectangle'), arch_rise_m=record.get('arch_rise_m'),
         grille=record.get('grille',False), grille_pattern=record.get('grille_pattern','vertical'),
@@ -53,7 +57,16 @@ def materialize_openings(plan):
     data = plan.to_dict() if hasattr(plan, 'to_dict') else plan
     context = data['request']['context']
     parcel = Polygon(context['parcel'])
-    builder = MeshBuilder(parcel)
+    # The catalog sweeps frames and sills OUTWARD from the wall face, so they
+    # legitimately overhang the sidewalk. Clip them to the street envelope (the
+    # parcel plus a bounded apron over its declared fronts), exactly as the
+    # legacy pipeline does, or the cadastral clip erases every profile band.
+    from domain.architecture import ParcelContext
+    from modeling.grammar import street_envelope
+    envelope = street_envelope(ParcelContext(
+        tuple(map(tuple, context['parcel'])),
+        explicit_fronts=tuple(sorted(set(context['fronts'].values())))))
+    builder = MeshBuilder(parcel, envelope=envelope)
     hosts = {surface['id']: surface for row in data['massing']['storeys']
              for surface in row['surfaces']}
     for record in data['openings']:
@@ -62,6 +75,9 @@ def materialize_openings(plan):
         catalogue = opening_for_record(record, host)
         a = np.asarray(line.coords[0], float)
         tangent = (np.asarray(line.coords[-1], float)-a)/line.length
+        # ``host['normal']`` points away from the building and is the side the
+        # catalog builders extrude along: frames and sills project to the
+        # street, glazing sits set back inside the reveal.
         normal = np.asarray(host['normal'], float)
         with builder.assembly('opening/' + record['id']):
             build_opening(builder, a, tangent, normal, catalogue)
