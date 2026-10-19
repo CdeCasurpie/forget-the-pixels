@@ -78,6 +78,9 @@ def cases():
                                   dict(id='wing', floors=[1], position='rear', width='narrow')]
     wing['building']['roof'] = dict(cover='mixed')
     result['secondary_wing'] = wing
+    shade = _case(style='moderno')
+    shade['building']['roof'] = dict(shade=True)
+    result['azotea_shade'] = shade
     return result
 
 
@@ -112,6 +115,18 @@ def audit(name, plan):
             assert Polygon(hole).area > 1., f'{name}: collapsed courtyard hole'
     if (data['request']['building'].get('roof', {}) or {}).get('objects') == []:
         assert all(not r['props'] for r in roofs), f'{name}: explicit absence ignored'
+    shade_requested = (data['request']['building'].get('roof', {}) or {}).get('shade', False)
+    assert sum(bool(r.get('shade')) for r in roofs) == int(shade_requested), \
+        f'{name}: explicit roof shade ignored or duplicated'
+    for roof in roofs:
+        shade = roof.get('shade')
+        if shade:
+            cover = Polygon(shade['support'])
+            assert Polygon(roof['support'], roof.get('support_holes', ())).covers(cover)
+            assert shade['datum_m']-shade['post_base_m'] >= 2.
+            for prop in roof['props']:
+                assert not cover.intersects(Point(*prop['position'])), \
+                    f'{name}: canopy collides with roof equipment'
     if any(c['base_z_m'] > 0 for c in data.get('crowns', ())):
         assert main['junction'] == 'behind', f'{name}: the fronton is not met behind'
         assert main['wall_joints'], f'{name}: the fronton junction is not flashed'
@@ -155,6 +170,7 @@ def main(argv=None):
             roofs=[(r['floor'], r['design']['form'], r['design']['covering'], r['junction'])
                    for r in roofs],
             props=[[p['kind'] for p in r['props']] for r in roofs],
+            shade=[r['id'] for r in roofs if r.get('shade')],
             faces=report['roofs']['faces'], watertight=report['audit']['watertight'],
             dressing_faces=report['dressings']['faces'],
             outdoor_faces=report['outdoor_details']['faces'],

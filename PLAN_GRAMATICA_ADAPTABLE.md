@@ -208,7 +208,9 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
   jardines/patios frontales solicitados y en esquinas de balcones amplios,
   fuera de las rutas de acceso y puertas. Un cerco sin jardín solicitado no
   activa macetas. Cubiertas por cuerpo: un ala baja conserva su propia cubierta
-  sin convertirse en la terraza del cuerpo principal. La teja
+  sin convertirse en la terraza del cuerpo principal. `roof.shade=true` ubica
+  una pérgola ligera con cuatro apoyos sobre una zona plana libre de equipos;
+  si no cabe, informa `roof_shade_capacity`. La teja
   explícita obliga una pendiente incluso en estilo moderno; la cubierta mixta
   reserva banda frontal de teja. Los techos con patio conservan su hueco.
   Pendiente: aceptación visual de los encuentros complejos y costes geométricos,

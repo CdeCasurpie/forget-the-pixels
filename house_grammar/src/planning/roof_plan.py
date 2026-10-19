@@ -23,7 +23,7 @@ from domain.roof_details import EaveDesign, RoofDesign
 from modeling.grammar import street_envelope
 from modeling.mesh_builder import polygons
 from modeling.roof_planes import faces, geometry, plan_faces
-from modeling.roofscape import PROP_WEIGHTS, scatter_props
+from modeling.roofscape import PROP_WEIGHTS, _prop_footprint, scatter_props
 from planning.envelope import SLAB
 from planning.massing import fail
 
@@ -188,6 +188,49 @@ def _flat_props(data, flat, roof_id):
     return props
 
 
+def _shade(data, roof):
+    """Choose one rectangular pergola site clear of all rooftop utilities."""
+    flat = unary_union([Polygon(f['polygon'], f['holes']) for f in roof['faces']
+                        if abs(f['plane'][0])+abs(f['plane'][1]) < 1e-8])
+    if flat.is_empty or flat.area < 9.:
+        return None
+    usable = flat.buffer(-.3, join_style=2)
+    stair = data['core'].get('stairs')
+    if stair is not None:
+        usable = usable.difference(shape(stair).buffer(.45))
+    for prop in roof['props']:
+        usable = usable.difference(_prop_footprint(prop['kind'], prop['position'],
+                                                  prop['rotation_deg'], prop['scale']).buffer(.45))
+    frame = data['massing']['fronts'][sorted(data['massing']['fronts'])[0]]
+    t, n = np.asarray(frame['right'], float), np.asarray(frame['inward'], float)
+    origin = np.asarray(frame['origin'], float)
+    minx, miny, maxx, maxy = usable.bounds if not usable.is_empty else (0, 0, 0, 0)
+    candidates = [(float(x), float(y)) for x in np.arange(minx+.2, maxx, .5)
+                  for y in np.arange(miny+.2, maxy, .5)]
+    candidates.sort(key=lambda xy: (-float((np.asarray(xy)-origin)@n),
+                                    float((np.asarray(xy)-origin)@t)))
+    for point in candidates:
+        c = np.asarray(point)
+        poly = Polygon([c+t*u+n*v for u, v in ((-1.25, -1.), (1.25, -1.),
+                                               (1.25, 1.), (-1.25, 1.))])
+        if not usable.covers(poly):
+            continue
+        design = RoofDesign(form='shed', covering='slats', construction='frame',
+                            style=roof['style'], slope_deg=5.,
+                            rotation_deg=float(np.degrees(np.arctan2(n[1], n[0]))),
+                            material='wood',
+                            substrate_material='wood', detail='medium',
+                            eave=EaveDesign(kind='exposed', overhang_m=0., fascia=False,
+                                            material='wood', fascia_material='wood'))
+        z = roof['datum_m']+2.25
+        ff = plan_faces(poly, design, z)
+        return dict(id=roof['id']+'/shade', support=tuple(poly.exterior.coords)[:-1],
+                    datum_m=z, post_base_m=roof['datum_m'], outward=n.tolist(),
+                    design=asdict(design),
+                    faces=[dict(polygon=f.polygon, holes=f.holes, plane=f.plane) for f in ff])
+    return None
+
+
 def plan_roofs(plan):
     data = plan.to_dict() if hasattr(plan, 'to_dict') else plan
     massing = data['massing']
@@ -263,6 +306,18 @@ def plan_roofs(plan):
                                              for ring in part.interiors],
                               faces=[dict(polygon=f.polygon, holes=f.holes, plane=f.plane) for f in ff],
                               wall_joints=joints))
+    controls = data['request']['building'].get('roof', {}) or {}
+    if controls.get('shade'):
+        for roof in sorted(roofs, key=lambda r: -sum(
+                Polygon(f['polygon'], f['holes']).area for f in r['faces']
+                if abs(f['plane'][0])+abs(f['plane'][1]) < 1e-8)):
+            shade = _shade(data, roof)
+            if shade is not None:
+                roof['shade'] = shade
+                break
+        else:
+            fail('roof_shade_capacity', 'building.roof.shade',
+                 'no clear flat roof span fits the supported shade and its service clearance')
     return roofs
 
 

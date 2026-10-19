@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from shapely.geometry import Point, Polygon
 
+from domain.architectural_plan import PlanningError
 from planning.envelope import plan_envelope
 from planning.envelope_export import export_envelope
 from planning.roof_catalogue import materialize_roofs
@@ -61,6 +62,7 @@ def test_a_shorter_secondary_body_gets_its_own_cover_not_the_main_terrace():
     assert main_ledge['design']['form'] == 'flat'
     assert wing['design']['form'] == 'band'
     assert main_ledge['id'] != wing['id']
+    assert sum(bool(r.get('shade')) for r in roofs) == 1
 
 
 @pytest.mark.parametrize('style,form', [
@@ -176,6 +178,27 @@ def test_explicit_stair_head_only_does_not_sample_from_an_empty_vocabulary():
     assert [p['kind'] for p in props] == ['stair_bulkhead']
 
 
+def test_requested_shade_is_a_supported_clear_roof_canopy():
+    plan = _plan(dict(shade=True))
+    roof = plan_roofs(plan)[0]
+    shade = roof['shade']
+    footprint = Polygon(shade['support'])
+    assert Polygon(roof['support']).covers(footprint)
+    assert shade['datum_m']-shade['post_base_m'] > 2.
+    assert all(not footprint.intersects(Point(*p['position'])) for p in roof['props'])
+    names = {part['name'] for part in materialize_roofs(plan).parts}
+    assert {'roof_slats', 'roof_shade_beam', 'member_shaft'} <= names
+
+
+def test_explicit_absence_of_shade_stays_absent():
+    assert not any(r.get('shade') for r in plan_roofs(_plan(dict(shade=False))))
+
+
+def test_shade_on_a_pitched_roof_reports_a_capacity_conflict():
+    with pytest.raises(PlanningError, match='roof_shade_capacity'):
+        _plan(dict(shade=True), style='republicano')
+
+
 def test_props_stand_on_the_roof_not_beyond_it():
     plan = _plan(None)
     spec = plan_roofs(plan)[0]
@@ -188,3 +211,13 @@ def test_roof_props_are_deterministic():
     first = plan_roofs(_plan(None))[0]['props']
     second = plan_roofs(_plan(None))[0]['props']
     assert first == second
+
+
+def test_occupancy_changes_do_not_rewrite_the_roof_or_its_stair_head():
+    occupied = request(style='moderno')
+    occupied['building']['program'] = dict(occupancy='occupied')
+    vacant = request(style='moderno')
+    vacant['building']['program'] = dict(occupancy='vacant')
+    a, b = plan_envelope(occupied), plan_envelope(vacant)
+    assert a.roofs == b.roofs
+    assert a.dressings == b.dressings
