@@ -21,6 +21,7 @@ from planning.catalogue_openings import mesh_items
 from planning.site_plan import FENCE_THICKNESS
 
 DETAIL_Z = {'meter': (.28, .58), 'bell': (.88, .98), 'number': (1.60, 1.72)}
+CAP_MATERIAL = {'plain': 'stone', 'tile': 'roof_tile', 'corrugated': 'roof'}
 
 
 def _street_envelope(context):
@@ -56,8 +57,21 @@ def _fence(builder, massing, site):
     # ``build_fence`` places members along the outward normal (away from the
     # lot), so its negative depth reaches *into* the parcel.
     n = -np.asarray(frame['inward'], float)
+    cap = fence.get('cap', 'plain')
+    height = fence['height_m']
     with builder.assembly('site/fence'):
         build_fence(builder, a, t, n, frame['length_m'], _boundary(frame, fence, site['gates']))
+        if cap != 'plain':
+            # A continuous coping crowns each solid span, above its own wall.
+            for low, high in fence['panels_m']:
+                builder.box(a, t, n, low, high, height, height+.055,
+                            -(FENCE_THICKNESS+.02), 0., CAP_MATERIAL[cap], 'fence_cap')
+        for gate in site['gates']:
+            low, high = gate['interval_m']
+            if gate['kind'] == 'vehicle' and cap in ('tile', 'corrugated'):
+                # A portal roof bridges the gate and bears on both jambs.
+                builder.box(a, t, n, low-.075, high+.075, height, height+.085,
+                            -.65, 0., CAP_MATERIAL[cap], 'gate_canopy')
         for detail in fence['details']:
             edge = shape(detail['geometry'])
             u = sorted(edge.project(shape({'type': 'Point', 'coordinates': list(p)}))

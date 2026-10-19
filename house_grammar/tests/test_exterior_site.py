@@ -24,10 +24,12 @@ def request(site=None, parcel=((0, 0), (9, 0), (9, 18), (0, 18)),
                 building=building)
 
 
-def open_fence(form='open', height='low', style=None, **site_extra):
+def open_fence(form='open', height='low', style=None, cap=None, **site_extra):
     spec = dict(front='F1', form=form, height=height)
     if style is not None:
         spec['style'] = style
+    if cap is not None:
+        spec['cap'] = cap
     site = dict(fence=spec)
     site.update(site_extra)
     return request(site)
@@ -135,6 +137,26 @@ def test_gates_keep_their_piers_and_stay_within_the_run():
         assert low >= 0. and high <= length
     for (a0, a1), (b0, b1) in zip(intervals, intervals[1:]):
         assert b0-a1 >= 0.2
+
+
+def test_cap_crowns_the_fence_spans():
+    plan = plan_envelope(open_fence(form='solid', height='high', cap='tile'))
+    names = members(plan)
+    assert 'fence_cap' in names
+    assert 'fence_cap' not in members(plan_envelope(open_fence(form='solid', height='high',
+                                                               cap='plain')))
+
+
+def test_vehicle_portal_roof_bears_on_its_jambs():
+    plan = plan_envelope(open_fence(form='solid', height='high', cap='corrugated',
+                                    garage=True))
+    names = members(plan)
+    assert 'gate_canopy' in names
+    assert 'boundary_post' in names
+    # a plain cap leaves the cochera without a roof
+    uncovered = members(plan_envelope(open_fence(form='solid', height='high', cap='plain',
+                                                 garage=True)))
+    assert 'gate_canopy' not in uncovered
 
 
 def test_devices_are_anchored_to_the_pedestrian_gate():
