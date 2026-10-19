@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from shapely.geometry import shape
 
+from domain.architectural_plan import PlanningError
 from planning.chart import surface_chart
 from planning.envelope import plan_envelope
 from planning.envelope_export import export_envelope, solids
@@ -18,6 +19,49 @@ def request():
                              fronts={'F1': 0}, levels_m=[0, 3.2, 6.]),
                 building=dict(profile='barranco_residential',
                               site=dict(front_space=dict(front='F1', depth='medium'))))
+
+
+def narrow_request():
+    r = request()
+    r['context']['parcel'] = [[0, 0], [5.8, 0], [5.8, 17], [0, 17]]
+    r['context']['levels_m'] = [0, 3.1]
+    r['building'].pop('site')
+    return r
+
+
+def test_implicit_two_window_rhythm_reduces_count_before_dropping_all_bays():
+    plan = plan_envelope(narrow_request())
+    windows = [o for o in plan.openings if o['kind'] == 'window']
+    assert len(windows) == 1
+    assert windows[0]['width_m'] >= 1.
+    assert any('reduced from 2 to 1' in d.get('reason', '') for d in plan.decisions)
+
+
+def test_explicit_unfittable_two_window_request_still_reports_capacity():
+    r = narrow_request()
+    r['building']['facades'] = [dict(body='main', front='F1', floors=[1],
+                                    windows=dict(count=2, proportion='vertical'))]
+    with pytest.raises(PlanningError, match='window_capacity'):
+        plan_envelope(r)
+
+
+def test_explicit_window_on_a_panel_without_space_reports_capacity():
+    r = narrow_request()
+    r['context']['parcel'] = [[0, 0], [3.2, 0], [3.2, 17], [0, 17]]
+    r['building']['facades'] = [dict(body='main', front='F1', floors=[1],
+                                    windows=dict(count=1, proportion='vertical'))]
+    with pytest.raises(PlanningError, match='window_capacity'):
+        plan_envelope(r)
+
+
+def test_wide_residential_front_adapts_its_bay_count_without_tiny_windows():
+    r = request()
+    r['context']['parcel'] = [[0, 0], [17, 0], [17, 23], [0, 23]]
+    plan = plan_envelope(r)
+    for floor in (1, 2):
+        windows = [o for o in plan.openings if o['kind'] == 'window' and o['floor'] == floor]
+        assert len(windows) == 4
+        assert all(o['width_m'] >= 1. for o in windows)
 
 
 def with_balcony():

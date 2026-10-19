@@ -221,7 +221,7 @@ def _window_families(windows, default_proportion='vertical'):
             [windows.get('proportion', default_proportion)]*windows['count'])
 
 
-def _windows(row, surfaces, blocked, request, usage, residential_type):
+def _windows(row, surfaces, blocked, request, usage, residential_type, decisions=None):
     """Resolve bays jointly: count, sizes, margins, piers and rhythm.
 
     Widths come from disjoint family bands, so a main window stays wider than a
@@ -250,6 +250,7 @@ def _windows(row, surfaces, blocked, request, usage, residential_type):
             if local_use == 'commercial':families = ['storefront']
             elif local_use == 'office':families = ['horizontal']*3
             elif residential_type == 'multi_family' and exposed >= 9.:families = ['vertical']*3
+            elif exposed >= 15.:families = ['vertical']*4
             else:families = ['vertical']*2
             weights = None;distribution = 'balanced'
         margin = openings_plan.WINDOW_EDGE_M
@@ -277,26 +278,40 @@ def _windows(row, surfaces, blocked, request, usage, residential_type):
                     candidates.append(dict(surface, line=coords, length_m=part.length,
                                            margin=piece_margin,
                                            slot_id=f'{surface["id"]}/free{len(candidates)}'))
-        if not candidates:continue
-        loads = openings_plan.assign([c['length_m'] for c in candidates], families,
-                                     margins=[c['margin'] for c in candidates])
-        if loads is None:
+        if not candidates:
             if explicit:
-                fail('window_capacity', front, 'facade too short for the requested windows')
+                fail('window_capacity', front, 'no panel fits the requested windows and edge reserves')
             continue
-        for candidate, load in zip(candidates, loads):
-            if not load:continue
-            bays = openings_plan.solve_bays(candidate['length_m'], load, weights=weights,
-                                            margin=candidate['margin'],
-                                            distribution=distribution)
-            if bays is None:
-                if explicit:fail('window_capacity', front, 'requested windows exceed the panel')
+        sizes = [len(families)] if explicit else range(len(families), 0, -1)
+        for count in sizes:
+            loads = openings_plan.assign([c['length_m'] for c in candidates], families[:count],
+                                         margins=[c['margin'] for c in candidates])
+            if loads is None:
                 continue
-            for bay in bays:
-                candidate_line = _segment_of_piece(candidate['line'], bay['start'], bay['width'])
-                selected.append((candidate, candidate_line, 'window',
-                                 (openings_plan.proportion_of(bay['family']),
-                                  'explicit' if explicit else 'completion', bay['family'])))
+            resolved = []
+            for candidate, load in zip(candidates, loads):
+                if not load:continue
+                bays = openings_plan.solve_bays(candidate['length_m'], load, weights=weights,
+                                                margin=candidate['margin'],
+                                                distribution=distribution)
+                if bays is None:
+                    resolved = None
+                    break
+                for bay in bays:
+                    candidate_line = _segment_of_piece(candidate['line'], bay['start'], bay['width'])
+                    resolved.append((candidate, candidate_line, 'window',
+                                     (openings_plan.proportion_of(bay['family']),
+                                      'explicit' if explicit else 'completion', bay['family'])))
+            if resolved is not None:
+                selected.extend(resolved)
+                if decisions is not None and count < len(families):
+                    decisions.append(dict(path=f'facade/{body}/floor{floor}/{front}/windows',
+                                          reason=f'automatic count reduced from {len(families)} to {count} to preserve bay widths and margins',
+                                          source='completion'))
+                break
+        else:
+            if explicit:
+                fail('window_capacity', front, 'requested windows exceed the panel')
     return selected
 
 
@@ -400,7 +415,7 @@ def plan_exterior_envelope(request):
             access = access + _vehicle(row, surfaces, request, access)
             blocked = [(door, _door_clearance(kind, request)) for _, door, kind, _ in access]
             requested = _windows(row, surfaces, blocked, request, uses[row['id']],
-                                 program_plan.program['residential'])
+                                 program_plan.program['residential'], decisions)
             for index, (surface, line, kind, source) in enumerate(access+requested):
                 width = line.length
                 if kind == 'window':

@@ -1,6 +1,6 @@
 # Plan de rediseño: gramática arquitectónica adaptable de Barranco
 
-**Estado:** R0 implementada; R1 con puente funcional y cierre técnico cerrado (anclaje de superficie, vecindad entre pisos, estilo local, paleta y cobertura geométrica); la aceptación arquitectónica sigue abierta y R2 en diseño. Las antiguas Fases 0–5 son antecedentes técnicos, no aceptación arquitectónica del resultado. El programa vigente es R0–R7, abajo.
+**Estado (octubre de 2026):** R0–R4 cerrados; R5 implementada y auditada con banco geométrico de 20 casos, pendiente de aceptación visual. R6 en calibración: nueve variantes nuevas y comparación con fotografías reales todavía pendiente. R7 no iniciado. Las antiguas Fases 0–5 son antecedentes técnicos, no aceptación arquitectónica del resultado. El programa vigente es R0–R7, abajo.
 **Objetivo:** generar casas plausibles, detalladas y habitadas de Barranco a partir de una descripción exterior compacta, completando algorítmicamente lo que no se ve.
 **Alcance:** nuevo contrato, planificación espacial, generación procedural y materialización. No se exige compatibilidad con el sistema anterior.
 
@@ -173,6 +173,18 @@ El “noise” es detalle contextual: reglas de soporte, espacio, orientación, 
 **Medir:** padding real al borde del vano, dimensiones, proporción vano/paño, alineación entre pisos, profundidad puerta/ventana, fidelidad al catálogo, silueta, colocación de ornamentos y densidad de detalle. Revisar frente y oblicua del GLB con render fiable. Revisar geometría y coste por componente sin exigir que piezas decorativas legítimamente abiertas sean sólidos cerrados.
 
 **Salida:** aceptación visual además de tests; casos inviables producen diagnósticos y no ventanas comprimidas. El éxito de 413 pruebas y 93 corridas anteriores conserva valor como regresión geométrica, no como evidencia de realismo arquitectónico.
+
+**Avance R6:** `house_grammar/experiments/r6/` exporta ocho escenas nuevas y
+una pareja ocupada/desocupada, audita márgenes y accesos y registra el coste en
+caras por componente. La inspección del frente angosto destapó una fachada sin
+ventanas: ahora el conteo **automático** baja de dos a una cuando no caben ambas
+sin reducir dimensiones; la solicitud explícita imposible conserva el conflicto
+`window_capacity`. En un frente residencial ancho se proponen cuatro ejes. Esos
+dos casos ya se usaron para calibrar y no son un holdout intacto. Falta cotejo
+con fotos independientes y un banco de aceptación nuevo, además de revisión
+de siluetas, ornamento y presupuesto geométrico. La suite completa previa a
+estos últimos ajustes registró 1472 correctas, 2 omitidas y los mismos dos
+fallos históricos de `test_compositional_massing.py`.
 
 ### R7 — Entrada compacta, ruta única y limpieza
 
