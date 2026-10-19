@@ -37,6 +37,7 @@ class ResolvedRoofAssembly:
     props: tuple[RoofProp,...] = ()
     wall_finishes: tuple[RoofWallFinish,...] = ()
     neighbor_polygons: tuple[tuple[tuple[float,float],...],...] = ()
+    support_holes: tuple[tuple[tuple[float,float],...],...] = ()
 
 
 def wall_finishes(mass,walls):

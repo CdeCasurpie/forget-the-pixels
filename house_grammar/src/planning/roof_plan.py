@@ -25,6 +25,7 @@ from modeling.mesh_builder import polygons
 from modeling.roof_planes import faces, geometry, plan_faces
 from modeling.roofscape import PROP_WEIGHTS, scatter_props
 from planning.envelope import SLAB
+from planning.massing import fail
 
 ROOF_PRESET = {
     'republicano': dict(form='gable', covering='curved_tile', slope_deg=22., eave='profiled',
@@ -79,12 +80,30 @@ def _design(style, main, area, controls=None):
         eave = EaveDesign(kind='clean', overhang_m=0., fascia=False)
     elif cover == 'corrugated':
         covering = 'corrugated'
-    elif cover == 'tile' and form != 'flat':
+        if form == 'flat':
+            form, parapet, cap = 'shed', 0., 'none'
+            eave = EaveDesign(kind='clean', overhang_m=.30, fascia=True)
+    elif cover == 'tile':
         covering = 'curved_tile'
+        if form == 'flat':
+            # Covering is independent of style: tiles need drainage and a
+            # substrate, even on a building whose default roof is an azotea.
+            form, parapet, cap = 'shed', 0., 'none'
+            eave = EaveDesign(kind='clean', overhang_m=.30, fascia=True)
+    elif cover == 'mixed':
+        # A shallow tiled street band leaves the rear part of the roof flat.
+        # The street-facing rotation and depth are resolved from the actual
+        # parcel frame below, not from the style preset.
+        form, covering, parapet, cap = 'band', 'curved_tile', 0., 'none'
+        eave = EaveDesign(kind='clean', overhang_m=0., fascia=False)
     module = .24 if area <= 60. else .30 if area <= 150. else .38
+    material = ('concrete' if cover == 'slab' else
+                'roof_tile' if covering in ('curved_tile', 'flat_tile') else 'roof')
+    substrate = 'concrete' if cover == 'slab' or form == 'flat' else 'wood'
     return RoofDesign(form=form, covering=covering, construction='solid',
-                      style=style, slope_deg=preset['slope_deg'], material=preset['material'],
-                      substrate_material=preset['substrate'], eave=eave,
+                      style=style, slope_deg=(12. if cover == 'corrugated' and form == 'shed'
+                                             else preset['slope_deg']), material=material,
+                      substrate_material=substrate, eave=eave,
                       parapet_m=parapet if form == 'flat' else 0.,
                       cap=cap if form == 'flat' else 'none',
                       cap_material='stone', detail='medium', tile_width_m=module,
@@ -161,7 +180,7 @@ def _flat_props(data, flat, roof_id):
             props.append(dict(kind='stair_bulkhead', position=[float(centre.x), float(centre.y)],
                               rotation_deg=0., scale=1., seed=int(rng.integers(0, 2**31-1))))
             usable = usable.difference(core.buffer(.25))
-    if usable.area > 1.0:
+    if usable.area > 1.0 and weights:
         for prop in scatter_props(usable, weights, rng, density=.04, limit=6):
             props.append(dict(kind=prop.kind, position=[float(prop.position[0]), float(prop.position[1])],
                               rotation_deg=float(prop.rotation_deg), scale=float(prop.scale),
@@ -193,12 +212,20 @@ def plan_roofs(plan):
         controls = data['request']['building'].get('roof', {}) or {}
         design = _design(style, floor == highest, union[floor].area, controls)
         parts = list(exposed.geoms) if hasattr(exposed, 'geoms') else [exposed]
-        for part in parts:
+        for part_index, part in enumerate(parts):
             if part.area < (MAIN_MIN_AREA if floor == highest else LEDGE_MIN_AREA):
                 continue
-            if design.form in ('hip', 'pavilion') and part.symmetric_difference(part.convex_hull).area > 1e-6:
-                design = replace(design, form='gable')
-            poly = part.buffer(design.eave.overhang_m, join_style=2)
+            part_design = design
+            if part_design.form == 'band':
+                frame = massing['fronts'][sorted(massing['fronts'])[0]]
+                inward = np.asarray(frame['inward'], float)
+                axis = np.asarray(part.exterior.coords) @ inward
+                depth = min(part_design.band_depth_m, (axis.max()-axis.min())*.45)
+                part_design = replace(part_design, band_depth_m=depth,
+                                      rotation_deg=float(np.degrees(np.arctan2(inward[1], inward[0]))))
+            if part_design.form in ('hip', 'pavilion') and part.symmetric_difference(part.convex_hull).area > 1e-6:
+                part_design = replace(part_design, form='gable')
+            poly = part.buffer(part_design.eave.overhang_m, join_style=2)
             available = poly.difference(upper.buffer(.02)) if not upper.is_empty else poly
             available = available.intersection(envelope)
             joints = []
@@ -207,28 +234,30 @@ def plan_roofs(plan):
                 if abs(crown['base_z_m']-datum) > 1e-6:
                     continue
                 cut, _ = _crown_cut(massing, crown)
-                if cut is None:
+                if cut is None or not available.intersects(cut):
                     continue
                 junction = 'behind'
                 available = available.difference(cut)
                 joints += _lines(available.boundary.intersection(cut.boundary))
+            roof_id = f'{floors[floor][0]["body"]}/roof{floor}/part{part_index}'
             if available.is_empty or available.geom_type != 'Polygon':
-                continue
+                fail('roof_capacity', roof_id, 'no connected roof remains after crown and upper-mass reservations')
             try:
-                planned = plan_faces(poly, design, datum)
-            except ValueError:
-                continue
+                planned = plan_faces(poly, part_design, datum)
+            except ValueError as error:
+                fail('roof_capacity', roof_id, str(error))
             ff = [patch for f in planned
                   for piece in polygons(geometry(f).intersection(available))
                   for patch in faces(piece, [f.plane])]
             if not ff:
-                continue
-            roof_id = f'{floors[floor][0]["body"]}/roof{floor}'
-            props = _flat_props(data, available, roof_id) if design.form == 'flat' else []
+                fail('roof_capacity', roof_id, 'no roof faces remain inside the permitted envelope')
+            props = _flat_props(data, available, roof_id) if part_design.form == 'flat' else []
             roofs.append(dict(id=roof_id, body=floors[floor][0]['body'],
                               floor=floor, datum_m=round(datum, 6), style=style, junction=junction,
-                              design=asdict(design), props=props,
+                              design=asdict(part_design), props=props,
                               support=tuple(tuple(p) for p in part.exterior.coords[:-1]),
+                              support_holes=[tuple(tuple(p) for p in ring.coords[:-1])
+                                             for ring in part.interiors],
                               faces=[dict(polygon=f.polygon, holes=f.holes, plane=f.plane) for f in ff],
                               wall_joints=joints))
     return roofs

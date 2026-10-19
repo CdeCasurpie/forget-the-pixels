@@ -190,17 +190,22 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
 - [ ] R3: cierre técnico hecho — vanos de catálogo dimensionados conjuntamente
   (bandas, márgenes desde el borde, reserva de portal, tipología automática,
   contorno compartido muro/pieza); pendiente la revisión visual del usuario.
-- [ ] R4: cercos, entradas y ornamentación conservada. Hecho: cerco de catálogo
+- [x] R4: cercos, entradas y ornamentación conservada. Hecho: cerco de catálogo
   (forma independiente del estilo, ausencia explícita, cap/toldo de remate),
   puerta peatonal alineada al ingreso, cochera compartida sin segunda hoja
   peatonal, rutas exteriores contenidas en el suelo libre y frontón anclado a
   su sector/eje (no triángulo fijo) y el orden de fachada que enmarca los ejes
   de los lenguajes locales (pilastras del catálogo de miembros verticales, sólo
-  en republicano/clásico/barroco). Pendiente: cornisas de fachada entre ejes; el
-  alero y el encuentro con la cubierta pertenecen a R5. El retiro físico de
+  en republicano/clásico/barroco). La cornisa de encuentro con cubierta y el
+  alero pertenecen a R5 (decisión del usuario). El retiro físico de
   `_fence_parts` se posterga a R7 (sigue como
   emisor de la ruta histórica Phase-5, igual que `_joinery` en interiores).
-- [ ] R5: cubiertas y detalle cotidiano contextual.
+- [ ] R5: cubiertas y detalle cotidiano contextual. Implementado: techos y
+  aleros del catálogo sobre paños expuestos; terraza plana en los retranqueos;
+  encuentro del frontón por detrás con junta tapada; azotea con caseta de
+  escalera y utilitarios apoyados, ausencia explícita respetada; fondos someros
+  y cortinas detrás de ventanas. Pendiente: revisar soportes y encuentros en
+  masas complejas, detalle de retiros/balcones/fachadas y aceptación visual.
 - [ ] R6: aceptación arquitectónica sobre referencias.
 - [ ] R7: flujo compacto, ruta única y limpieza.
 

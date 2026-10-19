@@ -53,6 +53,15 @@ def cases():
     slab = _case(style='republicano')
     slab['building']['roof'] = dict(cover='slab')
     result['slab_republicano'] = slab
+    mixed = _case(style='moderno')
+    mixed['building']['roof'] = dict(cover='mixed', objects=[])
+    result['tile_band_moderno'] = mixed
+    tile = _case(style='moderno')
+    tile['building']['roof'] = dict(cover='tile')
+    result['tile_moderno'] = tile
+    patio = _case(style='republicano', operations=[dict(id='patio', kind='courtyard', body='main')])
+    patio['context']['parcel'] = [[0, 0], [14, 0], [14, 20], [0, 20]]
+    result['courtyard'] = patio
     return result
 
 
@@ -77,10 +86,12 @@ def audit(name, plan):
         kinds = [p['kind'] for p in roof['props']]
         assert kinds.count('stair_bulkhead') <= 1, f'{name}: the stair head is doubled'
         if roof['design']['form'] == 'flat':
-            field = Polygon(roof['support'])
+            field = Polygon(roof['support'], roof.get('support_holes', ()))
             for prop in roof['props']:
                 assert field.buffer(1e-6).contains(Point(*prop['position'])), \
                     f'{name}: {prop["kind"]} floats beyond the azotea'
+        for hole in roof.get('support_holes', ()):
+            assert Polygon(hole).area > 1., f'{name}: collapsed courtyard hole'
     if (data['request']['building'].get('roof', {}) or {}).get('objects') == []:
         assert all(not r['props'] for r in roofs), f'{name}: explicit absence ignored'
     if any(c['base_z_m'] > 0 for c in data.get('crowns', ())):
@@ -111,9 +122,11 @@ def main(argv=None):
                    for r in roofs],
             props=[[p['kind'] for p in r['props']] for r in roofs],
             faces=report['roofs']['faces'], watertight=report['audit']['watertight'],
+            dressing_faces=report['dressings']['faces'],
             semantics=report['roofs']['semantics']))
         print(f'{name}: roofs {manifest[-1]["roofs"]} props {manifest[-1]["props"]} '
-              f'faces {report["roofs"]["faces"]} watertight {manifest[-1]["watertight"]}')
+              f'faces {report["roofs"]["faces"]} dressing {report["dressings"]["faces"]} '
+              f'watertight {manifest[-1]["watertight"]}')
     (output/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
 
 

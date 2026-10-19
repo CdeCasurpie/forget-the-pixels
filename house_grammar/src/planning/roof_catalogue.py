@@ -38,6 +38,8 @@ def materialize_roofs(plan):
         resolved = ResolvedRoofAssembly(
             id=spec['id'], mass_ref=spec['body'], design=_design(spec), faces=faces,
             support=tuple(tuple(p) for p in spec['support']), base_z=spec['datum_m'],
+            support_holes=tuple(tuple(tuple(p) for p in ring)
+                                for ring in spec.get('support_holes', ())),
             wall_joints=tuple(tuple(j) for j in spec['wall_joints']))
         # A parapet coping lips a few centimetres past its flush wall head; the
         # roof face itself is already clipped to the envelope.

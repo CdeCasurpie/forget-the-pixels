@@ -38,6 +38,19 @@ def test_setback_ledge_becomes_a_flat_terrace():
     assert floors == {2: 'flat', 3: 'gable'}
 
 
+def test_courtyard_roof_keeps_its_open_court():
+    data = request(operations=[dict(id='patio', kind='courtyard', body='main')])
+    data['context']['parcel'] = [[0, 0], [14, 0], [14, 20], [0, 20]]
+    plan = plan_envelope(data)
+    roof = plan_roofs(plan)[0]
+    assert len(roof['support_holes']) == 1
+    court = Polygon(roof['support_holes'][0])
+    assert court.area > 1.
+    assert all(not Polygon(f['polygon'], f['holes']).covers(court.representative_point())
+               for f in roof['faces'])
+    assert len(materialize_roofs(plan).faces) > 0
+
+
 @pytest.mark.parametrize('style,form', [
     ('republicano', 'gable'), ('barroco', 'hip'), ('clasico', 'hip'),
     ('madera', 'gable'), ('moderno', 'flat'),
@@ -127,6 +140,28 @@ def test_roof_cover_can_force_a_slab():
     roof = plan_roofs(_plan(dict(cover='slab'), style='republicano'))[0]
     assert roof['design']['form'] == 'flat'
     assert roof['design']['parapet_m'] > 0.
+
+
+def test_explicit_tile_cover_drains_even_on_a_modern_building():
+    roof = plan_roofs(_plan(dict(cover='tile')))[0]
+    assert roof['design']['form'] == 'shed'
+    assert roof['design']['covering'] == 'curved_tile'
+    assert roof['design']['parapet_m'] == 0.
+
+
+def test_explicit_mixed_cover_has_a_street_tile_band_and_flat_rear():
+    plan = _plan(dict(cover='mixed'))
+    roof = plan_roofs(plan)[0]
+    assert roof['design']['form'] == 'band'
+    assert roof['design']['covering'] == 'curved_tile'
+    assert any(abs(f['plane'][0])+abs(f['plane'][1]) > .01 for f in roof['faces'])
+    assert any(abs(f['plane'][0])+abs(f['plane'][1]) < .01 for f in roof['faces'])
+    assert len(materialize_roofs(plan).faces) > 0
+
+
+def test_explicit_stair_head_only_does_not_sample_from_an_empty_vocabulary():
+    props = plan_roofs(_plan(dict(objects=['stair_bulkhead'])))[0]['props']
+    assert [p['kind'] for p in props] == ['stair_bulkhead']
 
 
 def test_props_stand_on_the_roof_not_beyond_it():

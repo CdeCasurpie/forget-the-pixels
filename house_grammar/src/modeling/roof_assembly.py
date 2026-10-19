@@ -150,7 +150,7 @@ def build_roof_assembly(mb,r,envelope):
                         mb.solid(part,lambda x,y,p=p:height(p,x,y)-d.thickness_m-.012,
                                  lambda x,y,p=p:height(p,x,y)-d.thickness_m,'wood','roof_board')
             if not r.canopy:
-                support=Polygon(r.support)
+                support=Polygon(r.support, r.support_holes)
                 # Gable closure only laps the wall head: full-height duplication
                 # flickers against the wall face. The 10 mm proud lip keeps one
                 # visible plane; neighbors never receive another mass's closure.
