@@ -132,7 +132,7 @@ def audit(name, plan):
         assert main['wall_joints'], f'{name}: the fronton junction is not flashed'
     envelope = _street_envelope(data['request']['context'])
     mesh = materialize_roofs(plan)
-    allowed = envelope.buffer(.2, join_style=2)
+    allowed = envelope.buffer(1e-5, join_style=2)
     for vertex in mesh.vertices:
         assert allowed.contains(Point(vertex[0], vertex[1])), f'{name}: roof outside the envelope'
     free = shape(data['massing']['site']['free'])

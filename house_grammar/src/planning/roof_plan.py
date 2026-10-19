@@ -18,14 +18,12 @@ import numpy as np
 from shapely.geometry import LineString, Polygon, shape
 from shapely.ops import unary_union
 
-from domain.architecture import ParcelContext
 from domain.roof_details import EaveDesign, RoofDesign
-from modeling.grammar import street_envelope
 from modeling.mesh_builder import polygons
 from modeling.roof_planes import faces, geometry, plan_faces
 from modeling.roofscape import PROP_WEIGHTS, _prop_footprint, scatter_props
 from planning.envelope import SLAB
-from planning.massing import fail
+from planning.massing import fail, front_frames
 
 ROOF_PRESET = {
     'republicano': dict(form='gable', covering='curved_tile', slope_deg=22., eave='profiled',
@@ -41,6 +39,9 @@ ROOF_PRESET = {
 }
 LEDGE_MIN_AREA = 1.5
 MAIN_MIN_AREA = 6.0
+STREET_APRON_M = 1.35
+SLOPED_DETAIL_CLEARANCE_M = .12
+FLAT_CAP_CLEARANCE_M = .03
 
 
 def _style(request, body):
@@ -148,9 +149,20 @@ def _lines(geom):
 
 
 def _street_envelope(context):
-    return street_envelope(ParcelContext(
-        tuple(map(tuple, context['parcel'])),
-        explicit_fronts=tuple(sorted(set(context['fronts'].values())))))
+    """Street apron only over the declared front span, never beyond its ends.
+
+    The general-purpose catalog envelope expands laterally at street corners
+    for joinery. A roof cannot use that extension: it would place the eave over
+    the neighbor's lot. Front frames already normalize parcel ring winding.
+    """
+    parcel = Polygon(context['parcel'])
+    aprons = []
+    for frame in front_frames(context).values():
+        a = np.asarray(frame['origin'], float)
+        b = a+np.asarray(frame['right'], float)*frame['length_m']
+        outward = -np.asarray(frame['inward'], float)*STREET_APRON_M
+        aprons.append(Polygon([a, b, b+outward, a+outward]))
+    return unary_union([parcel, *aprons])
 
 
 def _flat_props(data, flat, roof_id):
@@ -273,7 +285,11 @@ def plan_roofs(plan):
             available = poly.difference(upper.buffer(.02)) if not upper.is_empty else poly
             if not neighbors.is_empty:
                 available = available.difference(neighbors.buffer(.02))
-            available = available.intersection(envelope)
+            clearance = (FLAT_CAP_CLEARANCE_M if part_design.parapet_m
+                         else SLOPED_DETAIL_CLEARANCE_M if part_design.eave.overhang_m
+                         else 0.)
+            allowed = envelope.buffer(-clearance, join_style=2) if clearance else envelope
+            available = available.intersection(allowed)
             joints = []
             junction = 'none'
             for crown in data.get('crowns', ()):

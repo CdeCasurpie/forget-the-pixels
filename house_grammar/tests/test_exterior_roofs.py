@@ -108,6 +108,17 @@ def test_roof_stays_inside_the_street_envelope():
     assert all(allowed.contains(Point(v[0], v[1])) for v in mesh.vertices)
 
 
+@pytest.mark.parametrize('style', ['republicano', 'barroco', 'moderno'])
+def test_fascia_and_coping_never_cross_the_lateral_lot_boundary(style):
+    data = request(style=style)
+    data['context']['parcel'] = [[0, 0], [6, 0], [6, 12], [0, 12]]
+    plan = plan_envelope(data)
+    allowed = _street_envelope(data['context'])
+    mesh = materialize_roofs(plan)
+    assert len(mesh.faces) > 0
+    assert all(allowed.buffer(1e-5).covers(Point(v[0], v[1])) for v in mesh.vertices)
+
+
 def test_roof_plan_is_deterministic():
     first = plan_roofs(plan_envelope(request(style='barroco')))
     second = plan_roofs(plan_envelope(request(style='barroco')))
