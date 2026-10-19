@@ -194,8 +194,11 @@ R0 → R1 → R2 → R3 → R4 → R5 → R6 → R7. Revisar visualmente desde R
   (forma independiente del estilo, ausencia explícita, cap/toldo de remate),
   puerta peatonal alineada al ingreso, cochera compartida sin segunda hoja
   peatonal, rutas exteriores contenidas en el suelo libre y frontón anclado a
-  su sector/eje (no triángulo fijo). Pendiente: pilastras y cornisas de fachada
-  entre ejes; el retiro físico de `_fence_parts` se posterga a R7 (sigue como
+  su sector/eje (no triángulo fijo) y el orden de fachada que enmarca los ejes
+  de los lenguajes locales (pilastras del catálogo de miembros verticales, sólo
+  en republicano/clásico/barroco). Pendiente: cornisas de fachada entre ejes; el
+  alero y el encuentro con la cubierta pertenecen a R5. El retiro físico de
+  `_fence_parts` se posterga a R7 (sigue como
   emisor de la ruta histórica Phase-5, igual que `_joinery` en interiores).
 - [ ] R5: cubiertas y detalle cotidiano contextual.
 - [ ] R6: aceptación arquitectónica sobre referencias.
